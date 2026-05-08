@@ -118,16 +118,16 @@
     <rect x="1885" y="690" width="35" height="390" />
   </g>
 
-  <!-- Layer 6 : neon billboards (claude-orange + cyan + amber) -->
+  <!-- Layer 6 : neon billboards (claude-orange + amber only — palette discipline) -->
   <g>
     <!-- Big claude-orange billboard (left of central tower) -->
     <rect x="455" y="510" width="80" height="32" fill="rgba(217, 119, 87, 0.85)" />
     <rect x="455" y="510" width="80" height="32" fill="rgba(217, 119, 87, 0.5)" filter="url(#blur)" />
     <rect x="455" y="546" width="80" height="3" fill="rgba(217, 119, 87, 0.6)" />
 
-    <!-- Cyan billboard high right -->
-    <rect x="1380" y="540" width="55" height="22" fill="rgba(80, 220, 230, 0.8)" />
-    <rect x="1380" y="540" width="55" height="22" fill="rgba(80, 220, 230, 0.5)" filter="url(#blur)" />
+    <!-- Claude-soft billboard right (replaces the off-palette cyan) -->
+    <rect x="1380" y="540" width="55" height="22" fill="rgba(255, 170, 130, 0.7)" />
+    <rect x="1380" y="540" width="55" height="22" fill="rgba(255, 170, 130, 0.5)" filter="url(#blur)" />
 
     <!-- Amber thin strip on central tower -->
     <rect x="800" y="320" width="200" height="6" fill="rgba(255, 180, 80, 0.65)" />
@@ -136,10 +136,6 @@
     <!-- Vertical neon (Tyrell-ish) -->
     <rect x="938" y="240" width="6" height="100" fill="rgba(217, 119, 87, 0.75)" />
     <rect x="938" y="240" width="6" height="100" fill="rgba(217, 119, 87, 0.6)" filter="url(#blur)" />
-
-    <!-- Magenta accent right -->
-    <rect x="1700" y="700" width="40" height="14" fill="rgba(220, 60, 140, 0.7)" />
-    <rect x="1700" y="700" width="40" height="14" fill="rgba(220, 60, 140, 0.5)" filter="url(#blur)" />
   </g>
 
   <!-- Layer 7 : tiny window cells (orange) -->
@@ -191,8 +187,8 @@
     <rect x="1870" y="740" width="3" height="3" />
   </g>
 
-  <!-- Layer 8 : tiny window cells (cyan) — sparser -->
-  <g fill="rgba(120, 220, 230, 0.7)">
+  <!-- Layer 8 : tiny window cells (claude-soft, secondaires) — sparser -->
+  <g fill="rgba(255, 200, 160, 0.55)">
     <rect x="50" y="800" width="3" height="3" />
     <rect x="100" y="850" width="3" height="3" />
     <rect x="270" y="900" width="3" height="3" />
@@ -206,9 +202,25 @@
     <rect x="1700" y="850" width="3" height="3" />
   </g>
 
-  <!-- Layer 9 : red eye dot (Terminator nod) — high on the central tower -->
-  <circle cx="900" cy="240" r="2.5" fill="#ff3030" />
-  <circle cx="900" cy="240" r="6" fill="#ff3030" opacity="0.6" filter="url(#blur)" />
+  <!-- Layer 9 : red eye (Terminator nod) — high on the central tower, animated pulse -->
+  <g>
+    <!-- Outer halo -->
+    <circle cx="900" cy="220" r="22" fill="#ff2020" opacity="0.35" filter="url(#strongBlur)">
+      <animate attributeName="opacity" values="0.35;0.55;0.35" dur="2.4s" repeatCount="indefinite" />
+    </circle>
+    <!-- Mid glow -->
+    <circle cx="900" cy="220" r="10" fill="#ff3030" opacity="0.85" filter="url(#blur)">
+      <animate attributeName="opacity" values="0.85;1;0.85" dur="2.4s" repeatCount="indefinite" />
+      <animate attributeName="r" values="10;12;10" dur="2.4s" repeatCount="indefinite" />
+    </circle>
+    <!-- Hot core -->
+    <circle cx="900" cy="220" r="5" fill="#ff5050">
+      <animate attributeName="r" values="5;6;5" dur="2.4s" repeatCount="indefinite" />
+    </circle>
+    <circle cx="900" cy="220" r="2" fill="#ffd0c0">
+      <animate attributeName="opacity" values="1;0.7;1" dur="2.4s" repeatCount="indefinite" />
+    </circle>
+  </g>
 
   <!-- Layer 10 : foreground halo + global vignette -->
   <rect width="1920" height="1080" fill="url(#halo)" />
