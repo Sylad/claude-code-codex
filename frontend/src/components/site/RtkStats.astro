@@ -1,0 +1,126 @@
+---
+import rtkStats from "@/data/rtk-stats.json";
+
+const { summary, lastUpdated } = rtkStats as {
+  summary: {
+    total_commands: number;
+    total_input: number;
+    total_output: number;
+    total_saved: number;
+    avg_savings_pct: number;
+    total_time_ms: number;
+    avg_time_ms: number;
+  };
+  lastUpdated: string;
+};
+
+function formatTokens(n: number): string {
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000) return `${(n / 1_000).toFixed(0)}K`;
+  return String(n);
+}
+
+function formatDuration(ms: number): string {
+  const totalSeconds = Math.round(ms / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  if (minutes >= 60) {
+    const hours = Math.floor(minutes / 60);
+    return `${hours}h${(minutes % 60).toString().padStart(2, "0")}`;
+  }
+  if (minutes > 0) return `${minutes}m${seconds.toString().padStart(2, "0")}s`;
+  return `${seconds}s`;
+}
+
+function formatDate(iso: string): string {
+  const d = new Date(iso);
+  return d.toLocaleDateString("fr-FR", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
+}
+
+const stats = [
+  {
+    label: "Commandes proxiées",
+    value: summary.total_commands.toLocaleString("fr-FR"),
+    sub: "via RTK",
+  },
+  {
+    label: "Tokens économisés",
+    value: formatTokens(summary.total_saved),
+    sub: `sur ${formatTokens(summary.total_input + summary.total_output)} traités`,
+    accent: true,
+  },
+  {
+    label: "Économie moyenne",
+    value: `${summary.avg_savings_pct.toFixed(1)}%`,
+    sub: "sur les commandes proxiées",
+  },
+  {
+    label: "Temps total proxy",
+    value: formatDuration(summary.total_time_ms),
+    sub: `~ ${summary.avg_time_ms}ms par commande`,
+  },
+];
+---
+
+<section
+  class="relative mx-auto max-w-6xl px-5 sm:px-8 py-16 border-t border-white/5"
+>
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-8">
+    <div>
+      <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+        Preuve de collab · live
+      </p>
+      <h2 class="mt-2 text-2xl sm:text-3xl font-semibold text-ink">
+        Combien de tokens RTK a économisés
+      </h2>
+      <p class="mt-2 text-ink-muted leading-relaxed max-w-xl text-sm sm:text-base">
+        Ces 6 sites ont été codés en pair-programming avec Claude Code. Pour ne
+        pas exploser la facture API, toutes les commandes shell passent par
+        <a
+          href="https://github.com/rtk-ai/rtk"
+          target="_blank"
+          rel="noopener"
+          class="text-claude hover:text-claude-soft underline underline-offset-4"
+          >RTK</a
+        > qui filtre les sorties avant qu'elles n'atteignent Claude. Stats
+        actuelles :
+      </p>
+    </div>
+    <p class="font-mono text-[10px] uppercase tracking-wider text-ink/50 shrink-0">
+      Maj. {formatDate(lastUpdated)}
+    </p>
+  </div>
+
+  <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    {stats.map((s) => (
+      <div
+        class={`rounded-xl border p-5 ${
+          s.accent
+            ? "border-claude/30 bg-claude/5"
+            : "border-white/10 bg-paper-elevated"
+        }`}
+      >
+        <p
+          class={`font-mono text-[10px] uppercase tracking-wider mb-2 ${
+            s.accent ? "text-claude" : "text-ink-muted"
+          }`}
+        >
+          {s.label}
+        </p>
+        <p class="text-3xl sm:text-4xl font-semibold text-ink tracking-tight">
+          {s.value}
+        </p>
+        <p class="text-xs text-ink-muted mt-1">{s.sub}</p>
+      </div>
+    ))}
+  </div>
+
+  <p class="font-mono text-[10px] text-ink/40 mt-6 text-right">
+    Source : <code>rtk gain --format json</code> · mise à jour manuelle via le
+    skill <code>/update-rtk-stats</code>.
+  </p>
+</section>
