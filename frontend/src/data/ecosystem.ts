@@ -297,15 +297,4 @@ export const ecosystemEntries: EcosystemEntry[] = [
     source:
       "https://github.com/anthropics/skills/tree/main/skills/webapp-testing",
   },
-  {
-    id: "ruflo",
-    name: "Ruflo (ex Claude-Flow)",
-    category: "plugin",
-    official: false,
-    description:
-      "Marketplace de 32 plugins pour orchestrer 100+ agents IA — swarms, mémoire vectorielle, fédération multi-machines, hooks. MIT.",
-    tags: ["orchestration", "multi-agent", "swarm", "marketplace", "tiers"],
-    install: "/plugin marketplace add ruvnet/ruflo && /plugin install ruflo-core@ruflo",
-    source: "https://github.com/ruvnet/ruflo",
-  },
 ];
