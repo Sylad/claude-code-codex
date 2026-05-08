@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <title>Hero effects editor</title>
+    <style>
+      :root {
+        font-family: ui-monospace, "JetBrains Mono", monospace;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #0f0f10;
+        color: #e8e6e3;
+        padding: 16px;
+      }
+      h1 {
+        font-size: 14px;
+        margin: 0 0 12px;
+        color: #d97757;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+      }
+      .stage {
+        position: relative;
+        width: 1280px;
+        max-width: 100%;
+        aspect-ratio: 1280 / 720;
+        margin: 0 0 16px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: #000;
+        overflow: hidden;
+        user-select: none;
+      }
+      .stage img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+      }
+      .stage svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+      .marker {
+        cursor: grab;
+      }
+      .marker.dragging {
+        cursor: grabbing;
+      }
+      .marker-ring {
+        fill: none;
+        stroke-width: 2;
+      }
+      .marker-dot {
+        stroke: rgba(0, 0, 0, 0.6);
+        stroke-width: 1;
+      }
+      .marker-label {
+        font-family: ui-monospace, monospace;
+        font-size: 11px;
+        font-weight: bold;
+        paint-order: stroke;
+        stroke: rgba(0, 0, 0, 0.85);
+        stroke-width: 3;
+      }
+      .panel {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        max-width: 1280px;
+      }
+      .panel h2 {
+        font-size: 12px;
+        margin: 0 0 8px;
+        color: #d97757;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+      }
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+      button {
+        font: inherit;
+        background: #d97757;
+        color: #0f0f10;
+        border: 0;
+        padding: 8px 14px;
+        cursor: pointer;
+        border-radius: 6px;
+        font-weight: 600;
+      }
+      button.secondary {
+        background: rgba(255, 255, 255, 0.05);
+        color: #e8e6e3;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+      }
+      button:active {
+        transform: scale(0.97);
+      }
+      textarea {
+        width: 100%;
+        min-height: 240px;
+        background: #18181a;
+        color: #e8e6e3;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 10px;
+        font: inherit;
+        font-size: 12px;
+        line-height: 1.4;
+        resize: vertical;
+      }
+      .legend {
+        font-size: 12px;
+        color: #a8a29e;
+        line-height: 1.5;
+      }
+      .legend code {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 1px 6px;
+        border-radius: 3px;
+        color: #d97757;
+      }
+      .marker-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        font-size: 12px;
+      }
+      .marker-list li {
+        padding: 4px 0;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .marker-list li .swatch {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Cyberpunk hero — light source positioning editor</h1>
+
+    <div class="stage" id="stage">
+      <img src="/hero-cyberpunk.jpg" alt="" id="bg" />
+      <svg viewBox="0 0 1280 720" preserveAspectRatio="xMidYMid meet" id="svg">
+        <g id="markers"></g>
+      </svg>
+    </div>
+
+    <div class="panel">
+      <div>
+        <h2>Controls</h2>
+        <div class="controls">
+          <button id="export">Copy JSON to clipboard</button>
+          <button id="reset" class="secondary">Reset to defaults</button>
+          <button id="reload" class="secondary">Reload from textarea</button>
+        </div>
+        <p class="legend">
+          1. Drag chaque marker (cercle coloré) sur la vraie source lumineuse
+          de l'image.<br />
+          2. Clique <code>Copy JSON</code> → la valeur va dans le presse-papier
+          ET dans la textarea.<br />
+          3. Colle le JSON dans la conversation Claude — il mettra à jour
+          <code>HeroEffects.astro</code> automatiquement.
+        </p>
+        <h2 style="margin-top: 18px">Markers</h2>
+        <ul class="marker-list" id="legend"></ul>
+      </div>
+
+      <div>
+        <h2>Output JSON</h2>
+        <textarea id="output" spellcheck="false"></textarea>
+      </div>
+    </div>
+
+    <script>
+      const defaults = [
+        { id: "eye", label: "EYE", x: 475, y: 175, color: "#ff2828", desc: "Cyborg red eye" },
+        { id: "shoulder", label: "SHOULDER", x: 270, y: 320, color: "#80f0ff", desc: "Cyan circle on shoulder" },
+        { id: "collar", label: "COLLAR", x: 420, y: 244, color: "#80f0ff", desc: "Cyan neon strip on neck" },
+        { id: "wallRefl", label: "WALL-REFL", x: 135, y: 320, color: "#80f0ff", desc: "Cyan reflection on left wall" },
+        { id: "bbOrange", label: "BB-ORANGE", x: 880, y: 245, color: "#ffb060", desc: "Orange neon billboard center" },
+        { id: "bbPurple", label: "BB-PURPLE", x: 1100, y: 460, color: "#c060ff", desc: "Purple billboard right" },
+        { id: "towerDot", label: "TOWER-DOT", x: 1078, y: 92, color: "#ff4040", desc: "Red dot top-right tower" },
+        { id: "flyCar", label: "FLY-CAR", x: 843, y: 40, color: "#ffe8a0", desc: "Flying car headlight" },
+        { id: "carHead", label: "CAR-HEAD", x: 845, y: 619, color: "#fff0c0", desc: "Distant car headlights" },
+        { id: "carTail", label: "CAR-TAIL", x: 1207, y: 593, color: "#ff4040", desc: "Right car taillights" },
+      ];
+
+      let markers = JSON.parse(JSON.stringify(defaults));
+
+      const stage = document.getElementById("stage");
+      const svg = document.getElementById("svg");
+      const layer = document.getElementById("markers");
+      const legend = document.getElementById("legend");
+      const output = document.getElementById("output");
+
+      function render() {
+        layer.innerHTML = "";
+        legend.innerHTML = "";
+        for (const m of markers) {
+          const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+          g.setAttribute("class", "marker");
+          g.setAttribute("data-id", m.id);
+          g.setAttribute("transform", `translate(${m.x}, ${m.y})`);
+
+          const ring = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+          ring.setAttribute("class", "marker-ring");
+          ring.setAttribute("r", 14);
+          ring.setAttribute("stroke", m.color);
+          g.appendChild(ring);
+
+          const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+          dot.setAttribute("class", "marker-dot");
+          dot.setAttribute("r", 4);
+          dot.setAttribute("fill", m.color);
+          g.appendChild(dot);
+
+          const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+          text.setAttribute("class", "marker-label");
+          text.setAttribute("x", 18);
+          text.setAttribute("y", 5);
+          text.setAttribute("fill", m.color);
+          text.textContent = `${m.label} (${m.x},${m.y})`;
+          g.appendChild(text);
+
+          layer.appendChild(g);
+
+          const li = document.createElement("li");
+          const sw = document.createElement("span");
+          sw.className = "swatch";
+          sw.style.background = m.color;
+          li.appendChild(sw);
+          li.appendChild(document.createTextNode(`${m.label} — ${m.desc}`));
+          legend.appendChild(li);
+        }
+        updateOutput();
+      }
+
+      function updateOutput() {
+        const min = markers.map(({ id, x, y }) => ({ id, x, y }));
+        output.value = JSON.stringify(min, null, 2);
+      }
+
+      function svgPointFromEvent(ev) {
+        const pt = svg.createSVGPoint();
+        pt.x = ev.clientX;
+        pt.y = ev.clientY;
+        const ctm = svg.getScreenCTM();
+        if (!ctm) return { x: 0, y: 0 };
+        const inv = ctm.inverse();
+        const { x, y } = pt.matrixTransform(inv);
+        return { x: Math.round(x), y: Math.round(y) };
+      }
+
+      let dragging = null;
+      stage.addEventListener("pointerdown", (ev) => {
+        const target = ev.target.closest(".marker");
+        if (!target) return;
+        const id = target.getAttribute("data-id");
+        const m = markers.find((m) => m.id === id);
+        if (!m) return;
+        dragging = m;
+        target.classList.add("dragging");
+        target.setPointerCapture(ev.pointerId);
+        ev.preventDefault();
+      });
+      stage.addEventListener("pointermove", (ev) => {
+        if (!dragging) return;
+        const { x, y } = svgPointFromEvent(ev);
+        dragging.x = Math.max(0, Math.min(1280, x));
+        dragging.y = Math.max(0, Math.min(720, y));
+        render();
+      });
+      stage.addEventListener("pointerup", (ev) => {
+        if (!dragging) return;
+        const el = layer.querySelector(`[data-id="${dragging.id}"]`);
+        if (el) el.classList.remove("dragging");
+        dragging = null;
+      });
+
+      document.getElementById("export").addEventListener("click", async () => {
+        updateOutput();
+        try {
+          await navigator.clipboard.writeText(output.value);
+          const btn = document.getElementById("export");
+          const orig = btn.textContent;
+          btn.textContent = "✓ copied";
+          setTimeout(() => (btn.textContent = orig), 1500);
+        } catch {
+          /* clipboard refused — user will copy manually from textarea */
+        }
+      });
+
+      document.getElementById("reset").addEventListener("click", () => {
+        markers = JSON.parse(JSON.stringify(defaults));
+        render();
+      });
+
+      document.getElementById("reload").addEventListener("click", () => {
+        try {
+          const data = JSON.parse(output.value);
+          for (const upd of data) {
+            const m = markers.find((m) => m.id === upd.id);
+            if (m) {
+              m.x = upd.x;
+              m.y = upd.y;
+            }
+          }
+          render();
+        } catch (e) {
+          alert("JSON invalide: " + e.message);
+        }
+      });
+
+      render();
+    </script>
+  </body>
+</html>
