@@ -2,6 +2,7 @@
 import "@/styles/global.css";
 import Navbar from "@/components/site/Navbar.vue";
 import Footer from "@/components/site/Footer.astro";
+import HeroEffects from "@/components/site/HeroEffects.astro";
 
 interface Props {
   title: string;
@@ -63,11 +64,7 @@ const heroEffects = "/hero-cyberpunk-effects.svg";
         alt=""
         class="absolute inset-0 w-full h-full object-cover object-center"
       />
-      <img
-        src={heroEffects}
-        alt=""
-        class="absolute inset-0 w-full h-full object-cover object-center mix-blend-screen"
-      />
+      <HeroEffects />
       <div
         class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-paper/80"
       >
