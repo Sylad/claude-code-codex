@@ -1,0 +1,296 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import AsciiDiagram from "@/components/site/AsciiDiagram.astro";
+import CaseStudySection from "@/components/site/CaseStudySection.astro";
+---
+
+<BaseLayout
+  title="Case study · OL Companion"
+  description="OL Companion — compagnon de saison Olympique Lyonnais. React + TanStack côté front, NestJS + crons côté back, push live via SSE depuis 365scores. 100% codé en pair-programming avec Claude Code."
+>
+  <PageHero
+    eyebrow="Case study · 2026-05-08"
+    title="OL Companion"
+    intro="Compagnon de saison pour l'Olympique Lyonnais : classement Ligue 1, calendrier, brackets de coupe, live-match avec shot map, carte L1 bicolore. React 18 + TanStack côté front, NestJS 11 + crons côté back, push live via SSE depuis 365scores. 100% du code écrit en pair-programming avec Claude Code (zéro ligne tapée à la main)."
+  />
+
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12">
+    <div class="space-y-12">
+      <CaseStudySection eyebrow="Pourquoi cette app">
+        <p>
+          Suivre l'OL en Ligue 1 sans jongler entre dix sites : un seul écran qui agrège classement,
+          forme, prochains matchs, calendrier, brackets de coupe, news communautaires et — le plus
+          tendu — un live-match avec shot map quand l'OL joue. L'app est déployée sur le NAS Synology
+          et tourne en LAN ; elle sert aussi de bac à sable pour la stack <strong>React 18 + Vite +
+          TanStack Router/Query + Tailwind</strong> côté front, et <strong>NestJS 11 + crons
+          @nestjs/schedule</strong> côté back.
+        </p>
+        <p>
+          Toute la base de code (frontend + backend + Docker + nginx) a été écrite en
+          pair-programming avec Claude Code. Sylvain n'a tapé aucune ligne directement : direction
+          produit + revues + arbitrages, exécution déléguée à l'agent.
+        </p>
+      </CaseStudySection>
+
+      <CaseStudySection eyebrow="Architecture">
+        <p>
+          Trois sources de données externes, agrégées côté backend, mises en cache JSON local,
+          poussées en live au frontend via SSE :
+        </p>
+
+        <AsciiDiagram caption="Frontend React (4202) ↔ Backend NestJS (3002) ↔ 3 sources externes. SSE @Sse() pousse les invalidations TanStack Query.">
+{`
+  ┌───────────────────────────────────────┐
+  │   Frontend React 18 + TanStack        │
+  │   Vite · nginx :4202                  │
+  │                                       │
+  │   useEventStream() ──invalidate──▶    │
+  │   queries: ['live-match'],            │
+  │            ['standings'],             │
+  │            ['fixtures'], …            │
+  └──────────────┬────────────────────────┘
+                 │ /api/* (proxy nginx)
+                 │ /api/events (SSE)
+                 ▼
+  ┌───────────────────────────────────────┐
+  │   Backend NestJS 11 :3002             │
+  │                                       │
+  │   EventBusService (Subject<…>)        │
+  │   @Sse() /api/events ─ heartbeat 30s  │
+  │                                       │
+  │   crons @nestjs/schedule (Paris TZ)   │
+  │   ├─ live-match    */30 * * * * *     │
+  │   ├─ standings     0 0 * * * *        │
+  │   ├─ fixtures      0 */30 * * * *     │
+  │   ├─ cups+bracket  0 0 */2 * * *      │
+  │   ├─ news          0 */30 * * * *     │
+  │   └─ season-reset  0 0 3 1 8 *        │
+  │                                       │
+  │   Caches JSON dans data/              │
+  │   PinGuard sur écritures              │
+  └──┬──────────────┬──────────────┬──────┘
+     │              │              │
+     ▼              ▼              ▼
+ 365scores     football-data   Wikipedia FR
+ LIGUE1=35     teamId=523      /api/wiki-image
+ OL=465        compId=2015     (proxy + cache)
+ (live, form,  (calendrier
+  brackets,    officiel)
+  shot chart)
+`}
+        </AsciiDiagram>
+
+        <p>
+          Front (port <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">4202</code>)
+          et back (port <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">3002</code>)
+          tournent côte-à-côte sur le NAS Synology dans deux containers Docker du même
+          <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">docker-compose.yml</code>.
+          nginx proxifie <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">/api/</code>
+          vers le backend (même réseau Docker), ce qui permet à la SSE de passer sans
+          <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">proxy_buffering</code>
+          en plus.
+        </p>
+      </CaseStudySection>
+
+      <CaseStudySection eyebrow="Pattern phare · SSE → TanStack Query invalidation">
+        <p>
+          Le morceau de bravoure de l'app, repris ailleurs depuis (cf
+          <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">sse_invalidation_pattern.md</code>).
+          Côté backend, un <strong>EventBusService</strong> global expose un
+          <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">Subject&lt;...&gt;</code>
+          RxJS. Chaque cron qui poll 365scores diffe sa réponse via une signature courte
+          (<code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">[statusGroup, scores, gameTime, events.length].join('|')</code>)
+          et n'émet sur le bus que si la signature change. Pas de spam, pas de re-render à vide.
+        </p>
+        <p>
+          Un <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">@Sse()</code>
+          controller merge le flux du bus avec un heartbeat 30s (sinon proxies/load-balancers
+          ferment la connexion idle). Côté front, un seul hook
+          <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">useEventStream()</code>
+          monté dans l'AppShell ouvre un
+          <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">EventSource</code>
+          et appelle <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">qc.invalidateQueries(...)</code>
+          selon le <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">type</code>
+          reçu. Les query keys sont structurées en arbre
+          (<code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">['live-match']</code> →
+          <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">['live-match', 'stats', gameId, matchupId]</code>),
+          donc une seule invalidation root rafraîchit toute la branche.
+        </p>
+        <p>
+          <strong>Filet de sécurité</strong> : les hooks live gardent un
+          <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">refetchInterval: 30_000</code>
+          conditionnel (uniquement quand <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">status === 'live'</code>),
+          au cas où la SSE tombe. Reconnexion automatique de
+          <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">EventSource</code>
+          gère le reste — pas de logique retry à coder.
+        </p>
+      </CaseStudySection>
+
+      <CaseStudySection eyebrow="Données · 365scores reverse-engineered">
+        <p>
+          365scores n'a pas d'API publique. Les endpoints utilisés
+          (<code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">data.365scores.com/web/standings/</code>,
+          <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">webws.365scores.com/web/game/</code>,
+          <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">/web/games/results/</code>,
+          <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">/web/games/fixtures/</code>)
+          ont été inspectés au devtools puis stabilisés derrière
+          <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">SCORES365_HEADERS</code>
+          — sans <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">X-Domain: fr</code>,
+          <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">Referer</code>
+          ligue-1-35 et <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">User-Agent</code>
+          réaliste, c'est HTTP 403.
+        </p>
+        <p>
+          IDs critiques : <strong>Ligue 1</strong> = compétition <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">35</code>,
+          <strong>OL</strong> = <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">competitorId=465</code>
+          côté 365scores et <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">teamId=523</code>
+          côté football-data.org. Le backend remappe 465 → 523 en sortie pour rester compatible
+          avec l'historique frontend.
+        </p>
+        <p>
+          <strong>Standings — défense en profondeur</strong>. 365scores publie déjà l'ordre LFP
+          officiel (différence générale → buts marqués → face-à-face), mais
+          <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">standings.service.ts</code>
+          re-trie localement après fetch, en cas de changement de format upstream. Pas de H2H
+          local reconstruit depuis football-data : déjà essayé, ne match jamais ligue1.com.
+        </p>
+        <p>
+          <strong>Round-complete check</strong> sur les snapshots
+          <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">season-rankings.json</code> :
+          la mise à jour ne se fait que si
+          <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">MIN(played) === MAX(played)</code>
+          (journée complète pour toutes les équipes), sinon on capture des positions instables
+          mid-journée.
+        </p>
+        <p>
+          Pour les logos clubs, l'app combine deux sources : Wikipedia FR via
+          <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">/api/wiki-image?q=</code>
+          (avec mapping statique ID → full wiki name pour les noms ambigus type "Reims" / "Brest"
+          qui retournent la ville plutôt que le club), et le CDN 365scores
+          (<code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">imagecache.365scores.com/.../Competitors/&lt;id&gt;</code>)
+          pour les popups de la carte L1.
+        </p>
+      </CaseStudySection>
+
+      <CaseStudySection eyebrow="Identité visuelle · rouge & bleu OL, vert sémantique">
+        <p>
+          La règle palette est verrouillée par le <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">CLAUDE.md</code>
+          du projet pour ne pas dériver entre deux sessions. Les couleurs identité OL
+          (<span class="text-rose-400">rouge</span> <code class="font-mono text-rose-300/80 text-[0.9em]">#dc2626</code> /
+          <span class="text-blue-400">bleu marine</span> <code class="font-mono text-blue-300/80 text-[0.9em]">#1e3a8a</code>)
+          structurent toute la décoration ; le vert n'apparaît que pour les usages sémantiques
+          universels — forme W (vert) / N (jaune) / L (rouge), goal-difference positif, badge
+          "Victoire", positions 1-3 LdC dans le tableau.
+        </p>
+        <p>
+          Conséquence concrète : sur le PositionTracker (Recharts), la ligne d'évolution est
+          <strong>bleu OL</strong> (pas vert), et le dot du point courant est <strong>rouge OL</strong>.
+          Sur la carte Ligue 1, les marqueurs des autres clubs sont bleus, OL est rouge plein.
+          Seule exception : le thème <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">/fcnoobz</code>
+          (Football Manager save perso) active <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">body.theme-fcnoobz</code>
+          qui override en lime + bleu électrique cyberpunk.
+        </p>
+
+        <p class="mt-4">Et deux features où Claude Code a livré pile ce qu'il fallait :</p>
+
+        <ul class="space-y-2.5">
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span>
+              <strong>Brackets de coupe (CdF + EL) qui continuent après élimination OL</strong> —
+              <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">bracket.service.ts</code>
+              fetch les matchs des autres équipes via
+              <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">/results/</code> +
+              <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">/fixtures/</code>
+              (l'endpoint racine <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">/web/games/?competitions=X</code>
+              renvoie 0 — piège vérifié). CdF affichée dès stageNum 6 (1/4), EL dès stageNum 3 (1/8).
+              Suivre le parcours adverse même quand l'OL est sorti reste utile : c'est volontaire.
+            </span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span>
+              <strong>Carte Ligue 1 avec markers bicolores leg-aller/leg-retour</strong> — Leaflet +
+              react-leaflet + tuiles OSM, 18 clubs hardcodés
+              (<code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">ligue1-clubs-coords.ts</code>).
+              Chaque marqueur est un cercle SVG dont la moitié <strong>gauche</strong> représente
+              le match aller et la moitié <strong>droite</strong> le retour. Couleur de chaque
+              moitié = résultat OL côté concerné. Source = full-season history 365scores. Collision
+              Paris (PSG + Paris FC) gérée par offset visuel +20px y sur le second.
+            </span>
+          </li>
+        </ul>
+      </CaseStudySection>
+
+      <article class="space-y-4 pt-2">
+        <div
+          class="rounded-xl border border-white/10 bg-paper-elevated p-6 sm:p-8"
+        >
+          <p
+            class="font-mono text-xs uppercase tracking-wider text-claude mb-3"
+          >
+            Stack & crédits
+          </p>
+          <ul class="text-sm text-ink-muted space-y-1.5 mb-5">
+            <li>
+              <strong class="text-ink">Frontend</strong> · React 18 · Vite 5 · TanStack Router 1.78
+              · TanStack Query 5.59 · Tailwind 3.4 · Recharts 2.13 · Leaflet + react-leaflet ·
+              Lucide.
+            </li>
+            <li>
+              <strong class="text-ink">Backend</strong> · NestJS 11 · @nestjs/schedule v5 · RxJS
+              (SSE via <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">@Sse()</code>) ·
+              Anthropic SDK 0.91 · Jest (>35 tests verts) · stockage JSON local.
+            </li>
+            <li>
+              <strong class="text-ink">Sources</strong> · 365scores (classement, forme, brackets,
+              shot chart) · football-data.org (calendrier officiel) · Wikipedia FR via
+              <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">/api/wiki-image</code>
+              · CDN 365scores pour logos clubs.
+            </li>
+            <li>
+              <strong class="text-ink">Infra</strong> · Docker multi-stage
+              (<code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">node:20-alpine</code> →
+              <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">nginx:alpine</code>)
+              sur NAS Synology, port 4202 / 3002.
+            </li>
+          </ul>
+
+          <p
+            class="font-mono text-xs uppercase tracking-wider text-claude mb-2"
+          >
+            Crédits IA
+          </p>
+          <p class="text-sm text-ink-muted leading-relaxed mb-5">
+            Collab à trois — humain (direction produit, revues, arbitrages) + <strong class="text-ink">Claude
+            Code</strong> (code frontend, backend, infra Docker, debugging) + <strong class="text-ink">ChatGPT</strong>
+            (logos OL Companion et FC Noobz, propositions de design). Sylvain a écrit
+            <strong class="text-ink">zéro ligne</strong> de la base de code à la main.
+          </p>
+
+          <div class="flex flex-wrap gap-3 text-xs">
+            <a
+              href="https://github.com/Sylad/ol-companion"
+              target="_blank"
+              rel="noopener"
+              class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors"
+            >
+              ↗ GitHub Sylad/ol-companion
+            </a>
+            <a
+              href="http://nas:4202"
+              class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors"
+            >
+              ↗ Démo LAN · http://nas:4202
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <p class="text-center text-xs text-ink/50 font-mono pt-4">
+        Snapshot 2026-05-08 · 4 sprints livrés sur main entre 05-02 et 05-08.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

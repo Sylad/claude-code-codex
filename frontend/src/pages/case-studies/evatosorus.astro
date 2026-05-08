@@ -1,0 +1,226 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import AsciiDiagram from "@/components/site/AsciiDiagram.astro";
+import CaseStudySection from "@/components/site/CaseStudySection.astro";
+---
+
+<BaseLayout
+  title="Case study · Evatosorus"
+  description="Codex paléontologique pour Eva, suite naturelle d'Eywa. 1500+ espèces du Mésozoïque, 7 films Jurassic Park, hero T-Rex IA. Build statique Astro 6 + React 19 sur Cloudflare Pages."
+>
+  <PageHero
+    eyebrow="Case study · 2026-05-06"
+    title="Evatosorus"
+    intro="Codex paléontologique premium pour Eva — suite naturelle d'Eywa (même nièce, même pattern Astro). 1500+ espèces du Mésozoïque importées de PaleoBioDB, 7 films Jurassic Park comme entries narratives, hero T-Rex généré à l'IA. Ton documentaire BBC, palette ambre / sable / terre, build statique pur sur Cloudflare Pages."
+  />
+
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12">
+    <div class="space-y-12">
+      <CaseStudySection eyebrow="Le pitch">
+        <p>
+          Eva a déjà reçu Eywa l'an passé (codex Avatar / Pandora). Pour le
+          deuxième round, on monte d'un cran : un <strong>codex paléontologique
+          du Mésozoïque tout entier</strong> — Trias, Jurassique, Crétacé.
+          1500+ espèces, paleo-art domaine public, voyage temporel cinématique,
+          carte des fossiles trouvés. Bonus vanne maison : une nièce qui a déjà
+          vu Avatar douze fois ne refusera pas un T-Rex en plein écran.
+        </p>
+        <p>
+          Le nom est un mot-valise (Eva + saurus) qui rime volontairement avec
+          Eywa. Mêmes briques techniques (Astro + GSAP + Tailwind), même
+          dédicace en page À propos, mais identité visuelle <strong>opposée</strong> :
+          là où Eywa était cyan / bioluminescent / océan, Evatosorus tape
+          dans l'ambre / sable / terre / fossile. Pas de duplication UX
+          verbatim — anti-pattern explicite.
+        </p>
+      </CaseStudySection>
+
+      <CaseStudySection eyebrow="Architecture">
+        <p>
+          Aucun backend NestJS. Aucun NAS. Build statique pur figé au moment du
+          deploy, hébergé sur Cloudflare Pages. Les données viennent
+          d'APIs publiques (PaleoBioDB, Wikimedia Commons, GBIF) ingérées au
+          build via un script Node, et les assets visuels lourds (image hero
+          + 3 boucles MP4) viennent d'openart.ai.
+        </p>
+
+        <AsciiDiagram caption="Pipeline build-time : sources publiques + assets IA → Astro statique → Cloudflare Pages.">
+{`┌─────────────────────────────────────────────────────────────────┐
+│                  Astro 6 frontend (statique pur)                │
+│                                                                 │
+│   ┌────────────────────┐         ┌────────────────────────┐     │
+│   │  Pages SSR-statiques│         │  React 19 islands      │     │
+│   │  • / landing 75s   │ ◄─────► │  • CodexFilters.tsx    │     │
+│   │  • /codex          │         │  • PaleoMap.tsx        │     │
+│   │  • /periodes/[id]  │         │    (Leaflet client:only)│     │
+│   │  • /especes/[id]   │         └────────────────────────┘     │
+│   │  • /films/[id]     │                                        │
+│   │  • /carte /about   │                                        │
+│   └─────────┬──────────┘                                        │
+│             │                                                   │
+│             │  build-time data fetch (mjs script)               │
+│             ▼                                                   │
+│   ┌────────────────────────────────────────────────────────┐    │
+│   │           Sources de données (build-time)              │    │
+│   │  • PaleoBioDB API — taxonomie + occurrences fossiles   │    │
+│   │  • Wikimedia Commons — paleo-art domaine public        │    │
+│   │  • GBIF Occurrence API — points de la carte            │    │
+│   └────────────────────────────────────────────────────────┘    │
+│                                                                 │
+│   ┌────────────────────────────────────────────────────────┐    │
+│   │           Assets visuels (figés dans /public)          │    │
+│   │  • openart.ai — hero T-Rex (jpg)                       │    │
+│   │  • openart.ai — 3× boucles MP4 (landing / films /      │    │
+│   │    about), chaque fichier < 25 MB (cap Cloudflare)     │    │
+│   └────────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+                 ┌────────────────────────────┐
+                 │  Cloudflare Pages (CDN)    │
+                 │  evatosorus.pages.dev      │
+                 │  1527 pages · dist ~27 MB  │
+                 └────────────────────────────┘`}
+        </AsciiDiagram>
+      </CaseStudySection>
+
+      <CaseStudySection eyebrow="Données — 1500+ espèces du Mésozoïque">
+        <p>
+          La source principale est l'<a
+            href="https://paleobiodb.org/data1.2/"
+            target="_blank"
+            rel="noopener">API PaleoBioDB</a
+          > — gratuite, riche, taxonomie exhaustive avec occurrences fossiles
+          datées. Un script <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">import-paleobiodb.mjs</code>
+          tape l'API et écrit un JSON généré, qui est mergé au build avec un
+          <strong>seed manuel</strong> de ~24 espèces stars curées à la main
+          (T-Rex, Vélociraptor, Brachiosaurus, Spinosaurus…).
+        </p>
+        <p>
+          Le seed reste <strong>la source de vérité</strong> — toute regen
+          auto doit préserver les fiches déjà curées (merge, pas overwrite).
+          Anti-pattern frontal : importer 1500 espèces sans paleo-art donne des
+          fiches creuses. Solution : fallback propre <em>« Pas d'illustration
+          disponible »</em> avec une silhouette stylisée plutôt qu'un trou
+          visuel. Les images viennent de Wikimedia Commons, vérifiées domaine
+          public ou CC-BY-SA — chaque fiche crédite la licence d'origine.
+        </p>
+        <p>
+          La carte interactive (Leaflet + tuiles CARTO Dark No Labels) consomme
+          GBIF pour les points de fossiles trouvés. C'est un composant
+          React monté en <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">client:only="react"</code>
+          — Leaflet ne survit pas au SSR.
+        </p>
+      </CaseStudySection>
+
+      <CaseStudySection eyebrow="Films Jurassic Park comme entries narratives">
+        <p>
+          Eva n'est pas paléontologue, elle est cinéphile. D'où le pari :
+          plutôt qu'un index académique, on entre dans le codex
+          <strong>par les 7 films Jurassic Park</strong>. Chaque film a sa fiche
+          (synopsis, année, espèces vedettes), et chaque espèce du film
+          renvoie vers sa propre fiche détaillée. Cross-link bidirectionnel
+          via le seed.
+        </p>
+        <p>
+          C'est un wedge UX : un visiteur qui ne connaît rien aux dinosaures
+          peut commencer par <em>Jurassic Park</em> (1993) et naviguer de
+          T-Rex à Velociraptor, puis dériver vers les espèces réelles du
+          Crétacé qu'il n'a jamais vues à l'écran. Le ton documentaire BBC
+          du reste du site fait le contre-poids — pas de niaiserie, juste
+          des faits sourcés et un fil narratif.
+        </p>
+      </CaseStudySection>
+
+      <CaseStudySection eyebrow="Hero T-Rex IA + 3 boucles MP4">
+        <p>
+          L'image du T-Rex en hero et les trois boucles vidéo (landing /
+          page films / page about) ont été générées sur
+          <a href="https://openart.ai" target="_blank" rel="noopener">openart.ai</a>
+          à partir de prompts curés. Crédit IA explicite sur ce projet :
+          <strong>Claude Code (code) + openart.ai (assets visuels)</strong>.
+        </p>
+        <p>
+          Cap Cloudflare Pages oblige : chaque fichier doit rester sous 25 MB.
+          Les 3 MP4 totalisent ~40 MB mais chacun passe individuellement, et
+          quand un fichier dépasse on le re-passe au skill
+          <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">optimize-mp4-web</code>
+          (ffmpeg H.264 web-optimisé, réduction 80-95 % sans perte visuelle
+          perceptible). Poster fallback systématique sur <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">hero-trex.jpg</code>
+          — utilisé aussi pour og-image et favicons (cropés au PIL).
+        </p>
+        <p>
+          La landing reproduit le pattern atmosphère temps-driven validé sur
+          Eywa : pas de scrollytelling forcé, juste une boucle de ~75
+          secondes qui fait évoluer le fond pendant que le visiteur lit.
+          L'ambiance bouge toute seule, le contenu actionnable reste en
+          haut du viewport.
+        </p>
+      </CaseStudySection>
+
+      <CaseStudySection eyebrow="Ce que Claude Code a fait (et ce que je n'ai pas tapé)">
+        <p>
+          Comme les 5 autres apps de cette série : <strong>0 ligne de code
+          écrite à la main</strong>. Tout le code Astro/React/CSS, les blurbs
+          vulgarisés des fiches espèce, le script d'import PaleoBioDB, les
+          composants cinéma (CycleBackdrop + DustField), les filtres
+          réactifs du codex, les routes dynamiques, les fallbacks d'image,
+          les tokens Tailwind 4 ambre/jade/rust — tout est sorti d'une
+          conversation avec Claude Code. Direction artistique et code review
+          côté humain ; implémentation côté Claude.
+        </p>
+        <p>
+          Versions épinglées (<code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">vite@7.3.2</code>,
+          <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">astro@6.2.1</code>)
+          parce que le combo Tailwind 4 + rolldown a une fenêtre de
+          compatibilité étroite sur tsconfigPaths. Trace écrite dans le
+          CLAUDE.md du projet pour ne pas bumper aveuglément.
+        </p>
+
+        <div class="grid gap-4 sm:grid-cols-2 not-prose pt-2">
+          <a
+            href="https://github.com/Sylad/evatosorus"
+            target="_blank"
+            rel="noopener"
+            class="rounded-xl border border-white/10 bg-paper-elevated p-5 hover:border-claude/40 transition-colors group"
+          >
+            <p
+              class="font-mono text-xs uppercase tracking-wider text-claude mb-2"
+            >
+              Repo GitHub
+            </p>
+            <p class="text-ink group-hover:text-claude-soft transition-colors">
+              Sylad/evatosorus ↗
+            </p>
+            <p class="text-xs text-ink-muted mt-1">
+              Public, MIT, 1527 pages générées au build
+            </p>
+          </a>
+          <a
+            href="https://evatosorus.pages.dev"
+            target="_blank"
+            rel="noopener"
+            class="rounded-xl border border-white/10 bg-paper-elevated p-5 hover:border-claude/40 transition-colors group"
+          >
+            <p
+              class="font-mono text-xs uppercase tracking-wider text-claude mb-2"
+            >
+              Live
+            </p>
+            <p class="text-ink group-hover:text-claude-soft transition-colors">
+              evatosorus.pages.dev ↗
+            </p>
+            <p class="text-xs text-ink-muted mt-1">
+              Cloudflare Pages, build statique pur
+            </p>
+          </a>
+        </div>
+      </CaseStudySection>
+
+      <p class="text-center text-xs text-ink/50 font-mono pt-4">
+        Case study mise à jour 2026-05-06 · V1 livrée, 1527 pages, dist ~27 MB.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

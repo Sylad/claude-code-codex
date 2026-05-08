@@ -1,0 +1,25 @@
+---
+interface Props {
+  caption?: string;
+}
+
+const { caption } = Astro.props;
+---
+
+<figure class="my-6 rounded-lg border border-white/10 bg-paper overflow-hidden">
+  <div class="px-4 py-2 border-b border-white/5 bg-white/[0.02] flex items-center gap-2">
+    <span class="inline-block w-2 h-2 rounded-full bg-claude/70"></span>
+    <span class="font-mono text-[10px] uppercase tracking-wider text-ink-muted">
+      Architecture
+    </span>
+  </div>
+  <pre
+    class="px-4 py-4 overflow-x-auto text-sm leading-snug font-mono text-ink/90 whitespace-pre"><slot /></pre>
+  {caption && (
+    <figcaption
+      class="px-4 py-2 border-t border-white/5 bg-white/[0.02] text-xs text-ink-muted"
+    >
+      {caption}
+    </figcaption>
+  )}
+</figure>

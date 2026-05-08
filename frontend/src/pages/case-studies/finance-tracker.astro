@@ -1,0 +1,257 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import AsciiDiagram from "@/components/site/AsciiDiagram.astro";
+import CaseStudySection from "@/components/site/CaseStudySection.astro";
+---
+
+<BaseLayout
+  title="Finance Tracker"
+  description="Deep dive — tracker finances perso avec analyse PDF par Claude, construit en pair-programming avec Claude Code (0 ligne de code humaine)."
+>
+  <PageHero
+    eyebrow="Case study · finance-tracker"
+    title="Analyse de relevés bancaires PDF en two-phase tool_use"
+    intro="Une app perso qui ingère des relevés PDF, les fait catégoriser par Claude, calcule un score de santé financière, et propose une démo publique verrouillée pour montrer sans rien fuiter. Stack : React 18 + NestJS 11 + Anthropic SDK, code 100% écrit avec Claude Code."
+  />
+
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12 space-y-12">
+    <CaseStudySection eyebrow="Pourquoi ce projet">
+      <p>
+        Suivre ses finances perso à la main, c'est lourd : ouvrir chaque relevé,
+        ressaisir chaque transaction, retrouver de tête à quelle catégorie ça
+        appartient. L'enjeu était de voir si un LLM pouvait absorber cette
+        corvée de catégorisation et la rendre <em>fiable</em> — pas juste
+        plausible — sur des PDFs bancaires français bruts.
+      </p>
+      <p>
+        Sous-objectif personnel : c'était aussi un terrain pour pratiquer
+        <strong>NestJS + React 18 + Tailwind + shadcn</strong>, hors de la zone
+        JVM dans laquelle je tourne en prod depuis 2005. Le code a été écrit
+        en pair-programming avec Claude Code, ChatGPT a posé le logo et les
+        premières maquettes UX. Aucune ligne tapée en solo.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Architecture">
+      <AsciiDiagram caption="Pipeline d'import : PDF → NestJS → Claude two-phase → JSON storage. Démo publique passe par un Cloudflare quick tunnel + bypass PIN host-locked.">
+{`┌──────────────────────────────────────────────────────────────────────────┐
+│                     React 18 + TanStack Router/Query                     │
+│        upload multi-PDF (max 12)   ·   dashboard   ·   /loans /savings   │
+└──────────────────────────────┬───────────────────────────────────────────┘
+                               │  fetch + Bearer <PIN>
+                               ▼
+┌──────────────────────────────────────────────────────────────────────────┐
+│                       NestJS 11  (port 3000)                             │
+│                                                                          │
+│   PinGuard (global)  ──┐         DemoModeMiddleware                      │
+│                        ├──► host-locked bypass si *.trycloudflare.com    │
+│                        └──► AsyncLocalStorage { demoMode, forced }       │
+│                                                                          │
+│   AnalysisController  ──► AnthropicService                               │
+│                              │                                           │
+│                              ▼                                           │
+│              ┌──── Phase 1 (tool_use ANALYZE_TOOL) ────┐                 │
+│              │   PDF base64 → transactions[], score,   │                 │
+│              │   suggestedRecurringExpenses[]          │                 │
+│              └─────────────────────────────────────────┘                 │
+│                              │                                           │
+│                              ▼                                           │
+│              ┌──── Phase 2 (tool_use CATEGORIZE_TOOL) ─┐                 │
+│              │   transactions[] → category +           │                 │
+│              │   subCategory + confidence              │                 │
+│              └─────────────────────────────────────────┘                 │
+│                              │                                           │
+│   StorageService ◄───────────┘                                           │
+│      data/finance/statements/<YYYY-MM>.json                              │
+│      data/finance/statements/archive/<YYYY>/<YYYY-MM>.json               │
+│      data/finance/yearly/<YYYY>.json                                     │
+│      data/demo/...           (isolation par AsyncLocalStorage)           │
+│                                                                          │
+│   AutoSyncService ──► LoansService.splitByAmount  +  SavingsService      │
+└──────────────────────────────────────────────────────────────────────────┘
+                               ▲
+                               │  cloudflared tunnel --url http://localhost:4200
+                               │
+                  https://<random>.trycloudflare.com  (démo verrouillée)`}
+      </AsciiDiagram>
+      <p>
+        Trois flux remarquables coexistent : l'<strong>import PDF</strong>
+        (synchrone, multipart, jusqu'à 12 fichiers en une fois), l'<strong>auto-sync</strong>
+        post-analyse qui met à jour les jauges crédit / épargne, et le
+        <strong>mode démo isolé</strong> qui dérive le <code>dataDir</code>
+        runtime via <code>AsyncLocalStorage</code> pour ne jamais croiser les
+        données réelles avec les fixtures publiques.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Stack & data flow">
+      <ul class="space-y-2.5 leading-relaxed">
+        <li class="flex gap-3">
+          <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+          <span><strong>Frontend</strong> : React 18 + TypeScript 5 + Vite 5 +
+          TanStack Router (code-based) + TanStack Query + Tailwind 3 +
+          shadcn/ui + Recharts. Palette slate + emerald (validée comme
+          identité fintech sobre). <code>font-feature-settings: 'tnum'</code>
+          global pour des chiffres tabulaires partout — non-négociable en
+          fintech.</span>
+        </li>
+        <li class="flex gap-3">
+          <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+          <span><strong>Backend</strong> : NestJS 11 + Anthropic SDK 0.91 +
+          Multer pour l'upload + Zod pour la validation. Stockage 100% JSON
+          local — pas de DB. Un fichier par mois sous
+          <code>data/finance/statements/&lt;YYYY-MM&gt;.json</code>, archivage
+          automatique en sous-dossier <code>archive/&lt;YYYY&gt;/</code> pour
+          les années passées.</span>
+        </li>
+        <li class="flex gap-3">
+          <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+          <span><strong>IA</strong> : Claude Sonnet 4.5 en
+          <code>tool_choice: {`{ type: 'tool' }`}</code> strict pour forcer
+          la sortie structurée. Phase 1 extrait les transactions brutes +
+          score + suggestions de récurrents ; Phase 2 catégorise chaque
+          transaction (catégorie / sous-catégorie / confidence). Découper en
+          deux appels donne un meilleur taux de réussite que tout demander
+          d'un coup.</span>
+        </li>
+        <li class="flex gap-3">
+          <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+          <span><strong>Build & deploy</strong> : Docker multi-stage
+          (node:20-alpine builder → nginx:alpine pour le frontend,
+          node:20-alpine runtime pour le backend), docker-compose sur NAS
+          Synology DSM. nginx proxifie <code>/api/</code> vers le backend
+          sur le même réseau Docker.</span>
+        </li>
+        <li class="flex gap-3">
+          <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+          <span><strong>Auth</strong> : <code>PinGuard</code> NestJS global,
+          Bearer token simple comparé à <code>process.env.APP_PIN</code>.
+          Mode permissif si la variable est absente. Frontend stocke le PIN
+          en sessionStorage (volontairement non persistant entre onglets).</span>
+        </li>
+      </ul>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Le process avec Claude Code">
+      <p>
+        Construit en 8 phases incrémentales (V3 livrée 2026-05-02, durcissements
+        V3.1 le 2026-05-03), chaque phase écrite en TDD bite-sized via plans
+        markdown que Claude Code génère puis exécute. Mon rôle : tracer la
+        vision, valider à chaque étape, repérer ce qui cloche en testant
+        l'app avec mes propres relevés. Le rôle de Claude : poser le code,
+        expliquer, itérer.
+      </p>
+      <ul class="space-y-2.5 leading-relaxed">
+        <li class="flex gap-3">
+          <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+          <span><strong>Two-phase tool_use Claude</strong> — Phase 1
+          extraction PDF → transactions + score, Phase 2 catégorisation. Le
+          <code>tool_choice</code> strict évite les hallucinations de format ;
+          la validation Zod côté NestJS bloque ce qui passe quand même.</span>
+        </li>
+        <li class="flex gap-3">
+          <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+          <span><strong>Heuristiques de split sub-credits</strong> — sur un
+          créancier qui porte plusieurs prêts simultanés, on ne peut pas se
+          contenter du nom. Le code cluster les débits par
+          <em>montant ±5%</em> (absorbe les variations d'intérêts), ne garde
+          que les références à <em>≥ 8 chiffres</em> qui reviennent ≥ 2 fois,
+          et ne retient un cluster que s'il couvre <em>≥ 3 mois distincts</em>
+          avec ≤ 1 occurrence par mois. Sans ces filtres, le bruit cartes
+          (PAIEMENT CB, RETRAIT) générait des dizaines de faux crédits.</span>
+        </li>
+        <li class="flex gap-3">
+          <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+          <span><strong>Mode démo Cloudflare host-locked</strong> — un
+          middleware regarde le header <code>Host</code> et, s'il matche
+          <code>DEMO_FORCED_HOSTS</code> (par défaut <code>trycloudflare.com</code>),
+          force <code>demoMode = true</code> et <em>bypass PinGuard</em>. La
+          UI lit <code>/api/demo/status</code> au boot ; si <code>forced</code>,
+          elle masque le bouton "Quitter démo" et affiche un badge "Démo
+          verrouillée". N'importe quel quick tunnel ad-hoc devient ainsi
+          public mais isolé sur la persona <strong>"Alex Démo"</strong> —
+          dataset synthétique 6 mois, jamais croisé avec les vraies données.</span>
+        </li>
+        <li class="flex gap-3">
+          <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+          <span><strong>PinGuard NestJS portable</strong> — recette réutilisée
+          telle quelle sur warhammer40k. Pas de hash, pas de JWT : token clair
+          comparé à une env var, sessionStorage côté frontend, prompt natif
+          en cas de 401 et retry. Suffisant pour un usage perso/familial.</span>
+        </li>
+      </ul>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Pivots & lessons learned">
+      <ul class="space-y-2.5 leading-relaxed">
+        <li class="flex gap-3">
+          <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+          <span><strong>Période d'un relevé : ne pas se fier au nom de
+          fichier</strong>. Les conventions banque française nomment souvent
+          le PDF avec la date <em>d'émission</em> (mois M+1), pas la période
+          couverte (mois M). Avant fix, <code>extractMonthFromFilename</code>
+          devinait mal et ratait des mois. Solution : ne reconnaître que le
+          pattern explicite <code>YYYY-MM</code>, sinon dériver la période
+          côté code via le <strong>nombre de jours distincts</strong> (pas le
+          nombre de tx) — un relevé qui chevauche deux mois vote pour celui
+          avec ~21 jours uniques contre ~9.</span>
+        </li>
+        <li class="flex gap-3">
+          <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+          <span><strong>Archivage par déplacement, pas suppression</strong>.
+          La V1 supprimait le fichier après agrégation dans le yearly summary.
+          Conséquence : si je ré-uploadais un vieux mois, le summary se
+          régénérait avec un seul mois et écrasait le reste. Fix : déplacer
+          dans <code>archive/&lt;YYYY&gt;/</code> et régénérer depuis
+          l'ensemble du dossier. Les <em>opérations destructives par
+          défaut</em>, c'est presque toujours une mauvaise idée.</span>
+        </li>
+        <li class="flex gap-3">
+          <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+          <span><strong>Whitelist + regex anti-bruit avant auto-création</strong>.
+          Claude suggère parfois "c'est un crédit" sur des paiements CB
+          répétés au même commerçant. Sans <code>KNOWN_LOAN_CREDITORS</code>
+          (organismes REGAFI/ASF) et sans regex
+          <code>NOT_A_CREDIT</code> (<code>PAIEMENT CB|ACHAT CB|RETRAIT…</code>),
+          on créait des crédits fantômes. Leçon : un LLM qui suggère, c'est
+          bien. Un code qui filtre avant d'écrire, c'est mieux.</span>
+        </li>
+        <li class="flex gap-3">
+          <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+          <span><strong>sessionStorage n'est pas réactif</strong>. Le toggle
+          mode démo écrivait en sessionStorage mais l'UI ne se rafraîchissait
+          pas. Pas la peine de poser un signal/store autour : un
+          <code>window.location.reload()</code> après écriture règle le
+          problème en 1 ligne. À ne pas sur-architecturer.</span>
+        </li>
+        <li class="flex gap-3">
+          <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+          <span><strong>Distinguer auth error vs quota</strong>. Le SDK
+          Anthropic remonte 401 (clé KO) et 429 (quota) dans des classes
+          d'exceptions différentes mais une regex naïve les regroupait. Une
+          clé invalide apparaissait comme "quota épuisé" — message rassurant
+          mais faux. Classification dédiée
+          <code>isQuotaError()</code> qui ne mélange plus.</span>
+        </li>
+      </ul>
+    </CaseStudySection>
+
+    <div class="flex flex-wrap gap-3 pt-4">
+      <a
+        href="https://github.com/Sylad/finance-tracker"
+        target="_blank"
+        rel="noopener"
+        class="inline-flex items-center gap-1 px-3 py-1.5 rounded border border-white/10 text-ink-muted hover:text-claude hover:border-claude/40 transition-colors text-sm"
+      >
+        ↗ GitHub
+      </a>
+      <span
+        class="inline-flex items-center gap-1 px-3 py-1.5 rounded border border-white/10 text-ink-muted text-sm"
+        title="URL de tunnel régénérée à chaque restart"
+      >
+        Démo verrouillée — Cloudflare quick tunnel (URL éphémère)
+      </span>
+    </div>
+  </section>
+</BaseLayout>

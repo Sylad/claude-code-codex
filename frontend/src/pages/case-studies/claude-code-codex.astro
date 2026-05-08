@@ -1,0 +1,245 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import AsciiDiagram from "@/components/site/AsciiDiagram.astro";
+import CaseStudySection from "@/components/site/CaseStudySection.astro";
+---
+
+<BaseLayout
+  title="claude-code-codex (méta)"
+  description="Deep dive — ce site lui-même, codex sur Claude Code, construit en pair-programming avec Claude Code (0 ligne de code humaine). Méta pleinement assumé."
+>
+  <PageHero
+    eyebrow="Case study · claude-code-codex"
+    title="Le codex qui se documente lui-même"
+    intro="Ce site est à la fois la 6ème app perso et le projet le plus méta du lot — un codex sur Claude Code, codé en pair-programming avec Claude Code. C'est aussi le case study le plus simple à raconter parce qu'il est encore en cours."
+  />
+
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12 space-y-12">
+    <CaseStudySection eyebrow="Pourquoi ce projet">
+      <p>
+        Six mois de pair-programming intensif avec Claude Code, cinq apps
+        perso en prod, et l'envie d'avoir un endroit pour ranger ce qu'on
+        apprend en chemin. Plutôt que d'oublier au fond d'un Notion privé,
+        autant en faire un site public.
+      </p>
+      <p>
+        L'objectif est <strong>double</strong>. D'un côté, un codex
+        documentaire qui agrège la théorie Claude Code, l'écosystème
+        officiel, des case studies, des sources de veille, des vidéos —
+        sourcé strictement sur les domaines Anthropic publics. De l'autre,
+        un banc d'essai personnel pour tester les outils tiers (Ruflo a
+        été le premier candidat) et capitaliser sur ce qu'on en apprend.
+      </p>
+      <p>
+        Le narratif central est simple :
+        <strong>0 ligne de code écrite par l'humain</strong>. C'est le
+        cas sur les 6 sites perso, et c'est ce que cette page documente
+        pour le sixième.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Architecture">
+      <AsciiDiagram caption="Statique pur sur Cloudflare Pages, batch hebdo via GitHub Actions cron + Anthropic SDK. Aucun backend en prod.">
+{`┌─────────────────────────────────────────────────────────────────┐
+│  GitHub repo · Sylad/claude-code-codex (public, MIT)            │
+│  ┌─────────────────────────┐   ┌──────────────────────────────┐ │
+│  │  frontend/   (Astro 6)  │   │  scripts/   (TypeScript)     │ │
+│  │  • Vue 3 islands        │   │  • lib/feed-parser.ts        │ │
+│  │  • shadcn-vue tokens    │   │  • lib/claude.ts (SDK)       │ │
+│  │  • Tailwind 4 + claude  │   │  • lib/feeds.ts (dedup hash) │ │
+│  │    -orange palette      │   │  • sources/*.ts (4 sources)  │ │
+│  │  • 8 routes statiques   │   │  • batch-update.ts (orchstr) │ │
+│  └────────────┬────────────┘   └──────────────┬───────────────┘ │
+└───────────────┼───────────────────────────────┼─────────────────┘
+                │                               │
+                │ push main                     │ cron lundi 06h UTC
+                ▼                               │ workflow_dispatch
+   ┌──────────────────────────┐                 │
+   │  Cloudflare Pages        │                 │
+   │  build statique pur      │     ┌───────────┴────────────────┐
+   │  → claude-code-codex-    │     │  GitHub Actions runner     │
+   │    25m.pages.dev         │     │  (Ubuntu, Node 22)         │
+   └──────────────────────────┘     │                            │
+                                    │  npx tsx batch-update.ts   │
+                                    │           │                │
+                                    │           ▼                │
+                                    │  ┌────────────────────┐    │
+                                    │  │  Sources scrapées  │    │
+                                    │  │  • simon-willison  │    │
+                                    │  │    (Atom feed)     │    │
+                                    │  │  • anthropics/     │    │
+                                    │  │    skills (GH API) │    │
+                                    │  │  • mcp/servers     │    │
+                                    │  │  • anthropic-news  │    │
+                                    │  └─────────┬──────────┘    │
+                                    │            │ summarize     │
+                                    │            ▼               │
+                                    │  ┌────────────────────┐    │
+                                    │  │  Anthropic SDK     │    │
+                                    │  │  claude-haiku-4-5  │    │
+                                    │  │  140-char FR       │    │
+                                    │  └─────────┬──────────┘    │
+                                    │            │               │
+                                    │            ▼               │
+                                    │  frontend/src/data/feeds/  │
+                                    │     <source>.json (commit) │
+                                    └─────────────┬──────────────┘
+                                                  │ git push main
+                                                  ▼
+                                    Cloudflare rebuild auto`}
+      </AsciiDiagram>
+      <p>
+        Aucun backend en production. Le site est rendu en statique pur à
+        chaque push. Le seul code qui tourne en run-time est le job
+        GitHub Actions hebdo qui scrape les sources, résume via Claude,
+        et commit les feeds JSON sur <code>main</code>.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Stack & data flow">
+      <ul class="list-none space-y-1.5">
+        <li>
+          <strong>Frontend</strong> — Astro 6, Vue 3 + shadcn-vue,
+          Tailwind 4, JetBrains Mono pour le code, Inter pour le body
+        </li>
+        <li>
+          <strong>Hosting</strong> — Cloudflare Pages (build statique,
+          CDN edge)
+        </li>
+        <li>
+          <strong>Batch</strong> — GitHub Actions cron lundi 06h UTC
+          + workflow_dispatch on-demand
+        </li>
+        <li>
+          <strong>LLM</strong> — Anthropic SDK avec
+          <code>claude-haiku-4-5</code> pour les résumés (140 caractères,
+          FR, filtre <code>[off-topic]</code>)
+        </li>
+        <li>
+          <strong>Sources scrapées</strong> — atom feed Simon Willison,
+          GitHub API pour <code>anthropics/skills</code> et
+          <code>modelcontextprotocol/servers</code>, RSS Anthropic news
+          (avec fallback gracieux si 404)
+        </li>
+        <li>
+          <strong>Données</strong> — TypeScript modules en source de
+          vérité (<code>data/learning.ts</code>,
+          <code>data/ecosystem.ts</code>, etc.) + JSON feeds
+          auto-générés (<code>data/feeds/*.json</code>) à merger plus
+          tard si pertinent
+        </li>
+      </ul>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Le process avec Claude Code">
+      <p>
+        <strong>0 ligne de code humaine.</strong> La séance qui a
+        produit ce site (et la page que tu lis en ce moment) a été pilotée
+        par instruction conversationnelle. Voici les patterns de collab
+        utilisés concrètement :
+      </p>
+      <ul class="list-none space-y-1.5">
+        <li>
+          <strong>Sub-agents en parallèle</strong> via le tool
+          <code>Agent</code> — pour scraper les sources, rédiger les 8
+          sections de la page Théorie, ou générer les 6 deep-dives case
+          studies (dont celui-ci) sans étrangler le contexte du parent.
+        </li>
+        <li>
+          <strong>Mémoire persistante</strong> dans
+          <code>~/.claude/projects/&lt;cwd&gt;/memory/</code> —
+          <em>~70 fichiers .md</em> qui capturent les décisions, les
+          feedbacks (<code>feedback_*</code>), les patterns gagnants, les
+          anti-patterns observés (Ruflo). Rechargés automatiquement à
+          chaque session.
+        </li>
+        <li>
+          <strong>Skills custom</strong> — deux ont été
+          <em>skillifiés</em> depuis Ruflo lors de cette même séance :
+          <code>/sparc</code> (méthodologie 5 phases) et
+          <code>/skillify</code> (le meta-skill qui crée des skills à
+          partir d'idées externes).
+        </li>
+        <li>
+          <strong>CLAUDE.md project-level</strong> — chacun des 6 repos
+          a maintenant son fichier de règles spécifiques (heuristiques,
+          anti-patterns, conventions de naming) en complément du
+          CLAUDE.md cross-app.
+        </li>
+        <li>
+          <strong>APEX et brainstorming</strong> — pour les chantiers
+          structurés (Theory page, Ecosystem catalog), invocation
+          explicite des skills correspondants au lieu d'improviser.
+        </li>
+      </ul>
+      <p>
+        Le résultat : le site a été scaffold, théorisé, documenté,
+        enrichi de catalogues triables, polish-é (favicon, OG image,
+        hover micro-interactions), et instrumenté d'un batch update
+        hebdo en quelques heures de pair-programming. Sans qu'aucune
+        ligne de code n'ait été tapée par l'humain.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Pivots & lessons learned">
+      <ul class="list-none space-y-1.5">
+        <li>
+          <strong>Pivot stack Vue (vs React)</strong> — au moment du
+          scaffold initial, le mémo de kickoff disait "shadcn-vue" alors
+          que les sites cousins avato/evato étaient en React. Vérification
+          explicite avant scaffold a évité un coût de pivot tardif.
+        </li>
+        <li>
+          <strong>Ruflo refusé, mais 8 leçons capturées</strong> — le
+          test bench Ruflo a échoué sur les blockers (<code>--no-global</code>
+          cassé, cleanup incomplet), mais 8 patterns ont été notés et
+          deux ont été skillifiés (SPARC, skillify lui-même).
+        </li>
+        <li>
+          <strong>Posture "s'améliorer mutuellement"</strong> — pas de
+          verdict binaire adopt/reject sur un outil tiers. Toujours
+          extraire les leçons, même quand on rejette le packaging.
+        </li>
+        <li>
+          <strong>Catalogue strict Anthropic-officiel</strong> — la
+          tentation d'ajouter Ruflo au catalogue Ecosystem a été
+          attrapée à temps. Le site documentaire reste sourcé propre,
+          le test bench (cette section) capture les outils tiers
+          séparément.
+        </li>
+        <li>
+          <strong>Filtres FR souples vs EN stricts</strong> — pour
+          les vidéos en français, la barre qualité est explicitement
+          assouplie (recommandations personnelles) parce que le pool est
+          plus restreint. Honnêteté > complétude artificielle.
+        </li>
+      </ul>
+    </CaseStudySection>
+
+    <div class="flex flex-wrap gap-3 pt-4">
+      <a
+        href="https://github.com/Sylad/claude-code-codex"
+        target="_blank"
+        rel="noopener"
+        class="inline-flex items-center gap-1 px-3 py-1.5 rounded border border-white/10 text-ink-muted hover:text-claude hover:border-claude/40 transition-colors text-sm"
+      >
+        ↗ GitHub
+      </a>
+      <a
+        href="https://claude-code-codex-25m.pages.dev"
+        target="_blank"
+        rel="noopener"
+        class="inline-flex items-center gap-1 px-3 py-1.5 rounded border border-white/10 text-ink-muted hover:text-claude hover:border-claude/40 transition-colors text-sm"
+      >
+        ↗ Live
+      </a>
+      <a
+        href="/case-studies/ruflo"
+        class="inline-flex items-center gap-1 px-3 py-1.5 rounded border border-white/10 text-ink-muted hover:text-claude hover:border-claude/40 transition-colors text-sm"
+      >
+        → Lire le case study Ruflo
+      </a>
+    </div>
+  </section>
+</BaseLayout>

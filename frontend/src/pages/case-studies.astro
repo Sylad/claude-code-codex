@@ -8,7 +8,8 @@ const apps = [
     tagline: "Codex narratif sur l'univers Warhammer 40K",
     stack: "Angular 19 · NestJS · Anthropic SDK",
     role: "Visual-first, lore consolidé, galaxy map Bézier",
-    href: "https://github.com/Sylad/warhammer40k",
+    href: "/case-studies/warhammer40k",
+    repo: "https://github.com/Sylad/warhammer40k",
     accent: "from-amber-500/20 to-transparent",
   },
   {
@@ -16,7 +17,8 @@ const apps = [
     tagline: "Tracker finances perso avec analyse PDF par Claude",
     stack: "React · NestJS · Claude tool_use two-phase",
     role: "Upload multi-PDF, catégorisation auto, démo Cloudflare verrouillée",
-    href: "https://github.com/Sylad/finance-tracker",
+    href: "/case-studies/finance-tracker",
+    repo: "https://github.com/Sylad/finance-tracker",
     accent: "from-emerald-500/20 to-transparent",
   },
   {
@@ -24,7 +26,8 @@ const apps = [
     tagline: "Compagnon OL avec live-match et carte Ligue 1",
     stack: "React · NestJS · 365scores API · SSE",
     role: "Live SSE, brackets coupe, carte L1 markers bicolores",
-    href: "https://github.com/Sylad/ol-companion",
+    href: "/case-studies/ol-companion",
+    repo: "https://github.com/Sylad/ol-companion",
     accent: "from-red-500/20 to-transparent",
   },
   {
@@ -32,7 +35,8 @@ const apps = [
     tagline: "Codex Avatar / Pandora — atmosphère temps-driven",
     stack: "Astro 6 · React 19 · R3F · GSAP",
     role: "Cinema canvas time-driven, particules WebGL, ambient self-running",
-    href: "https://github.com/Sylad/avatar-pandora",
+    href: "/case-studies/avatar-pandora",
+    repo: "https://github.com/Sylad/avatar-pandora",
     accent: "from-cyan-500/20 to-transparent",
   },
   {
@@ -40,7 +44,8 @@ const apps = [
     tagline: "Codex paléonto richement illustré",
     stack: "Astro 6 · React 19 · openart.ai assets",
     role: "Hero T-Rex IA, vidéos boucle, codex 200+ espèces",
-    href: "https://github.com/Sylad/evatosorus",
+    href: "/case-studies/evatosorus",
+    repo: "https://github.com/Sylad/evatosorus",
     accent: "from-lime-500/20 to-transparent",
   },
   {
@@ -48,7 +53,8 @@ const apps = [
     tagline: "Ce site même — méta-codex sur Claude Code",
     stack: "Astro 6 · Vue 3 · shadcn-vue · GitHub Actions cron",
     role: "Doc + écosystème + case studies, batch update hebdo via Claude",
-    href: "https://github.com/Sylad/claude-code-codex",
+    href: "/case-studies/claude-code-codex",
+    repo: "https://github.com/Sylad/claude-code-codex",
     accent: "from-orange-500/20 to-transparent",
   },
 ];
@@ -61,17 +67,14 @@ const apps = [
   <PageHero
     eyebrow="03 · Case studies"
     title="Six apps construites avec Claude Code"
-    intro="Cinq projets perso + ce site lui-même. Pour chacun : ce que ça fait, la stack, et une ou deux choses non-évidentes apprises en cours de route."
+    intro="Cinq projets perso + ce site lui-même. Tous codés en pair-programming avec Claude Code — 0 ligne de code écrite par l'humain. Clique sur une card pour le deep dive : architecture, stack, process IA, lessons learned."
   />
 
   <section class="mx-auto max-w-6xl px-5 sm:px-8 py-16">
     <div class="grid gap-5 sm:grid-cols-2">
       {apps.map((app) => (
-        <a
-          href={app.href}
-          target="_blank"
-          rel="noopener"
-          class={`group relative overflow-hidden rounded-xl border border-white/10 bg-paper-elevated p-6 hover:border-claude/40 transition-colors`}
+        <article
+          class={`group relative overflow-hidden rounded-xl border border-white/10 bg-paper-elevated p-6 hover:border-claude/40 transition-colors motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-claude/10`}
         >
           <div
             class={`absolute inset-0 bg-gradient-to-br ${app.accent} opacity-50 group-hover:opacity-80 transition-opacity pointer-events-none`}
@@ -80,21 +83,46 @@ const apps = [
           <div class="relative">
             <div class="flex items-center justify-between mb-3">
               <p class="font-mono text-sm text-claude">{app.name}</p>
-              <span
-                class="text-ink-muted group-hover:text-claude group-hover:translate-x-0.5 transition-all"
+              <a
+                href={app.href}
+                aria-label={`Deep dive ${app.name}`}
+                class="text-ink-muted hover:text-claude motion-safe:hover:translate-x-1 transition-all"
               >
                 →
-              </span>
+              </a>
             </div>
-            <h2 class="text-xl font-medium text-ink mb-2">{app.tagline}</h2>
+            <h2 class="text-xl font-medium text-ink mb-2">
+              <a
+                href={app.href}
+                class="hover:text-claude transition-colors"
+              >
+                {app.tagline}
+              </a>
+            </h2>
             <p class="text-sm text-ink-muted mb-4 leading-relaxed">
               {app.role}
             </p>
-            <p class="font-mono text-xs text-ink/60 pt-3 border-t border-white/5">
+            <p class="font-mono text-xs text-ink/60 pt-3 border-t border-white/5 mb-3">
               {app.stack}
             </p>
+            <div class="flex flex-wrap items-center gap-2">
+              <a
+                href={app.href}
+                class="font-mono text-[10px] uppercase tracking-wider text-claude/80 hover:text-claude transition-colors"
+              >
+                Deep dive →
+              </a>
+              <a
+                href={app.repo}
+                target="_blank"
+                rel="noopener"
+                class="ml-auto font-mono text-[10px] uppercase tracking-wider text-ink-muted hover:text-claude transition-colors"
+              >
+                ↗ GitHub
+              </a>
+            </div>
           </div>
-        </a>
+        </article>
       ))}
     </div>
 
@@ -163,15 +191,5 @@ const apps = [
       </div>
     </div>
 
-    <div class="mt-12 rounded-xl border border-white/10 bg-paper-elevated p-6 sm:p-8">
-      <p class="font-mono text-xs uppercase tracking-wider text-ink-muted mb-3">
-        À venir
-      </p>
-      <p class="text-ink-muted leading-relaxed">
-        Pour chaque app, une fiche détaillée : capture d'écran, archi,
-        anti-patterns rencontrés, prompts utiles, et coût Anthropic estimé sur
-        la durée du projet.
-      </p>
-    </div>
   </section>
 </BaseLayout>

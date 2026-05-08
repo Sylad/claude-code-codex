@@ -1,0 +1,265 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import AsciiDiagram from "@/components/site/AsciiDiagram.astro";
+import CaseStudySection from "@/components/site/CaseStudySection.astro";
+---
+
+<BaseLayout
+  title="Case study · avatar-pandora (Eywa)"
+  description="Codex Avatar / Pandora cadeau pour Eva, la nièce de Sylvain. Atmosphère temps-driven, particules WebGL, Astro statique pur sur Cloudflare Pages. 100% codé en pair-programming avec Claude Code."
+>
+  <PageHero
+    eyebrow="03 · Case study · avatar-pandora"
+    title="Eywa — un codex Pandora pour ma nièce"
+    intro="Quatrième app du laboratoire perso. Un codex Avatar offert à Eva, ma Gremlins de nièce, fan absolue des schtroumpfs géants à trois mètres de haut. Moi je trouve ça moyen, mais bon — l'occasion d'apprendre Astro, R3F et GSAP en codant avec Claude Code, en pair-programming intégral. Zéro ligne écrite à la main."
+  />
+
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12">
+    <div class="space-y-12">
+      <CaseStudySection eyebrow="Le pitch">
+        <p>
+          <strong>Eywa</strong> (la déesse-réseau de Pandora — clin d'œil à Eva,
+          E_W_A vs E_V_A, une lettre d'écart) est un codex en français sur
+          l'univers Avatar. Sept sections de contenu lyrique sourcé Pandorapedia
+          + Avatar Wiki + Paul Frommer : Pandora, Clans Na'vi, Bestiaire, Flore,
+          Personnages, Engins, Films + une page dédiée à la langue Na'vi.
+        </p>
+        <p>
+          Public visé : <strong>Eva, 18 ans</strong>, fan visuelle avant tout.
+          Donc atmosphère cinématique, images grand format, ambiance
+          bioluminescente. Et un codex explorable pour quand elle veut creuser.
+          Live :
+          <a href="https://eywa-eywa.pages.dev" target="_blank" rel="noopener"
+            >eywa-eywa.pages.dev</a
+          > · code :
+          <a
+            href="https://github.com/Sylad/avatar-pandora"
+            target="_blank"
+            rel="noopener">github.com/Sylad/avatar-pandora</a
+          >.
+        </p>
+      </CaseStudySection>
+
+      <CaseStudySection eyebrow="Architecture">
+        <p>
+          Astro 6 statique pur déployé sur Cloudflare Pages. Quelques îlots
+          React 19 pour les morceaux interactifs (CinemaCanvas R3F,
+          ParticleField WebGL, CycleBackdrop). Le backend NestJS minimal sur
+          port 3003 n'existe que sur le NAS local pour la validation — en
+          public, le proxy <code>/api/wiki-image</code> tourne en Cloudflare
+          Function.
+        </p>
+
+        <AsciiDiagram caption="Astro statique + îlots React 19 · une cible publique sans backend (Cloudflare Pages + Functions), une cible NAS pour la validation locale.">
+{`                ┌─────────────────────────────────────────────┐
+                │  Eywa frontend — Astro 6 (statique pur)     │
+                │  ───────────────────────────────────────    │
+                │   pages MDX × 78    sidebar 320px sticky    │
+                │   îlots React 19 (client:visible) :         │
+                │      • CinemaCanvas (R3F, mode 'time')      │
+                │      • ParticleField (WebGL, shader custom) │
+                │      • CycleBackdrop (cross-fade 75s)       │
+                │      • GSAP (transitions UI)                │
+                │   logo SVG codé (pas un asset image)        │
+                └────────────────┬────────────────────────────┘
+                                 │
+                                 │  /api/wiki-image?q=...
+                                 │
+              ┌──────────────────┴──────────────────┐
+              │                                     │
+              ▼                                     ▼
+   ┌────────────────────────┐         ┌──────────────────────────┐
+   │  CIBLE PUBLIQUE        │         │  CIBLE NAS (validation)  │
+   │  Cloudflare Pages      │         │  http://nas:4203         │
+   │  eywa-eywa.pages.dev   │         │  docker compose          │
+   │                        │         │                          │
+   │  /api/wiki-image →     │         │  /api/wiki-image →       │
+   │  Cloudflare Function   │         │  NestJS port 3003        │
+   │  (Fandom→Wiki proxy)   │         │  (Fandom→Wiki proxy)     │
+   └────────────────────────┘         └──────────────────────────┘`}
+        </AsciiDiagram>
+
+        <p>
+          Astro statique = aucun cold start, aucun budget serveur, et un site
+          qui charge en moins d'une seconde même sur le 4G de la nièce. Le
+          NestJS reste là sur le NAS uniquement pour itérer en local sans
+          pousser à chaque fois sur main.
+        </p>
+      </CaseStudySection>
+
+      <CaseStudySection eyebrow="Le pivot — atmosphère vs scroll">
+        <p>
+          La V1 livrée fin avril était un scrollytelling cinéma 700vh : cold
+          open → forêt → Hometree → montagnes flottantes → océan Metkayina →
+          volcan Fire & Ash → reveal du codex. J'aimais les transitions, mais
+          dès que la nièce a vu ça, le verdict est tombé : <em
+            >"je dois scroller pour voir quoi ?"</em
+          >. Friction. Le scroll forcé tuait l'envie d'explorer le codex.
+        </p>
+        <p>
+          Pivot V2 — <strong>atmosphère temps-driven</strong> : on garde le
+          viewport unique, on garde les images grand format, on garde les
+          particules bioluminescentes, mais l'ambiance se transforme toute
+          seule sur une boucle de 75 secondes. Le visiteur arrive, pose son
+          téléphone, l'image se transforme. Six atmosphères se cross-fadent en
+          continu. Les particules WebGL pulsent sur la même clock. Le logo, la
+          tagline et les CTAs restent fixes au-dessus avec une dark vignette
+          pour la lisibilité.
+        </p>
+        <p>
+          Validation immédiate (<em>"c'est très bien"</em>). Le scroll n'a pas
+          disparu pour autant : il reste valide pour les <strong
+            >pages dédiées</strong
+          > du codex (sidebar warhammer-style, contenu long). Mais sur la
+          racine, plus jamais de scrollytelling forcé. Le pattern technique —
+          <code>CinemaCanvas</code> mode <code>'time'</code> +
+          <code>CycleBackdrop</code> cross-fade synchronisé — est devenu une
+          référence pour les futures landings perso.
+        </p>
+      </CaseStudySection>
+
+      <CaseStudySection eyebrow="Détails techniques notables">
+        <ul class="space-y-3 list-none pl-0">
+          <li class="flex gap-3">
+            <span
+              class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"
+            ></span>
+            <span
+              ><strong>CinemaCanvas en mode <code>'time'</code></strong> :
+              react-three-fiber tourne sur une horloge globale partagée, pas sur
+              <code>useFrame</code> indépendant. Toutes les couches visuelles
+              (backdrop, particules, GSAP UI) lisent le même <code>t / 75s</code
+              > pour rester synchrones.</span
+            >
+          </li>
+          <li class="flex gap-3">
+            <span
+              class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"
+            ></span>
+            <span
+              ><strong>ParticleField WebGL custom</strong> : shader fragment
+              maison qui simule la bioluminescence des spores Pandora — pulsation
+              lente sur la même clock que le backdrop, dérive vent + atténuation
+              radiale. ~3 000 particules, 60fps stables sur mobile.</span
+            >
+          </li>
+          <li class="flex gap-3">
+            <span
+              class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"
+            ></span>
+            <span
+              ><strong>Logo SVG codé</strong>, pas généré, pas exporté
+              d'Illustrator. Glyphes Na'vi-inspirés tracés en
+              <code>&lt;path&gt;</code> Astro avec animations
+              <code>stroke-dasharray</code> sur l'apparition. Custom de bout en
+              bout.</span
+            >
+          </li>
+          <li class="flex gap-3">
+            <span
+              class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"
+            ></span>
+            <span
+              ><strong>Proxy <code>/api/wiki-image</code> Fandom→Wiki</strong> :
+              fallback en chaîne sur Avatar Fandom puis Wikipedia (les deux
+              n'indexent pas les mêmes choses). Implémentation NestJS sur le NAS,
+              re-portée 1:1 en Cloudflare Function pour le public — même contrat,
+              deux runtimes.</span
+            >
+          </li>
+          <li class="flex gap-3">
+            <span
+              class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"
+            ></span>
+            <span
+              ><strong>Reduced motion</strong> : hook
+              <code>useReducedMotion</code> qui coupe le cinema canvas et fige
+              le backdrop sur une atmosphère statique. Accessibilité
+              non-négociable, même sur un cadeau de nièce.</span
+            >
+          </li>
+          <li class="flex gap-3">
+            <span
+              class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"
+            ></span>
+            <span
+              ><strong>Fair-use respecté</strong> : aucun still de film
+              re-hosté, uniquement des proxys vers wiki + concept arts linkés.
+              Repo public-ready, LICENSE MIT/CC, déploy auto sur
+              <code>git push origin main</code> (~2 min pipeline Cloudflare).</span
+            >
+          </li>
+        </ul>
+      </CaseStudySection>
+
+      <CaseStudySection eyebrow="Ce que Claude Code a apporté">
+        <p>
+          Avant Eywa, je n'avais jamais touché Astro, jamais touché
+          react-three-fiber, jamais écrit un shader. Java/Spring depuis 21 ans,
+          oui ; WebGL non. Le projet a démarré à zéro et j'ai écrit
+          <strong>zéro ligne</strong> à la main — tout est sorti de
+          conversations avec Claude Code.
+        </p>
+        <p>
+          Le pivot scroll → temps-driven aurait pris une semaine en solo (lire
+          la doc R3F, comprendre le rendering loop, débugger les
+          synchronisations). Avec Claude Code en pair-programming, c'était une
+          après-midi de discussion, deux refactos et une validation visuelle.
+          Idem pour le shader bioluminescent : description en langage naturel
+          ("je veux des spores qui pulsent doucement, comme dans la scène de la
+          forêt nocturne"), itérations sur les paramètres, code GLSL généré et
+          ajusté. Crédits IA : <strong>100% Claude Code</strong>.
+        </p>
+        <p>
+          Le code est là, public, lisible. Si tu veux faire pareil — prends un
+          sujet qui t'enflamme (la nièce qui kiffe Avatar, dans mon cas), ouvre
+          Claude Code, et laisse la conversation devenir ton commit log.
+        </p>
+      </CaseStudySection>
+
+      <article class="space-y-4 pt-2">
+        <div
+          class="rounded-xl border border-white/10 bg-paper-elevated p-6 sm:p-8"
+        >
+          <p
+            class="font-mono text-xs uppercase tracking-wider text-claude mb-3"
+          >
+            Liens
+          </p>
+          <div class="flex flex-wrap gap-3 text-sm">
+            <a
+              href="https://eywa-eywa.pages.dev"
+              target="_blank"
+              rel="noopener"
+              class="inline-flex items-center gap-1 px-3 py-1.5 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors"
+            >
+              ↗ Site live (Cloudflare Pages)
+            </a>
+            <a
+              href="https://github.com/Sylad/avatar-pandora"
+              target="_blank"
+              rel="noopener"
+              class="inline-flex items-center gap-1 px-3 py-1.5 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors"
+            >
+              ↗ Repo GitHub
+            </a>
+            <a
+              href="https://eywa-eywa.pages.dev/about"
+              target="_blank"
+              rel="noopener"
+              class="inline-flex items-center gap-1 px-3 py-1.5 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors"
+            >
+              ↗ Page À propos (dédicace Eva)
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <p class="text-center text-xs text-ink/50 font-mono pt-4">
+        Stack — Astro 6 · React 19 · @react-three/fiber · GSAP · Tailwind ·
+        NestJS (NAS) · Cloudflare Pages + Functions (public).
+      </p>
+    </div>
+  </section>
+</BaseLayout>

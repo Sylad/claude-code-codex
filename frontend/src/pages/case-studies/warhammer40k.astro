@@ -1,0 +1,234 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import AsciiDiagram from "@/components/site/AsciiDiagram.astro";
+import CaseStudySection from "@/components/site/CaseStudySection.astro";
+---
+
+<BaseLayout
+  title="Warhammer 40K Codex"
+  description="Deep dive — codex narratif Warhammer 40K, construit en pair-programming avec Claude Code (0 ligne de code humaine)."
+>
+  <PageHero
+    eyebrow="Case study · warhammer40k"
+    title="Warhammer 40K Codex"
+    intro="Codex numérique fan, lore-first et image-dominant. Angular 19 custom gothique, NestJS 11, stockage JSON, Anthropic SDK pour quelques générations narratives. 100% du code écrit en pair-programming avec Claude Code."
+  />
+
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12 space-y-12">
+    <CaseStudySection eyebrow="Pourquoi ce projet">
+      <p>
+        Une encyclopédie Warhammer 40K il en existe déjà des dizaines —
+        Lexicanum, Fandom, Omnis Bibliotheca. L'objectif n'était pas de les
+        battre sur l'exhaustivité, mais de proposer une expérience
+        <strong>lore-first AAA gothique</strong> : maximum d'images, sidebar
+        permanente, cards image-first, polices Cinzel dorées sur fond presque
+        noir. Pas un dashboard data, une lecture immersive. Le projet sert
+        aussi de terrain pour stresser des patterns Claude Code complexes —
+        scraping multi-sources, calibration manuelle d'une carte galactique,
+        hiérarchies de données profondes.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Architecture">
+      <AsciiDiagram caption="Frontend Angular ↔ NestJS ↔ JSON files + Anthropic SDK + sources externes (wiki, Reddit)">
+{`┌──────────────────────────────────────────────────────────────────┐
+│  Frontend Angular 19 (port 4201, nginx)                          │
+│  · standalone components · Signals · Cinzel + Inter              │
+│  · routes flat /units/:id, /factions/:id, /lore/galaxy           │
+└──────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼  /api/* (proxy nginx)
+┌──────────────────────────────────────────────────────────────────┐
+│  Backend NestJS 11 (port 3001) — 15 modules                      │
+│  factions · units · subfactions · series · videos · gallery      │
+│  artworks · images · image-import · image-meta · wiki-image      │
+│  lore-feed · claude-usage · events (SSE) · health                │
+└──────────────────────────────────────────────────────────────────┘
+        │                  │                    │
+        ▼                  ▼                    ▼
+┌──────────────┐  ┌────────────────┐  ┌────────────────────────┐
+│ JSON files   │  │ Anthropic SDK  │  │ Sources externes       │
+│ data/        │  │ sonnet-4-6     │  │ · Wiki Fandom (img)    │
+│ + datasheets │  │ descriptions   │  │ · Lexicanum (lore)     │
+│   /public/   │  │ unités/séries  │  │ · Omnis Bibliotheca FR │
+│ + image-meta │  │                │  │ · Reddit r/Warhammer40k│
+└──────────────┘  └────────────────┘  └────────────────────────┘`}
+      </AsciiDiagram>
+      <p>
+        Le backend lit les JSON au constructor (pattern <code>readFileSync</code>
+        sur <code>data/factions.json</code>, <code>units.json</code>,
+        <code>subfactions.json</code>, etc.). Pas de base de données — le bind-mount
+        Docker <code>data/warhammer/</code> sur le NAS permet de patcher le
+        contenu en prod via <code>scp</code> + <code>docker compose restart</code>,
+        sans rebuild d'image.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Stack & data flow">
+      <ul>
+        <li>
+          <strong>Frontend</strong> — Angular 19 standalone, RxJS 7 + Signals,
+          SCSS pur custom (zéro <code>mat-form-field</code> sur les filtres :
+          tout est en pills gothiques, tokens <code>--gold #c9a24a</code> /
+          <code>--red #7b1113</code> / <code>--bg #050403</code>).
+        </li>
+        <li>
+          <strong>Backend</strong> — NestJS 11, Anthropic SDK 0.91 pour
+          générer les descriptions narratives unités/séries (max 1024 tokens,
+          <code>claude-sonnet-4-6</code>). Endpoint <code>POST
+          /api/units/:id/description</code> avec PIN guard.
+        </li>
+        <li>
+          <strong>Imagerie unit-detail</strong> — datasheet locale prioritaire
+          (<code>backend/public/datasheets/&lt;unit-id&gt;.jpg</code>, 119/133
+          unités) avec <code>HEAD</code>-check côté frontend, fallback wiki
+          Fandom via <code>/api/wiki-image?q=</code>.
+        </li>
+        <li>
+          <strong>Galerie</strong> — 1468 images persos montées en read-only
+          depuis <code>/volume2/photo/Jeux/Warhammer 40K</code>, plus
+          <code>image-meta.json</code> pour les catégorisations multi-tags
+          user, plus modal d'import (Wiki Fandom / Reddit / URL directe) qui
+          pousse dans <code>data/warhammer/imported/</code>.
+        </li>
+        <li>
+          <strong>Live</strong> — SSE <code>/api/events</code> pour pousser
+          les changements de solde Claude et les invalidations de cache côté
+          front.
+        </li>
+        <li>
+          <strong>Déploiement</strong> — Docker compose multi-stage
+          (<code>node:20-alpine</code> → <code>nginx:alpine</code>) sur NAS
+          Synology 1821+, http://nas:4201.
+        </li>
+      </ul>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Le process avec Claude Code">
+      <p>
+        0 ligne de code humaine sur l'app. La boucle a été : je décris ce que
+        je veux (souvent à partir d'un mockup PNG ou d'une spec textuelle
+        rangée dans <code>UX/</code>), Claude génère / refactor / teste, je
+        valide ou course-corrige. Quelques patterns qui ont vraiment compté :
+      </p>
+      <ul>
+        <li>
+          <strong>CLAUDE.md projet + mémoires user-level</strong> — un
+          <code>CLAUDE.md</code> de 130 lignes au root du repo (architecture,
+          conventions code, anti-patterns, pièges connus, identité visuelle)
+          chargé à chaque session, plus une vingtaine de fichiers mémoire
+          user-level (<code>warhammer_design.md</code>,
+          <code>warhammer_imagery.md</code>, <code>warhammer_lore_sources.md</code>,
+          etc.) qui consolident les décisions UX figées et les sources
+          textuelles préférées (Omnis Bibliotheca FR &gt; Lexicanum EN &gt;
+          Fluff Bible PDF).
+        </li>
+        <li>
+          <strong>Pipeline OpenCV pour la galaxy map</strong> — la carte canon
+          GW (3740×2300 px, 213 labels) a été parsée par un script Python
+          dédié <code>scripts/detect_planets.py</code> : 2 passes contraste
+          local (texte sur fond noir / sur fond rouge pour les rifts warp),
+          fusion multi-lignes avec contraintes strictes
+          (<code>vertical_gap_max=6</code>, <code>x_overlap_min=0.65</code>),
+          OCR Tesseract <code>--psm 6</code> avec upscale 4×, plus détection
+          des battle markers rouges via circularité &gt; 0.55 pour caler les
+          coords canon de Cadia, Vigilus, Pisina. 24 markers placés au pixel
+          près par OCR.
+        </li>
+        <li>
+          <strong>Calibration Leaflet pixel-image-space</strong> — pour les
+          ~40 markers que l'OCR ne couvre pas, mode 🎯 Calibration intégré à
+          la page <code>lore-galaxy</code> : <code>L.Marker</code> draggables
+          en <code>CRS.Simple</code>, <code>dragend</code> qui logge et copie
+          en clipboard un JSON <code>&#123; id: &#123; cx, cy &#125; &#125;</code>, patch en batch
+          via regex Python sur <code>lore-galaxy.component.ts</code>.
+          Idempotent — un re-patch ne casse rien.
+        </li>
+        <li>
+          <strong>Éditeur SVG Bézier pour les Segmenta</strong> — après cinq
+          tentatives ratées d'extraire les frontières des cinq Segmenta
+          (k-means, sliding-window, OpenCV contours), pivot vers un éditeur
+          HTML/SVG interactif <code>scripts/segmenta-editor.html</code> avec
+          drag de vertices, anchors quadratiques, snap-to-Terra (rayons 5°,
+          cercles concentriques). Cinq polygones tracés en ~10 minutes,
+          export JSON, 24 samples par courbe Bézier réinjectés dans le code.
+        </li>
+        <li>
+          <strong>Scraping multi-sources</strong> — Lexicanum (MediaWiki
+          anglais sans Cloudflare) pour les 71 chapitres successeurs Space
+          Marines, Omnis Bibliotheca pour le texte FR, PDF Fluff Bible local
+          pour le canon, le tout reformulé via Claude. Sub-agents lancés en
+          parallèle quand l'enrichissement portait sur plusieurs factions
+          indépendantes.
+        </li>
+      </ul>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Pivots & lessons learned">
+      <ul>
+        <li>
+          <strong>Sectors abandonnés</strong> — l'idée d'ajouter un niveau
+          "secteur" entre Segmentum et planète a été tentée puis coupée. Pas
+          de sources canon cohérentes, valeur ajoutée UX faible, complexité
+          de modèle non négligeable. Décision figée le 8 mai 2026, mémoire
+          dédiée pour éviter qu'on ne le relance.
+        </li>
+        <li>
+          <strong>Galaxy Bézier a tenu</strong> — à l'inverse, les Segmenta
+          tracés à la main via éditeur SVG fonctionnent bien : 130 / 52 / 105
+          / 158 / 131 samples par Segmentum, toggle ON par défaut. Outil
+          interactif &gt; algos de détection automatique sur ce type de
+          tâche géométrique.
+        </li>
+        <li>
+          <strong>Single-screen ne marche pas sur les pages détail</strong> —
+          tentative initiale en mode "tout dans le viewport sans scroll" sur
+          faction-detail : overflow horizontal, UX cassée. Les pages détail
+          scrollent, point. Seul le dashboard reste single-screen.
+        </li>
+        <li>
+          <strong>Filtres Material 19 retirés</strong> — les pills custom
+          gothiques (border doré 28% alpha, fond noir 42%, font-weight 900,
+          uppercase letter-spacing .08em) battent <code>mat-select</code> sur
+          ce design. Material reste pour les composants utilitaires (snackbar,
+          dialog) mais a disparu des filtres.
+        </li>
+        <li>
+          <strong>Lore feed STATIQUE</strong> — première version générait des
+          phrases d'ambiance via Claude au load. Coût crédits élevé pour un
+          gain négligeable. Maintenant <code>lore-feed.json</code> avec dix
+          entrées hardcodées, endpoint qui retourne trois random.
+        </li>
+        <li>
+          <strong>Seed JSON masqué par bind-mount</strong> — au premier
+          lancement sur le NAS, le bind-mount <code>data/warhammer</code>
+          écrase le <code>/app/data</code> baked dans l'image et le backend
+          plante en boucle (<code>ENOENT factions.json</code>). Solution :
+          <code>cp -n backend/seed/*.json data/warhammer/</code> au bootstrap.
+          Documenté dans le CLAUDE.md projet pour ne plus jamais le
+          re-découvrir.
+        </li>
+      </ul>
+    </CaseStudySection>
+
+    <div class="flex flex-wrap gap-3 pt-4">
+      <a
+        href="https://github.com/Sylad/warhammer40k"
+        target="_blank"
+        rel="noopener"
+        class="inline-flex items-center gap-1 px-3 py-1.5 rounded border border-white/10 text-ink-muted hover:text-claude hover:border-claude/40 transition-colors text-sm"
+      >
+        ↗ GitHub
+      </a>
+      <a
+        href="http://nas:4201"
+        target="_blank"
+        rel="noopener"
+        class="inline-flex items-center gap-1 px-3 py-1.5 rounded border border-white/10 text-ink-muted hover:text-claude hover:border-claude/40 transition-colors text-sm"
+      >
+        ↗ Live (NAS)
+      </a>
+    </div>
+  </section>
+</BaseLayout>
