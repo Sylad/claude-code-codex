@@ -1,0 +1,14 @@
+{
+  "name": "claude-code-codex-scripts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "batch": "tsx scripts/batch-update.ts",
+    "batch:dry": "tsx scripts/batch-update.ts --dry-run --no-summarize"
+  },
+  "description": "Batch update scripts for the claude-code-codex weekly content refresh. The site itself lives under frontend/."
+}

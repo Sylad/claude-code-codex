@@ -65,13 +65,13 @@ const sections = [
       <div class="mt-9 flex flex-wrap gap-3">
         <a
           href="/theory"
-          class="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-claude text-paper font-medium hover:bg-claude-soft transition-colors"
+          class="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-claude text-paper font-medium hover:bg-claude-soft transition-colors motion-safe:active:scale-95"
         >
           Commencer par la théorie →
         </a>
         <a
           href="/case-studies"
-          class="inline-flex items-center gap-2 px-5 py-2.5 rounded-md border border-white/15 text-ink hover:bg-white/5 transition-colors"
+          class="inline-flex items-center gap-2 px-5 py-2.5 rounded-md border border-white/15 text-ink hover:bg-white/5 transition-colors motion-safe:active:scale-95"
         >
           Voir les apps construites
         </a>
@@ -87,7 +87,7 @@ const sections = [
       {sections.map((s) => (
         <a
           href={s.href}
-          class="group flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-8 p-6 sm:p-8 bg-paper hover:bg-paper-elevated transition-colors"
+          class="group flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-8 p-6 sm:p-8 bg-paper hover:bg-paper-elevated transition-colors motion-safe:active:scale-[0.995]"
         >
           <span class="font-mono text-sm text-claude w-12 shrink-0">
             {s.eyebrow}
@@ -100,7 +100,7 @@ const sections = [
               {s.desc}
             </p>
           </div>
-          <span class="font-mono text-ink-muted group-hover:text-claude group-hover:translate-x-1 transition-all">
+          <span class="font-mono text-ink-muted group-hover:text-claude motion-safe:group-hover:translate-x-2 transition-all duration-200">
             →
           </span>
         </a>

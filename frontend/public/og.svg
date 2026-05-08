@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <!--
+    Open Graph image for claude-code-codex
+    1200x630, dark paper background, claude-orange C on the left,
+    site name + tagline in mono, codex-grid dot pattern.
+  -->
+  <title>claude-code-codex</title>
+
+  <!-- background: matches site --paper oklch(0.145 0 0) -->
+  <rect width="1200" height="630" fill="#252525" />
+
+  <!-- codex-grid dot pattern, 24px tile, low-opacity light dots -->
+  <defs>
+    <pattern id="codexGrid" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="1" fill="#fafafa" fill-opacity="0.04" />
+    </pattern>
+    <radialGradient id="halo" cx="20%" cy="35%" r="55%">
+      <stop offset="0%" stop-color="#D97757" stop-opacity="0.18" />
+      <stop offset="100%" stop-color="#D97757" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#codexGrid)" />
+  <rect width="1200" height="630" fill="url(#halo)" />
+
+  <!-- left: large C mark, same shape family as favicon -->
+  <g transform="translate(120, 195) scale(3.75)">
+    <path
+      fill="#D97757"
+      d="M32 6C17.641 6 6 17.641 6 32s11.641 26 26 26c7.74 0 14.69-3.382 19.45-8.748l-7.74-6.86A15.66 15.66 0 0 1 32 47.66c-8.65 0-15.66-7.01-15.66-15.66S23.35 16.34 32 16.34c4.6 0 8.74 1.985 11.6 5.146l7.78-6.815C46.62 9.336 39.69 6 32 6Z"
+    />
+    <rect x="11" y="22" width="2.5" height="20" rx="1" fill="#D97757" opacity="0.55" />
+  </g>
+
+  <!-- right: text block -->
+  <g font-family="'JetBrains Mono', 'SFMono-Regular', Menlo, Monaco, Consolas, monospace">
+    <!-- eyebrow -->
+    <text
+      x="480" y="240"
+      font-size="22"
+      font-weight="500"
+      fill="#D97757"
+      letter-spacing="4"
+    >CODEX · v0.1</text>
+
+    <!-- site name (slightly larger, bold) -->
+    <text
+      x="480" y="320"
+      font-size="68"
+      font-weight="700"
+      fill="#fafafa"
+    >claude-code-codex</text>
+
+    <!-- tagline -->
+    <text
+      x="480" y="380"
+      font-size="28"
+      font-weight="400"
+      fill="#a3a3a3"
+    >Codex non-officiel sur Claude Code</text>
+
+    <!-- footer line: site URL + categories -->
+    <text
+      x="480" y="450"
+      font-size="20"
+      font-weight="400"
+      fill="#737373"
+    >theorie · ecosysteme · case studies · learning · videos</text>
+  </g>
+
+  <!-- bottom-right thin claude-orange accent bar -->
+  <rect x="480" y="478" width="120" height="3" fill="#D97757" />
+</svg>

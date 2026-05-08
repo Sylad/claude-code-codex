@@ -14,6 +14,8 @@ const fullTitle = title === "claude-code-codex"
   : `${title} · claude-code-codex`;
 const meta = description ?? "Codex non-officiel sur Claude Code : théorie, écosystème, case studies, ressources et vidéos.";
 const pathname = Astro.url.pathname;
+const canonical = new URL(pathname, Astro.url);
+const ogImage = new URL("/og.svg", Astro.url).toString();
 ---
 
 <!doctype html>
@@ -24,9 +26,20 @@ const pathname = Astro.url.pathname;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={meta} />
+    <link rel="canonical" href={canonical.toString()} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={meta} />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical.toString()} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:type" content="image/svg+xml" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="claude-code-codex — codex non-officiel sur Claude Code" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={meta} />
+    <meta name="twitter:image" content={ogImage} />
     <link
       rel="preconnect"
       href="https://fonts.googleapis.com"

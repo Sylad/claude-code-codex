@@ -51,7 +51,7 @@ function isActive(href: string, pathname: string) {
         aria-label="Claude Code Codex — accueil"
       >
         <span
-          class="grid place-items-center w-8 h-8 rounded-md border border-claude/40 bg-claude/10 text-claude transition-colors group-hover:bg-claude/20"
+          class="grid place-items-center w-8 h-8 rounded-md border border-claude/40 bg-claude/10 text-claude transition-[colors,transform] duration-200 group-hover:bg-claude/20 motion-safe:group-hover:rotate-[-3deg] motion-safe:group-active:scale-95"
         >
           <BookOpenText :size="16" />
         </span>
@@ -65,7 +65,7 @@ function isActive(href: string, pathname: string) {
           <a
             :href="link.href"
             :class="[
-              'px-3 py-2 text-sm rounded-md transition-colors',
+              'px-3 py-2 text-sm rounded-md transition-colors motion-safe:active:scale-95',
               isActive(link.href, pathname)
                 ? 'text-claude bg-claude/10'
                 : 'text-ink-muted hover:text-ink hover:bg-white/5',

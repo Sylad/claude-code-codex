@@ -94,7 +94,7 @@ function clearFilters() {
           v-for="k in kinds"
           :key="k"
           :class="[
-            'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm border transition-colors',
+            'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm border transition-colors motion-safe:active:scale-95',
             selectedKinds.has(k)
               ? 'bg-claude text-paper border-claude'
               : 'border-white/10 text-ink-muted hover:border-claude/40 hover:text-ink',
@@ -162,7 +162,7 @@ function clearFilters() {
       <li
         v-for="entry in filteredEntries"
         :key="entry.id"
-        class="relative overflow-hidden rounded-xl border border-white/10 bg-paper-elevated p-5 transition-colors hover:border-claude/30"
+        class="relative overflow-hidden rounded-xl border border-white/10 bg-paper-elevated p-5 transition-[colors,transform,box-shadow] duration-200 hover:border-claude/30 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-claude/10"
       >
         <div
           :class="`absolute inset-0 bg-gradient-to-br ${KIND_ACCENTS[entry.kind]} opacity-50 pointer-events-none`"
