@@ -56,10 +56,20 @@ const ogImage = new URL("/og.svg", Astro.url).toString();
       class="fixed inset-0 -z-10 overflow-hidden pointer-events-none"
       aria-hidden="true"
     >
+      <video
+        src="/hero-cyberpunk.mp4"
+        poster="/hero-cyberpunk.svg"
+        autoplay
+        loop
+        muted
+        playsinline
+        preload="auto"
+        class="motion-safe:block hidden absolute inset-0 w-full h-full object-cover object-bottom opacity-30"
+      ></video>
       <img
         src="/hero-cyberpunk.svg"
         alt=""
-        class="absolute inset-0 w-full h-full object-cover object-bottom opacity-30 motion-safe:animate-[fade-in_1.4s_ease-out]"
+        class="motion-reduce:block hidden absolute inset-0 w-full h-full object-cover object-bottom opacity-30"
       />
       <div
         class="absolute inset-0 bg-gradient-to-b from-paper/70 via-paper/85 to-paper/95"
