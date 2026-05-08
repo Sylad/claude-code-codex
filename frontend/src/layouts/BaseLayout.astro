@@ -18,7 +18,6 @@ const pathname = Astro.url.pathname;
 const canonical = new URL(pathname, Astro.url);
 const ogImage = new URL("/og.svg", Astro.url).toString();
 const heroPoster = "/hero-cyberpunk.jpg";
-const heroEffects = "/hero-cyberpunk-effects.svg";
 ---
 
 <!doctype html>
@@ -62,11 +61,11 @@ const heroEffects = "/hero-cyberpunk-effects.svg";
       <img
         src={heroPoster}
         alt=""
-        class="absolute inset-0 w-full h-full object-cover object-center"
+        class="absolute inset-0 w-full h-full object-cover object-center opacity-40"
       />
       <HeroEffects />
       <div
-        class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-paper/80"
+        class="absolute inset-0 bg-gradient-to-b from-paper/15 via-paper/55 to-paper/90"
       >
       </div>
     </div>
