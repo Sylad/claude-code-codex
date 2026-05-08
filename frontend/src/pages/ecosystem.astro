@@ -1,45 +1,68 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
-import StubBody from "@/components/site/StubBody.astro";
-
-const bullets = [
-  "Plugins officiels marketplace — superpowers, frontend-design, ui-ux-pro-max, etc.",
-  "MCP servers populaires — context7, playwright, cloudflare, GitHub",
-  "Skills custom — anatomie, frontmatter, déclencheurs, anti-patterns",
-  "Outils tiers utiles — Aider, Cursor, Claude API SDK, Anthropic SDK",
-  "Catalogue triable par catégorie (debug / UI / infra / docs / data)",
-];
-
-const sources = [
-  {
-    label: "Marketplace plugins Claude Code (claude-plugins-official)",
-    href: "https://github.com/anthropics",
-  },
-  {
-    label: "Model Context Protocol (modelcontextprotocol.io)",
-    href: "https://modelcontextprotocol.io",
-  },
-  {
-    label: "GitHub topic — claude-code",
-    href: "https://github.com/topics/claude-code",
-  },
-  {
-    label: "GitHub topic — mcp",
-    href: "https://github.com/topics/mcp",
-  },
-];
+import EcosystemCatalog from "@/components/site/EcosystemCatalog.vue";
+import { ecosystemEntries } from "@/data/ecosystem";
 ---
 
 <BaseLayout
   title="Écosystème"
-  description="Plugins, skills, MCP servers et tools à connaître pour optimiser Claude Code. Catalogue mis à jour chaque semaine."
+  description="Catalogue triable de plugins, MCP servers, skills et SDKs Claude Code — sources officielles Anthropic uniquement."
 >
   <PageHero
     eyebrow="02 · Écosystème"
-    title="Plugins, MCP, skills, tools"
-    intro="Ce que la communauté a construit autour de Claude Code, et qui vaut le coup d'être installé. Catalogue triable, mis à jour automatiquement chaque lundi."
+    title="Plugins, MCP, skills, SDKs"
+    intro="Catalogue des composants officiels (Anthropic + protocole MCP) que tu peux installer pour étendre Claude Code. Filtre par catégorie, recherche, et copie la commande d'install d'un clic."
   />
 
-  <StubBody status="Crawling en cours" bullets={bullets} sources={sources} />
+  <section class="mx-auto max-w-6xl px-5 sm:px-8 py-12">
+    <EcosystemCatalog entries={ecosystemEntries} client:load />
+
+    <div
+      class="mt-12 rounded-xl border border-claude/20 bg-claude/5 p-6 sm:p-8"
+    >
+      <p class="font-mono text-xs uppercase tracking-wider text-claude mb-3">
+        Critères du catalogue
+      </p>
+      <p class="text-ink leading-relaxed mb-3">
+        Pour rester sourcé propre, ce catalogue ne liste pour l'instant
+        que des entrées <strong class="text-ink">officielles Anthropic</strong>
+        — plugins de la marketplace
+        <a
+          href="https://github.com/anthropics/claude-plugins-official"
+          target="_blank"
+          rel="noopener"
+          class="text-claude hover:text-claude-soft underline underline-offset-4"
+          >claude-plugins-official</a
+        >, skills du dépôt
+        <a
+          href="https://github.com/anthropics/skills"
+          target="_blank"
+          rel="noopener"
+          class="text-claude hover:text-claude-soft underline underline-offset-4"
+          >anthropics/skills</a
+        >, serveurs MCP de référence du repo
+        <a
+          href="https://github.com/modelcontextprotocol/servers"
+          target="_blank"
+          rel="noopener"
+          class="text-claude hover:text-claude-soft underline underline-offset-4"
+          >modelcontextprotocol/servers</a
+        >, SDK officiels Anthropic, et le protocole MCP lui-même.
+      </p>
+      <p class="text-ink-muted leading-relaxed text-sm">
+        Le batch hebdo enrichira progressivement le catalogue avec les
+        plugins / serveurs MCP / skills publiés via les marketplaces
+        publiques. Si tu vois manquer un composant officiel important,
+        ouvre une issue
+        <a
+          href="https://github.com/Sylad/claude-code-codex/issues"
+          target="_blank"
+          rel="noopener"
+          class="text-claude hover:text-claude-soft underline underline-offset-4"
+          >sur le repo</a
+        >.
+      </p>
+    </div>
+  </section>
 </BaseLayout>

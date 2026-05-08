@@ -6,7 +6,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://claude-code-codex.pages.dev',
+  site: 'https://claude-code-codex-25m.pages.dev',
   integrations: [vue()],
   vite: {
     plugins: [tailwindcss()],

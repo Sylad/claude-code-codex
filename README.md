@@ -1,3 +1,4 @@
+[![Live demo](https://img.shields.io/badge/Live-claude--code--codex--25m.pages.dev-D97757)](https://claude-code-codex-25m.pages.dev)
 [![Built with Claude Code](https://img.shields.io/badge/Built%20with-Claude%20Code-D97757?logo=anthropic&logoColor=white)](https://claude.com/claude-code)
 [![Astro](https://img.shields.io/badge/Astro-6-BC52EE?logo=astro&logoColor=white)](https://astro.build)
 [![Vue 3](https://img.shields.io/badge/Vue-3-42b883?logo=vue.js&logoColor=white)](https://vuejs.org)
