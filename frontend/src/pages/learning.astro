@@ -1,37 +1,49 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
-import StubBody from "@/components/site/StubBody.astro";
-
-const bullets = [
-  "Anthropic blog (anthropic.com/news) — releases et updates Claude",
-  "Latent Space (lspace.swyx.io) — interviews et deep dives IA",
-  "Simon Willison's Weblog (simonwillison.net) — quotidien sur les outils LLM",
-  "Every.to AI section — essais long-form sur l'IA et le travail",
-  "Anthropic engineering blog — papers et architectures internes",
-  "Filtre : pas d'AI-influencer générique, pas de regurgitation Twitter",
-];
-
-const sources = [
-  { label: "Anthropic News", href: "https://www.anthropic.com/news" },
-  { label: "Latent Space (Swyx)", href: "https://www.latent.space" },
-  {
-    label: "Simon Willison's Weblog",
-    href: "https://simonwillison.net",
-  },
-  { label: "Every.to AI", href: "https://every.to/ai" },
-];
+import LearningCatalog from "@/components/site/LearningCatalog.vue";
+import { learningEntries } from "@/data/learning";
 ---
 
 <BaseLayout
   title="Learning"
-  description="Les blogs et sites pour suivre Claude Code et l'IA — Anthropic, Latent Space, Simon Willison, Every.to."
+  description="Sources curées pour suivre Claude Code et l'IA agentique — Anthropic, Simon Willison, Latent Space, Every, Hamel, Eugene Yan, Chip Huyen et plus."
 >
   <PageHero
     eyebrow="04 · Learning"
     title="Sources curées pour suivre Claude"
-    intro="Les blogs et sites qui valent vraiment le détour. Filtre exigeant : pas de fluff, pas de regurgitation. Mis à jour chaque semaine via le job batch."
+    intro="Une sélection courte de blogs, newsletters et podcasts qui parlent vraiment de Claude Code, des agents et de l'AI engineering — pas des AI-influencers génériques."
   />
 
-  <StubBody status="Curation en cours" bullets={bullets} sources={sources} />
+  <section class="mx-auto max-w-6xl px-5 sm:px-8 py-12">
+    <LearningCatalog entries={learningEntries} client:load />
+
+    <div
+      class="mt-12 rounded-xl border border-claude/20 bg-claude/5 p-6 sm:p-8"
+    >
+      <p class="font-mono text-xs uppercase tracking-wider text-claude mb-3">
+        Filtres de curation
+      </p>
+      <p class="text-ink leading-relaxed mb-3">
+        Ce qui passe le filtre :
+        <strong class="text-ink">contenu original</strong>,
+        <strong class="text-ink">spécifique au tooling Claude / agents IA</strong>
+        (pas de ML générique 2018), et
+        <strong class="text-ink">à jour</strong> (le batch hebdo retirera
+        les sources qui n'ont pas publié depuis 6+ mois — sauf exceptions
+        comme Jay Alammar dont les illustrated guides sont des références
+        gelées mais toujours utiles).
+      </p>
+      <p class="text-ink-muted leading-relaxed text-sm">
+        Une source pertinente manquante ? Ouvre une issue
+        <a
+          href="https://github.com/Sylad/claude-code-codex/issues"
+          target="_blank"
+          rel="noopener"
+          class="text-claude hover:text-claude-soft underline underline-offset-4"
+          >sur le repo</a
+        >.
+      </p>
+    </div>
+  </section>
 </BaseLayout>
