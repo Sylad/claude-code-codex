@@ -1,37 +1,49 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
-import StubBody from "@/components/site/StubBody.astro";
-
-const bullets = [
-  "Chaînes YouTube EN spécifiques Claude Code (pas AI-influencer)",
-  "Chaînes YouTube FR — encore rares, mais à dénicher",
-  "Filtres : récence (≤6 mois), spécificité Claude Code (pas Cursor / Copilot générique)",
-  "Vidéos Anthropic officielles — Claude Code launch, MCP, agents SDK",
-  "Tri par pertinence (titre + transcript) via Claude au refresh hebdo",
-];
-
-const sources = [
-  {
-    label: "Anthropic — chaîne YouTube officielle",
-    href: "https://www.youtube.com/@AnthropicAI",
-  },
-  {
-    label: "YouTube Data API v3 (pour batch enrichment)",
-    href: "https://developers.google.com/youtube/v3",
-  },
-];
+import VideosCatalog from "@/components/site/VideosCatalog.vue";
+import { videoEntries } from "@/data/videos";
 ---
 
 <BaseLayout
   title="Vidéos"
-  description="Sélection de chaînes YouTube FR / EN qui couvrent Claude Code spécifiquement."
+  description="Sélection de chaînes YouTube et vidéos qui couvrent vraiment Claude Code — Anthropic, IndyDevDan, Cole Medin, Latent Space, Lenny's Podcast."
 >
   <PageHero
     eyebrow="05 · Vidéos"
-    title="Chaînes YouTube curées"
-    intro="Une sélection FR / EN de chaînes qui parlent vraiment de Claude Code — pas une roundup AI tools générique. Refresh hebdo via YouTube Data API + résumé Claude."
+    title="Chaînes & talks curés"
+    intro="Une sélection courte de chaînes YouTube, talks et podcasts qui parlent vraiment de Claude Code, des hooks, du MCP et de l'agentic coding — pas des AI-influencers généralistes."
   />
 
-  <StubBody status="Sélection initiale" bullets={bullets} sources={sources} />
+  <section class="mx-auto max-w-6xl px-5 sm:px-8 py-12">
+    <VideosCatalog entries={videoEntries} client:load />
+
+    <div
+      class="mt-12 rounded-xl border border-claude/20 bg-claude/5 p-6 sm:p-8"
+    >
+      <p class="font-mono text-xs uppercase tracking-wider text-claude mb-3">
+        Filtres de curation
+      </p>
+      <p class="text-ink leading-relaxed mb-3">
+        Pour passer le filtre, une vidéo doit couvrir
+        <strong class="text-ink"
+          >spécifiquement Claude Code ou l'écosystème immédiat</strong
+        > (hooks, MCP, skills, agents SDK, plugins) — pas une simple comparaison
+        ChatGPT vs Claude ni une réaction d'AI-influencer.
+      </p>
+      <p class="text-ink-muted leading-relaxed mb-3">
+        Côté <strong class="text-ink">FR</strong> : la barre qualité est
+        identique. Pour l'instant on n'a pas trouvé de chaîne francophone qui
+        passe le filtre — préférence pour omettre plutôt que diluer. Si tu
+        connais une chaîne FR sérieuse sur Claude Code, ouvre une issue
+        <a
+          href="https://github.com/Sylad/claude-code-codex/issues"
+          target="_blank"
+          rel="noopener"
+          class="text-claude hover:text-claude-soft underline underline-offset-4"
+          >sur le repo</a
+        >.
+      </p>
+    </div>
+  </section>
 </BaseLayout>

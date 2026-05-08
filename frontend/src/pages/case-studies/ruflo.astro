@@ -1,0 +1,300 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+
+const lessons = [
+  {
+    title: "Multi-agent named SendMessage",
+    body: "Pattern Lead ←→ architect ←→ developer ←→ tester ←→ reviewer avec rôles fixes et messages directs entre agents. À tenter sur les features complexes (5+ fichiers, plusieurs couches) au lieu d'un seul sub-agent général.",
+  },
+  {
+    title: "Méthodologie SPARC",
+    body: "Specification → Pseudocode → Architecture → Refinement → Completion. Framework cognitif pour structurer le dev d'une feature algo lourde. Différent d'APEX par l'étape pseudocode + refinement.",
+  },
+  {
+    title: "Memory SQLite + embeddings HNSW",
+    body: "Pour les projets qui accumulent beaucoup de souvenirs structurés, semantic search via SQLite + vector embeddings >> grep dans des .md. Pas urgent mais à reconsidérer si la recherche par mots-clés sature.",
+  },
+  {
+    title: "Hooks self-learning : noter explicitement les patterns gagnants",
+    body: "Au-delà du feedback implicite, capturer systématiquement les patterns validés par l'humain ET les anti-patterns observés. Ça construit une mémoire actionnable session après session.",
+  },
+  {
+    title: "Two install paths (lite vs full)",
+    body: "Quand on shippe un outil custom : proposer un mode lite (zéro pollution workspace, juste une slash command) ET un mode full (workspace setup complet). User choisit selon son besoin.",
+  },
+  {
+    title: "Cleanup --dry-run par défaut",
+    body: "Pour tout script destructif (rm, drop, deploy rollback) : --dry-run en sortie par défaut, --force pour exécuter vraiment. Safety pattern qui sauve des soirées.",
+  },
+  {
+    title: "CLAUDE.md project-level avec règles spécifiques",
+    body: "Au-delà du CLAUDE.md global, chaque projet peut avoir ses règles métier persistantes (ex : 'toujours tester PIN guard sur nouvel endpoint', 'JAMAIS de vraies données dans les fixtures').",
+  },
+  {
+    title: "Plugin marketplace décentralisé (concept)",
+    body: "Pas applicable maintenant (latence IPFS), mais intéressant intellectuellement : registry non-centralisé pour distribuer des plugins de manière autonome. À garder en tête.",
+  },
+];
+---
+
+<BaseLayout
+  title="Test bench · Ruflo"
+  description="Retour d'expérience sur Ruflo (claude-flow), framework multi-agent pour Claude Code. Ce qui marche, ce qui pète, et les 8 leçons à reprendre."
+>
+  <PageHero
+    eyebrow="Test bench · 2026-05-08"
+    title="Ruflo (claude-flow)"
+    intro="Framework d'orchestration multi-agent qui se greffe sur Claude Code — 32 plugins, swarms hiérarchiques, mémoire vectorielle, fédération multi-machines. Testé en sandbox sur la 3.7.0-alpha.17 puis sur la 3.6.30 stable."
+  />
+
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12">
+    <div class="space-y-12">
+      <article class="space-y-4">
+        <p
+          class="font-mono text-xs uppercase tracking-[0.2em] text-claude"
+        >
+          Pourquoi le tester
+        </p>
+        <p class="text-ink leading-relaxed text-base sm:text-lg">
+          Le repo
+          <a
+            href="https://github.com/ruvnet/ruflo"
+            target="_blank"
+            rel="noopener"
+            class="text-claude hover:text-claude-soft underline underline-offset-4"
+            >ruvnet/ruflo</a
+          >
+          (anciennement claude-flow) propose une couche d'orchestration multi-agent
+          sur Claude Code, avec des concepts ambitieux : swarms hiérarchiques,
+          mémoire vectorielle persistante, hooks self-learning, fédération sécurisée
+          entre machines. Le README annonce <em>"agents qui ne tournent pas
+          juste, ils collaborent"</em>. Il a fallu voir ce qu'il en était en
+          pratique avant de l'intégrer (ou pas) dans le workflow perso.
+        </p>
+      </article>
+
+      <article class="space-y-4">
+        <p
+          class="font-mono text-xs uppercase tracking-[0.2em] text-claude"
+        >
+          Ce qu'on a testé
+        </p>
+        <ul class="space-y-2.5 text-ink leading-relaxed">
+          <li class="flex gap-3">
+            <span
+              class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"
+            ></span>
+            <span
+              ><strong class="text-ink">Sandbox isolée</strong> dans un dossier
+              dédié, snapshot md5 de
+              <code
+                class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5"
+                >~/.claude/CLAUDE.md</code
+              > avant et après init pour mesurer l'empreinte globale.</span
+            >
+          </li>
+          <li class="flex gap-3">
+            <span
+              class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"
+            ></span>
+            <span
+              ><strong class="text-ink">Init minimal + flag <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">--no-global</code></strong>
+              pour limiter au maximum la surface — d'abord sur la 3.7.0-alpha.17
+              (npm latest), puis sur la 3.6.30 (GitHub "Latest" stable).</span
+            >
+          </li>
+          <li class="flex gap-3">
+            <span
+              class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"
+            ></span>
+            <span
+              ><strong class="text-ink">Vérification du cleanup</strong> :
+              <code
+                class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5"
+                >ruflo cleanup --dry-run</code
+              > puis <code
+                class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5"
+                >--force</code
+              >, puis listing des artefacts résiduels.</span
+            >
+          </li>
+          <li class="flex gap-3">
+            <span
+              class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"
+            ></span>
+            <span
+              ><strong class="text-ink">Quelques commandes basiques</strong> :
+              <code
+                class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5"
+                >status</code
+              >, <code
+                class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5"
+                >swarm init</code
+              >, <code
+                class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5"
+                >memory init</code
+              >, <code
+                class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5"
+                >plugins list</code
+              > (registry IPFS via Pinata).</span
+            >
+          </li>
+        </ul>
+      </article>
+
+      <article class="space-y-4">
+        <p
+          class="font-mono text-xs uppercase tracking-[0.2em] text-claude"
+        >
+          Verdict
+        </p>
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div
+            class="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-5"
+          >
+            <p
+              class="font-mono text-xs uppercase tracking-wider text-emerald-400 mb-2"
+            >
+              Ce qui fonctionne
+            </p>
+            <ul class="text-sm text-ink-muted leading-relaxed space-y-1.5">
+              <li>• Toolkit massif (47+ commandes, V3 features)</li>
+              <li>• Swarm init donne un graphe coordonné en une commande</li>
+              <li>• 8 skills pré-installés sur la 3.6.30 (SPARC, swarm-orchestration, pair-programming…)</li>
+              <li>• <code class="font-mono text-emerald-300/80 text-[0.9em]">cleanup --dry-run</code> est l'output par défaut (safety)</li>
+              <li>• Documentation détaillée des modes minimal / full</li>
+            </ul>
+          </div>
+          <div
+            class="rounded-xl border border-rose-500/20 bg-rose-500/5 p-5"
+          >
+            <p
+              class="font-mono text-xs uppercase tracking-wider text-rose-400 mb-2"
+            >
+              Ce qui pète
+            </p>
+            <ul class="text-sm text-ink-muted leading-relaxed space-y-1.5">
+              <li>• <code class="font-mono text-rose-300/80 text-[0.9em]">--no-global</code> ne respecte pas <code class="font-mono text-rose-300/80 text-[0.9em]">~/.claude/CLAUDE.md</code> (testé sur les deux versions)</li>
+              <li>• <code class="font-mono text-rose-300/80 text-[0.9em]">cleanup --force</code> laisse CLAUDE.md projet, .mcp.json, et 8 skills/</li>
+              <li>• Naming inconsistent (ruflo vs claude-flow dans les mêmes fichiers)</li>
+              <li>• Plugin registry IPFS ralentit la commande (~8s via Pinata)</li>
+              <li>• npm <code class="font-mono text-rose-300/80 text-[0.9em]">latest</code> tag pointe sur du prerelease alpha</li>
+            </ul>
+          </div>
+        </div>
+
+        <div
+          class="rounded-xl border border-claude/20 bg-claude/5 p-5 sm:p-6 mt-2"
+        >
+          <p
+            class="font-mono text-xs uppercase tracking-wider text-claude mb-2"
+          >
+            Décision
+          </p>
+          <p class="text-ink leading-relaxed">
+            Pas d'adoption en l'état. Les blockers sont des défauts d'architecture
+            (cleanup incomplet de plusieurs catégories d'artefacts) plus que
+            des bugs d'alpha — la stable 3.6.30 ne corrige rien. À reconsidérer
+            quand un changelog mentionnera explicitement le fix de
+            <code
+              class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5"
+              >--no-global</code
+            > et un cleanup réellement complet.
+          </p>
+        </div>
+      </article>
+
+      <article class="space-y-4">
+        <p
+          class="font-mono text-xs uppercase tracking-[0.2em] text-claude"
+        >
+          Leçons à reprendre (8)
+        </p>
+        <p class="text-ink-muted leading-relaxed">
+          Ne pas adopter Ruflo n'invalide pas ses idées. Voici les patterns
+          qu'on ré-applique chez nous, indépendamment :
+        </p>
+
+        <ol class="grid gap-3 sm:grid-cols-2">
+          {lessons.map((l, i) => (
+            <li
+              class="rounded-xl border border-white/10 bg-paper-elevated p-5"
+            >
+              <p
+                class="font-mono text-xs text-claude/80 mb-2"
+              >
+                {String(i + 1).padStart(2, "0")}
+              </p>
+              <h3 class="text-base font-medium text-ink mb-1.5">
+                {l.title}
+              </h3>
+              <p class="text-sm text-ink-muted leading-relaxed">{l.body}</p>
+            </li>
+          ))}
+        </ol>
+      </article>
+
+      <article class="space-y-4 pt-2">
+        <div
+          class="rounded-xl border border-white/10 bg-paper-elevated p-6 sm:p-8"
+        >
+          <p
+            class="font-mono text-xs uppercase tracking-wider text-claude mb-3"
+          >
+            Watchlist
+          </p>
+          <p class="text-ink leading-relaxed mb-3">
+            Ruflo est sur notre liste d'outils à re-tester quand mature.
+            Conditions de re-évaluation :
+          </p>
+          <ul class="text-sm text-ink-muted space-y-1.5">
+            <li>
+              ✓ Mention dans le changelog d'un fix
+              <code
+                class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5"
+                >--no-global</code
+              >
+            </li>
+            <li>
+              ✓ Un
+              <code
+                class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5"
+                >cleanup --all</code
+              > ou équivalent qui retire skills + CLAUDE.md projet + .mcp.json
+            </li>
+            <li>
+              ✓ Naming cohérent (ruflo OU claude-flow, pas les deux dans les
+              mêmes fichiers)
+            </li>
+            <li>
+              ✓ Sortie d'une 4.0 stable, ou ligne 3.6.x continue de stabiliser
+            </li>
+          </ul>
+          <div class="mt-4 flex flex-wrap gap-3 text-xs">
+            <a
+              href="https://github.com/ruvnet/ruflo/releases"
+              target="_blank"
+              rel="noopener"
+              class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors"
+            >
+              ↗ Releases GitHub
+            </a>
+            <a
+              href="https://www.npmjs.com/package/ruflo"
+              target="_blank"
+              rel="noopener"
+              class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors"
+            >
+              ↗ npm ruflo
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <p class="text-center text-xs text-ink/50 font-mono pt-4">
+        Test mené 2026-05-08 · versions 3.7.0-alpha.17 + 3.6.30 stable.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

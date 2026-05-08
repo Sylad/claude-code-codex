@@ -98,13 +98,79 @@ const apps = [
       ))}
     </div>
 
+    <div class="mt-16">
+      <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude mb-2">
+        Tools tested
+      </p>
+      <h2 class="text-2xl sm:text-3xl font-semibold text-ink mb-3">
+        Outils explorés sur le banc d'essai
+      </h2>
+      <p class="text-ink-muted leading-relaxed max-w-2xl mb-6">
+        Le codex sert aussi de banc d'essai personnel : on installe les outils
+        de l'écosystème Claude Code, on les pousse en sandbox, et on capture les
+        leçons — adoptés ou non.
+      </p>
+
+      <div class="grid gap-5 sm:grid-cols-2">
+        <a
+          href="/case-studies/ruflo"
+          class="group relative overflow-hidden rounded-xl border border-white/10 bg-paper-elevated p-6 hover:border-claude/40 transition-colors"
+        >
+          <div
+            class="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-transparent opacity-50 group-hover:opacity-80 transition-opacity pointer-events-none"
+          >
+          </div>
+          <div class="relative">
+            <div class="flex items-center justify-between mb-3">
+              <p class="font-mono text-sm text-claude">ruflo</p>
+              <span
+                class="text-ink-muted group-hover:text-claude group-hover:translate-x-0.5 transition-all"
+              >
+                →
+              </span>
+            </div>
+            <h3 class="text-xl font-medium text-ink mb-2">
+              Multi-agent orchestration sur Claude Code
+            </h3>
+            <p class="text-sm text-ink-muted mb-4 leading-relaxed">
+              Testé sur la 3.7-alpha et la 3.6.30 stable. Pas adopté
+              (`--no-global` cassé, cleanup incomplet) mais 8 patterns à
+              reprendre.
+            </p>
+            <p class="font-mono text-xs text-ink/60 pt-3 border-t border-white/5">
+              Ruflo · 32 plugins · multi-agent
+            </p>
+          </div>
+        </a>
+
+        <div
+          class="relative overflow-hidden rounded-xl border border-white/5 border-dashed bg-paper-elevated/50 p-6"
+        >
+          <p class="font-mono text-xs uppercase tracking-wider text-ink/40 mb-2">
+            Slot libre
+          </p>
+          <p class="text-ink-muted leading-relaxed text-sm">
+            Le prochain outil testé apparaîtra ici. Suggestions bienvenues
+            <a
+              href="https://github.com/Sylad/claude-code-codex/issues"
+              target="_blank"
+              rel="noopener"
+              class="text-claude hover:text-claude-soft underline underline-offset-4"
+              >sur le repo</a
+            >.
+          </p>
+        </div>
+      </div>
+    </div>
+
     <div class="mt-12 rounded-xl border border-white/10 bg-paper-elevated p-6 sm:p-8">
       <p class="font-mono text-xs uppercase tracking-wider text-ink-muted mb-3">
         À venir
       </p>
       <p class="text-ink-muted leading-relaxed">
-        Pour chaque app, une fiche détaillée : capture d'écran, archi, anti-patterns
-        rencontrés, prompts utiles, et coût Anthropic estimé sur la durée du projet.
+        Pour chaque app, une fiche détaillée : capture d'écran, archi,
+        anti-patterns rencontrés, prompts utiles, et coût Anthropic estimé sur
+        la durée du projet.
       </p>
     </div>
   </section>
