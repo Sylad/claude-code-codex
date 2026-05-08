@@ -2,6 +2,20 @@ import type { TestedTool } from "./tools-tested-types";
 
 export const testedTools: TestedTool[] = [
   {
+    id: "rtk",
+    name: "RTK (Rust Token Killer)",
+    author: "rtk-ai",
+    category: "tool",
+    description:
+      "CLI proxy Rust qui filtre et résume les sorties de commandes (git, ls, gh, find…) avant qu'elles atteignent le contexte LLM. Économie 60-90% de tokens sur les opérations dev quotidiennes. Adopté en config globale.",
+    tags: ["claude-code", "tokens", "proxy", "rust", "essential"],
+    url: "https://github.com/rtk-ai/rtk",
+    stars: 44736,
+    lastPush: "2026-05-08",
+    license: "Apache-2.0",
+    status: "tested",
+  },
+  {
     id: "ruflo",
     name: "Ruflo",
     author: "ruvnet",
