@@ -41,22 +41,22 @@ const sections = [
   description="Un codex non-officiel sur Claude Code : comment ça marche, l'écosystème, six apps construites avec, et les meilleures sources pour suivre l'évolution."
 >
   <section class="relative codex-noise overflow-hidden">
-    <img
-      src="/hero-cyberpunk.svg"
-      alt=""
-      aria-hidden="true"
-      class="pointer-events-none absolute inset-0 w-full h-full object-cover object-bottom opacity-95 motion-safe:animate-[fade-in_1.2s_ease-out]"
-    />
+    <!-- Hero zone : counter-mask the BaseLayout overlay so the cyberpunk
+         video shows through brighter here than on content pages -->
     <div
-      class="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-paper/30 to-paper"
+      class="pointer-events-none absolute inset-0 bg-paper/-50 mix-blend-overlay"
     >
     </div>
     <div
-      class="pointer-events-none absolute inset-0 codex-grid opacity-30"
+      class="pointer-events-none absolute inset-0 codex-grid opacity-25"
     >
     </div>
     <div
-      class="pointer-events-none absolute inset-0 bg-gradient-to-br from-claude/15 via-transparent to-transparent"
+      class="pointer-events-none absolute inset-0 bg-gradient-to-br from-claude/20 via-transparent to-transparent"
+    >
+    </div>
+    <div
+      class="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-paper"
     >
     </div>
     <div class="relative mx-auto max-w-6xl px-5 sm:px-8 py-24 sm:py-36">
