@@ -1,0 +1,45 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import StubBody from "@/components/site/StubBody.astro";
+
+const bullets = [
+  "Plugins officiels marketplace — superpowers, frontend-design, ui-ux-pro-max, etc.",
+  "MCP servers populaires — context7, playwright, cloudflare, GitHub",
+  "Skills custom — anatomie, frontmatter, déclencheurs, anti-patterns",
+  "Outils tiers utiles — Aider, Cursor, Claude API SDK, Anthropic SDK",
+  "Catalogue triable par catégorie (debug / UI / infra / docs / data)",
+];
+
+const sources = [
+  {
+    label: "Marketplace plugins Claude Code (claude-plugins-official)",
+    href: "https://github.com/anthropics",
+  },
+  {
+    label: "Model Context Protocol (modelcontextprotocol.io)",
+    href: "https://modelcontextprotocol.io",
+  },
+  {
+    label: "GitHub topic — claude-code",
+    href: "https://github.com/topics/claude-code",
+  },
+  {
+    label: "GitHub topic — mcp",
+    href: "https://github.com/topics/mcp",
+  },
+];
+---
+
+<BaseLayout
+  title="Écosystème"
+  description="Plugins, skills, MCP servers et tools à connaître pour optimiser Claude Code. Catalogue mis à jour chaque semaine."
+>
+  <PageHero
+    eyebrow="02 · Écosystème"
+    title="Plugins, MCP, skills, tools"
+    intro="Ce que la communauté a construit autour de Claude Code, et qui vaut le coup d'être installé. Catalogue triable, mis à jour automatiquement chaque lundi."
+  />
+
+  <StubBody status="Crawling en cours" bullets={bullets} sources={sources} />
+</BaseLayout>

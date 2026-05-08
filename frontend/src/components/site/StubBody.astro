@@ -1,0 +1,58 @@
+---
+interface Props {
+  status: string;
+  bullets: string[];
+  sources?: { label: string; href: string }[];
+}
+
+const { status, bullets, sources = [] } = Astro.props;
+---
+
+<section class="mx-auto max-w-4xl px-5 sm:px-8 py-16">
+  <div class="rounded-xl border border-white/10 bg-paper-elevated p-6 sm:p-8">
+    <div class="flex items-center gap-2 mb-4">
+      <span class="inline-block w-2 h-2 rounded-full bg-claude animate-pulse"></span>
+      <p class="font-mono text-xs uppercase tracking-wider text-ink-muted">
+        {status}
+      </p>
+    </div>
+
+    <p class="text-ink-muted leading-relaxed">
+      Cette page est en train de se construire — un job hebdomadaire scanne
+      les sources, résume les nouveautés via Claude, et commit le tout sur
+      <code class="font-mono text-claude-soft">main</code>. En attendant,
+      voici ce qui est prévu :
+    </p>
+
+    <ul class="mt-5 space-y-2.5">
+      {bullets.map((b) => (
+        <li class="flex gap-3 text-ink">
+          <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+          <span>{b}</span>
+        </li>
+      ))}
+    </ul>
+
+    {sources.length > 0 && (
+      <div class="mt-8 pt-6 border-t border-white/5">
+        <p class="font-mono text-xs uppercase tracking-wider text-ink/60 mb-3">
+          Sources candidates
+        </p>
+        <ul class="space-y-1.5 text-sm">
+          {sources.map((s) => (
+            <li>
+              <a
+                class="text-ink-muted hover:text-claude transition-colors"
+                href={s.href}
+                target="_blank"
+                rel="noopener"
+              >
+                → {s.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+  </div>
+</section>

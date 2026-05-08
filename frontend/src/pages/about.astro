@@ -1,0 +1,95 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+---
+
+<BaseLayout
+  title="À propos"
+  description="Pourquoi ce codex Claude Code existe, qui l'écrit, et comment il se met à jour tout seul."
+>
+  <PageHero
+    eyebrow="06 · À propos"
+    title="Vibe coded with Claude Code"
+    intro="Un codex sur Claude Code, codé avec Claude Code. Oui c'est un peu méta, et oui ça en dit autant sur la collab IA × dev que sur Claude Code lui-même."
+  />
+
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-16 space-y-12">
+    <div class="rounded-xl border border-white/10 bg-paper-elevated p-6 sm:p-8">
+      <p class="font-mono text-xs uppercase tracking-wider text-claude mb-4">
+        L'histoire courte
+      </p>
+      <div class="space-y-4 text-ink leading-relaxed">
+        <p>
+          Six mois de pair-programming intensif avec Claude Code, cinq apps perso
+          en prod, et l'envie d'avoir un endroit pour ranger ce qu'on apprend
+          en chemin. Plutôt que d'oublier au fond d'un Notion privé, autant en
+          faire un site public.
+        </p>
+        <p>
+          Je suis dev Java senior depuis 2005. J'utilise Claude Code depuis fin
+          2026 pour explorer hors de ma zone JVM — Angular, React, NestJS,
+          Astro, Vue, NestJS, Cloudflare Workers. Ce codex est ma façon de
+          consolider et de partager ce que je découvre, sans me la jouer
+          tutoriel exhaustif.
+        </p>
+        <p class="text-ink-muted text-sm italic">
+          Et oui, le site est lui-même codé en pair avec Claude. Donc si vous
+          trouvez une typo, c'est probablement de sa faute. (Ou de la mienne
+          pour avoir validé sans relire.)
+        </p>
+      </div>
+    </div>
+
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div class="rounded-xl border border-white/10 bg-paper-elevated p-6">
+        <p class="font-mono text-xs uppercase tracking-wider text-claude mb-3">
+          Stack du site
+        </p>
+        <ul class="space-y-1.5 text-sm text-ink-muted">
+          <li><span class="text-ink">Frontend</span> — Astro 6 statique pur</li>
+          <li><span class="text-ink">UI</span> — Vue 3 + shadcn-vue + Tailwind 4</li>
+          <li><span class="text-ink">Hosting</span> — Cloudflare Pages</li>
+          <li><span class="text-ink">Batch</span> — GitHub Actions cron hebdo</li>
+          <li><span class="text-ink">LLM</span> — Anthropic SDK (Claude Sonnet)</li>
+        </ul>
+      </div>
+
+      <div class="rounded-xl border border-white/10 bg-paper-elevated p-6">
+        <p class="font-mono text-xs uppercase tracking-wider text-claude mb-3">
+          Sources
+        </p>
+        <ul class="space-y-1.5 text-sm text-ink-muted">
+          <li>Docs Anthropic publiques (claude.com/docs)</li>
+          <li>Repos GitHub officiels anthropics/*</li>
+          <li>Blogs et papers indépendants curés</li>
+          <li>YouTube Data API v3</li>
+          <li>Aucun scraping de contenu privé / payant</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="rounded-xl border border-claude/20 bg-claude/5 p-6 sm:p-8">
+      <p class="font-mono text-xs uppercase tracking-wider text-claude mb-3">
+        Si tu veux faire pareil
+      </p>
+      <p class="text-ink leading-relaxed">
+        Prends un sujet qui t'enflamme, ouvre Claude Code, et accepte d'être
+        un peu ridicule au début. Le code n'est pas magique — la magie c'est
+        d'oser explorer un domaine où tu n'es pas légitime. Le repo de ce site
+        est
+        <a
+          href="https://github.com/Sylad/claude-code-codex"
+          target="_blank"
+          rel="noopener"
+          class="text-claude hover:text-claude-soft underline underline-offset-4"
+        >
+          public
+        </a>, fork-le si ça t'inspire.
+      </p>
+    </div>
+
+    <p class="text-center text-xs text-ink/50 font-mono">
+      Site fan-made — sans affiliation officielle Anthropic.
+    </p>
+  </section>
+</BaseLayout>

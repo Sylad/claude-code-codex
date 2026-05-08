@@ -1,0 +1,132 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const sections = [
+  {
+    href: "/theory",
+    eyebrow: "01",
+    title: "Théorie",
+    desc: "Comment Claude Code fonctionne sous le capot — context window, tool use, sessions, hooks, slash commands, MCP, skills, agents SDK.",
+  },
+  {
+    href: "/ecosystem",
+    eyebrow: "02",
+    title: "Écosystème",
+    desc: "Les plugins, skills, MCP servers et tools à connaître pour optimiser l'utilisation. Catalogue triable mis à jour chaque semaine.",
+  },
+  {
+    href: "/case-studies",
+    eyebrow: "03",
+    title: "Case studies",
+    desc: "Six apps perso codées en pair-programming avec Claude Code. Stack, archi, pièges rencontrés, leçons retenues.",
+  },
+  {
+    href: "/learning",
+    eyebrow: "04",
+    title: "Learning",
+    desc: "Les blogs et sites qui valent vraiment le détour pour suivre Claude et l'IA — Anthropic, Latent Space, Simon Willison, Every.to.",
+  },
+  {
+    href: "/videos",
+    eyebrow: "05",
+    title: "Vidéos",
+    desc: "Sélection de chaînes YouTube FR / EN qui couvrent Claude Code spécifiquement — pas de fluff, pas d'AI-influencer générique.",
+  },
+];
+---
+
+<BaseLayout
+  title="claude-code-codex"
+  description="Un codex non-officiel sur Claude Code : comment ça marche, l'écosystème, six apps construites avec, et les meilleures sources pour suivre l'évolution."
+>
+  <section class="relative codex-grid codex-noise overflow-hidden">
+    <div
+      class="pointer-events-none absolute inset-0 bg-gradient-to-br from-claude/10 via-transparent to-transparent"
+    >
+    </div>
+    <div class="relative mx-auto max-w-6xl px-5 sm:px-8 py-24 sm:py-36">
+      <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+        Codex Claude Code · v0.1
+      </p>
+      <h1
+        class="mt-4 text-4xl sm:text-6xl md:text-7xl font-semibold tracking-tight text-ink leading-[1.05]"
+      >
+        Un codex pour comprendre,<br />
+        utiliser et builder<br />
+        avec
+        <span class="text-claude">Claude Code</span>.
+      </h1>
+      <p class="mt-6 max-w-2xl text-base sm:text-lg text-ink-muted leading-relaxed">
+        Théorie, écosystème, case studies, learning, vidéos. Codé en pair-programming
+        avec Claude Code lui-même — donc oui, c'est un peu méta. Mis à jour
+        chaque semaine via un job qui résume les nouveautés.
+      </p>
+
+      <div class="mt-9 flex flex-wrap gap-3">
+        <a
+          href="/theory"
+          class="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-claude text-paper font-medium hover:bg-claude-soft transition-colors"
+        >
+          Commencer par la théorie →
+        </a>
+        <a
+          href="/case-studies"
+          class="inline-flex items-center gap-2 px-5 py-2.5 rounded-md border border-white/15 text-ink hover:bg-white/5 transition-colors"
+        >
+          Voir les apps construites
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-5 sm:px-8 py-20">
+    <p class="font-mono text-xs uppercase tracking-[0.2em] text-ink-muted mb-10">
+      Sommaire
+    </p>
+    <div class="grid gap-px bg-white/5 rounded-xl overflow-hidden border border-white/10">
+      {sections.map((s) => (
+        <a
+          href={s.href}
+          class="group flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-8 p-6 sm:p-8 bg-paper hover:bg-paper-elevated transition-colors"
+        >
+          <span class="font-mono text-sm text-claude w-12 shrink-0">
+            {s.eyebrow}
+          </span>
+          <div class="flex-1">
+            <h2 class="text-xl sm:text-2xl font-medium text-ink group-hover:text-claude transition-colors">
+              {s.title}
+            </h2>
+            <p class="mt-2 text-ink-muted leading-relaxed max-w-2xl">
+              {s.desc}
+            </p>
+          </div>
+          <span class="font-mono text-ink-muted group-hover:text-claude group-hover:translate-x-1 transition-all">
+            →
+          </span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-4xl px-5 sm:px-8 py-12">
+    <div
+      class="rounded-xl border border-claude/20 bg-claude/5 p-6 sm:p-8 text-center"
+    >
+      <p class="text-sm font-mono uppercase tracking-wider text-claude mb-3">
+        Note de l'auteur
+      </p>
+      <p class="text-ink leading-relaxed">
+        Site fan, sans affiliation Anthropic. Sources publiques uniquement.
+        Si tu spottes une erreur, ouvre une issue
+        <a
+          class="text-claude hover:text-claude-soft underline underline-offset-4"
+          href="https://github.com/Sylad/claude-code-codex"
+          target="_blank"
+          rel="noopener"
+        >
+          sur le repo
+        </a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,48 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import StubBody from "@/components/site/StubBody.astro";
+
+const bullets = [
+  "Architecture haut niveau : agentic loop, tool use, system prompt, sub-agents",
+  "Context window : compaction auto, prompt caching 5min, gestion de la mémoire conversationnelle",
+  "Sessions et état : où Claude Code persiste, comment reprendre une session",
+  "Hooks : SessionStart, PreToolUse, PostToolUse, UserPromptSubmit — exemples concrets",
+  "Slash commands custom et skills : différences, quand choisir l'un ou l'autre",
+  "MCP servers : protocole, install (local stdio vs remote), créer son propre serveur",
+  "Plugins : marketplace officielle, anatomie d'un plugin, supply chain considérations",
+  "Agents SDK : building custom agents, mode plan, isolation worktree",
+];
+
+const sources = [
+  {
+    label: "Anthropic — Claude Code docs (claude.com/docs/claude-code)",
+    href: "https://docs.claude.com/en/docs/claude-code/overview",
+  },
+  {
+    label: "Anthropic — Engineering blog",
+    href: "https://www.anthropic.com/engineering",
+  },
+  {
+    label: "anthropics/anthropic-cookbook (GitHub)",
+    href: "https://github.com/anthropics/anthropic-cookbook",
+  },
+  {
+    label: "anthropics/claude-code (GitHub)",
+    href: "https://github.com/anthropics/claude-code",
+  },
+];
+---
+
+<BaseLayout
+  title="Théorie"
+  description="Comment Claude Code fonctionne sous le capot — context window, tool use, sessions, hooks, slash commands, MCP, skills, agents SDK."
+>
+  <PageHero
+    eyebrow="01 · Théorie"
+    title="Comment Claude Code fonctionne"
+    intro="L'architecture, les abstractions et les mécaniques qu'il faut comprendre pour utiliser Claude Code efficacement — et pour savoir pourquoi il fait parfois ce qu'il fait."
+  />
+
+  <StubBody status="En cours de rédaction" bullets={bullets} sources={sources} />
+</BaseLayout>

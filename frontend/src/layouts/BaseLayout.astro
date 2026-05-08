@@ -1,0 +1,48 @@
+---
+import "@/styles/global.css";
+import Navbar from "@/components/site/Navbar.vue";
+import Footer from "@/components/site/Footer.astro";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+const fullTitle = title === "claude-code-codex"
+  ? title
+  : `${title} · claude-code-codex`;
+const meta = description ?? "Codex non-officiel sur Claude Code : théorie, écosystème, case studies, ressources et vidéos.";
+const pathname = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang="fr" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={meta} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={meta} />
+    <meta property="og:type" content="website" />
+    <link
+      rel="preconnect"
+      href="https://fonts.googleapis.com"
+    />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+    <title>{fullTitle}</title>
+  </head>
+  <body class="bg-paper text-ink min-h-dvh flex flex-col">
+    <Navbar client:load pathname={pathname} />
+    <main class="flex-1 pt-16">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

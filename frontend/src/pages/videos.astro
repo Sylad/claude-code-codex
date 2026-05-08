@@ -1,0 +1,37 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import StubBody from "@/components/site/StubBody.astro";
+
+const bullets = [
+  "Chaînes YouTube EN spécifiques Claude Code (pas AI-influencer)",
+  "Chaînes YouTube FR — encore rares, mais à dénicher",
+  "Filtres : récence (≤6 mois), spécificité Claude Code (pas Cursor / Copilot générique)",
+  "Vidéos Anthropic officielles — Claude Code launch, MCP, agents SDK",
+  "Tri par pertinence (titre + transcript) via Claude au refresh hebdo",
+];
+
+const sources = [
+  {
+    label: "Anthropic — chaîne YouTube officielle",
+    href: "https://www.youtube.com/@AnthropicAI",
+  },
+  {
+    label: "YouTube Data API v3 (pour batch enrichment)",
+    href: "https://developers.google.com/youtube/v3",
+  },
+];
+---
+
+<BaseLayout
+  title="Vidéos"
+  description="Sélection de chaînes YouTube FR / EN qui couvrent Claude Code spécifiquement."
+>
+  <PageHero
+    eyebrow="05 · Vidéos"
+    title="Chaînes YouTube curées"
+    intro="Une sélection FR / EN de chaînes qui parlent vraiment de Claude Code — pas une roundup AI tools générique. Refresh hebdo via YouTube Data API + résumé Claude."
+  />
+
+  <StubBody status="Sélection initiale" bullets={bullets} sources={sources} />
+</BaseLayout>
