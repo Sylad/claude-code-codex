@@ -59,20 +59,21 @@ const heroVideo = "/hero-cyberpunk.mp4";
       aria-hidden="true"
     >
       <video
-        src={heroVideo}
-        poster={heroPoster}
         autoplay
         loop
         muted
         playsinline
         preload="auto"
-        class="motion-reduce:hidden absolute inset-0 w-full h-full object-cover object-center"
-      ></video>
-      <img
-        src={heroPoster}
-        alt=""
-        class="motion-safe:hidden absolute inset-0 w-full h-full object-cover object-center"
-      />
+        poster={heroPoster}
+        class="absolute inset-0 w-full h-full object-cover object-center"
+      >
+        <source src={heroVideo} type="video/mp4" />
+        <img
+          src={heroPoster}
+          alt=""
+          class="absolute inset-0 w-full h-full object-cover object-center"
+        />
+      </video>
       <div
         class="absolute inset-0 bg-gradient-to-b from-paper/20 via-paper/65 to-paper/95"
       >
