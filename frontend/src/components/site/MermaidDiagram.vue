@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, watch, onMounted, onBeforeUnmount } from "vue";
 import { Maximize2, X } from "lucide-vue-next";
 
 const props = defineProps<{
@@ -7,12 +7,28 @@ const props = defineProps<{
   caption?: string;
 }>();
 
-const container = ref<HTMLDivElement | null>(null);
+const inlineContainer = ref<HTMLDivElement | null>(null);
 const fullscreenContainer = ref<HTMLDivElement | null>(null);
 const error = ref<string>("");
 const isReady = ref(false);
 const isFullscreen = ref(false);
 let svgString = "";
+
+function injectInto(el: HTMLDivElement | null) {
+  if (!el || !svgString) return;
+  el.innerHTML = svgString;
+  // Force the SVG to scale to its container width.
+  const svg = el.querySelector("svg");
+  if (svg) {
+    svg.removeAttribute("width");
+    svg.removeAttribute("height");
+    svg.setAttribute(
+      "style",
+      "width: 100%; height: auto; display: block; max-width: 100%;",
+    );
+    svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+  }
+}
 
 onMounted(async () => {
   try {
@@ -46,18 +62,27 @@ onMounted(async () => {
         padding: 16,
         nodeSpacing: 36,
         rankSpacing: 60,
-        useMaxWidth: true,
+        useMaxWidth: false,
         htmlLabels: true,
       },
     });
     const id = `mermaid-${Math.random().toString(36).slice(2, 9)}`;
     const { svg } = await mermaid.render(id, props.definition);
     svgString = svg;
-    if (container.value) container.value.innerHTML = svg;
+    injectInto(inlineContainer.value);
     isReady.value = true;
   } catch (err) {
     error.value = (err as Error).message ?? String(err);
     console.error("[MermaidDiagram] render failed:", err);
+  }
+
+  window.addEventListener("keydown", onKeydown);
+});
+
+// When fullscreen toggles on, inject into the modal container after it mounts.
+watch(isFullscreen, (open) => {
+  if (open) {
+    requestAnimationFrame(() => injectInto(fullscreenContainer.value));
   }
 });
 
@@ -65,12 +90,6 @@ function open() {
   if (!isReady.value) return;
   isFullscreen.value = true;
   document.body.style.overflow = "hidden";
-  // Hydrate fullscreen SVG container right after the v-if mounts
-  requestAnimationFrame(() => {
-    if (fullscreenContainer.value) {
-      fullscreenContainer.value.innerHTML = svgString;
-    }
-  });
 }
 
 function close() {
@@ -81,10 +100,6 @@ function close() {
 function onKeydown(e: KeyboardEvent) {
   if (e.key === "Escape" && isFullscreen.value) close();
 }
-
-onMounted(() => {
-  window.addEventListener("keydown", onKeydown);
-});
 
 onBeforeUnmount(() => {
   window.removeEventListener("keydown", onKeydown);
@@ -117,24 +132,23 @@ onBeforeUnmount(() => {
       </button>
     </div>
 
-    <button
-      v-if="isReady"
-      type="button"
-      class="block w-full text-left cursor-zoom-in group"
-      :title="'Cliquer pour agrandir'"
-      @click="open"
+    <div
+      :class="[
+        'relative transition-opacity',
+        isReady ? 'cursor-zoom-in' : 'opacity-50',
+      ]"
+      :role="isReady ? 'button' : undefined"
+      :tabindex="isReady ? 0 : -1"
+      :title="isReady ? 'Cliquer pour agrandir' : undefined"
+      @click="isReady && open()"
+      @keydown.enter.prevent="isReady && open()"
+      @keydown.space.prevent="isReady && open()"
     >
       <div
-        ref="container"
-        class="px-4 py-6 overflow-x-auto [&_svg]:max-w-full [&_svg]:h-auto [&_svg]:mx-auto motion-safe:group-hover:opacity-95 transition-opacity"
+        ref="inlineContainer"
+        class="px-4 py-6 overflow-x-auto min-h-[200px]"
       ></div>
-    </button>
-
-    <div
-      v-else
-      ref="container"
-      class="px-4 py-6 overflow-x-auto [&_svg]:max-w-full [&_svg]:h-auto [&_svg]:mx-auto opacity-0"
-    ></div>
+    </div>
 
     <noscript>
       <pre
@@ -178,10 +192,9 @@ onBeforeUnmount(() => {
         role="dialog"
         aria-modal="true"
         :aria-label="caption ?? 'Diagramme architecture'"
-        @click.self="close"
       >
         <div
-          class="flex items-center justify-between px-5 py-3 border-b border-white/5 bg-white/[0.02]"
+          class="shrink-0 flex items-center justify-between px-5 py-3 border-b border-white/5 bg-white/[0.02]"
         >
           <div class="flex items-center gap-2">
             <span class="inline-block w-2 h-2 rounded-full bg-claude/70"></span>
@@ -203,18 +216,18 @@ onBeforeUnmount(() => {
         </div>
 
         <div
-          class="flex-1 overflow-auto p-6 sm:p-10 grid place-items-center"
+          class="flex-1 overflow-auto p-4 sm:p-8"
           @click.self="close"
         >
           <div
             ref="fullscreenContainer"
-            class="max-w-full [&_svg]:max-w-full [&_svg]:h-auto [&_svg]:max-h-[calc(100dvh-10rem)]"
+            class="w-full max-w-[1600px] mx-auto"
           ></div>
         </div>
 
         <div
           v-if="caption"
-          class="px-5 py-3 border-t border-white/5 bg-white/[0.02] text-xs text-ink-muted text-center"
+          class="shrink-0 px-5 py-3 border-t border-white/5 bg-white/[0.02] text-xs text-ink-muted text-center"
         >
           {{ caption }}
         </div>

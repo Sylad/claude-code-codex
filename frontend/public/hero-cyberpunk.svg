@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 1920 1080"
+  preserveAspectRatio="xMidYMid slice"
+  role="img"
+  aria-label="Skyline cyberpunk dystopique inspirée Blade Runner — clin d'œil"
+>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a0a08" />
+      <stop offset="22%" stop-color="#2a0f0c" />
+      <stop offset="48%" stop-color="#1a0d0a" />
+      <stop offset="80%" stop-color="#0a0707" />
+      <stop offset="100%" stop-color="#000" />
+    </linearGradient>
+
+    <radialGradient id="sun" cx="60%" cy="60%" r="55%">
+      <stop offset="0%" stop-color="rgba(217, 119, 87, 0.55)" />
+      <stop offset="35%" stop-color="rgba(217, 119, 87, 0.18)" />
+      <stop offset="100%" stop-color="rgba(217, 119, 87, 0)" />
+    </radialGradient>
+
+    <radialGradient id="halo" cx="50%" cy="62%" r="65%">
+      <stop offset="0%" stop-color="rgba(255, 90, 60, 0.45)" />
+      <stop offset="50%" stop-color="rgba(180, 50, 40, 0.18)" />
+      <stop offset="100%" stop-color="rgba(0, 0, 0, 0)" />
+    </radialGradient>
+
+    <linearGradient id="haze" x1="0" y1="0.5" x2="0" y2="1">
+      <stop offset="0%" stop-color="rgba(217, 119, 87, 0)" />
+      <stop offset="50%" stop-color="rgba(217, 119, 87, 0.10)" />
+      <stop offset="100%" stop-color="rgba(0, 0, 0, 0)" />
+    </linearGradient>
+
+    <filter id="blur" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="4" />
+    </filter>
+
+    <filter id="strongBlur" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="14" />
+    </filter>
+
+    <!-- Skyline silhouettes -->
+    <symbol id="building-tall" viewBox="0 0 60 400">
+      <rect x="0" y="0" width="60" height="400" fill="#000" />
+      <rect x="28" y="-40" width="4" height="40" fill="#000" />
+      <rect x="26" y="-60" width="8" height="20" fill="#000" />
+    </symbol>
+  </defs>
+
+  <!-- Layer 1 : sky -->
+  <rect width="1920" height="1080" fill="url(#sky)" />
+
+  <!-- Layer 2 : distant sun glow -->
+  <rect width="1920" height="1080" fill="url(#sun)" />
+  <ellipse cx="1180" cy="640" rx="320" ry="22" fill="rgba(255, 130, 90, 0.55)" filter="url(#blur)" />
+  <ellipse cx="1180" cy="640" rx="180" ry="11" fill="rgba(255, 170, 130, 0.7)" filter="url(#blur)" />
+
+  <!-- Layer 3 : atmospheric haze band over horizon -->
+  <rect x="0" y="540" width="1920" height="200" fill="url(#haze)" />
+
+  <!-- Layer 4 : far skyline (dimmer, slightly ahead) -->
+  <g opacity="0.55">
+    <rect x="40" y="640" width="80" height="440" fill="#0d0808" />
+    <rect x="125" y="600" width="55" height="480" fill="#0d0808" />
+    <rect x="190" y="650" width="100" height="430" fill="#0a0606" />
+    <rect x="305" y="580" width="70" height="500" fill="#0d0808" />
+    <rect x="385" y="620" width="120" height="460" fill="#0a0606" />
+    <rect x="520" y="590" width="55" height="490" fill="#0d0808" />
+    <rect x="590" y="640" width="80" height="440" fill="#0a0606" />
+
+    <rect x="700" y="600" width="60" height="480" fill="#0d0808" />
+    <rect x="780" y="540" width="100" height="540" fill="#0a0606" />
+    <rect x="895" y="610" width="70" height="470" fill="#0d0808" />
+    <rect x="980" y="560" width="90" height="520" fill="#0a0606" />
+    <rect x="1080" y="600" width="60" height="480" fill="#0d0808" />
+    <rect x="1160" y="630" width="110" height="450" fill="#0a0606" />
+
+    <rect x="1290" y="580" width="70" height="500" fill="#0d0808" />
+    <rect x="1380" y="610" width="100" height="470" fill="#0a0606" />
+    <rect x="1495" y="570" width="60" height="510" fill="#0d0808" />
+    <rect x="1570" y="610" width="90" height="470" fill="#0a0606" />
+    <rect x="1675" y="580" width="70" height="500" fill="#0d0808" />
+    <rect x="1760" y="630" width="120" height="450" fill="#0a0606" />
+  </g>
+
+  <!-- Layer 5 : main skyline (sharper, in front) -->
+  <g fill="#000">
+    <rect x="0" y="700" width="100" height="380" />
+    <rect x="100" y="660" width="65" height="420" />
+    <rect x="170" y="730" width="80" height="350" />
+    <rect x="255" y="640" width="55" height="440" />
+    <rect x="315" y="700" width="100" height="380" />
+    <rect x="420" y="610" width="60" height="470" />
+    <rect x="485" y="660" width="80" height="420" />
+    <rect x="570" y="630" width="55" height="450" />
+    <rect x="630" y="700" width="100" height="380" />
+
+    <!-- Iconic massive central tower (Blade Runner Tyrell hint) -->
+    <polygon
+      points="740,1080 740,420 770,360 770,260 800,200 1000,200 1030,260 1030,360 1060,420 1060,1080"
+      fill="#020202"
+    />
+    <rect x="895" y="80" width="10" height="120" fill="#000" />
+    <rect x="889" y="60" width="22" height="20" fill="#000" />
+
+    <rect x="1070" y="700" width="80" height="380" />
+    <rect x="1155" y="650" width="60" height="430" />
+    <rect x="1220" y="700" width="100" height="380" />
+    <rect x="1325" y="620" width="55" height="460" />
+    <rect x="1385" y="680" width="80" height="400" />
+    <rect x="1470" y="640" width="65" height="440" />
+    <rect x="1540" y="700" width="100" height="380" />
+    <rect x="1645" y="660" width="55" height="420" />
+    <rect x="1705" y="710" width="90" height="370" />
+    <rect x="1800" y="650" width="80" height="430" />
+    <rect x="1885" y="690" width="35" height="390" />
+  </g>
+
+  <!-- Layer 6 : neon billboards (claude-orange + cyan + amber) -->
+  <g>
+    <!-- Big claude-orange billboard (left of central tower) -->
+    <rect x="455" y="510" width="80" height="32" fill="rgba(217, 119, 87, 0.85)" />
+    <rect x="455" y="510" width="80" height="32" fill="rgba(217, 119, 87, 0.5)" filter="url(#blur)" />
+    <rect x="455" y="546" width="80" height="3" fill="rgba(217, 119, 87, 0.6)" />
+
+    <!-- Cyan billboard high right -->
+    <rect x="1380" y="540" width="55" height="22" fill="rgba(80, 220, 230, 0.8)" />
+    <rect x="1380" y="540" width="55" height="22" fill="rgba(80, 220, 230, 0.5)" filter="url(#blur)" />
+
+    <!-- Amber thin strip on central tower -->
+    <rect x="800" y="320" width="200" height="6" fill="rgba(255, 180, 80, 0.65)" />
+    <rect x="800" y="320" width="200" height="6" fill="rgba(255, 180, 80, 0.5)" filter="url(#blur)" />
+
+    <!-- Vertical neon (Tyrell-ish) -->
+    <rect x="938" y="240" width="6" height="100" fill="rgba(217, 119, 87, 0.75)" />
+    <rect x="938" y="240" width="6" height="100" fill="rgba(217, 119, 87, 0.6)" filter="url(#blur)" />
+
+    <!-- Magenta accent right -->
+    <rect x="1700" y="700" width="40" height="14" fill="rgba(220, 60, 140, 0.7)" />
+    <rect x="1700" y="700" width="40" height="14" fill="rgba(220, 60, 140, 0.5)" filter="url(#blur)" />
+  </g>
+
+  <!-- Layer 7 : tiny window cells (orange) -->
+  <g fill="rgba(255, 160, 110, 0.85)">
+    <rect x="20" y="730" width="3" height="3" />
+    <rect x="32" y="730" width="3" height="3" />
+    <rect x="44" y="740" width="3" height="3" />
+    <rect x="60" y="760" width="3" height="3" />
+    <rect x="72" y="780" width="3" height="3" />
+    <rect x="120" y="700" width="3" height="3" />
+    <rect x="135" y="720" width="3" height="3" />
+    <rect x="142" y="740" width="3" height="3" />
+    <rect x="180" y="780" width="3" height="3" />
+    <rect x="200" y="800" width="3" height="3" />
+    <rect x="280" y="700" width="3" height="3" />
+    <rect x="295" y="720" width="3" height="3" />
+    <rect x="328" y="740" width="3" height="3" />
+    <rect x="395" y="690" width="3" height="3" />
+    <rect x="438" y="720" width="3" height="3" />
+    <rect x="500" y="700" width="3" height="3" />
+    <rect x="540" y="730" width="3" height="3" />
+    <rect x="595" y="680" width="3" height="3" />
+    <rect x="650" y="740" width="3" height="3" />
+    <rect x="700" y="780" width="3" height="3" />
+    <!-- Tower windows -->
+    <rect x="780" y="450" width="3" height="3" />
+    <rect x="790" y="475" width="3" height="3" />
+    <rect x="820" y="500" width="3" height="3" />
+    <rect x="850" y="450" width="3" height="3" />
+    <rect x="880" y="500" width="3" height="3" />
+    <rect x="910" y="475" width="3" height="3" />
+    <rect x="940" y="525" width="3" height="3" />
+    <rect x="970" y="500" width="3" height="3" />
+    <rect x="1000" y="450" width="3" height="3" />
+    <rect x="1030" y="500" width="3" height="3" />
+    <rect x="1085" y="730" width="3" height="3" />
+    <rect x="1110" y="760" width="3" height="3" />
+    <rect x="1180" y="700" width="3" height="3" />
+    <rect x="1230" y="780" width="3" height="3" />
+    <rect x="1290" y="720" width="3" height="3" />
+    <rect x="1340" y="700" width="3" height="3" />
+    <rect x="1400" y="740" width="3" height="3" />
+    <rect x="1480" y="690" width="3" height="3" />
+    <rect x="1540" y="730" width="3" height="3" />
+    <rect x="1600" y="780" width="3" height="3" />
+    <rect x="1660" y="700" width="3" height="3" />
+    <rect x="1730" y="780" width="3" height="3" />
+    <rect x="1810" y="720" width="3" height="3" />
+    <rect x="1870" y="740" width="3" height="3" />
+  </g>
+
+  <!-- Layer 8 : tiny window cells (cyan) — sparser -->
+  <g fill="rgba(120, 220, 230, 0.7)">
+    <rect x="50" y="800" width="3" height="3" />
+    <rect x="100" y="850" width="3" height="3" />
+    <rect x="270" y="900" width="3" height="3" />
+    <rect x="500" y="850" width="3" height="3" />
+    <rect x="800" y="700" width="3" height="3" />
+    <rect x="900" y="650" width="3" height="3" />
+    <rect x="970" y="700" width="3" height="3" />
+    <rect x="1000" y="650" width="3" height="3" />
+    <rect x="1200" y="850" width="3" height="3" />
+    <rect x="1500" y="900" width="3" height="3" />
+    <rect x="1700" y="850" width="3" height="3" />
+  </g>
+
+  <!-- Layer 9 : red eye dot (Terminator nod) — high on the central tower -->
+  <circle cx="900" cy="240" r="2.5" fill="#ff3030" />
+  <circle cx="900" cy="240" r="6" fill="#ff3030" opacity="0.6" filter="url(#blur)" />
+
+  <!-- Layer 10 : foreground halo + global vignette -->
+  <rect width="1920" height="1080" fill="url(#halo)" />
+
+  <!-- Layer 11 : light rain (diagonal) -->
+  <g stroke="rgba(180, 200, 220, 0.18)" stroke-width="0.6" stroke-linecap="round">
+    <line x1="100" y1="200" x2="92" y2="220" />
+    <line x1="280" y1="180" x2="272" y2="200" />
+    <line x1="450" y1="240" x2="442" y2="260" />
+    <line x1="620" y1="190" x2="612" y2="210" />
+    <line x1="790" y1="220" x2="782" y2="240" />
+    <line x1="960" y1="180" x2="952" y2="200" />
+    <line x1="1140" y1="240" x2="1132" y2="260" />
+    <line x1="1320" y1="190" x2="1312" y2="210" />
+    <line x1="1480" y1="220" x2="1472" y2="240" />
+    <line x1="1640" y1="180" x2="1632" y2="200" />
+    <line x1="1800" y1="240" x2="1792" y2="260" />
+
+    <line x1="50" y1="400" x2="42" y2="420" />
+    <line x1="220" y1="380" x2="212" y2="400" />
+    <line x1="380" y1="440" x2="372" y2="460" />
+    <line x1="540" y1="390" x2="532" y2="410" />
+    <line x1="700" y1="420" x2="692" y2="440" />
+    <line x1="870" y1="380" x2="862" y2="400" />
+    <line x1="1030" y1="440" x2="1022" y2="460" />
+    <line x1="1200" y1="390" x2="1192" y2="410" />
+    <line x1="1370" y1="420" x2="1362" y2="440" />
+    <line x1="1540" y1="380" x2="1532" y2="400" />
+    <line x1="1700" y1="440" x2="1692" y2="460" />
+    <line x1="1860" y1="400" x2="1852" y2="420" />
+
+    <line x1="120" y1="560" x2="112" y2="580" />
+    <line x1="320" y1="540" x2="312" y2="560" />
+    <line x1="500" y1="600" x2="492" y2="620" />
+    <line x1="680" y1="550" x2="672" y2="570" />
+    <line x1="1080" y1="540" x2="1072" y2="560" />
+    <line x1="1260" y1="600" x2="1252" y2="620" />
+    <line x1="1440" y1="550" x2="1432" y2="570" />
+    <line x1="1620" y1="540" x2="1612" y2="560" />
+    <line x1="1800" y1="600" x2="1792" y2="620" />
+  </g>
+</svg>
