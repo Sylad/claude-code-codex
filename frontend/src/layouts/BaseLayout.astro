@@ -17,7 +17,7 @@ const pathname = Astro.url.pathname;
 const canonical = new URL(pathname, Astro.url);
 const ogImage = new URL("/og.svg", Astro.url).toString();
 const heroPoster = "/hero-cyberpunk.jpg";
-const heroVideo = "/hero-cyberpunk.mp4";
+const heroEffects = "/hero-cyberpunk-effects.svg";
 ---
 
 <!doctype html>
@@ -64,7 +64,7 @@ const heroVideo = "/hero-cyberpunk.mp4";
         class="absolute inset-0 w-full h-full object-cover object-center opacity-25"
       />
       <img
-        src="/hero-cyberpunk-effects.svg"
+        src={heroEffects}
         alt=""
         class="absolute inset-0 w-full h-full object-cover object-center opacity-70 mix-blend-screen"
       />
