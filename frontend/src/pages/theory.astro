@@ -1,48 +1,62 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
-import StubBody from "@/components/site/StubBody.astro";
+import TheorySection from "@/components/site/TheorySection.astro";
+import TheoryTOC from "@/components/site/TheoryTOC.vue";
+import { sections } from "@/data/theory";
 
-const bullets = [
-  "Architecture haut niveau : agentic loop, tool use, system prompt, sub-agents",
-  "Context window : compaction auto, prompt caching 5min, gestion de la mémoire conversationnelle",
-  "Sessions et état : où Claude Code persiste, comment reprendre une session",
-  "Hooks : SessionStart, PreToolUse, PostToolUse, UserPromptSubmit — exemples concrets",
-  "Slash commands custom et skills : différences, quand choisir l'un ou l'autre",
-  "MCP servers : protocole, install (local stdio vs remote), créer son propre serveur",
-  "Plugins : marketplace officielle, anatomie d'un plugin, supply chain considérations",
-  "Agents SDK : building custom agents, mode plan, isolation worktree",
-];
-
-const sources = [
-  {
-    label: "Anthropic — Claude Code docs (claude.com/docs/claude-code)",
-    href: "https://docs.claude.com/en/docs/claude-code/overview",
-  },
-  {
-    label: "Anthropic — Engineering blog",
-    href: "https://www.anthropic.com/engineering",
-  },
-  {
-    label: "anthropics/anthropic-cookbook (GitHub)",
-    href: "https://github.com/anthropics/anthropic-cookbook",
-  },
-  {
-    label: "anthropics/claude-code (GitHub)",
-    href: "https://github.com/anthropics/claude-code",
-  },
-];
+const tocEntries = sections.map((s) => ({
+  id: s.id,
+  number: s.number,
+  title: s.title,
+}));
 ---
 
 <BaseLayout
   title="Théorie"
-  description="Comment Claude Code fonctionne sous le capot — context window, tool use, sessions, hooks, slash commands, MCP, skills, agents SDK."
+  description="Comment Claude Code fonctionne sous le capot — architecture agentique, context window, sessions, hooks, slash commands, skills, MCP, plugins, agents SDK."
 >
   <PageHero
     eyebrow="01 · Théorie"
     title="Comment Claude Code fonctionne"
-    intro="L'architecture, les abstractions et les mécaniques qu'il faut comprendre pour utiliser Claude Code efficacement — et pour savoir pourquoi il fait parfois ce qu'il fait."
+    intro="L'architecture, les abstractions et les mécaniques qu'il faut comprendre pour utiliser Claude Code efficacement — et pour savoir pourquoi il fait parfois ce qu'il fait. Tout est sourcé sur la doc Anthropic publique."
   />
 
-  <StubBody status="En cours de rédaction" bullets={bullets} sources={sources} />
+  <div class="mx-auto max-w-6xl px-5 sm:px-8 py-10">
+    <div class="grid gap-10 lg:grid-cols-[220px_1fr]">
+      <aside class="hidden lg:block">
+        <TheoryTOC entries={tocEntries} client:load />
+      </aside>
+
+      <article class="min-w-0">
+        {sections.map((section) => (
+          <TheorySection section={section} />
+        ))}
+
+        <div
+          class="mt-12 rounded-xl border border-claude/20 bg-claude/5 p-6 sm:p-8"
+        >
+          <p
+            class="font-mono text-xs uppercase tracking-wider text-claude mb-3"
+          >
+            Note
+          </p>
+          <p class="text-ink leading-relaxed">
+            Ce contenu est rédigé à partir des sources Anthropic publiques
+            uniquement (claude.com/docs, code.claude.com, anthropic.com,
+            github.com/anthropics). Les détails évoluent avec Claude Code —
+            si tu repères une info datée ou inexacte, ouvre une issue
+            <a
+              class="text-claude hover:text-claude-soft underline underline-offset-4"
+              href="https://github.com/Sylad/claude-code-codex/issues"
+              target="_blank"
+              rel="noopener"
+            >
+              sur le repo
+            </a>.
+          </p>
+        </div>
+      </article>
+    </div>
+  </div>
 </BaseLayout>

@@ -1,0 +1,24 @@
+---
+interface Props {
+  language: string;
+  filename?: string;
+  code: string;
+}
+
+const { language, filename, code } = Astro.props;
+---
+
+<figure class="rounded-lg border border-white/10 bg-paper overflow-hidden my-4">
+  <figcaption
+    class="flex items-center justify-between px-4 py-2 border-b border-white/5 bg-white/[0.02]"
+  >
+    <span class="font-mono text-xs text-ink-muted">
+      {filename ?? `[${language}]`}
+    </span>
+    <span class="font-mono text-[10px] uppercase tracking-wider text-claude/70">
+      {language}
+    </span>
+  </figcaption>
+  <pre
+    class="px-4 py-3 overflow-x-auto text-sm leading-relaxed font-mono text-ink/90"><code>{code}</code></pre>
+</figure>

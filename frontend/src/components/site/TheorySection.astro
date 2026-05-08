@@ -1,0 +1,66 @@
+---
+import CodeBlock from "@/components/site/CodeBlock.astro";
+import type { TheorySection } from "@/data/theory";
+
+interface Props {
+  section: TheorySection;
+}
+
+const { section } = Astro.props;
+---
+
+<section
+  id={section.id}
+  class="scroll-mt-24 py-14 border-b border-white/5 last:border-b-0"
+>
+  <header class="mb-6">
+    <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+      {section.number} · {section.subtitle}
+    </p>
+    <h2 class="mt-2 text-3xl sm:text-4xl font-semibold tracking-tight text-ink">
+      {section.title}
+    </h2>
+  </header>
+
+  <p class="text-ink-muted leading-relaxed text-base sm:text-lg max-w-3xl">
+    {section.intro}
+  </p>
+
+  <ul class="mt-7 space-y-3">
+    {section.bullets.map((bullet) => (
+      <li class="flex gap-3 text-ink leading-relaxed">
+        <span
+          class="mt-2.5 inline-block w-1 h-1 rounded-full bg-claude shrink-0"
+        ></span>
+        <span class="flex-1" set:html={bullet.replace(/`([^`]+)`/g, '<code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">$1</code>')}></span>
+      </li>
+    ))}
+  </ul>
+
+  <div class="mt-7 space-y-4">
+    {section.snippets.map((snippet) => (
+      <CodeBlock
+        language={snippet.language}
+        filename={snippet.filename}
+        code={snippet.code}
+      />
+    ))}
+  </div>
+
+  <div class="mt-7 flex flex-wrap items-center gap-2">
+    <span class="font-mono text-xs uppercase tracking-wider text-ink/60">
+      Sources :
+    </span>
+    {section.sources.map((source) => (
+      <a
+        href={source.href}
+        target="_blank"
+        rel="noopener"
+        class="inline-flex items-center gap-1 text-xs text-ink-muted hover:text-claude transition-colors px-2.5 py-1 rounded border border-white/10 hover:border-claude/40"
+      >
+        <span>↗</span>
+        <span>{source.label}</span>
+      </a>
+    ))}
+  </div>
+</section>
