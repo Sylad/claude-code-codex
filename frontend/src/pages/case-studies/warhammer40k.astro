@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
-import AsciiDiagram from "@/components/site/AsciiDiagram.astro";
+import MermaidDiagram from "@/components/site/MermaidDiagram.vue";
 import CaseStudySection from "@/components/site/CaseStudySection.astro";
 ---
 
@@ -31,30 +31,46 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
     </CaseStudySection>
 
     <CaseStudySection eyebrow="Architecture">
-      <AsciiDiagram caption="Frontend Angular ↔ NestJS ↔ JSON files + Anthropic SDK + sources externes (wiki, Reddit)">
-{`┌──────────────────────────────────────────────────────────────────┐
-│  Frontend Angular 19 (port 4201, nginx)                          │
-│  · standalone components · Signals · Cinzel + Inter              │
-│  · routes flat /units/:id, /factions/:id, /lore/galaxy           │
-└──────────────────────────────────────────────────────────────────┘
-                              │
-                              ▼  /api/* (proxy nginx)
-┌──────────────────────────────────────────────────────────────────┐
-│  Backend NestJS 11 (port 3001) — 15 modules                      │
-│  factions · units · subfactions · series · videos · gallery      │
-│  artworks · images · image-import · image-meta · wiki-image      │
-│  lore-feed · claude-usage · events (SSE) · health                │
-└──────────────────────────────────────────────────────────────────┘
-        │                  │                    │
-        ▼                  ▼                    ▼
-┌──────────────┐  ┌────────────────┐  ┌────────────────────────┐
-│ JSON files   │  │ Anthropic SDK  │  │ Sources externes       │
-│ data/        │  │ sonnet-4-6     │  │ · Wiki Fandom (img)    │
-│ + datasheets │  │ descriptions   │  │ · Lexicanum (lore)     │
-│   /public/   │  │ unités/séries  │  │ · Omnis Bibliotheca FR │
-│ + image-meta │  │                │  │ · Reddit r/Warhammer40k│
-└──────────────┘  └────────────────┘  └────────────────────────┘`}
-      </AsciiDiagram>
+      <MermaidDiagram
+        client:load
+        caption="Frontend Angular ↔ NestJS ↔ JSON files + Anthropic SDK + sources externes (wiki, Lexicanum, Reddit)"
+        definition={`flowchart TB
+  subgraph FE["Frontend (port 4201, nginx)"]
+    ng["Angular 19<br/>standalone · Signals<br/>Cinzel + Inter"]
+    routes["routes flat:<br/>/units/:id<br/>/factions/:id<br/>/lore/galaxy"]
+  end
+
+  subgraph BE["Backend NestJS 11 (port 3001)"]
+    api["15 modules"]
+    mods["factions · units · subfactions · series<br/>videos · gallery · artworks · images<br/>image-import · image-meta · wiki-image<br/>lore-feed · claude-usage · events (SSE) · health"]
+  end
+
+  subgraph DATA["Stockage local"]
+    json["JSON files<br/>data/"]
+    sheets["datasheets<br/>/public/"]
+    meta["image-meta.json"]
+  end
+
+  subgraph EXT["Sources externes"]
+    wiki["Wiki Fandom (img)"]
+    lex["Lexicanum (lore)"]
+    omnis["Omnis Bibliotheca FR"]
+    reddit["Reddit r/Warhammer40k"]
+    sdk["Anthropic SDK<br/>sonnet-4-6"]
+  end
+
+  ng --> routes
+  routes -->|/api/*| api
+  api --> mods
+  mods --> json
+  mods --> sheets
+  mods --> meta
+  mods -->|scrape| wiki
+  mods -->|scrape| lex
+  mods -->|scrape| omnis
+  mods -->|scrape| reddit
+  mods -->|descriptions unités/séries| sdk`}
+      />
       <p>
         Le backend lit les JSON au constructor (pattern <code>readFileSync</code>
         sur <code>data/factions.json</code>, <code>units.json</code>,

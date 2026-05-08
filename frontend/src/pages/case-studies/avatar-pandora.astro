@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
-import AsciiDiagram from "@/components/site/AsciiDiagram.astro";
+import MermaidDiagram from "@/components/site/MermaidDiagram.vue";
 import CaseStudySection from "@/components/site/CaseStudySection.astro";
 ---
 
@@ -51,34 +51,41 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
           Function.
         </p>
 
-        <AsciiDiagram caption="Astro statique + îlots React 19 · une cible publique sans backend (Cloudflare Pages + Functions), une cible NAS pour la validation locale.">
-{`                ┌─────────────────────────────────────────────┐
-                │  Eywa frontend — Astro 6 (statique pur)     │
-                │  ───────────────────────────────────────    │
-                │   pages MDX × 78    sidebar 320px sticky    │
-                │   îlots React 19 (client:visible) :         │
-                │      • CinemaCanvas (R3F, mode 'time')      │
-                │      • ParticleField (WebGL, shader custom) │
-                │      • CycleBackdrop (cross-fade 75s)       │
-                │      • GSAP (transitions UI)                │
-                │   logo SVG codé (pas un asset image)        │
-                └────────────────┬────────────────────────────┘
-                                 │
-                                 │  /api/wiki-image?q=...
-                                 │
-              ┌──────────────────┴──────────────────┐
-              │                                     │
-              ▼                                     ▼
-   ┌────────────────────────┐         ┌──────────────────────────┐
-   │  CIBLE PUBLIQUE        │         │  CIBLE NAS (validation)  │
-   │  Cloudflare Pages      │         │  http://nas:4203         │
-   │  eywa-eywa.pages.dev   │         │  docker compose          │
-   │                        │         │                          │
-   │  /api/wiki-image →     │         │  /api/wiki-image →       │
-   │  Cloudflare Function   │         │  NestJS port 3003        │
-   │  (Fandom→Wiki proxy)   │         │  (Fandom→Wiki proxy)     │
-   └────────────────────────┘         └──────────────────────────┘`}
-        </AsciiDiagram>
+        <MermaidDiagram
+          client:load
+          caption="Astro statique + îlots React 19 · une cible publique sans backend (Cloudflare Pages + Functions), une cible NAS pour la validation locale."
+          definition={`flowchart TB
+  subgraph FE["Eywa frontend — Astro 6 (statique pur)"]
+    pages["Pages MDX (78) + sidebar 320px sticky"]
+    islands["Îlots React 19 (client:visible)"]
+    canvas["CinemaCanvas — R3F mode 'time'"]
+    particles["ParticleField — WebGL shader custom"]
+    backdrop["CycleBackdrop — cross-fade 75s"]
+    gsap["GSAP — transitions UI"]
+    logo["Logo SVG codé inline"]
+  end
+
+  subgraph PUB["Cible publique — Cloudflare Pages"]
+    cdn["eywa-eywa.pages.dev"]
+    cfn["/api/wiki-image — Cloudflare Function (Fandom -> Wiki proxy)"]
+  end
+
+  subgraph NAS["Cible NAS — validation locale"]
+    nas["http://nas:4203 (docker compose)"]
+    nest["/api/wiki-image — NestJS port 3003 (Fandom -> Wiki proxy)"]
+  end
+
+  pages --> islands
+  islands --> canvas
+  islands --> particles
+  islands --> backdrop
+  islands --> gsap
+  pages --> logo
+  FE -->|/api/wiki-image?q=...| cfn
+  FE -->|/api/wiki-image?q=...| nest
+  cfn --> cdn
+  nest --> nas`}
+        />
 
         <p>
           Astro statique = aucun cold start, aucun budget serveur, et un site

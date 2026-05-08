@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
-import AsciiDiagram from "@/components/site/AsciiDiagram.astro";
+import MermaidDiagram from "@/components/site/MermaidDiagram.vue";
 import CaseStudySection from "@/components/site/CaseStudySection.astro";
 ---
 
@@ -40,55 +40,46 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
     </CaseStudySection>
 
     <CaseStudySection eyebrow="Architecture">
-      <AsciiDiagram caption="Statique pur sur Cloudflare Pages, batch hebdo via GitHub Actions cron + Anthropic SDK. Aucun backend en prod.">
-{`┌─────────────────────────────────────────────────────────────────┐
-│  GitHub repo · Sylad/claude-code-codex (public, MIT)            │
-│  ┌─────────────────────────┐   ┌──────────────────────────────┐ │
-│  │  frontend/   (Astro 6)  │   │  scripts/   (TypeScript)     │ │
-│  │  • Vue 3 islands        │   │  • lib/feed-parser.ts        │ │
-│  │  • shadcn-vue tokens    │   │  • lib/claude.ts (SDK)       │ │
-│  │  • Tailwind 4 + claude  │   │  • lib/feeds.ts (dedup hash) │ │
-│  │    -orange palette      │   │  • sources/*.ts (4 sources)  │ │
-│  │  • 8 routes statiques   │   │  • batch-update.ts (orchstr) │ │
-│  └────────────┬────────────┘   └──────────────┬───────────────┘ │
-└───────────────┼───────────────────────────────┼─────────────────┘
-                │                               │
-                │ push main                     │ cron lundi 06h UTC
-                ▼                               │ workflow_dispatch
-   ┌──────────────────────────┐                 │
-   │  Cloudflare Pages        │                 │
-   │  build statique pur      │     ┌───────────┴────────────────┐
-   │  → claude-code-codex-    │     │  GitHub Actions runner     │
-   │    25m.pages.dev         │     │  (Ubuntu, Node 22)         │
-   └──────────────────────────┘     │                            │
-                                    │  npx tsx batch-update.ts   │
-                                    │           │                │
-                                    │           ▼                │
-                                    │  ┌────────────────────┐    │
-                                    │  │  Sources scrapées  │    │
-                                    │  │  • simon-willison  │    │
-                                    │  │    (Atom feed)     │    │
-                                    │  │  • anthropics/     │    │
-                                    │  │    skills (GH API) │    │
-                                    │  │  • mcp/servers     │    │
-                                    │  │  • anthropic-news  │    │
-                                    │  └─────────┬──────────┘    │
-                                    │            │ summarize     │
-                                    │            ▼               │
-                                    │  ┌────────────────────┐    │
-                                    │  │  Anthropic SDK     │    │
-                                    │  │  claude-haiku-4-5  │    │
-                                    │  │  140-char FR       │    │
-                                    │  └─────────┬──────────┘    │
-                                    │            │               │
-                                    │            ▼               │
-                                    │  frontend/src/data/feeds/  │
-                                    │     <source>.json (commit) │
-                                    └─────────────┬──────────────┘
-                                                  │ git push main
-                                                  ▼
-                                    Cloudflare rebuild auto`}
-      </AsciiDiagram>
+      <MermaidDiagram
+        client:load
+        caption="Statique pur sur Cloudflare Pages, batch hebdo via GitHub Actions cron + Anthropic SDK. Aucun backend en prod."
+        definition={`flowchart TB
+  subgraph REPO["GitHub repo · Sylad/claude-code-codex (public, MIT)"]
+    subgraph FE["frontend/ (Astro 6)"]
+      vue["Vue 3 islands<br/>shadcn-vue tokens<br/>Tailwind 4 + claude-orange<br/>8 routes statiques"]
+    end
+    subgraph SCR["scripts/ (TypeScript)"]
+      lib["lib/feed-parser.ts<br/>lib/claude.ts (SDK)<br/>lib/feeds.ts (dedup hash)"]
+      sources["sources/*.ts (4 sources)<br/>batch-update.ts (orchstr)"]
+    end
+  end
+
+  subgraph CF["Cloudflare Pages (build statique pur)"]
+    cfp["claude-code-codex-25m.pages.dev"]
+  end
+
+  subgraph CI["GitHub Actions runner (Ubuntu, Node 22)"]
+    cron["cron lundi 06h UTC<br/>+ workflow_dispatch"]
+    tsx["npx tsx batch-update.ts"]
+    scraped["Sources scrapées:<br/>• simon-willison (Atom)<br/>• anthropics/skills (GH API)<br/>• mcp/servers (GH API)<br/>• anthropic-news (RSS fallback)"]
+  end
+
+  subgraph LLM["Anthropic API"]
+    claude["claude-haiku-4-5<br/>résumé 140-char FR<br/>filtre [off-topic]"]
+  end
+
+  subgraph FEEDS["Output committed"]
+    json["frontend/src/data/feeds/<br/>&lt;source&gt;.json"]
+  end
+
+  vue --> cfp
+  REPO -->|push main| cfp
+  cron --> tsx
+  tsx --> scraped
+  scraped -->|summarize| claude
+  claude -->|résumé| json
+  json -->|git commit + push| REPO`}
+      />
       <p>
         Aucun backend en production. Le site est rendu en statique pur à
         chaque push. Le seul code qui tourne en run-time est le job

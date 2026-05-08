@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
-import AsciiDiagram from "@/components/site/AsciiDiagram.astro";
+import MermaidDiagram from "@/components/site/MermaidDiagram.vue";
 import CaseStudySection from "@/components/site/CaseStudySection.astro";
 ---
 
@@ -39,47 +39,42 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
           poussées en live au frontend via SSE :
         </p>
 
-        <AsciiDiagram caption="Frontend React (4202) ↔ Backend NestJS (3002) ↔ 3 sources externes. SSE @Sse() pousse les invalidations TanStack Query.">
-{`
-  ┌───────────────────────────────────────┐
-  │   Frontend React 18 + TanStack        │
-  │   Vite · nginx :4202                  │
-  │                                       │
-  │   useEventStream() ──invalidate──▶    │
-  │   queries: ['live-match'],            │
-  │            ['standings'],             │
-  │            ['fixtures'], …            │
-  └──────────────┬────────────────────────┘
-                 │ /api/* (proxy nginx)
-                 │ /api/events (SSE)
-                 ▼
-  ┌───────────────────────────────────────┐
-  │   Backend NestJS 11 :3002             │
-  │                                       │
-  │   EventBusService (Subject<…>)        │
-  │   @Sse() /api/events ─ heartbeat 30s  │
-  │                                       │
-  │   crons @nestjs/schedule (Paris TZ)   │
-  │   ├─ live-match    */30 * * * * *     │
-  │   ├─ standings     0 0 * * * *        │
-  │   ├─ fixtures      0 */30 * * * *     │
-  │   ├─ cups+bracket  0 0 */2 * * *      │
-  │   ├─ news          0 */30 * * * *     │
-  │   └─ season-reset  0 0 3 1 8 *        │
-  │                                       │
-  │   Caches JSON dans data/              │
-  │   PinGuard sur écritures              │
-  └──┬──────────────┬──────────────┬──────┘
-     │              │              │
-     ▼              ▼              ▼
- 365scores     football-data   Wikipedia FR
- LIGUE1=35     teamId=523      /api/wiki-image
- OL=465        compId=2015     (proxy + cache)
- (live, form,  (calendrier
-  brackets,    officiel)
-  shot chart)
-`}
-        </AsciiDiagram>
+        <MermaidDiagram
+          client:load
+          caption="Frontend React (4202) ↔ Backend NestJS (3002) ↔ 3 sources externes. SSE @Sse() pousse les invalidations TanStack Query."
+          definition={`flowchart TB
+  subgraph FE["Frontend React 18 (port 4202)"]
+    ui["TanStack Router/Query + Recharts + Leaflet"]
+    sse["useEventStream() — EventSource + invalidateQueries"]
+  end
+
+  subgraph BE["Backend NestJS 11 (port 3002)"]
+    bus["EventBusService — RxJS Subject (signature diff)"]
+    sseSvc["@Sse() /api/events — heartbeat 30s"]
+    cron["6 crons @nestjs/schedule (Paris TZ)"]
+    pin["PinGuard (écritures only)"]
+    cache["Caches JSON local (data/)"]
+    wikiProxy["/api/wiki-image — Fandom/Wiki proxy + cache"]
+  end
+
+  subgraph EXT["Sources externes"]
+    s365["365scores (LIGUE1=35, OL=465) — live, form, brackets, shot chart"]
+    fdo["football-data.org (teamId=523, compId=2015) — calendrier officiel"]
+    wiki["Wikipedia FR"]
+  end
+
+  ui -->|/api/* via nginx| pin
+  pin --> cache
+  ui -.->|EventSource /api/events| sseSvc
+  cron --> cache
+  cron -->|emit on change| bus
+  bus --> sseSvc
+  sseSvc -.->|push| sse
+  cron --> s365
+  cron --> fdo
+  wikiProxy --> wiki
+  ui -->|/api/wiki-image| wikiProxy`}
+        />
 
         <p>
           Front (port <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">4202</code>)

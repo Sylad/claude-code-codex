@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
-import AsciiDiagram from "@/components/site/AsciiDiagram.astro";
+import MermaidDiagram from "@/components/site/MermaidDiagram.vue";
 import CaseStudySection from "@/components/site/CaseStudySection.astro";
 ---
 
@@ -45,44 +45,44 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
           + 3 boucles MP4) viennent d'openart.ai.
         </p>
 
-        <AsciiDiagram caption="Pipeline build-time : sources publiques + assets IA → Astro statique → Cloudflare Pages.">
-{`┌─────────────────────────────────────────────────────────────────┐
-│                  Astro 6 frontend (statique pur)                │
-│                                                                 │
-│   ┌────────────────────┐         ┌────────────────────────┐     │
-│   │  Pages SSR-statiques│         │  React 19 islands      │     │
-│   │  • / landing 75s   │ ◄─────► │  • CodexFilters.tsx    │     │
-│   │  • /codex          │         │  • PaleoMap.tsx        │     │
-│   │  • /periodes/[id]  │         │    (Leaflet client:only)│     │
-│   │  • /especes/[id]   │         └────────────────────────┘     │
-│   │  • /films/[id]     │                                        │
-│   │  • /carte /about   │                                        │
-│   └─────────┬──────────┘                                        │
-│             │                                                   │
-│             │  build-time data fetch (mjs script)               │
-│             ▼                                                   │
-│   ┌────────────────────────────────────────────────────────┐    │
-│   │           Sources de données (build-time)              │    │
-│   │  • PaleoBioDB API — taxonomie + occurrences fossiles   │    │
-│   │  • Wikimedia Commons — paleo-art domaine public        │    │
-│   │  • GBIF Occurrence API — points de la carte            │    │
-│   └────────────────────────────────────────────────────────┘    │
-│                                                                 │
-│   ┌────────────────────────────────────────────────────────┐    │
-│   │           Assets visuels (figés dans /public)          │    │
-│   │  • openart.ai — hero T-Rex (jpg)                       │    │
-│   │  • openart.ai — 3× boucles MP4 (landing / films /      │    │
-│   │    about), chaque fichier < 25 MB (cap Cloudflare)     │    │
-│   └────────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-                 ┌────────────────────────────┐
-                 │  Cloudflare Pages (CDN)    │
-                 │  evatosorus.pages.dev      │
-                 │  1527 pages · dist ~27 MB  │
-                 └────────────────────────────┘`}
-        </AsciiDiagram>
+        <MermaidDiagram
+          client:load
+          caption="Pipeline build-time : sources publiques + assets IA → Astro statique → Cloudflare Pages."
+          definition={`flowchart TB
+  subgraph FE["Astro 6 frontend (statique pur)"]
+    pages["Pages SSR-statiques — /, /codex, /periodes/[id], /especes/[id], /films/[id], /carte, /about"]
+    islands["React 19 islands — CodexFilters, PaleoMap (Leaflet client:only)"]
+    fetcher["import-paleobiodb.mjs (build-time data fetch)"]
+    assets["Assets figés /public — hero T-Rex jpg + 3 MP4 boucles (≤ 25 MB)"]
+  end
+
+  subgraph DATA["Sources de données (build-time)"]
+    pbdb["PaleoBioDB API — taxonomie + occurrences"]
+    wmc["Wikimedia Commons — paleo-art DP/CC"]
+    gbif["GBIF Occurrence API — points carte"]
+    wiki["Wikipedia — fiches contextuelles"]
+  end
+
+  subgraph AI["Assets IA (openart.ai)"]
+    trex["Hero T-Rex (jpg)"]
+    mp4["3 boucles MP4 (landing / films / about)"]
+  end
+
+  subgraph CDN["Cloudflare Pages"]
+    cf["evatosorus.pages.dev — 1527 pages, dist ~27 MB"]
+  end
+
+  pages --> islands
+  fetcher --> pbdb
+  fetcher --> wmc
+  fetcher --> gbif
+  fetcher --> wiki
+  fetcher --> pages
+  trex --> assets
+  mp4 --> assets
+  pages --> cf
+  assets --> cf`}
+        />
       </CaseStudySection>
 
       <CaseStudySection eyebrow="Données — 1500+ espèces du Mésozoïque">

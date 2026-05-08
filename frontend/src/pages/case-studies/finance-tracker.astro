@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
-import AsciiDiagram from "@/components/site/AsciiDiagram.astro";
+import MermaidDiagram from "@/components/site/MermaidDiagram.vue";
 import CaseStudySection from "@/components/site/CaseStudySection.astro";
 ---
 
@@ -34,47 +34,41 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
     </CaseStudySection>
 
     <CaseStudySection eyebrow="Architecture">
-      <AsciiDiagram caption="Pipeline d'import : PDF → NestJS → Claude two-phase → JSON storage. Démo publique passe par un Cloudflare quick tunnel + bypass PIN host-locked.">
-{`┌──────────────────────────────────────────────────────────────────────────┐
-│                     React 18 + TanStack Router/Query                     │
-│        upload multi-PDF (max 12)   ·   dashboard   ·   /loans /savings   │
-└──────────────────────────────┬───────────────────────────────────────────┘
-                               │  fetch + Bearer <PIN>
-                               ▼
-┌──────────────────────────────────────────────────────────────────────────┐
-│                       NestJS 11  (port 3000)                             │
-│                                                                          │
-│   PinGuard (global)  ──┐         DemoModeMiddleware                      │
-│                        ├──► host-locked bypass si *.trycloudflare.com    │
-│                        └──► AsyncLocalStorage { demoMode, forced }       │
-│                                                                          │
-│   AnalysisController  ──► AnthropicService                               │
-│                              │                                           │
-│                              ▼                                           │
-│              ┌──── Phase 1 (tool_use ANALYZE_TOOL) ────┐                 │
-│              │   PDF base64 → transactions[], score,   │                 │
-│              │   suggestedRecurringExpenses[]          │                 │
-│              └─────────────────────────────────────────┘                 │
-│                              │                                           │
-│                              ▼                                           │
-│              ┌──── Phase 2 (tool_use CATEGORIZE_TOOL) ─┐                 │
-│              │   transactions[] → category +           │                 │
-│              │   subCategory + confidence              │                 │
-│              └─────────────────────────────────────────┘                 │
-│                              │                                           │
-│   StorageService ◄───────────┘                                           │
-│      data/finance/statements/<YYYY-MM>.json                              │
-│      data/finance/statements/archive/<YYYY>/<YYYY-MM>.json               │
-│      data/finance/yearly/<YYYY>.json                                     │
-│      data/demo/...           (isolation par AsyncLocalStorage)           │
-│                                                                          │
-│   AutoSyncService ──► LoansService.splitByAmount  +  SavingsService      │
-└──────────────────────────────────────────────────────────────────────────┘
-                               ▲
-                               │  cloudflared tunnel --url http://localhost:4200
-                               │
-                  https://<random>.trycloudflare.com  (démo verrouillée)`}
-      </AsciiDiagram>
+      <MermaidDiagram
+        client:load
+        caption="Pipeline d'import : PDF → NestJS → Claude two-phase → JSON storage. Démo publique passe par un Cloudflare quick tunnel + bypass PIN host-locked."
+        definition={`flowchart TB
+  subgraph FE["Frontend (React 18 + TanStack)"]
+    ui["Upload multi-PDF (max 12), dashboard, /loans /savings"]
+  end
+
+  subgraph BE["NestJS 11 (port 3000)"]
+    pin["PinGuard (global, Bearer PIN)"]
+    demo["DemoModeMiddleware (AsyncLocalStorage)"]
+    ctrl["AnalysisController"]
+    anth["AnthropicService (Sonnet 4.5)"]
+    p1["Phase 1 — tool_use ANALYZE_TOOL: transactions, score, recurring"]
+    p2["Phase 2 — tool_use CATEGORIZE_TOOL: category, sub, confidence"]
+    store["StorageService — data/finance/statements/&lt;YYYY-MM&gt;.json + archive + yearly + data/demo"]
+    sync["AutoSyncService — Loans.splitByAmount + Savings"]
+  end
+
+  subgraph EXT["External"]
+    claude["Anthropic API"]
+    tunnel["Cloudflare quick tunnel (*.trycloudflare.com — démo verrouillée)"]
+  end
+
+  ui -->|fetch + Bearer PIN| pin
+  pin --> demo
+  demo --> ctrl
+  ctrl --> anth
+  anth --> p1
+  p1 --> p2
+  p2 --> store
+  store --> sync
+  anth -->|tool_use| claude
+  tunnel -.->|host bypass| demo`}
+      />
       <p>
         Trois flux remarquables coexistent : l'<strong>import PDF</strong>
         (synchrone, multipart, jusqu'à 12 fichiers en une fois), l'<strong>auto-sync</strong>

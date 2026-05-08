@@ -1,6 +1,28 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
+import { testedTools } from "@/data/tools-tested";
+import {
+  STATUS_LABELS,
+  STATUS_ACCENTS,
+  STATUS_DOTS,
+  CATEGORY_LABELS,
+} from "@/data/tools-tested-types";
+import type { ToolStatus } from "@/data/tools-tested-types";
+
+const STATUS_ORDER: ToolStatus[] = ["tested", "to-test", "browsed"];
+const groupedTools = STATUS_ORDER.map((status) => ({
+  status,
+  tools: testedTools.filter((t) => t.status === status),
+}));
+
+const totalTools = testedTools.length;
+
+function formatStars(n?: number): string {
+  if (!n) return "";
+  if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;
+  return String(n);
+}
 
 const apps = [
   {
@@ -128,66 +150,122 @@ const apps = [
 
     <div class="mt-16">
       <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude mb-2">
-        Tools tested
+        Tools tested · {totalTools} entrées
       </p>
       <h2 class="text-2xl sm:text-3xl font-semibold text-ink mb-3">
         Outils explorés sur le banc d'essai
       </h2>
-      <p class="text-ink-muted leading-relaxed max-w-2xl mb-6">
+      <p class="text-ink-muted leading-relaxed max-w-2xl mb-8">
         Le codex sert aussi de banc d'essai personnel : on installe les outils
-        de l'écosystème Claude Code, on les pousse en sandbox, et on capture les
-        leçons — adoptés ou non.
+        de l'écosystème Claude Code, on les pousse en sandbox, et on capture
+        les leçons — adoptés ou non. <strong class="text-ink">Testé</strong> =
+        passé par la sandbox + case study écrit.
+        <strong class="text-ink">À tester</strong> = identifié comme
+        candidat. <strong class="text-ink">Sur le radar</strong> = repéré, à
+        explorer si pertinent.
       </p>
 
-      <div class="grid gap-5 sm:grid-cols-2">
-        <a
-          href="/case-studies/ruflo"
-          class="group relative overflow-hidden rounded-xl border border-white/10 bg-paper-elevated p-6 hover:border-claude/40 transition-colors"
-        >
-          <div
-            class="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-transparent opacity-50 group-hover:opacity-80 transition-opacity pointer-events-none"
-          >
-          </div>
-          <div class="relative">
-            <div class="flex items-center justify-between mb-3">
-              <p class="font-mono text-sm text-claude">ruflo</p>
+      {groupedTools.map(({ status, tools }) => (
+        tools.length > 0 && (
+          <div class="mb-10">
+            <div class="flex items-center gap-2 mb-4">
               <span
-                class="text-ink-muted group-hover:text-claude group-hover:translate-x-0.5 transition-all"
-              >
-                →
-              </span>
+                class={`inline-block w-2 h-2 rounded-full ${STATUS_DOTS[status]}`}
+              ></span>
+              <h3 class="font-mono text-xs uppercase tracking-wider text-ink-muted">
+                {STATUS_LABELS[status]} · {tools.length}
+              </h3>
             </div>
-            <h3 class="text-xl font-medium text-ink mb-2">
-              Multi-agent orchestration sur Claude Code
-            </h3>
-            <p class="text-sm text-ink-muted mb-4 leading-relaxed">
-              Testé sur la 3.7-alpha et la 3.6.30 stable. Pas adopté
-              (`--no-global` cassé, cleanup incomplet) mais 8 patterns à
-              reprendre.
-            </p>
-            <p class="font-mono text-xs text-ink/60 pt-3 border-t border-white/5">
-              Ruflo · 32 plugins · multi-agent
-            </p>
-          </div>
-        </a>
+            <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {tools.map((tool) => {
+                const primaryHref = tool.caseStudyHref ?? tool.url;
+                const isInternal = !!tool.caseStudyHref;
+                return (
+                  <article
+                    class={`relative overflow-hidden rounded-xl border ${STATUS_ACCENTS[status]} p-5 transition-colors hover:border-claude/40 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-claude/10`}
+                  >
+                    <div class="flex flex-col gap-3 h-full">
+                      <div class="flex items-start justify-between gap-2">
+                        <div class="min-w-0 flex-1">
+                          <p class="font-mono text-[10px] uppercase tracking-wider text-claude">
+                            {CATEGORY_LABELS[tool.category]}
+                            {tool.stars && (
+                              <span class="text-ink-muted ml-2">
+                                ★ {formatStars(tool.stars)}
+                              </span>
+                            )}
+                          </p>
+                          <h4 class="mt-1 text-base font-medium text-ink truncate">
+                            <a
+                              href={primaryHref}
+                              target={isInternal ? undefined : "_blank"}
+                              rel={isInternal ? undefined : "noopener"}
+                              class="hover:text-claude transition-colors"
+                            >
+                              {tool.name}
+                            </a>
+                          </h4>
+                          <p class="mt-0.5 text-xs text-ink-muted">
+                            {tool.author}
+                            {tool.license && (
+                              <span class="text-ink/50"> · {tool.license}</span>
+                            )}
+                          </p>
+                        </div>
+                      </div>
 
-        <div
-          class="relative overflow-hidden rounded-xl border border-white/5 border-dashed bg-paper-elevated/50 p-6"
-        >
-          <p class="font-mono text-xs uppercase tracking-wider text-ink/40 mb-2">
-            Slot libre
-          </p>
-          <p class="text-ink-muted leading-relaxed text-sm">
-            Le prochain outil testé apparaîtra ici. Suggestions bienvenues
-            <a
-              href="https://github.com/Sylad/claude-code-codex/issues"
-              target="_blank"
-              rel="noopener"
-              class="text-claude hover:text-claude-soft underline underline-offset-4"
-              >sur le repo</a
-            >.
-          </p>
-        </div>
+                      <p class="text-sm text-ink-muted leading-relaxed flex-1">
+                        {tool.description}
+                      </p>
+
+                      <div class="flex flex-wrap items-center gap-2 pt-1">
+                        {tool.caseStudyHref ? (
+                          <a
+                            href={tool.caseStudyHref}
+                            class="font-mono text-[10px] uppercase tracking-wider text-claude/80 hover:text-claude transition-colors"
+                          >
+                            → Case study
+                          </a>
+                        ) : (
+                          <span class="font-mono text-[10px] uppercase tracking-wider text-ink/40">
+                            {tool.lastPush}
+                          </span>
+                        )}
+                        <a
+                          href={tool.url}
+                          target="_blank"
+                          rel="noopener"
+                          class="ml-auto font-mono text-[10px] uppercase tracking-wider text-ink-muted hover:text-claude transition-colors"
+                        >
+                          ↗ GitHub
+                        </a>
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+        )
+      ))}
+
+      <div
+        class="rounded-xl border border-white/5 border-dashed bg-paper-elevated/50 p-5 text-center"
+      >
+        <p class="font-mono text-xs uppercase tracking-wider text-ink/40 mb-1">
+          Suggestion ?
+        </p>
+        <p class="text-ink-muted text-sm leading-relaxed">
+          Une ressource Claude Code-spécifique mérite d'être ajoutée à la
+          watchlist ? Ouvre une issue
+          <a
+            href="https://github.com/Sylad/claude-code-codex/issues"
+            target="_blank"
+            rel="noopener"
+            class="text-claude hover:text-claude-soft underline underline-offset-4"
+            >sur le repo</a
+          >.
+        </p>
       </div>
     </div>
 
