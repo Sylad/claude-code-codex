@@ -1,0 +1,11 @@
+[
+  {
+    "id": "e9e3aecd3b905e0a",
+    "source": "humancoders",
+    "url": "https://blog.humancoders.com/mcp-le-chainon-manquant-entre-lia-generative-et-vos-outils/",
+    "title": "MCP : le chaînon manquant entre l'IA générative et vos outils",
+    "summary": "Le Model Context Protocol d’Anthropic permet aux LLM de se connecter à Slack, PostgreSQL, Stripe et plus. Fonctionnement, cas d’usage et lim",
+    "publishedAt": "Mon, 12 May 2025 13:34:46 GMT",
+    "fetchedAt": "2026-05-09T08:12:03.309Z"
+  }
+]

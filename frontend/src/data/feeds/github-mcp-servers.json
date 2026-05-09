@@ -1,0 +1,58 @@
+[
+  {
+    "id": "82c71f2c6cef1c2a",
+    "source": "github-mcp-servers",
+    "url": "https://github.com/modelcontextprotocol/servers/tree/main/src/everything",
+    "title": "everything",
+    "summary": "# Everything MCP Server\n**[Architecture](docs/architecture.md)\n| [Project Structure](docs/structure.md)\n| [Startup Process](docs/startup.md)",
+    "fetchedAt": "2026-05-09T08:12:03.093Z"
+  },
+  {
+    "id": "95ec80ccbf01cd3a",
+    "source": "github-mcp-servers",
+    "url": "https://github.com/modelcontextprotocol/servers/tree/main/src/fetch",
+    "title": "fetch",
+    "summary": "# Fetch MCP Server\n\n<!-- mcp-name: io.github.modelcontextprotocol/server-fetch -->\n\nA Model Context Protocol server that provides web conten",
+    "fetchedAt": "2026-05-09T08:12:03.093Z"
+  },
+  {
+    "id": "df30a77ec522ebf0",
+    "source": "github-mcp-servers",
+    "url": "https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem",
+    "title": "filesystem",
+    "summary": "# Filesystem MCP Server\n\nNode.js server implementing Model Context Protocol (MCP) for filesystem operations.\n\n## Features\n\n- Read/write file",
+    "fetchedAt": "2026-05-09T08:12:03.093Z"
+  },
+  {
+    "id": "0bebff4139fdb367",
+    "source": "github-mcp-servers",
+    "url": "https://github.com/modelcontextprotocol/servers/tree/main/src/git",
+    "title": "git",
+    "summary": "# mcp-server-git: A git MCP server\n\n<!-- mcp-name: io.github.modelcontextprotocol/server-git -->\n\n## Overview\n\nA Model Context Protocol serv",
+    "fetchedAt": "2026-05-09T08:12:03.093Z"
+  },
+  {
+    "id": "1e29591528f25514",
+    "source": "github-mcp-servers",
+    "url": "https://github.com/modelcontextprotocol/servers/tree/main/src/memory",
+    "title": "memory",
+    "summary": "# Knowledge Graph Memory Server\n\nA basic implementation of persistent memory using a local knowledge graph. This lets Claude remember inform",
+    "fetchedAt": "2026-05-09T08:12:03.093Z"
+  },
+  {
+    "id": "513c1a75f9e8c388",
+    "source": "github-mcp-servers",
+    "url": "https://github.com/modelcontextprotocol/servers/tree/main/src/sequentialthinking",
+    "title": "sequentialthinking",
+    "summary": "# Sequential Thinking MCP Server\n\nAn MCP server implementation that provides a tool for dynamic and reflective problem-solving through a str",
+    "fetchedAt": "2026-05-09T08:12:03.093Z"
+  },
+  {
+    "id": "977a776a841449dd",
+    "source": "github-mcp-servers",
+    "url": "https://github.com/modelcontextprotocol/servers/tree/main/src/time",
+    "title": "time",
+    "summary": "# Time MCP Server\n\n<!-- mcp-name: io.github.modelcontextprotocol/server-time -->\n\nA Model Context Protocol server that provides time and tim",
+    "fetchedAt": "2026-05-09T08:12:03.093Z"
+  }
+]

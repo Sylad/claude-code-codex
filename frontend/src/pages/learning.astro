@@ -2,6 +2,7 @@
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
 import LearningCatalog from "@/components/site/LearningCatalog.vue";
+import LatestNews from "@/components/site/LatestNews.astro";
 import { learningEntries } from "@/data/learning";
 ---
 
@@ -15,7 +16,19 @@ import { learningEntries } from "@/data/learning";
     intro="Une sélection courte de blogs, newsletters et podcasts qui parlent vraiment de Claude Code, des agents et de l'AI engineering — pas des AI-influencers génériques."
   />
 
+  <LatestNews />
+
   <section class="mx-auto max-w-6xl px-5 sm:px-8 py-12">
+    <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude mb-2">
+      Catalogue des sources
+    </p>
+    <h2 class="text-2xl sm:text-3xl font-semibold text-ink mb-3">
+      Tous les blogs / newsletters / podcasts curés
+    </h2>
+    <p class="text-ink-muted leading-relaxed max-w-2xl mb-8 text-sm sm:text-base">
+      Pour aller au-delà de l'aperçu live au-dessus : la liste complète
+      des sources qu'on suit, triables par type et langue.
+    </p>
     <LearningCatalog entries={learningEntries} client:load />
 
     <div

@@ -1,0 +1,138 @@
+[
+  {
+    "id": "8d5f79168ade90a4",
+    "source": "github-anthropics-skills",
+    "url": "https://github.com/anthropics/skills/tree/main/skills/algorithmic-art",
+    "title": "algorithmic-art",
+    "summary": "---\nname: algorithmic-art\ndescription: Creating algorithmic art using p5.js with seeded randomness and interactive parameter exploration. Us",
+    "fetchedAt": "2026-05-09T08:12:00.902Z"
+  },
+  {
+    "id": "03534a1503363342",
+    "source": "github-anthropics-skills",
+    "url": "https://github.com/anthropics/skills/tree/main/skills/brand-guidelines",
+    "title": "brand-guidelines",
+    "summary": "---\nname: brand-guidelines\ndescription: Applies Anthropic's official brand colors and typography to any sort of artifact that may benefit fr",
+    "fetchedAt": "2026-05-09T08:12:00.902Z"
+  },
+  {
+    "id": "87afa1053def55cd",
+    "source": "github-anthropics-skills",
+    "url": "https://github.com/anthropics/skills/tree/main/skills/canvas-design",
+    "title": "canvas-design",
+    "summary": "---\nname: canvas-design\ndescription: Create beautiful visual art in .png and .pdf documents using design philosophy. You should use this ski",
+    "fetchedAt": "2026-05-09T08:12:00.902Z"
+  },
+  {
+    "id": "3aa96300f8907b3a",
+    "source": "github-anthropics-skills",
+    "url": "https://github.com/anthropics/skills/tree/main/skills/claude-api",
+    "title": "claude-api",
+    "summary": "---\nname: claude-api\ndescription: \"Build, debug, and optimize Claude API / Anthropic SDK apps. Apps built with this skill should include pro",
+    "fetchedAt": "2026-05-09T08:12:00.902Z"
+  },
+  {
+    "id": "08955d51118973ac",
+    "source": "github-anthropics-skills",
+    "url": "https://github.com/anthropics/skills/tree/main/skills/doc-coauthoring",
+    "title": "doc-coauthoring",
+    "summary": "---\nname: doc-coauthoring\ndescription: Guide users through a structured workflow for co-authoring documentation. Use when user wants to writ",
+    "fetchedAt": "2026-05-09T08:12:00.902Z"
+  },
+  {
+    "id": "ca93444cdf7bad51",
+    "source": "github-anthropics-skills",
+    "url": "https://github.com/anthropics/skills/tree/main/skills/docx",
+    "title": "docx",
+    "summary": "---\nname: docx\ndescription: \"Use this skill whenever the user wants to create, read, edit, or manipulate Word documents (.docx files). Trigg",
+    "fetchedAt": "2026-05-09T08:12:00.902Z"
+  },
+  {
+    "id": "e23d438a42d29f89",
+    "source": "github-anthropics-skills",
+    "url": "https://github.com/anthropics/skills/tree/main/skills/frontend-design",
+    "title": "frontend-design",
+    "summary": "---\nname: frontend-design\ndescription: Create distinctive, production-grade frontend interfaces with high design quality. Use this skill whe",
+    "fetchedAt": "2026-05-09T08:12:00.902Z"
+  },
+  {
+    "id": "474bb1da5ce2cb83",
+    "source": "github-anthropics-skills",
+    "url": "https://github.com/anthropics/skills/tree/main/skills/internal-comms",
+    "title": "internal-comms",
+    "summary": "---\nname: internal-comms\ndescription: A set of resources to help me write all kinds of internal communications, using the formats that my co",
+    "fetchedAt": "2026-05-09T08:12:00.902Z"
+  },
+  {
+    "id": "e4e8ef072e439a17",
+    "source": "github-anthropics-skills",
+    "url": "https://github.com/anthropics/skills/tree/main/skills/mcp-builder",
+    "title": "mcp-builder",
+    "summary": "---\nname: mcp-builder\ndescription: Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with ex",
+    "fetchedAt": "2026-05-09T08:12:00.902Z"
+  },
+  {
+    "id": "ea80f09e2f48a320",
+    "source": "github-anthropics-skills",
+    "url": "https://github.com/anthropics/skills/tree/main/skills/pdf",
+    "title": "pdf",
+    "summary": "---\nname: pdf\ndescription: Use this skill whenever the user wants to do anything with PDF files. This includes reading or extracting text/ta",
+    "fetchedAt": "2026-05-09T08:12:00.902Z"
+  },
+  {
+    "id": "7ef71285d2196e3e",
+    "source": "github-anthropics-skills",
+    "url": "https://github.com/anthropics/skills/tree/main/skills/pptx",
+    "title": "pptx",
+    "summary": "---\nname: pptx\ndescription: \"Use this skill any time a .pptx file is involved in any way — as input, output, or both. This includes: creatin",
+    "fetchedAt": "2026-05-09T08:12:00.902Z"
+  },
+  {
+    "id": "8a7784776c1d7d1d",
+    "source": "github-anthropics-skills",
+    "url": "https://github.com/anthropics/skills/tree/main/skills/skill-creator",
+    "title": "skill-creator",
+    "summary": "---\nname: skill-creator\ndescription: Create new skills, modify and improve existing skills, and measure skill performance. Use when users wa",
+    "fetchedAt": "2026-05-09T08:12:00.902Z"
+  },
+  {
+    "id": "add1c3b1de475bc2",
+    "source": "github-anthropics-skills",
+    "url": "https://github.com/anthropics/skills/tree/main/skills/slack-gif-creator",
+    "title": "slack-gif-creator",
+    "summary": "---\nname: slack-gif-creator\ndescription: Knowledge and utilities for creating animated GIFs optimized for Slack. Provides constraints, valid",
+    "fetchedAt": "2026-05-09T08:12:00.902Z"
+  },
+  {
+    "id": "8caa7ed6b35ca1e6",
+    "source": "github-anthropics-skills",
+    "url": "https://github.com/anthropics/skills/tree/main/skills/theme-factory",
+    "title": "theme-factory",
+    "summary": "---\nname: theme-factory\ndescription: Toolkit for styling artifacts with a theme. These artifacts can be slides, docs, reportings, HTML landi",
+    "fetchedAt": "2026-05-09T08:12:00.902Z"
+  },
+  {
+    "id": "d8f7beb31a1d7d3e",
+    "source": "github-anthropics-skills",
+    "url": "https://github.com/anthropics/skills/tree/main/skills/web-artifacts-builder",
+    "title": "web-artifacts-builder",
+    "summary": "---\nname: web-artifacts-builder\ndescription: Suite of tools for creating elaborate, multi-component claude.ai HTML artifacts using modern fr",
+    "fetchedAt": "2026-05-09T08:12:00.902Z"
+  },
+  {
+    "id": "23fc1b366ccd02bf",
+    "source": "github-anthropics-skills",
+    "url": "https://github.com/anthropics/skills/tree/main/skills/webapp-testing",
+    "title": "webapp-testing",
+    "summary": "---\nname: webapp-testing\ndescription: Toolkit for interacting with and testing local web applications using Playwright. Supports verifying f",
+    "fetchedAt": "2026-05-09T08:12:00.902Z"
+  },
+  {
+    "id": "4ee2ee8570fab852",
+    "source": "github-anthropics-skills",
+    "url": "https://github.com/anthropics/skills/tree/main/skills/xlsx",
+    "title": "xlsx",
+    "summary": "---\nname: xlsx\ndescription: \"Use this skill any time a spreadsheet file is the primary input or output. This means any task where the user w",
+    "fetchedAt": "2026-05-09T08:12:00.902Z"
+  }
+]

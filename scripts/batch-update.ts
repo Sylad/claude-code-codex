@@ -33,12 +33,14 @@ import anthropicNews from "./sources/anthropic-news.js";
 import simonWillison from "./sources/simon-willison.js";
 import githubSkills from "./sources/github-skills.js";
 import githubMcpServers from "./sources/github-mcp-servers.js";
+import humancoders from "./sources/humancoders.js";
 
 const SOURCES: SourceModule[] = [
   anthropicNews,
   simonWillison,
   githubSkills,
   githubMcpServers,
+  humancoders,
 ];
 
 interface Options {

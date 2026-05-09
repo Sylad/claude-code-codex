@@ -68,6 +68,44 @@ import PageHero from "@/components/site/PageHero.astro";
       </div>
     </div>
 
+    <div class="rounded-xl border border-white/10 bg-paper-elevated p-6">
+      <p class="font-mono text-xs uppercase tracking-wider text-claude mb-3">
+        Crédits IA
+      </p>
+      <ul class="space-y-1.5 text-sm text-ink-muted">
+        <li>
+          <span class="text-ink">Code</span> — pair-programming avec
+          <a
+            href="https://claude.com/claude-code"
+            target="_blank"
+            rel="noopener"
+            class="text-claude hover:text-claude-soft underline underline-offset-4"
+            >Claude Code</a
+          >
+          (Anthropic). 0 ligne de code écrite par l'humain.
+        </li>
+        <li>
+          <span class="text-ink">Background visuel</span> — image
+          cyberpunk générée via
+          <a
+            href="https://openart.ai"
+            target="_blank"
+            rel="noopener"
+            class="text-claude hover:text-claude-soft underline underline-offset-4"
+            >openart.ai</a
+          >
+          (clin d'œil Blade Runner / Terminator pour un collègue fan
+          de SF qui se méfie de l'IA).
+        </li>
+        <li>
+          <span class="text-ink">Résumés batch hebdo</span> —
+          <code class="font-mono text-claude-soft">claude-haiku-4-5</code>
+          via Anthropic SDK, déclenché par le workflow GitHub Actions
+          du repo.
+        </li>
+      </ul>
+    </div>
+
     <div class="rounded-xl border border-claude/20 bg-claude/5 p-6 sm:p-8">
       <p class="font-mono text-xs uppercase tracking-wider text-claude mb-3">
         Si tu veux faire pareil

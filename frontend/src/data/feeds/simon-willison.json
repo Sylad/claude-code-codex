@@ -1,0 +1,137 @@
+[
+  {
+    "id": "55bf5e37506c112a",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/May/9/luke-curley/#atom-everything",
+    "title": "Quoting Luke Curley",
+    "summary": "<blockquote cite=\"https://moq.dev/blog/webrtc-is-the-problem/\"><p>WebRTC is designed to <strong>degrade and drop my prompt</strong> during p",
+    "publishedAt": "2026-05-09T01:03:58+00:00",
+    "fetchedAt": "2026-05-09T08:11:56.108Z"
+  },
+  {
+    "id": "0abd127d4083ebc6",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/May/8/unreasonable-effectiveness-of-html/#atom-everything",
+    "title": "Using Claude Code: The Unreasonable Effectiveness of HTML",
+    "summary": "<p><strong><a href=\"https://twitter.com/trq212/status/2052809885763747935\">Using Claude Code: The Unreasonable Effectiveness of HTML</a></st",
+    "publishedAt": "2026-05-08T21:00:11+00:00",
+    "fetchedAt": "2026-05-09T08:11:56.108Z"
+  },
+  {
+    "id": "8179ec5fd21c4cf7",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/May/7/llm-gemini/#atom-everything",
+    "title": "llm-gemini 0.31",
+    "summary": "<p><strong>Release:</strong> <a href=\"https://github.com/simonw/llm-gemini/releases/tag/0.31\">llm-gemini 0.31</a></p> <blockquote> <ul> <li>",
+    "publishedAt": "2026-05-07T19:57:06+00:00",
+    "fetchedAt": "2026-05-09T08:11:56.108Z"
+  },
+  {
+    "id": "b04200899d48186e",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/May/7/big-words/#atom-everything",
+    "title": "Big Words",
+    "summary": "<p><strong>Tool:</strong> <a href=\"https://tools.simonwillison.net/big-words\">Big Words</a></p> <p>I'm using my <a href=\"https://simonwillis",
+    "publishedAt": "2026-05-07T18:47:09+00:00",
+    "fetchedAt": "2026-05-09T08:11:56.108Z"
+  },
+  {
+    "id": "446f5a8605ef2e79",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/May/7/firefox-claude-mythos/#atom-everything",
+    "title": "Behind the Scenes Hardening Firefox with Claude Mythos Preview",
+    "summary": "<p><strong><a href=\"https://hacks.mozilla.org/2026/05/behind-the-scenes-hardening-firefox/\">Behind the Scenes Hardening Firefox with Claude",
+    "publishedAt": "2026-05-07T17:56:25+00:00",
+    "fetchedAt": "2026-05-09T08:11:56.108Z"
+  },
+  {
+    "id": "d4576f9d8fdb5830",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/May/7/xai-anthropic/#atom-everything",
+    "title": "Notes on the xAI/Anthropic data center deal",
+    "summary": "<p>There weren't a lot of big new announcements from Anthropic at yesterday's Code w/ Claude event, but the biggest by far was the deal they",
+    "publishedAt": "2026-05-07T17:09:28+00:00",
+    "fetchedAt": "2026-05-09T08:11:56.108Z"
+  },
+  {
+    "id": "94895c326bda3991",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/May/7/github-repo-stats/#atom-everything",
+    "title": "GitHub Repo Stats",
+    "summary": "<p><strong>Tool:</strong> <a href=\"https://tools.simonwillison.net/github-repo-stats\">GitHub Repo Stats</a></p> <p>One of the things I alway",
+    "publishedAt": "2026-05-07T07:25:14+00:00",
+    "fetchedAt": "2026-05-09T08:11:56.108Z"
+  },
+  {
+    "id": "bbb4f250c21dbb1f",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/May/6/code-w-claude-2026/#atom-everything",
+    "title": "Live blog: Code w/ Claude 2026",
+    "summary": "<p>I'm at Anthropic's Code w/ Claude event today. Here's my live blog of the morning keynote sessions.</p> <p>Tags: <a href=\"https://simonwi",
+    "publishedAt": "2026-05-06T15:58:27+00:00",
+    "fetchedAt": "2026-05-09T08:11:56.108Z"
+  },
+  {
+    "id": "b4a37e868793364a",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/May/6/vibe-coding-and-agentic-engineering/#atom-everything",
+    "title": "Vibe coding and agentic engineering are getting closer than I'd like",
+    "summary": "<p>I recently talked with Joseph Ruscio about AI coding tools for Heavybit's High Leverage podcast: <a href=\"https://www.heavybit.com/librar",
+    "publishedAt": "2026-05-06T14:24:08+00:00",
+    "fetchedAt": "2026-05-09T08:11:56.108Z"
+  },
+  {
+    "id": "da773fbd4b4acb1d",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/May/5/datasette-referrer-policy/#atom-everything",
+    "title": "datasette-referrer-policy 0.1",
+    "summary": "<p><strong>Release:</strong> <a href=\"https://github.com/datasette/datasette-referrer-policy/releases/tag/0.1\">datasette-referrer-policy 0.1",
+    "publishedAt": "2026-05-05T23:44:27+00:00",
+    "fetchedAt": "2026-05-09T08:11:56.108Z"
+  },
+  {
+    "id": "e3667d49dc363deb",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/May/5/our-ai-started-a-cafe-in-stockholm/#atom-everything",
+    "title": "Our AI started a cafe in Stockholm",
+    "summary": "<p><strong><a href=\"https://andonlabs.com/blog/ai-cafe-stockholm\">Our AI started a cafe in Stockholm</a></strong></p> Andon Labs previously",
+    "publishedAt": "2026-05-05T22:14:21+00:00",
+    "fetchedAt": "2026-05-09T08:11:56.108Z"
+  },
+  {
+    "id": "6786076f2f232d68",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/May/5/datasette-llm/#atom-everything",
+    "title": "datasette-llm 0.1a7",
+    "summary": "<p><strong>Release:</strong> <a href=\"https://github.com/datasette/datasette-llm/releases/tag/0.1a7\">datasette-llm 0.1a7</a></p> <blockquote",
+    "publishedAt": "2026-05-05T01:56:55+00:00",
+    "fetchedAt": "2026-05-09T08:11:56.108Z"
+  },
+  {
+    "id": "cc242aee1b48b5c1",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/May/5/llm-echo/#atom-everything",
+    "title": "llm-echo 0.5a0",
+    "summary": "<p><strong>Release:</strong> <a href=\"https://github.com/simonw/llm-echo/releases/tag/0.5a0\">llm-echo 0.5a0</a></p> <blockquote> <ul> <li>Ne",
+    "publishedAt": "2026-05-05T01:31:54+00:00",
+    "fetchedAt": "2026-05-09T08:11:56.108Z"
+  },
+  {
+    "id": "e246958d7aa5b07c",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/May/5/john-gruber/#atom-everything",
+    "title": "Quoting John Gruber",
+    "summary": "<blockquote cite=\"https://daringfireball.net/2026/05/y_combinators_stake_in_openai\"><p>So it’s well known that Y Combinator owns <em>some</e",
+    "publishedAt": "2026-05-05T00:46:29+00:00",
+    "fetchedAt": "2026-05-09T08:11:56.108Z"
+  },
+  {
+    "id": "9e2378534e2ce27c",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/May/4/granite-41-3b-svg-pelican-gallery/#atom-everything",
+    "title": "Granite 4.1 3B SVG Pelican Gallery",
+    "summary": "<p><strong><a href=\"https://simonw.github.io/granite-4.1-3b-gguf-pelicans/\">Granite 4.1 3B SVG Pelican Gallery</a></strong></p> IBM released",
+    "publishedAt": "2026-05-04T23:49:24+00:00",
+    "fetchedAt": "2026-05-09T08:11:56.108Z"
+  }
+]

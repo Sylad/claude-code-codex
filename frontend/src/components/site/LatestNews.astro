@@ -1,0 +1,152 @@
+---
+import simonWillison from "@/data/feeds/simon-willison.json";
+import humancoders from "@/data/feeds/humancoders.json";
+import anthropicNews from "@/data/feeds/anthropic-news.json";
+
+interface FeedItem {
+  id: string;
+  source: string;
+  url: string;
+  title: string;
+  summary: string;
+  publishedAt?: string;
+  fetchedAt: string;
+}
+
+const SOURCE_META: Record<
+  string,
+  { label: string; pill: string; isFr: boolean }
+> = {
+  "simon-willison": {
+    label: "Simon Willison",
+    pill: "border-amber-500/30 bg-amber-500/10 text-amber-300",
+    isFr: false,
+  },
+  humancoders: {
+    label: "Human Coders",
+    pill: "border-violet-500/30 bg-violet-500/10 text-violet-300",
+    isFr: true,
+  },
+  "anthropic-news": {
+    label: "Anthropic",
+    pill: "border-claude/30 bg-claude/10 text-claude",
+    isFr: false,
+  },
+};
+
+const allItems: FeedItem[] = [
+  ...(simonWillison as FeedItem[]),
+  ...(humancoders as FeedItem[]),
+  ...(anthropicNews as FeedItem[]),
+];
+
+function parsePublishedAt(s?: string): number {
+  if (!s) return 0;
+  const t = Date.parse(s);
+  return isNaN(t) ? 0 : t;
+}
+
+function stripHtml(s: string): string {
+  return s
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function truncate(s: string, n = 220): string {
+  if (s.length <= n) return s;
+  return s.slice(0, n).replace(/\s+\S*$/, "") + "…";
+}
+
+function formatDate(s?: string): string {
+  if (!s) return "";
+  const d = new Date(s);
+  if (isNaN(d.getTime())) return "";
+  return d.toLocaleDateString("fr-FR", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+allItems.sort(
+  (a, b) => parsePublishedAt(b.publishedAt) - parsePublishedAt(a.publishedAt),
+);
+
+const recentItems = allItems.slice(0, 10);
+const totalItems = allItems.length;
+---
+
+{recentItems.length > 0 && (
+  <section class="mx-auto max-w-6xl px-5 sm:px-8 pt-4 pb-16">
+    <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-8">
+      <div>
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+          Dernières news · flux live
+        </p>
+        <h2 class="mt-2 text-2xl sm:text-3xl font-semibold text-ink">
+          Ce qui s'écrit en ce moment
+        </h2>
+        <p class="mt-2 text-ink-muted leading-relaxed max-w-2xl text-sm sm:text-base">
+          Aperçu agrégé de quelques flux RSS. Anthropic + Simon Willison
+          (EN, l'incontournable du tooling LLM) + Human Coders (FR,
+          filtré sur les articles qui mentionnent Claude / Anthropic /
+          MCP). Mis à jour chaque lundi via le batch hebdo.
+        </p>
+      </div>
+      <p class="font-mono text-[10px] uppercase tracking-wider text-ink/50 shrink-0">
+        {totalItems} entrées
+      </p>
+    </div>
+
+    <ul class="grid gap-4 sm:grid-cols-2">
+      {recentItems.map((item) => {
+        const meta = SOURCE_META[item.source] ?? {
+          label: item.source,
+          pill: "border-white/10 bg-white/5 text-ink-muted",
+          isFr: false,
+        };
+        const cleanSummary = truncate(stripHtml(item.summary));
+        const date = formatDate(item.publishedAt);
+        return (
+          <li class="rounded-xl border border-white/10 bg-paper-elevated p-5 transition-colors hover:border-claude/30 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-claude/10 transition-[colors,transform,box-shadow] duration-200">
+            <div class="flex items-center gap-2 flex-wrap mb-3">
+              <span
+                class={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider border ${meta.pill}`}
+              >
+                {meta.label}
+              </span>
+              {meta.isFr && (
+                <span class="font-mono text-[10px] uppercase tracking-wider text-ink-muted">
+                  FR
+                </span>
+              )}
+              <span class="ml-auto font-mono text-[10px] text-ink/50">
+                {date}
+              </span>
+            </div>
+            <h3 class="text-base font-medium text-ink leading-tight mb-2">
+              <a
+                href={item.url}
+                target="_blank"
+                rel="noopener"
+                class="hover:text-claude transition-colors"
+              >
+                {item.title}
+              </a>
+            </h3>
+            <p class="text-sm text-ink-muted leading-relaxed">
+              {cleanSummary}
+            </p>
+          </li>
+        );
+      })}
+    </ul>
+  </section>
+)}

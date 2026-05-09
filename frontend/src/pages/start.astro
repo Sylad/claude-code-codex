@@ -355,6 +355,110 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
       </p>
     </CaseStudySection>
 
+    <!-- 6.5 · Local vs Anthropic -->
+    <CaseStudySection eyebrow="06.5 · Qu'est-ce qui tourne où ?">
+      <p>
+        Question légitime de débutant : quand tu lances Claude Code,
+        qu'est-ce qui s'exécute <strong>sur ta machine</strong> et
+        qu'est-ce qui passe <strong>par les serveurs d'Anthropic</strong> ?
+      </p>
+
+      <div class="rounded-xl border border-white/10 bg-paper-elevated overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-white/10 bg-white/[0.02]">
+              <th class="text-left px-4 py-3 font-mono text-xs uppercase tracking-wider text-claude w-1/2">
+                💻 Sur ta machine (local)
+              </th>
+              <th class="text-left px-4 py-3 font-mono text-xs uppercase tracking-wider text-claude">
+                ☁️ Chez Anthropic
+              </th>
+            </tr>
+          </thead>
+          <tbody class="text-ink-muted align-top">
+            <tr class="border-b border-white/5">
+              <td class="px-4 py-3">
+                Le binaire Claude Code lui-même
+                (<code class="font-mono text-claude-soft">claude</code>)
+              </td>
+              <td class="px-4 py-3">Le modèle Claude (le LLM, le « cerveau »)</td>
+            </tr>
+            <tr class="border-b border-white/5">
+              <td class="px-4 py-3">
+                Tous les outils : <code class="font-mono text-claude-soft">Read</code>,
+                <code class="font-mono text-claude-soft">Edit</code>,
+                <code class="font-mono text-claude-soft">Bash</code>,
+                <code class="font-mono text-claude-soft">Grep</code>…
+              </td>
+              <td class="px-4 py-3">
+                La décision : "quel outil appeler ensuite ?", "comment
+                rédiger ce code ?"
+              </td>
+            </tr>
+            <tr class="border-b border-white/5">
+              <td class="px-4 py-3">Tes fichiers (ne quittent jamais le disque)</td>
+              <td class="px-4 py-3">
+                <strong>Les extraits</strong> que Claude a lus + tes
+                prompts (le contexte de la conversation)
+              </td>
+            </tr>
+            <tr class="border-b border-white/5">
+              <td class="px-4 py-3">Hooks, skills, sub-agents, MCP servers locaux</td>
+              <td class="px-4 py-3">Les réponses du modèle (texte + tool calls)</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3">
+                Tes secrets, ton <code class="font-mono text-claude-soft">.env</code>,
+                ton historique git
+                <span class="text-ink/50 italic">(sauf si tu les fais lire explicitement)</span>
+              </td>
+              <td class="px-4 py-3">
+                <em>Ce que Claude a lu</em> reste dans le contexte de la
+                session — Anthropic n'entraîne pas par défaut sur les
+                conversations API
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>
+        Concrètement, à chaque tour : ton prompt + le contexte
+        accumulé (résumé de ce qui s'est passé, fichiers lus,
+        sorties de commandes) part à l'API Anthropic. Le modèle
+        renvoie soit du texte, soit la décision « j'appelle l'outil X
+        avec ces paramètres ». Le harness local <strong>exécute</strong>
+        l'outil sur ta machine, renvoie le résultat au modèle, et
+        ainsi de suite. C'est cette boucle qu'on appelle
+        <em>agentic loop</em>.
+      </p>
+
+      <div class="rounded-lg border border-white/10 bg-paper-elevated p-4 text-sm space-y-2">
+        <p class="font-mono text-xs uppercase tracking-wider text-claude">
+          Pour bien doser ce que tu envoies
+        </p>
+        <ul class="list-disc pl-5 space-y-1 text-ink-muted">
+          <li>
+            Si tu ne veux pas qu'un fichier soit envoyé,
+            <strong>ne le fais pas lire</strong>. Aucun fichier ne part
+            tout seul.
+          </li>
+          <li>
+            Si tu veux du strict, ajoute des règles dans
+            <code class="font-mono text-claude-soft">.claude/settings.json</code>
+            pour bloquer certaines commandes ou paths via des hooks.
+          </li>
+          <li>
+            Côté facture : c'est le <strong>nombre de tokens
+            envoyés/reçus</strong> qui coûte. Un repo qui balance
+            10 fichiers de 1000 lignes par prompt va coûter cher. RTK
+            (cf <a href="/case-studies#tools-tested">Tools tested</a>)
+            est conçu pour réduire ça.
+          </li>
+        </ul>
+      </div>
+    </CaseStudySection>
+
     <!-- 7. Aller plus loin -->
     <CaseStudySection eyebrow="07 · Quand t'auras envie d'aller plus loin">
       <p>
