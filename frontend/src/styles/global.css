@@ -28,7 +28,7 @@
   --claude-orange: oklch(0.7 0.15 40);
   --claude-orange-soft: oklch(0.78 0.1 45);
   --ink: oklch(0.92 0.005 285);
-  --ink-muted: oklch(0.65 0.005 285);
+  --ink-muted: oklch(0.74 0.005 285);
   --paper: oklch(0.145 0 0);
   --paper-elevated: oklch(0.185 0 0);
 }
@@ -86,6 +86,36 @@
   ::selection {
     background: oklch(0.7 0.15 40 / 0.35);
     color: var(--ink);
+  }
+}
+
+/* Readability boost on the cyberpunk background.
+   Subtle text-shadow applied to body text + muted text so the type
+   reads cleanly even when the bg image shows through.
+   Cards (paper-elevated, claude/5, etc.) carry it gracefully too. */
+@layer base {
+  body {
+    text-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.55),
+      0 0 6px rgba(0, 0, 0, 0.35);
+  }
+
+  /* Defuse the shadow inside content cards (already opaque) so it
+     doesn't muddy the rendering on solid surfaces. */
+  .bg-paper,
+  .bg-paper-elevated,
+  [class*="bg-claude"],
+  [class*="bg-emerald"],
+  [class*="bg-rose"],
+  [class*="bg-amber"],
+  [class*="bg-cyan"],
+  [class*="bg-violet"],
+  [class*="bg-purple"],
+  [class*="bg-lime"],
+  [class*="bg-orange"],
+  [class*="bg-red"],
+  [class*="bg-fuchsia"] {
+    text-shadow: none;
   }
 }
 
