@@ -1,0 +1,438 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import CodeBlock from "@/components/site/CodeBlock.astro";
+import CaseStudySection from "@/components/site/CaseStudySection.astro";
+---
+
+<BaseLayout
+  title="Démarrer"
+  description="Claude Code pour les vrais débutants. Pas de jargon. Juste ce qu'il faut pour ouvrir le truc demain matin et que ça marche."
+>
+  <PageHero
+    eyebrow="Démarrer · Claude Code pour les vrais débutants"
+    title="Tu viens d'installer Claude Code et personne t'a vraiment expliqué"
+    intro="Si t'arrives ici, c'est peut-être qu'on t'a imposé l'outil au taff sans tutoriel, et que t'as passé ta semaine en daily à entendre « agents », « skills », « hooks », « LLM », « MCP » comme si c'était évident. Spoiler : c'est pas évident. On reprend tout depuis le début."
+  />
+
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12 space-y-14">
+
+    <!-- Empathie d'intro -->
+    <CaseStudySection eyebrow="Avant de commencer">
+      <p>
+        Cette page n'est pas un cours d'IA. Elle est écrite pour
+        <strong>la version de toi qui a installé Claude Code la semaine
+        dernière</strong> et qui se demande pourquoi son collègue parle
+        d'<em>agents</em> alors que franchement, c'est juste un
+        ChatGPT qui modifie le code, non ?
+      </p>
+      <p>
+        On va répondre exactement à ces questions, dans cet ordre :
+      </p>
+      <ol class="list-decimal pl-5 space-y-1.5">
+        <li>C'est quoi <strong>concrètement</strong> ?</li>
+        <li>Si tu viens de <strong>Copilot</strong>, ce qui change.</li>
+        <li>Tes <strong>5 premiers prompts</strong> (pas des commandes magiques).</li>
+        <li>3 <strong>réflexes</strong> qui changent tout.</li>
+        <li>4 <strong>erreurs classiques</strong> à éviter.</li>
+        <li>Le <strong>jargon décrypté</strong> (rapide, sans examen).</li>
+        <li>Quand t'auras envie d'<strong>aller plus loin</strong>.</li>
+      </ol>
+      <p class="text-ink-muted text-sm italic">
+        Pas de jargon non-expliqué. Quand un mot technique apparaît pour
+        la première fois, il est défini juste après. Le reste c'est ton
+        terminal et toi.
+      </p>
+    </CaseStudySection>
+
+    <!-- 1. C'est quoi concrètement -->
+    <CaseStudySection eyebrow="01 · C'est quoi en fait ?">
+      <p>
+        Claude Code, c'est <strong>un programme qui tourne dans ton
+        terminal</strong>. Tu lui parles en français (ou en anglais), il
+        modifie tes fichiers, lance des commandes, lit ton code, écrit
+        des tests. Pas de copier-coller depuis un chat web.
+      </p>
+      <p>
+        L'analogie qui marche le mieux :
+      </p>
+      <blockquote
+        class="border-l-2 border-claude/50 pl-4 py-1 text-ink italic"
+      >
+        Imagine ChatGPT, mais qui a accès à ton terminal et tes
+        fichiers. Quand tu dis « ajoute un bouton qui fait X », il
+        modifie le bon fichier directement. Si tu dis « les tests
+        plantent », il les lance, lit l'erreur, et propose un fix.
+      </blockquote>
+      <p>
+        C'est tout. La complexité que tu entends en daily (agents,
+        skills, hooks…) c'est juste les <strong>noms</strong> de ce
+        qu'il fait sous le capot. T'as pas besoin de les connaître
+        pour t'en servir.
+      </p>
+    </CaseStudySection>
+
+    <!-- 2. Si tu viens de Copilot -->
+    <CaseStudySection eyebrow="02 · Si tu viens de Copilot">
+      <p>
+        Pas de critique de Copilot ici, juste un repère pour celui qui
+        connaît. Les deux outils s'utilisent <strong>autrement</strong>.
+      </p>
+      <div class="rounded-xl border border-white/10 bg-paper-elevated overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-white/10 bg-white/[0.02]">
+              <th class="text-left px-4 py-3 font-mono text-xs uppercase tracking-wider text-ink-muted">Aspect</th>
+              <th class="text-left px-4 py-3 font-mono text-xs uppercase tracking-wider text-claude">Copilot mode agent</th>
+              <th class="text-left px-4 py-3 font-mono text-xs uppercase tracking-wider text-claude">Claude Code</th>
+            </tr>
+          </thead>
+          <tbody class="text-ink-muted">
+            <tr class="border-b border-white/5">
+              <td class="px-4 py-3 text-ink">Où ça vit</td>
+              <td class="px-4 py-3">Dans ton IDE (VS Code)</td>
+              <td class="px-4 py-3">Dans le terminal — tu l'invoques avec <code class="font-mono text-claude-soft">claude</code></td>
+            </tr>
+            <tr class="border-b border-white/5">
+              <td class="px-4 py-3 text-ink">Conversation</td>
+              <td class="px-4 py-3">Sidebar étroite à côté du code</td>
+              <td class="px-4 py-3">Pleine fenêtre terminal, on peut respirer</td>
+            </tr>
+            <tr class="border-b border-white/5">
+              <td class="px-4 py-3 text-ink">Contexte</td>
+              <td class="px-4 py-3">Voit le fichier actif + sélection</td>
+              <td class="px-4 py-3">Voit tout ton dossier projet, peut explorer</td>
+            </tr>
+            <tr class="border-b border-white/5">
+              <td class="px-4 py-3 text-ink">Mémoire</td>
+              <td class="px-4 py-3">Oublie après chaque session</td>
+              <td class="px-4 py-3">Garde un fichier <code class="font-mono text-claude-soft">CLAUDE.md</code> qui se relit à chaque ouverture</td>
+            </tr>
+            <tr class="border-b border-white/5">
+              <td class="px-4 py-3 text-ink">Style</td>
+              <td class="px-4 py-3">Suggestions inline dans ton fichier</td>
+              <td class="px-4 py-3">Conversation : tu décris, il fait, tu valides</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3 text-ink">Modèle</td>
+              <td class="px-4 py-3">GPT-* (OpenAI) par défaut</td>
+              <td class="px-4 py-3">Claude (Anthropic) — différent caractère, plus prudent en général</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        En pratique : si t'aimes <strong>écrire du code et que l'outil
+        complète</strong>, Copilot reste très bien. Si t'aimes
+        <strong>décrire ce que tu veux et que l'outil fasse les modifs</strong>,
+        Claude Code te plaira sûrement plus.
+      </p>
+    </CaseStudySection>
+
+    <!-- 3. Tes 5 premiers prompts -->
+    <CaseStudySection eyebrow="03 · Tes 5 premiers prompts">
+      <p>
+        Le piège classique du débutant : balancer une grosse demande
+        type <em>« écris-moi un système d'authentification complet »</em>.
+        Ça marche jamais bien. Comme avec un humain, vaut mieux
+        commencer doux.
+      </p>
+
+      <div class="space-y-4">
+        <div class="rounded-lg border border-white/10 bg-paper-elevated p-4">
+          <p class="font-mono text-[10px] uppercase tracking-wider text-claude mb-2">Prompt 1 · L'explorateur</p>
+          <CodeBlock language="prompt" code={`Lis le fichier src/auth/login.ts et explique-moi en 5 lignes ce qu'il fait.`} />
+          <p class="text-sm text-ink-muted">
+            Pourquoi : tu vérifies qu'il sait lire ton repo, et tu
+            constates qu'il <em>résume</em> mieux qu'il ne devine.
+            C'est ton premier reflex en début de session.
+          </p>
+        </div>
+
+        <div class="rounded-lg border border-white/10 bg-paper-elevated p-4">
+          <p class="font-mono text-[10px] uppercase tracking-wider text-claude mb-2">Prompt 2 · Le détective</p>
+          <CodeBlock language="prompt" code={`Trouve où on appelle la fonction logUserAction et liste tous les call sites.`} />
+          <p class="text-sm text-ink-muted">
+            Pourquoi : il utilise grep tout seul. Plus rapide que toi.
+            Surtout sur un gros repo que tu connais mal.
+          </p>
+        </div>
+
+        <div class="rounded-lg border border-white/10 bg-paper-elevated p-4">
+          <p class="font-mono text-[10px] uppercase tracking-wider text-claude mb-2">Prompt 3 · La modif chirurgicale</p>
+          <CodeBlock language="prompt" code={`Dans src/components/Button.tsx, ajoute un prop "loading" qui affiche un spinner et désactive le bouton. Garde le même style que les autres props.`} />
+          <p class="text-sm text-ink-muted">
+            Pourquoi : tu donnes <strong>un seul fichier</strong>, <strong>une seule
+            modif</strong>, et <strong>une contrainte de style</strong>. Le combo qui
+            marche.
+          </p>
+        </div>
+
+        <div class="rounded-lg border border-white/10 bg-paper-elevated p-4">
+          <p class="font-mono text-[10px] uppercase tracking-wider text-claude mb-2">Prompt 4 · Le débuggueur</p>
+          <CodeBlock language="prompt" code={`Lance "npm test", regarde l'erreur, et propose un fix. Ne modifie rien sans me demander.`} />
+          <p class="text-sm text-ink-muted">
+            Pourquoi : <em>« ne modifie rien sans me demander »</em>.
+            Important au début. Tu veux voir ce qu'il propose avant
+            qu'il touche tes fichiers.
+          </p>
+        </div>
+
+        <div class="rounded-lg border border-white/10 bg-paper-elevated p-4">
+          <p class="font-mono text-[10px] uppercase tracking-wider text-claude mb-2">Prompt 5 · Le réfacteur prudent</p>
+          <CodeBlock language="prompt" code={`Refactor src/utils/format.ts pour extraire les fonctions liées aux dates dans un nouveau fichier src/utils/dates.ts. Update tous les imports. Lance les tests à la fin.`} />
+          <p class="text-sm text-ink-muted">
+            Pourquoi : il fait la modif + le suivi (imports + tests).
+            C'est typiquement le genre de truc où Copilot tape pas et
+            où Claude Code brille.
+          </p>
+        </div>
+      </div>
+    </CaseStudySection>
+
+    <!-- 4. 3 réflexes -->
+    <CaseStudySection eyebrow="04 · 3 réflexes qui changent tout">
+      <ol class="list-decimal pl-5 space-y-3">
+        <li>
+          <strong>Avant de modifier, fais lire.</strong>
+          <p class="mt-1">
+            « Lis X, dis-moi ce que ça fait, puis attendons » avant
+            « modifie X ». Tu vérifies qu'il a compris, il enrichit son
+            contexte, ses modifs sont meilleures derrière.
+          </p>
+        </li>
+        <li>
+          <strong>Crée un <code class="font-mono text-claude-soft">CLAUDE.md</code> à la racine.</strong>
+          <p class="mt-1">
+            Mets dedans : nom du projet, stack technique, conventions
+            (« on commit en français », « tests toujours en
+            <code class="font-mono text-claude-soft">__tests__/</code> »,
+            « ne jamais toucher
+            <code class="font-mono text-claude-soft">migrations/</code>
+            sans demander »). Il le lit à chaque session. Plus tu le
+            soignes, plus il gagne en autonomie.
+          </p>
+        </li>
+        <li>
+          <strong>Lis ce qu'il propose <em>avant</em> de valider.</strong>
+          <p class="mt-1">
+            En mode interactif, il te demande l'autorisation pour
+            chaque commande risquée. Ne tape pas « yes » en pilote
+            automatique. Lis le diff. Tu progresses comme ça.
+          </p>
+        </li>
+      </ol>
+    </CaseStudySection>
+
+    <!-- 5. 4 erreurs classiques -->
+    <CaseStudySection eyebrow="05 · 4 erreurs classiques de début">
+      <ul class="space-y-3">
+        <li>
+          <strong class="text-rose-300">❌ « J'accepte tout sans lire »</strong>
+          <p class="mt-1 text-ink-muted">
+            La première fois qu'il fait un <code class="font-mono text-claude-soft">rm -rf</code>
+            sur un dossier que tu pensais vide, tu te souviens de ce
+            conseil. Ralentis. Lis le diff.
+          </p>
+        </li>
+        <li>
+          <strong class="text-rose-300">❌ « Je crois qu'il connaît mon repo »</strong>
+          <p class="mt-1 text-ink-muted">
+            Au début d'une session, il connaît : ton
+            <code class="font-mono text-claude-soft">CLAUDE.md</code>,
+            le nom de ton dossier, et c'est tout. Pour le reste il faut
+            qu'il <em>aille lire</em>. Donne-lui les noms de fichiers
+            pertinents quand tu les connais — ça lui économise du
+            tâtonnement.
+          </p>
+        </li>
+        <li>
+          <strong class="text-rose-300">❌ « Je lui demande tout d'un coup »</strong>
+          <p class="mt-1 text-ink-muted">
+            « Refactor toute l'app + ajoute un système d'auth + écris
+            les tests + déploie » → résultats incertains. Découpe.
+            Une chose à la fois. Tu vas vite, mais tu vas droit.
+          </p>
+        </li>
+        <li>
+          <strong class="text-rose-300">❌ « Je prends pas le temps de comprendre ce qu'il fait »</strong>
+          <p class="mt-1 text-ink-muted">
+            Si tu valides sans regarder, tu deviens dépendant sans
+            apprendre. Si tu prends 30 secondes pour comprendre ce
+            qu'il a touché et pourquoi, tu progresses comme dev en
+            même temps. C'est l'objectif initial.
+          </p>
+        </li>
+      </ul>
+    </CaseStudySection>
+
+    <!-- 6. Jargon décrypté -->
+    <CaseStudySection eyebrow="06 · Le jargon décrypté (pas un examen)">
+      <p>
+        Tu peux <strong>ignorer cette section au début</strong> et y
+        revenir quand un mot tombe en daily. Mais voilà l'essentiel,
+        pour ne plus avoir le sentiment de « travailler avec des
+        chinois ».
+      </p>
+      <dl class="space-y-3">
+        <div>
+          <dt class="font-mono text-sm text-claude">LLM</dt>
+          <dd class="text-ink-muted">
+            <em>Large Language Model</em>. Le cerveau. Claude, GPT,
+            Gemini sont des LLM. Claude Code utilise Claude (le LLM
+            d'Anthropic).
+          </dd>
+        </div>
+        <div>
+          <dt class="font-mono text-sm text-claude">Tool / outil</dt>
+          <dd class="text-ink-muted">
+            Une action que le LLM peut décider de faire. Lire un
+            fichier, lancer une commande shell, modifier du texte.
+            Quand tu vois « il a appelé le tool Bash », c'est juste
+            qu'il a lancé une commande.
+          </dd>
+        </div>
+        <div>
+          <dt class="font-mono text-sm text-claude">Agent</dt>
+          <dd class="text-ink-muted">
+            Le LLM qui tourne en boucle : il regarde où il en est,
+            décide d'utiliser un tool, voit le résultat, recommence
+            jusqu'à finir la tâche. Claude Code est un agent. Le mot
+            n'a rien de magique.
+          </dd>
+        </div>
+        <div>
+          <dt class="font-mono text-sm text-claude">Sub-agent</dt>
+          <dd class="text-ink-muted">
+            Un agent qui tourne dans une « bulle » à part avec sa
+            propre conversation. Utile pour explorer un truc sans
+            polluer ta conversation principale.
+          </dd>
+        </div>
+        <div>
+          <dt class="font-mono text-sm text-claude">Skill</dt>
+          <dd class="text-ink-muted">
+            Une recette pré-écrite pour une tâche récurrente. Genre
+            <code class="font-mono text-claude-soft">/sparc</code> ou
+            <code class="font-mono text-claude-soft">/save</code>. Tu
+            tapes un slash + le nom et il suit la recette.
+          </dd>
+        </div>
+        <div>
+          <dt class="font-mono text-sm text-claude">Hook</dt>
+          <dd class="text-ink-muted">
+            Un script qui se déclenche automatiquement avant ou après
+            certaines actions. Genre « avant chaque
+            <code class="font-mono text-claude-soft">git push</code>,
+            lance les tests ». Tu n'en as <em>vraiment</em> pas besoin
+            pour démarrer.
+          </dd>
+        </div>
+        <div>
+          <dt class="font-mono text-sm text-claude">MCP</dt>
+          <dd class="text-ink-muted">
+            <em>Model Context Protocol</em>. La norme qui permet de
+            brancher des outils externes (un Notion, une base de
+            données, GitHub) à un LLM. Pareil : tu n'en as pas besoin
+            tant que tu codes en local.
+          </dd>
+        </div>
+        <div>
+          <dt class="font-mono text-sm text-claude">Plugin</dt>
+          <dd class="text-ink-muted">
+            Un bundle de skills + agents + hooks + MCP packagés
+            ensemble. Tu installes un plugin, tu obtiens d'un coup un
+            ensemble de capacités. Genre un thème pour ton éditeur,
+            mais pour Claude Code.
+          </dd>
+        </div>
+      </dl>
+      <p class="text-ink-muted italic text-sm">
+        Tu vois ? C'est juste du vocabulaire. Aucun de ces concepts
+        n'est nécessaire pour faire ton premier vrai prompt. Tu peux
+        utiliser Claude Code pendant des mois sans jamais écrire un
+        skill ni configurer un hook.
+      </p>
+    </CaseStudySection>
+
+    <!-- 7. Aller plus loin -->
+    <CaseStudySection eyebrow="07 · Quand t'auras envie d'aller plus loin">
+      <p>
+        Tu reviens ici dans 2-3 semaines, après tes 10-20 premières
+        sessions. À ce moment-là, tu commenceras à avoir des questions
+        plus pointues : « pourquoi il a relu ce fichier 3 fois ? »,
+        « comment il décide quoi explorer ? », « est-ce que je peux
+        écrire mon propre skill ? ». Ces réponses sont sur les autres
+        pages :
+      </p>
+      <ul class="grid gap-3 sm:grid-cols-2">
+        <li class="rounded-lg border border-white/10 bg-paper-elevated p-4">
+          <a href="/theory" class="text-claude hover:text-claude-soft font-medium">
+            → Théorie
+          </a>
+          <p class="text-sm text-ink-muted mt-1">
+            Architecture, context window, hooks, skills, MCP, agents
+            SDK. Quand t'es prêt à comprendre <strong>comment</strong>
+            ça marche.
+          </p>
+        </li>
+        <li class="rounded-lg border border-white/10 bg-paper-elevated p-4">
+          <a href="/ecosystem" class="text-claude hover:text-claude-soft font-medium">
+            → Écosystème
+          </a>
+          <p class="text-sm text-ink-muted mt-1">
+            Plugins, MCP servers, skills officiels d'Anthropic. Quand
+            tu veux <strong>installer</strong> des trucs supplémentaires.
+          </p>
+        </li>
+        <li class="rounded-lg border border-white/10 bg-paper-elevated p-4">
+          <a href="/case-studies" class="text-claude hover:text-claude-soft font-medium">
+            → Case studies
+          </a>
+          <p class="text-sm text-ink-muted mt-1">
+            6 sites perso construits en pair-programming, 0 ligne de
+            code écrite par l'humain. Quand tu veux voir
+            <strong>ce qui est possible</strong>.
+          </p>
+        </li>
+        <li class="rounded-lg border border-white/10 bg-paper-elevated p-4">
+          <a href="/learning" class="text-claude hover:text-claude-soft font-medium">
+            → Learning
+          </a>
+          <p class="text-sm text-ink-muted mt-1">
+            Blogs et podcasts curés (Simon Willison, Latent Space,
+            Anthropic Engineering…). Pour <strong>continuer
+            d'apprendre</strong> au rythme où l'écosystème évolue.
+          </p>
+        </li>
+      </ul>
+    </CaseStudySection>
+
+    <!-- CTA final -->
+    <div
+      class="rounded-xl border border-claude/20 bg-claude/5 p-6 sm:p-8 text-center"
+    >
+      <p class="font-mono text-xs uppercase tracking-wider text-claude mb-3">
+        Action concrète
+      </p>
+      <p class="text-ink leading-relaxed">
+        Si t'as Claude Code installé, ouvre un terminal, va dans un
+        projet existant, et tape juste : <code class="font-mono text-claude-soft">claude</code>
+        Puis copie-colle le Prompt 1 ci-dessus. Tu verras déjà 80% de ce
+        qui rend l'outil utile.
+      </p>
+      <p class="text-ink-muted text-sm mt-3">
+        Pas encore installé ?
+        <a
+          href="https://docs.claude.com/en/docs/claude-code/quickstart"
+          target="_blank"
+          rel="noopener"
+          class="text-claude hover:text-claude-soft underline underline-offset-4"
+        >
+          Le quickstart officiel ↗
+        </a>
+        explique ça en 2 minutes.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

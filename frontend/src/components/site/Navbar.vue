@@ -5,6 +5,7 @@ import { Menu, X, BookOpenText } from "lucide-vue-next";
 defineProps<{ pathname: string }>();
 
 const links = [
+  { href: "/start", label: "Démarrer" },
   { href: "/theory", label: "Théorie" },
   { href: "/ecosystem", label: "Écosystème" },
   { href: "/case-studies", label: "Case studies" },

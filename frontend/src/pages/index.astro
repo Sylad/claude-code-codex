@@ -4,32 +4,39 @@ import RtkStats from "@/components/site/RtkStats.astro";
 
 const sections = [
   {
-    href: "/theory",
+    href: "/start",
     eyebrow: "01",
+    title: "Démarrer",
+    desc: "Claude Code pour les vrais débutants. Pas de jargon, pas de spam d'agents/skills/hooks. Juste ce qu'il faut pour ouvrir le truc demain matin et comprendre ce que tu fais.",
+    accent: true,
+  },
+  {
+    href: "/theory",
+    eyebrow: "02",
     title: "Théorie",
-    desc: "Comment Claude Code fonctionne sous le capot — context window, tool use, sessions, hooks, slash commands, MCP, skills, agents SDK.",
+    desc: "Comment Claude Code fonctionne sous le capot — context window, tool use, sessions, hooks, slash commands, MCP, skills, agents SDK. À lire après le tuto.",
   },
   {
     href: "/ecosystem",
-    eyebrow: "02",
+    eyebrow: "03",
     title: "Écosystème",
     desc: "Les plugins, skills, MCP servers et tools à connaître pour optimiser l'utilisation. Catalogue triable mis à jour chaque semaine.",
   },
   {
     href: "/case-studies",
-    eyebrow: "03",
+    eyebrow: "04",
     title: "Case studies",
     desc: "Six apps perso codées en pair-programming avec Claude Code. Stack, archi, pièges rencontrés, leçons retenues.",
   },
   {
     href: "/learning",
-    eyebrow: "04",
+    eyebrow: "05",
     title: "Learning",
     desc: "Les blogs et sites qui valent vraiment le détour pour suivre Claude et l'IA — Anthropic, Latent Space, Simon Willison, Every.to.",
   },
   {
     href: "/videos",
-    eyebrow: "05",
+    eyebrow: "06",
     title: "Vidéos",
     desc: "Sélection de chaînes YouTube FR / EN qui couvrent Claude Code spécifiquement — pas de fluff, pas d'AI-influencer générique.",
   },
@@ -72,23 +79,24 @@ const sections = [
         <span class="text-claude">Claude Code</span>.
       </h1>
       <p class="mt-6 max-w-2xl text-base sm:text-lg text-ink-muted leading-relaxed">
-        Théorie, écosystème, case studies, learning, vidéos. Codé en pair-programming
-        avec Claude Code lui-même — donc oui, c'est un peu méta. Mis à jour
-        chaque semaine via un job qui résume les nouveautés.
+        Tu débarques sur Claude Code et tu trouves le jargon des dailys un peu
+        chinois ? <strong class="text-ink">Commence par le tuto</strong>, on
+        explique tout doucement. Quand t'es à l'aise, tu reviens pour la
+        théorie, l'écosystème, les case studies, etc.
       </p>
 
       <div class="mt-9 flex flex-wrap gap-3">
         <a
-          href="/theory"
+          href="/start"
           class="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-claude text-paper font-medium hover:bg-claude-soft transition-colors motion-safe:active:scale-95"
         >
-          Commencer par la théorie →
+          Démarrer (pour les vrais débutants) →
         </a>
         <a
-          href="/case-studies"
+          href="/theory"
           class="inline-flex items-center gap-2 px-5 py-2.5 rounded-md border border-white/15 text-ink hover:bg-white/5 transition-colors motion-safe:active:scale-95"
         >
-          Voir les apps construites
+          J'ai déjà la base, théorie →
         </a>
         <a
           href="https://claude.com/claude-code"
@@ -110,7 +118,7 @@ const sections = [
       {sections.map((s) => (
         <a
           href={s.href}
-          class="group flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-8 p-6 sm:p-8 bg-paper hover:bg-paper-elevated transition-colors motion-safe:active:scale-[0.995]"
+          class={`group flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-8 p-6 sm:p-8 transition-colors motion-safe:active:scale-[0.995] ${s.accent ? "bg-claude/5 hover:bg-claude/10" : "bg-paper hover:bg-paper-elevated"}`}
         >
           <span class="font-mono text-sm text-claude w-12 shrink-0">
             {s.eyebrow}
@@ -118,6 +126,11 @@ const sections = [
           <div class="flex-1">
             <h2 class="text-xl sm:text-2xl font-medium text-ink group-hover:text-claude transition-colors">
               {s.title}
+              {s.accent && (
+                <span class="ml-2 align-middle inline-block font-mono text-[10px] uppercase tracking-wider text-claude border border-claude/40 rounded px-1.5 py-0.5">
+                  Commence ici
+                </span>
+              )}
             </h2>
             <p class="mt-2 text-ink-muted leading-relaxed max-w-2xl">
               {s.desc}
