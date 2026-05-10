@@ -1,5 +1,6 @@
 ---
 import "@/styles/global.css";
+import { ClientRouter } from "astro:transitions";
 import Navbar from "@/components/site/Navbar.vue";
 import Footer from "@/components/site/Footer.astro";
 
@@ -51,11 +52,13 @@ const heroPoster = "/hero-cyberpunk.jpg";
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
     />
     <title>{fullTitle}</title>
+    <ClientRouter />
   </head>
   <body class="text-ink min-h-dvh flex flex-col">
     <div
       class="fixed inset-0 -z-10 overflow-hidden pointer-events-none"
       aria-hidden="true"
+      transition:persist
     >
       <img
         src={heroPoster}
@@ -67,10 +70,10 @@ const heroPoster = "/hero-cyberpunk.jpg";
       >
       </div>
     </div>
-    <Navbar client:load pathname={pathname} />
+    <Navbar client:load pathname={pathname} transition:persist="navbar" />
     <main class="flex-1 pt-16">
       <slot />
     </main>
-    <Footer />
+    <Footer transition:persist />
   </body>
 </html>
