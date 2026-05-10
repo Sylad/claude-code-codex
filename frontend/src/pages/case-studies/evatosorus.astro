@@ -46,7 +46,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         </p>
 
         <MermaidDiagram
-          client:load
+          client:visible
           caption="Pipeline build-time : sources publiques + assets IA → Astro statique → Cloudflare Pages."
           definition={`flowchart TB
   subgraph FE["Astro 6 frontend (statique pur)"]

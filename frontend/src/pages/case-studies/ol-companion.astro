@@ -40,7 +40,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         </p>
 
         <MermaidDiagram
-          client:load
+          client:visible
           caption="Frontend React (4202) ↔ Backend NestJS (3002) ↔ 3 sources externes. SSE @Sse() pousse les invalidations TanStack Query."
           definition={`flowchart TB
   subgraph FE["Frontend React 18 (port 4202)"]

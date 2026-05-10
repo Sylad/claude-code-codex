@@ -51,7 +51,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         </p>
 
         <MermaidDiagram
-          client:load
+          client:visible
           caption="Astro statique + îlots React 19 · une cible publique sans backend (Cloudflare Pages + Functions), une cible NAS pour la validation locale."
           definition={`flowchart TB
   subgraph FE["Eywa frontend — Astro 6 (statique pur)"]

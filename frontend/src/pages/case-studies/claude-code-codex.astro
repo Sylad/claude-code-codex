@@ -41,7 +41,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
 
     <CaseStudySection eyebrow="Architecture">
       <MermaidDiagram
-        client:load
+        client:visible
         caption="Statique pur sur Cloudflare Pages, batch hebdo via GitHub Actions cron + Anthropic SDK. Aucun backend en prod."
         definition={`flowchart TB
   subgraph REPO["GitHub repo · Sylad/claude-code-codex (public, MIT)"]

@@ -35,7 +35,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
 
     <CaseStudySection eyebrow="Architecture">
       <MermaidDiagram
-        client:load
+        client:visible
         caption="Pipeline d'import : PDF → NestJS → Claude two-phase → JSON storage. Démo publique passe par un Cloudflare quick tunnel + bypass PIN host-locked."
         definition={`flowchart TB
   subgraph FE["Frontend (React 18 + TanStack)"]

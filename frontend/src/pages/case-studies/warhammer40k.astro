@@ -32,7 +32,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
 
     <CaseStudySection eyebrow="Architecture">
       <MermaidDiagram
-        client:load
+        client:visible
         caption="Frontend Angular ↔ NestJS ↔ JSON files + Anthropic SDK + sources externes (wiki, Lexicanum, Reddit)"
         definition={`flowchart TB
   subgraph FE["Frontend (port 4201, nginx)"]
