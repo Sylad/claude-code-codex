@@ -36,13 +36,14 @@ export const testedTools: TestedTool[] = [
     author: "thedotmack",
     category: "plugin",
     description:
-      "Plugin qui capture chaque session Claude Code, la compresse via l'agent SDK et ré-injecte le contexte pertinent au launch suivant — mémoire persistante cross-session.",
+      "Plugin de mémoire persistante cross-session pour Claude Code (capture tool usage + résumés sémantiques). Concept solide, exécution non-adoptable : `--help` lance l'install, pas de uninstall fourni.",
     tags: ["claude-code", "plugin", "memory", "context"],
     url: "https://github.com/thedotmack/claude-mem",
-    stars: 73706,
-    lastPush: "2026-05-08",
+    stars: 74236,
+    lastPush: "2026-05-10",
     license: "Apache-2.0",
-    status: "to-test",
+    status: "tested",
+    caseStudyHref: "/case-studies/claude-mem",
   },
   {
     id: "claude-code-router",

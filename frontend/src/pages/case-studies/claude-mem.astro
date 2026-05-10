@@ -1,0 +1,168 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import CaseStudySection from "@/components/site/CaseStudySection.astro";
+
+const lessons = [
+  {
+    title: "`--help` n'est pas toujours un help",
+    body: "Le binaire `claude-mem install --help` lance l'install entière. Aucun warning. Aucun dry-run. Pour un débutant, c'est piégeux — on tape la commande qui devrait afficher la doc et on se retrouve avec un plugin enabled, une marketplace registrée, et settings.json modifié. À ré-appliquer : ne jamais lancer `<tool> --help` aveuglément avant d'avoir lu le README.",
+  },
+  {
+    title: "Snapshot baseline avant tout test bench",
+    body: "md5 de `~/.claude/CLAUDE.md` et `~/.claude/settings.json`, listing de `~/.claude/plugins/` AVANT de toucher quoi que ce soit. Sans baseline, impossible de prouver concrètement les modifications post-install. Pattern formalisé dans le skill `/test-tool`.",
+  },
+  {
+    title: "Pas de uninstall = pas d'adoption",
+    body: "Critère minimal d'adoption : le tool doit fournir une commande `uninstall` qui retire 100% des artefacts. Sinon on accumule la pollution dans `~/.claude/` au fil des tests. claude-mem n'a pas de uninstall — donc reject par défaut.",
+  },
+  {
+    title: "Bun comme runtime requis = friction",
+    body: "Le plugin nécessite Bun installé en plus de Node. Si Bun n'est pas trouvé, le bootstrap tente `curl https://bun.sh/install | bash` qui échoue en cascade si `unzip` n'est pas dispo. Dépendances en chaîne sans fallback gracieux = install fragile.",
+  },
+  {
+    title: "Install non-atomique = état incohérent en cas d'échec",
+    body: "Quand l'install plante mid-way (ici sur Bun), aucun rollback automatique. Settings.json déjà modifié, plugin enabled, marketplace registrée — mais le runtime ne fonctionne pas. L'utilisateur se retrouve avec un environnement à moitié pollué qu'il faut nettoyer manuellement.",
+  },
+  {
+    title: "74k★ ≠ adoptable",
+    body: "Stars + activité (push aujourd'hui) sont nécessaires mais pas suffisants. Notre filtre original sur `/ecosystem` (\"actively maintained, ≥200 stars\") aurait validé claude-mem. Le test bench réel révèle ce que la métrique GitHub ne capture pas : l'expérience d'install et les garde-fous opérationnels.",
+  },
+];
+---
+
+<BaseLayout
+  title="Test bench · claude-mem"
+  description="Retour d'expérience sur thedotmack/claude-mem, plugin Claude Code de mémoire persistante. Concept séduisant, exécution non-adoptable : --help lance l'install, pas de uninstall, Bun requis, install non-atomique."
+>
+  <PageHero
+    eyebrow="Test bench · 2026-05-10"
+    title="claude-mem (thedotmack)"
+    intro="Plugin de mémoire persistante pour Claude Code — capture l'activité des sessions, génère des résumés sémantiques via l'agent SDK, et réinjecte le contexte pertinent à la session suivante. v13.0.1 stable, 74k★, Apache-2.0."
+  />
+
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12">
+    <div class="space-y-12">
+      <CaseStudySection eyebrow="Pourquoi tester">
+        <p>
+          Le concept est exactement ce qu'on cherche : ne plus perdre le contexte
+          entre deux sessions Claude Code. 74k stars, push récent, Apache-2.0 —
+          le profile est sain au niveau métriques. Sylvain l'a explicitement
+          flagué pour test, le pattern est prometteur.
+        </p>
+      </CaseStudySection>
+
+      <CaseStudySection eyebrow="Ce qu'on a testé">
+        <ul class="list-none space-y-2.5">
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span><strong class="text-ink">Snapshot baseline</strong> : md5 de
+            <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">~/.claude/CLAUDE.md</code>
+            et
+            <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">settings.json</code>,
+            listing complet de
+            <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">~/.claude/plugins/</code>.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span><strong class="text-ink">Inspect npm</strong> :
+            <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">npm view claude-mem version</code>
+            → 13.0.1 stable. Pas alpha, pas prerelease. 25+ tree-sitter parsers en deps.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span><strong class="text-ink">Tentative `--help`</strong> :
+            <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">npx claude-mem install --help</code>
+            <em>est censé être</em> un help, mais lance l'install entière. Échec sur le bootstrap Bun (`unzip` manquant) sans rollback.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span><strong class="text-ink">Vérification post-install</strong> : diff de l'état global vs baseline → modifications non-atomiques détectées.</span>
+          </li>
+        </ul>
+      </CaseStudySection>
+
+      <CaseStudySection eyebrow="Verdict">
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div class="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-5">
+            <p class="font-mono text-xs uppercase tracking-wider text-emerald-400 mb-2">
+              Ce qui est solide
+            </p>
+            <ul class="text-sm text-ink-muted leading-relaxed space-y-1.5">
+              <li>• Concept réel et utile (mémoire persistante automatique)</li>
+              <li>• Stable v13.0.1 (pas alpha)</li>
+              <li>• 74k★ + Apache-2.0 + push récent</li>
+              <li>• Site dédié <a href="https://claude-mem.ai" target="_blank" rel="noopener" class="text-emerald-300 hover:text-emerald-200 underline">claude-mem.ai</a> + 30+ traductions README</li>
+              <li>• Multi-IDE (Claude Code / Gemini CLI / OpenCode)</li>
+            </ul>
+          </div>
+          <div class="rounded-xl border border-rose-500/20 bg-rose-500/5 p-5">
+            <p class="font-mono text-xs uppercase tracking-wider text-rose-400 mb-2">
+              Ce qui pète
+            </p>
+            <ul class="text-sm text-ink-muted leading-relaxed space-y-1.5">
+              <li>• <code class="font-mono text-rose-300/80 text-[0.9em]">--help</code> lance l'install entière sans confirmation</li>
+              <li>• Pas de flag <code class="font-mono text-rose-300/80 text-[0.9em]">--dry-run</code></li>
+              <li>• Pas de commande <code class="font-mono text-rose-300/80 text-[0.9em]">claude-mem uninstall</code></li>
+              <li>• Bun runtime requis (échoue si <code class="font-mono text-rose-300/80 text-[0.9em]">unzip</code> absent)</li>
+              <li>• Install non-atomique : pas de rollback en cas d'échec</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="rounded-xl border border-claude/20 bg-claude/5 p-5 sm:p-6 mt-2">
+          <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">
+            Décision
+          </p>
+          <p class="text-ink leading-relaxed">
+            <strong>Reject + watchlist.</strong> 74 mille stars ne suffisent pas
+            quand l'install ne respecte pas les garde-fous opérationnels minimums
+            (dry-run, uninstall, atomicité). À reconsidérer quand un changelog
+            mentionnera explicitement ces fixes.
+          </p>
+        </div>
+      </CaseStudySection>
+
+      <CaseStudySection eyebrow="Leçons à reprendre">
+        <p class="text-ink-muted leading-relaxed">
+          Comme pour Ruflo, le rejet n'invalide pas les apprentissages.
+          Voici ce qu'on retient pour les prochains test benches — et ce
+          qui a directement nourri le skill <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">/test-tool</code> :
+        </p>
+        <ol class="grid gap-3 sm:grid-cols-2">
+          {lessons.map((l, i) => (
+            <li class="rounded-xl border border-white/10 bg-paper-elevated p-5">
+              <p class="font-mono text-xs text-claude/80 mb-2">
+                {String(i + 1).padStart(2, "0")}
+              </p>
+              <h3 class="text-base font-medium text-ink mb-1.5">{l.title}</h3>
+              <p class="text-sm text-ink-muted leading-relaxed">{l.body}</p>
+            </li>
+          ))}
+        </ol>
+      </CaseStudySection>
+
+      <CaseStudySection eyebrow="Watchlist">
+        <p class="text-ink leading-relaxed">
+          Conditions de re-évaluation pour une future adoption :
+        </p>
+        <ul class="list-none space-y-1.5 text-sm text-ink-muted">
+          <li>✓ <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">--help</code> devient un vrai help (pas une install)</li>
+          <li>✓ Flag <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">--dry-run</code> documenté</li>
+          <li>✓ Commande <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">claude-mem uninstall</code> fournie et complète</li>
+          <li>✓ Bun pas requis OU bootstrap propre (fallback si <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">unzip</code> absent)</li>
+          <li>✓ Install atomique (rollback automatique si échec)</li>
+        </ul>
+        <div class="mt-4 flex flex-wrap gap-3 text-xs">
+          <a href="https://github.com/thedotmack/claude-mem/releases" target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">↗ Releases GitHub</a>
+          <a href="https://www.npmjs.com/package/claude-mem" target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">↗ npm claude-mem</a>
+          <a href="https://claude-mem.ai" target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">↗ claude-mem.ai</a>
+        </div>
+      </CaseStudySection>
+
+      <p class="text-center text-xs text-ink/50 font-mono pt-4">
+        Test mené 2026-05-10 sur npm v13.0.1 · protocole formalisé dans le skill <code>/test-tool</code>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
