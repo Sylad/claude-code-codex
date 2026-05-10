@@ -7,26 +7,25 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
 
 <BaseLayout
   title="Case study · avatar-pandora (Eywa)"
-  description="Codex Avatar / Pandora cadeau pour Eva, la nièce de Sylvain. Atmosphère temps-driven, particules WebGL, Astro statique pur sur Cloudflare Pages. 100% codé en pair-programming avec Claude Code."
+  description="Codex Avatar / Pandora cadeau pour une proche. Atmosphère temps-driven, particules WebGL, Astro statique pur sur Cloudflare Pages. 100% codé en pair-programming avec Claude Code."
 >
   <PageHero
     eyebrow="03 · Case study · avatar-pandora"
-    title="Eywa — un codex Pandora pour ma nièce"
-    intro="Quatrième app du laboratoire perso. Un codex Avatar offert à Eva, ma Gremlins de nièce, fan absolue des schtroumpfs géants à trois mètres de haut. Moi je trouve ça moyen, mais bon — l'occasion d'apprendre Astro, R3F et GSAP en codant avec Claude Code, en pair-programming intégral. Zéro ligne écrite à la main."
+    title="Eywa — un codex Pandora à offrir"
+    intro="Quatrième app du laboratoire perso. Un codex Avatar offert à une proche, fan absolue des schtroumpfs géants à trois mètres de haut. Moi je trouve ça moyen, mais bon — l'occasion d'apprendre Astro, R3F et GSAP en codant avec Claude Code, en pair-programming intégral. Zéro ligne écrite à la main."
   />
 
   <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12">
     <div class="space-y-12">
       <CaseStudySection eyebrow="Le pitch">
         <p>
-          <strong>Eywa</strong> (la déesse-réseau de Pandora — clin d'œil à Eva,
-          E_W_A vs E_V_A, une lettre d'écart) est un codex en français sur
+          <strong>Eywa</strong> (la déesse-réseau de Pandora) est un codex en français sur
           l'univers Avatar. Sept sections de contenu lyrique sourcé Pandorapedia
           + Avatar Wiki + Paul Frommer : Pandora, Clans Na'vi, Bestiaire, Flore,
           Personnages, Engins, Films + une page dédiée à la langue Na'vi.
         </p>
         <p>
-          Public visé : <strong>Eva, 18 ans</strong>, fan visuelle avant tout.
+          Public visé : <strong>jeune adulte cinéphile</strong>, fan visuelle avant tout.
           Donc atmosphère cinématique, images grand format, ambiance
           bioluminescente. Et un codex explorable pour quand elle veut creuser.
           Live :
@@ -89,7 +88,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
 
         <p>
           Astro statique = aucun cold start, aucun budget serveur, et un site
-          qui charge en moins d'une seconde même sur le 4G de la nièce. Le
+          qui charge en moins d'une seconde même sur le 4G de la destinataire. Le
           NestJS reste là sur le NAS uniquement pour itérer en local sans
           pousser à chaque fois sur main.
         </p>
@@ -100,7 +99,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
           La V1 livrée fin avril était un scrollytelling cinéma 700vh : cold
           open → forêt → Hometree → montagnes flottantes → océan Metkayina →
           volcan Fire & Ash → reveal du codex. J'aimais les transitions, mais
-          dès que la nièce a vu ça, le verdict est tombé : <em
+          dès le retour de la destinataire, le verdict est tombé : <em
             >"je dois scroller pour voir quoi ?"</em
           >. Friction. Le scroll forcé tuait l'envie d'explorer le codex.
         </p>
@@ -183,7 +182,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
               ><strong>Reduced motion</strong> : hook
               <code>useReducedMotion</code> qui coupe le cinema canvas et fige
               le backdrop sur une atmosphère statique. Accessibilité
-              non-négociable, même sur un cadeau de nièce.</span
+              non-négociable, même sur un cadeau perso.</span
             >
           </li>
           <li class="flex gap-3">
@@ -220,7 +219,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         </p>
         <p>
           Le code est là, public, lisible. Si tu veux faire pareil — prends un
-          sujet qui t'enflamme (la nièce qui kiffe Avatar, dans mon cas), ouvre
+          sujet qui t'enflamme (un proche fan d'Avatar, dans mon cas), ouvre
           Claude Code, et laisse la conversation devenir ton commit log.
         </p>
       </CaseStudySection>
@@ -257,7 +256,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
               rel="noopener"
               class="inline-flex items-center gap-1 px-3 py-1.5 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors"
             >
-              ↗ Page À propos (dédicace Eva)
+              ↗ Page À propos
             </a>
           </div>
         </div>
