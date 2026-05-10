@@ -1,0 +1,188 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import CaseStudySection from "@/components/site/CaseStudySection.astro";
+
+const lessons = [
+  {
+    title: "Le contre-exemple de claude-mem",
+    body: "Même surface de problème (CLI registry pour Claude Code) mais design diamétralement opposé : `--health-check` est genuinely read-only, install par défaut project-local (pas global), pas d'enregistrement marketplace, cleanup trivial (`rm` un fichier .md). C'est la preuve qu'un outil tiers Claude Code peut être bien designé — claude-mem n'avait pas d'excuse.",
+  },
+  {
+    title: "Project-local install > global install",
+    body: "Tout va dans `./.claude/agents/`, `./.claude/commands/`, etc. — jamais `~/.claude/`. Conséquence : chaque projet Claude Code a sa stack de composants explicite, versionnée dans git si on veut. Aucun risque de drift global. Pattern à privilégier pour tout futur outil de ce genre.",
+  },
+  {
+    title: "`--dry-run` silencieusement ignoré : pattern à tester systématiquement",
+    body: "Le tool documente `--dry-run` (\"show what would be copied without actually copying\") mais avec `--agent X --dry-run --yes` il télécharge et écrit le fichier quand même. Aucune erreur, aucun warning. C'est exactement le pattern qui nous a fait rejeter claude-mem `--help`. À ajouter au protocole `/test-tool` : ne JAMAIS faire confiance à un flag de safety sans le tester en sandbox dédié.",
+  },
+  {
+    title: "Telemetry opt-out propre : env vars > prompts",
+    body: "CCT envoie des analytics anonymes à Supabase (fire-and-forget, 5s timeout, jamais bloquant). Opt-out via `CCT_NO_TRACKING=true`, `CCT_NO_ANALYTICS=true`, ou `CI=true`. Pattern propre : pas de prompt intrusif au premier run, opt-out facile, erreurs silencieuses. À distinguer des patterns hostiles (consent forcé, fail-on-network).",
+  },
+  {
+    title: "Aggregator pattern : la qualité varie",
+    body: "CCT agrège des composants de 7+ sources externes (anthropic/skills, obra/superpowers, wshobson/agents, K-Dense-AI bio/chem, alirezarezvani roles, awesome-claude-code, NerdyChefsAI). L'agent `code-reviewer` testé est solide (scaled diff reading, automated pre-checks). Mais on ne peut pas généraliser. Heuristique : avant tout install, lire le `.md` source — un agent communautaire est juste un prompt long, l'auditer avant de l'invoquer.",
+  },
+  {
+    title: "Dashboards localhost : utile mais à isoler",
+    body: "`--analytics`, `--chats`, `--plugins`, `--skills-manager`, `--teams` lancent des dashboards web sur localhost. Mode `--tunnel` exposerait via Cloudflare Tunnel. Non testés ici, mais à approcher avec prudence : un dashboard qui lit `~/.claude/projects/` peut afficher des conversations sensibles. Pour toute exposure réseau, vérifier auth/scope avant d'activer.",
+  },
+];
+---
+
+<BaseLayout
+  title="Test bench · claude-code-templates"
+  description="Retour d'expérience sur davila7/claude-code-templates v1.28.16. Registry CLI bien designé : project-local install, --health-check read-only, zéro pollution ~/.claude/. Adopté avec caveats (`--dry-run` bugué)."
+>
+  <PageHero
+    eyebrow="Test bench · 2026-05-10"
+    title="claude-code-templates (davila7)"
+    intro="Registry CLI npm pour bootstrap un setup Claude Code — agents, commands, skills, MCPs, hooks via `npx claude-code-templates@latest --agent X --yes`. v1.28.16 stable, 27k★, MIT, 152 releases. Site catalog : aitmpl.com."
+  />
+
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12">
+    <div class="space-y-12">
+      <CaseStudySection eyebrow="Pourquoi tester">
+        <p>
+          Premier outil testé qui ressemble fortement à <strong>claude-mem</strong>
+          en surface (CLI registry pour Claude Code, install via `npx`). Question :
+          est-ce un nouveau claude-mem (invasive, pas d'uninstall) ou un design propre ?
+          Bonus : 152 releases stables et un site catalog (aitmpl.com) qui donne envie
+          de browser sans s'engager.
+        </p>
+      </CaseStudySection>
+
+      <CaseStudySection eyebrow="Ce qu'on a testé">
+        <ul class="list-none space-y-2.5">
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span><strong class="text-ink">Snapshot baseline</strong> : md5
+            <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">~/.claude/CLAUDE.md</code> +
+            <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">settings.json</code> +
+            listing plugins/marketplaces/cache + 23 plugins installés.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span><strong class="text-ink">Code audit avant exécution</strong> : lecture
+            <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">tracking-service.js</code> (telemetry opt-out),
+            <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">health-check.js</code> (pure read-only),
+            <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">package.json</code> (pas de postinstall script).</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span><strong class="text-ink">--health-check</strong> dans sandbox
+            (<code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">CCT_NO_TRACKING=true</code>) :
+            output diagnostique complet (OS, Node, RAM, Anthropic API, Claude Code 2.1.131,
+            90 allow rules, 2 personal agents). Aucune écriture.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span><strong class="text-ink">--list-agents</strong> : read-only confirmé,
+            zéro global agent.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span><strong class="text-ink">--agent development-tools/code-reviewer --dry-run --yes</strong> :
+            install <em>quand même</em> survenue (bug
+            <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">--dry-run</code>
+            silencieux), mais project-local
+            (<code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">./.claude/agents/code-reviewer.md</code>
+            seul), zéro pollution `~/.claude/`.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span><strong class="text-ink">Cleanup</strong> :
+            <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">rm -rf cct-sandbox</code>.
+            Baseline `~/.claude/` strictement préservée (md5 inchangés).</span>
+          </li>
+        </ul>
+      </CaseStudySection>
+
+      <CaseStudySection eyebrow="Verdict">
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div class="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-5">
+            <p class="font-mono text-xs uppercase tracking-wider text-emerald-400 mb-2">
+              Ce qui est solide
+            </p>
+            <ul class="text-sm text-ink-muted leading-relaxed space-y-1.5">
+              <li>• Project-local install par défaut (pas `~/.claude/`)</li>
+              <li>• <code class="font-mono text-emerald-300/80 text-[0.9em]">--health-check</code> genuinely read-only</li>
+              <li>• Zéro Claude Code plugin / marketplace pollution</li>
+              <li>• Cleanup = <code class="font-mono text-emerald-300/80 text-[0.9em]">rm</code> un fichier .md</li>
+              <li>• Lifecycle complet (<code class="font-mono text-emerald-300/80 text-[0.9em]">--list/remove/update-agent</code>)</li>
+              <li>• Telemetry opt-out propre (env vars)</li>
+              <li>• MIT, 152 releases, sponsored "Claude for OSS"</li>
+            </ul>
+          </div>
+          <div class="rounded-xl border border-rose-500/20 bg-rose-500/5 p-5">
+            <p class="font-mono text-xs uppercase tracking-wider text-rose-400 mb-2">
+              Ce qui pète
+            </p>
+            <ul class="text-sm text-ink-muted leading-relaxed space-y-1.5">
+              <li>• <code class="font-mono text-rose-300/80 text-[0.9em]">--dry-run</code> silencieusement ignoré avec <code class="font-mono text-rose-300/80 text-[0.9em]">--agent</code></li>
+              <li>• Catalogue communautaire de qualité variable (7+ sources)</li>
+              <li>• Marketing-driven (Trendshift, sponsors multiples)</li>
+              <li>• Dashboards localhost à isoler (analytics/chats/tunnel)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="rounded-xl border border-claude/20 bg-claude/5 p-5 sm:p-6 mt-2">
+          <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">
+            Décision
+          </p>
+          <p class="text-ink leading-relaxed">
+            <strong>Adopt avec caveats.</strong> Premier outil testé qui passe le protocole
+            sans drame. <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">--health-check</code>
+            entre dans la boîte à outils ad-hoc. Pour les composants : browser
+            <a href="https://aitmpl.com" target="_blank" rel="noopener" class="text-claude underline hover:text-claude-soft">aitmpl.com</a>,
+            lire le <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">.md</code>
+            avant d'installer, install ciblé project-local si l'agent passe la revue.
+            Le bug <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">--dry-run</code>
+            est noté mais pas bloquant car le footprint est trivial à inspecter et nettoyer.
+          </p>
+        </div>
+      </CaseStudySection>
+
+      <CaseStudySection eyebrow="Leçons à reprendre">
+        <p class="text-ink-muted leading-relaxed">
+          Le test produit 6 patterns réutilisables — certains pour adopter
+          des outils similaires, d'autres pour durcir le protocole
+          <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">/test-tool</code> :
+        </p>
+        <ol class="grid gap-3 sm:grid-cols-2">
+          {lessons.map((l, i) => (
+            <li class="rounded-xl border border-white/10 bg-paper-elevated p-5">
+              <p class="font-mono text-xs text-claude/80 mb-2">
+                {String(i + 1).padStart(2, "0")}
+              </p>
+              <h3 class="text-base font-medium text-ink mb-1.5">{l.title}</h3>
+              <p class="text-sm text-ink-muted leading-relaxed">{l.body}</p>
+            </li>
+          ))}
+        </ol>
+      </CaseStudySection>
+
+      <CaseStudySection eyebrow="Cas d'usage retenus pour notre stack">
+        <ul class="list-none space-y-1.5 text-sm text-ink-muted">
+          <li>✓ <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">npx claude-code-templates@latest --health-check</code> comme diagnostic ad-hoc</li>
+          <li>✓ Browse <a href="https://aitmpl.com" target="_blank" rel="noopener" class="text-claude underline hover:text-claude-soft">aitmpl.com</a> comme catalogue de référence</li>
+          <li>✓ Install ciblé d'agents communautaires <strong>après</strong> avoir lu le <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">.md</code> source</li>
+          <li>✗ <strong>Pas</strong> d'install global (<code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">--create-agent</code>) tant qu'on n'a pas une raison forte — nos skills/agents perso couvrent</li>
+          <li>✗ <strong>Pas</strong> confiance dans <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">--dry-run</code> tant que le bug n'est pas fixé</li>
+        </ul>
+        <div class="mt-4 flex flex-wrap gap-3 text-xs">
+          <a href="https://github.com/davila7/claude-code-templates" target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">↗ GitHub</a>
+          <a href="https://www.npmjs.com/package/claude-code-templates" target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">↗ npm</a>
+          <a href="https://aitmpl.com" target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">↗ aitmpl.com</a>
+          <a href="https://docs.aitmpl.com" target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">↗ docs</a>
+        </div>
+      </CaseStudySection>
+
+      <p class="text-center text-xs text-ink/50 font-mono pt-4">
+        Test mené 2026-05-10 sur npm v1.28.16 · protocole formalisé dans le skill <code>/test-tool</code>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

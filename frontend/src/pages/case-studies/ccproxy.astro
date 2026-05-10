@@ -1,0 +1,178 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import CaseStudySection from "@/components/site/CaseStudySection.astro";
+
+const lessons = [
+  {
+    title: "Proxy externe ≠ plugin Claude Code",
+    body: "ccproxy ne s'enregistre pas comme marketplace plugin. Il vit dans `~/.ccproxy/` (sa propre dir) et intercepte au niveau réseau via `ANTHROPIC_BASE_URL=http://localhost:4000`. Modèle d'invasion radicalement différent de claude-mem ou Ruflo : pas de pollution `~/.claude/`, mais runtime continu (proxy server détaché). Trade-off : footprint propre côté config, mais process additionnel en mémoire.",
+  },
+  {
+    title: "npm `ccproxy` ≠ PyPI `claude-ccproxy`",
+    body: "Le vrai outil est sur PyPI sous `claude-ccproxy`. Le package npm `ccproxy` v0.1.0 est un projet distinct/orphelin. Une recherche naïve `npm install ccproxy` ne donne PAS le bon outil. Pattern à reconnaître : namespace squat / cross-registry confusion. Toujours croiser PyPI ↔ npm ↔ GitHub avant d'installer.",
+  },
+  {
+    title: "`uv` est le nouveau standard Python",
+    body: "Le README recommande `uv tool install` au lieu de `pip install`. `uv` est un installateur Python rust-based qui gère venv isolés (l'équivalent npm pour Python). Bootstrap : `curl https://astral.sh/uv/install.sh | sh`. Friction si pas déjà installé — exactement comme Bun pour claude-mem. Pattern : un outil dans un écosystème (Python) requis pour évaluer un outil ciblant un autre écosystème (Claude Code).",
+  },
+  {
+    title: "AGPL-3.0-or-later : à flagger explicitement",
+    body: "PyPI metadata = AGPL-3.0-or-later. Github API renvoyait juste \"Other\" (non-classifié), ce qui masque la nature copyleft réseau. Pour usage perso CLI c'est OK. Pour redistribution, intégration dans un produit commercial, ou même usage SaaS : la licence impose ouverture du code. À identifier au step Inspect avant de continuer.",
+  },
+  {
+    title: "Value-gating par API keys = quick eval impossible",
+    body: "ccproxy ne fait rien d'utile sans clés OpenAI/Gemini/Perplexity. Le \"hello world\" de la value proposition (router une requête vers Gemini) requiert un compte payant chez un autre provider. Le skill `/test-tool` exclut ce cas dans \"When NOT to use\". Pattern : un outil free-to-install peut être paid-to-evaluate. Détecter ça au step Inspect, pas en plein milieu d'un test.",
+  },
+  {
+    title: "v2.0 dev branch : signal de scope creep",
+    body: "Le README annonce une v2.0 prerelease : \"jails your process in a rootless WireGuard namespace, intercepts at the network layer with full TLS inspection, DAG-driven hook pipeline\". C'est un changement architectural massif sur 6 mois — le genre de réécriture qui fragmente la communauté et bloque les adoptions. Heuristique : quand un outil OSS récent (créé 2025) annonce une v2 ground-up rewrite, attendre que la nouvelle ligne soit stabilisée AVANT d'investir dessus.",
+  },
+];
+---
+
+<BaseLayout
+  title="Test bench · ccproxy"
+  description="Retour d'expérience sur starbased-co/ccproxy, proxy LiteLLM-based pour Claude Code. Footprint propre mais install non-effectuée : value requires API keys multi-providers, uv requis, AGPL-3.0."
+>
+  <PageHero
+    eyebrow="Test bench · 2026-05-10"
+    title="ccproxy (starbased-co)"
+    intro="Proxy programmable LiteLLM-based qui intercepte les requêtes Claude Code et les route vers d'autres providers (Gemini 2M context, Perplexity WebSearch). v1.2.0 stable, 400★, AGPL-3.0-or-later."
+  />
+
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12">
+    <div class="space-y-12">
+      <CaseStudySection eyebrow="Pourquoi tester">
+        <p>
+          L'idée est intelligente : garder le harness Claude Code intact, mais
+          rerouter certaines requêtes vers d'autres LLMs sur des règles
+          (token count, tool used, model name, thinking mode). Pour notre
+          stack, ça ouvrirait la porte à Gemini 2M tokens sur les gros
+          codebases ou Perplexity sur les <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">WebSearch</code>.
+          Architecture solide en façade — d'où le test.
+        </p>
+      </CaseStudySection>
+
+      <CaseStudySection eyebrow="Ce qu'on a testé">
+        <ul class="list-none space-y-2.5">
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span><strong class="text-ink">Snapshot baseline</strong> : md5 de
+            <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">~/.claude/CLAUDE.md</code>,
+            <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">settings.json</code>,
+            listing
+            <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">~/.claude/plugins/</code>.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span><strong class="text-ink">Cross-registry inspect</strong> :
+            npm <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">ccproxy</code> v0.1.0 est un package distinct/orphelin —
+            le vrai outil est sur PyPI sous <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">claude-ccproxy</code> v1.2.0.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span><strong class="text-ink">Lecture README + PyPI metadata</strong> : license réelle <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">AGPL-3.0-or-later</code>
+            (gh affichait "Other"), Python ≥3.11 requis,
+            <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">uv</code> recommandé.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span><strong class="text-ink">Vérification toolchain locale</strong> :
+            <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">uv</code> non installé.
+            Bootstrap nécessaire avant même de tenter <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">ccproxy install</code>.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span><strong class="text-ink">Install NON-effectuée</strong> : 3 gating factors cumulés ont fait avorter à
+            l'étape 4 (cf panneau Verdict).</span>
+          </li>
+        </ul>
+      </CaseStudySection>
+
+      <CaseStudySection eyebrow="Verdict">
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div class="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-5">
+            <p class="font-mono text-xs uppercase tracking-wider text-emerald-400 mb-2">
+              Ce qui est solide
+            </p>
+            <ul class="text-sm text-ink-muted leading-relaxed space-y-1.5">
+              <li>• Footprint propre dans <code class="font-mono text-emerald-300/80 text-[0.9em]">~/.ccproxy/</code></li>
+              <li>• PAS un plugin Claude Code (pas de marketplace pollution)</li>
+              <li>• Architecture hook pipeline + rule evaluator solide</li>
+              <li>• OAuth forwarding depuis <code class="font-mono text-emerald-300/80 text-[0.9em]">~/.claude/.credentials.json</code></li>
+              <li>• v1.2.0 stable, 400★, push aujourd'hui — actif</li>
+            </ul>
+          </div>
+          <div class="rounded-xl border border-rose-500/20 bg-rose-500/5 p-5">
+            <p class="font-mono text-xs uppercase tracking-wider text-rose-400 mb-2">
+              Ce qui bloque
+            </p>
+            <ul class="text-sm text-ink-muted leading-relaxed space-y-1.5">
+              <li>• <code class="font-mono text-rose-300/80 text-[0.9em]">uv</code> pas installé (curl-bootstrap requis)</li>
+              <li>• <code class="font-mono text-rose-300/80 text-[0.9em]">AGPL-3.0-or-later</code> (copyleft réseau)</li>
+              <li>• Value requires API keys OpenAI/Gemini/Perplexity</li>
+              <li>• Pas de <code class="font-mono text-rose-300/80 text-[0.9em]">ccproxy uninstall</code> documenté</li>
+              <li>• Pas de <code class="font-mono text-rose-300/80 text-[0.9em]">--dry-run</code> sur <code class="font-mono text-rose-300/80 text-[0.9em]">ccproxy install</code></li>
+              <li>• v2.0 dev branch : WireGuard / TLS-MITM (scope creep)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="rounded-xl border border-claude/20 bg-claude/5 p-5 sm:p-6 mt-2">
+          <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">
+            Décision
+          </p>
+          <p class="text-ink leading-relaxed">
+            <strong>Reject + watchlist (install non-effectuée).</strong> L'architecture est intéressante
+            et la pollution de l'environnement serait acceptable, mais 3 gating factors empêchent
+            un test bench rapide : toolchain Python manquante, license restrictive, et la value
+            proposition (multi-LLM routing) requiert des API keys payantes chez d'autres providers.
+            Le skill <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">/test-tool</code> exclut explicitement ce cas
+            (\"deep integration / paid tier\").
+          </p>
+        </div>
+      </CaseStudySection>
+
+      <CaseStudySection eyebrow="Leçons à reprendre">
+        <p class="text-ink-muted leading-relaxed">
+          Même sans installer, l'analyse de surface a produit 6 patterns réutilisables
+          pour les prochains test benches :
+        </p>
+        <ol class="grid gap-3 sm:grid-cols-2">
+          {lessons.map((l, i) => (
+            <li class="rounded-xl border border-white/10 bg-paper-elevated p-5">
+              <p class="font-mono text-xs text-claude/80 mb-2">
+                {String(i + 1).padStart(2, "0")}
+              </p>
+              <h3 class="text-base font-medium text-ink mb-1.5">{l.title}</h3>
+              <p class="text-sm text-ink-muted leading-relaxed">{l.body}</p>
+            </li>
+          ))}
+        </ol>
+      </CaseStudySection>
+
+      <CaseStudySection eyebrow="Watchlist">
+        <p class="text-ink leading-relaxed">
+          Conditions de re-évaluation pour une future adoption :
+        </p>
+        <ul class="list-none space-y-1.5 text-sm text-ink-muted">
+          <li>✓ Cas d'usage concret apparaît : router vers Gemini 2M sur gros codebases OU vers Perplexity sur <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">WebSearch</code></li>
+          <li>✓ Budget API keys multi-providers débloqué</li>
+          <li>✓ Commande <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">ccproxy uninstall</code> documentée</li>
+          <li>✓ Flag <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">--dry-run</code> sur <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">ccproxy install</code></li>
+          <li>✓ v2.0 stable releasée OU ligne v1.x continue de stabiliser sans la branche WireGuard</li>
+        </ul>
+        <div class="mt-4 flex flex-wrap gap-3 text-xs">
+          <a href="https://github.com/starbased-co/ccproxy" target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">↗ GitHub</a>
+          <a href="https://pypi.org/project/claude-ccproxy/" target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">↗ PyPI claude-ccproxy</a>
+          <a href="https://github.com/starbased-co/ccproxy/tree/dev" target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">↗ Branche dev (v2.0)</a>
+        </div>
+      </CaseStudySection>
+
+      <p class="text-center text-xs text-ink/50 font-mono pt-4">
+        Test mené 2026-05-10 sur PyPI claude-ccproxy v1.2.0 · protocole formalisé dans le skill <code>/test-tool</code>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

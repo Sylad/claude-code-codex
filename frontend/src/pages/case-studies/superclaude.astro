@@ -1,0 +1,211 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import CaseStudySection from "@/components/site/CaseStudySection.astro";
+
+const lessons = [
+  {
+    title: "Le worst-case d'invasion testé",
+    body: "Pire que claude-mem (qui modifiait juste settings.json + 1 plugin). SuperClaude écrirait 30 commandes dans `~/.claude/commands/`, 20 agents dans `~/.claude/agents/`, registrerait un plugin marketplace, ajouterait un SessionStart hook qui auto-exécute /pm à chaque démarrage, et s'auto-chargerait dans toute env pytest via `entry-points.pytest11`. C'est l'archétype du \"framework qui veut être ton OS\".",
+  },
+  {
+    title: "Pas d'`uninstall` first-class = signal rouge",
+    body: "Le seul cleanup script s'appelle `uninstall_legacy.sh` — le mot `legacy` dans le nom indique que c'est pour les vieux installs, pas l'outil principal. Et il ne couvre que les configs JSON + le plugin marketplace : les 30 commandes et 20 agents copiés dans `~/.claude/` doivent être nettoyés à la main. Heuristique : un outil qui écrit dans plusieurs dirs sans script qui retire 100% est non-adoptable.",
+  },
+  {
+    title: "PLUGIN_INSTALL.md en japonais seulement",
+    body: "Pour un projet anglophone à 22k★, la doc officielle d'install est uniquement en japonais (`公式インストール方法 (推奨)`). C'est désorientant et signal d'un projet en transition mal documentée. À distinguer de README multi-langue (en/zh/ja/kr) — ça c'est sain. Mais la doc canonique d'install qui n'existe qu'en JP, c'est un red flag.",
+  },
+  {
+    title: "Demande à désactiver les builtins Claude Code",
+    body: "PLUGIN_INSTALL.md demande explicitement d'ajouter `export USE_BUILTIN_RIPGREP=0` dans `.zshrc/.bashrc` et de `brew install ripgrep`. Désactiver activement un builtin Claude Code pour utiliser un binaire système est suspect — soit il y a une vraie raison technique non-documentée, soit c'est de la rigidité qui dégrade le harness. Pattern : un outil qui demande de défaire les défauts du harness pour fonctionner mérite scrutiny.",
+  },
+  {
+    title: "Notre stack custom couvre déjà 7/8 des features",
+    body: "30 commandes + 20 agents + 7 modes c'est massif, mais pour Sylvain : `/sc:brainstorm` → on a `superpowers:brainstorming`, `/sc:doctor` → on a `cct --health-check`, `/sc:pm` → on a TodoWrite + plans, `/sc:test` → on a `feature-dev:code-reviewer`, etc. Seul `/sc:research` orchestrant Tavily MCP serait un skill candidate. Leçon : avant d'adopter un méga-framework, lister ce qu'il apporte VS ce qu'on a déjà.",
+  },
+  {
+    title: "Multi-distribution = chaos d'install",
+    body: "5 chemins documentés : `pipx install`, `./install.sh`, `make reinstall-plugin-dev`, `npm install @bifrost_inc/superclaude`, et plugin marketplace via `/plugin install`. Chacun fait des choses différentes, aucun n'est documenté de bout en bout. Heuristique : quand un projet propose 5 façons de s'installer, aucune n'est solide. Préférer les outils qui documentent UN chemin propre.",
+  },
+];
+---
+
+<BaseLayout
+  title="Test bench · SuperClaude Framework"
+  description="Retour d'expérience sur SuperClaude-Org/SuperClaude_Framework v4.3.0. Worst-case d'invasion testé : 30 cmds + 20 agents + SessionStart hook + plugin + pytest auto-discovery. Reject + watchlist + skillify : notre stack custom couvre déjà 7/8 des features."
+>
+  <PageHero
+    eyebrow="Test bench · 2026-05-10"
+    title="SuperClaude Framework (SuperClaude-Org)"
+    intro="Méta-framework qui transforme Claude Code en « plateforme de développement structurée » via 30 commandes /sc:*, 20 agents, 7 modes cognitifs et 8 intégrations MCP. v4.3.0 stable, 22.7k★, MIT."
+  />
+
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12">
+    <div class="space-y-12">
+      <CaseStudySection eyebrow="Pourquoi tester">
+        <p>
+          22k★ + MIT + active = surface saine en métriques. La promesse
+          (méta-programmation par injection d'instructions comportementales,
+          orchestration de personas, MCPs intégrés) est exactement ce qu'on
+          étudie dans <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">/theory</code> du codex.
+          Question : est-ce skillify-able pièce-par-pièce, ou un monolithe à
+          adopter ou rejeter en bloc ?
+        </p>
+      </CaseStudySection>
+
+      <CaseStudySection eyebrow="Ce qu'on a testé">
+        <ul class="list-none space-y-2.5">
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span><strong class="text-ink">Snapshot baseline</strong> + inventory du
+            <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">~/.claude/</code> existant : 14 skills custom, 2 agents user-level, 23 plugins, hooks RTK actifs.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span><strong class="text-ink">Cross-distribution check</strong> : PyPI
+            <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">SuperClaude</code> v4.3.0
+            (Python ≥3.10, requires uv + pipx — neither installed), npm
+            <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">@bifrost_inc/superclaude</code> v4.0.7,
+            <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">install.sh</code>, Makefile,
+            plugin marketplace.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span><strong class="text-ink">Code audit</strong> :
+            <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">install.sh</code> écrit 30 cmds → <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">~/.claude/commands/</code>,
+            <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">scripts/uninstall_legacy.sh</code> liste les artefacts (plugin marketplace + JSON configs),
+            <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">PLUGIN_INSTALL.md</code> (japonais only) décrit le SessionStart hook auto-injection /pm.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span><strong class="text-ink">Stack-mapping</strong> : 30 commandes
+            <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">/sc:*</code>
+            mappées contre nos skills/agents existants (sparc, save, skillify, cct, superpowers brainstorming, etc.).</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span><strong class="text-ink">Install NON-effectuée</strong> : pollution prévue trop large pour notre stack en place. Verdict basé sur l'analyse de surface + code source.</span>
+          </li>
+        </ul>
+      </CaseStudySection>
+
+      <CaseStudySection eyebrow="Verdict">
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div class="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-5">
+            <p class="font-mono text-xs uppercase tracking-wider text-emerald-400 mb-2">
+              Ce qui est solide
+            </p>
+            <ul class="text-sm text-ink-muted leading-relaxed space-y-1.5">
+              <li>• 30 commandes lifecycle bien pensées</li>
+              <li>• 7 modes cognitifs = pattern persona-switching intéressant</li>
+              <li>• MCP integration avec Tavily / Context7 / Sequential</li>
+              <li>• 22.7k★, MIT, push récent — projet investi</li>
+              <li>• Multi-language docs (en/zh/ja/kr)</li>
+              <li>• Pytest plugin pourrait servir si scope contrôlé</li>
+            </ul>
+          </div>
+          <div class="rounded-xl border border-rose-500/20 bg-rose-500/5 p-5">
+            <p class="font-mono text-xs uppercase tracking-wider text-rose-400 mb-2">
+              Ce qui pète
+            </p>
+            <ul class="text-sm text-ink-muted leading-relaxed space-y-1.5">
+              <li>• 30 cmds + 20 agents écrits dans <code class="font-mono text-rose-300/80 text-[0.9em]">~/.claude/</code></li>
+              <li>• SessionStart hook auto-injecté</li>
+              <li>• Plugin marketplace + <code class="font-mono text-rose-300/80 text-[0.9em]">enabledPlugins</code> registered</li>
+              <li>• Pytest plugin auto-loaded dans toute env Python</li>
+              <li>• Pas de <code class="font-mono text-rose-300/80 text-[0.9em]">--dry-run</code>, pas de <code class="font-mono text-rose-300/80 text-[0.9em]">uninstall</code> first-class</li>
+              <li>• PLUGIN_INSTALL.md en japonais seulement</li>
+              <li>• Demande <code class="font-mono text-rose-300/80 text-[0.9em]">USE_BUILTIN_RIPGREP=0</code></li>
+              <li>• 5 chemins d'install documentés (chaos)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="rounded-xl border border-claude/20 bg-claude/5 p-5 sm:p-6 mt-2">
+          <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">
+            Décision
+          </p>
+          <p class="text-ink leading-relaxed">
+            <strong>Reject + watchlist + skillify candidates extraits.</strong>
+            Le pire cas d'invasion testé jusqu'ici. Notre stack custom (skills, agents,
+            cct, superpowers brainstorming) couvre déjà 7/8 des features —
+            <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">/sc:research</code>
+            avec Tavily MCP est le seul candidat skill réel. À reconsidérer si v5.0
+            (TypeScript plugin system, "no ETA") sort avec un mode opt-in granulaire
+            et un vrai <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">superclaude uninstall</code>.
+          </p>
+        </div>
+      </CaseStudySection>
+
+      <CaseStudySection eyebrow="Leçons à reprendre">
+        <p class="text-ink-muted leading-relaxed">
+          Le test produit 6 patterns réutilisables sur l'écosystème —
+          en particulier les heuristiques pour reconnaître un méga-framework non-adoptable :
+        </p>
+        <ol class="grid gap-3 sm:grid-cols-2">
+          {lessons.map((l, i) => (
+            <li class="rounded-xl border border-white/10 bg-paper-elevated p-5">
+              <p class="font-mono text-xs text-claude/80 mb-2">
+                {String(i + 1).padStart(2, "0")}
+              </p>
+              <h3 class="text-base font-medium text-ink mb-1.5">{l.title}</h3>
+              <p class="text-sm text-ink-muted leading-relaxed">{l.body}</p>
+            </li>
+          ))}
+        </ol>
+      </CaseStudySection>
+
+      <CaseStudySection eyebrow="Stack-mapping vs notre setup">
+        <p class="text-ink-muted leading-relaxed mb-4">
+          Pour décider <em>quoi</em> skillifier, on a mappé chaque catégorie
+          de commande SuperClaude contre ce qu'on a déjà :
+        </p>
+        <div class="overflow-x-auto -mx-5 sm:mx-0">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-white/10">
+                <th class="text-left p-3 font-mono text-xs uppercase tracking-wider text-claude/80">Commande SuperClaude</th>
+                <th class="text-left p-3 font-mono text-xs uppercase tracking-wider text-claude/80">Notre alternative</th>
+                <th class="text-left p-3 font-mono text-xs uppercase tracking-wider text-claude/80">Action</th>
+              </tr>
+            </thead>
+            <tbody class="text-ink-muted">
+              <tr class="border-b border-white/5"><td class="p-3"><code class="font-mono text-[0.9em]">/sc:brainstorm</code></td><td class="p-3"><code class="font-mono text-[0.9em]">superpowers:brainstorming</code></td><td class="p-3 text-emerald-400">✅ couvert</td></tr>
+              <tr class="border-b border-white/5"><td class="p-3"><code class="font-mono text-[0.9em]">/sc:research</code></td><td class="p-3">WebSearch + claude-code-guide</td><td class="p-3 text-amber-400">⚠️ skill <code class="font-mono text-[0.9em]">/research</code> + Tavily MCP candidat</td></tr>
+              <tr class="border-b border-white/5"><td class="p-3"><code class="font-mono text-[0.9em]">/sc:implement</code></td><td class="p-3">TDD via subagents</td><td class="p-3 text-emerald-400">✅ couvert</td></tr>
+              <tr class="border-b border-white/5"><td class="p-3"><code class="font-mono text-[0.9em]">/sc:doctor</code></td><td class="p-3"><code class="font-mono text-[0.9em]">cct --health-check</code></td><td class="p-3 text-emerald-400">✅ couvert</td></tr>
+              <tr class="border-b border-white/5"><td class="p-3"><code class="font-mono text-[0.9em]">/sc:index-repo</code></td><td class="p-3">RTK + grep</td><td class="p-3 text-emerald-400">✅ couvert pour notre taille</td></tr>
+              <tr class="border-b border-white/5"><td class="p-3"><code class="font-mono text-[0.9em]">/sc:pm</code></td><td class="p-3">TodoWrite + plans</td><td class="p-3 text-emerald-400">✅ couvert</td></tr>
+              <tr class="border-b border-white/5"><td class="p-3"><code class="font-mono text-[0.9em]">/sc:test</code></td><td class="p-3"><code class="font-mono text-[0.9em]">feature-dev:code-reviewer</code></td><td class="p-3 text-emerald-400">✅ couvert</td></tr>
+              <tr><td class="p-3">7 behavioral modes</td><td class="p-3">Skills compacts (sparc, save, skillify, etc.)</td><td class="p-3 text-emerald-400">✅ couvert avec moins de surface</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </CaseStudySection>
+
+      <CaseStudySection eyebrow="Watchlist">
+        <p class="text-ink leading-relaxed">
+          Conditions de re-évaluation pour une future adoption :
+        </p>
+        <ul class="list-none space-y-1.5 text-sm text-ink-muted">
+          <li>✓ <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">superclaude uninstall</code> first-class (pas le <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">_legacy.sh</code>)</li>
+          <li>✓ Mode opt-in granulaire (1-2 commandes à la fois, pas pack de 30)</li>
+          <li>✓ <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">--dry-run</code> documenté ET vérifié en sandbox</li>
+          <li>✓ PLUGIN_INSTALL.md en anglais</li>
+          <li>✓ Cesse de demander <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">USE_BUILTIN_RIPGREP=0</code></li>
+          <li>⏳ v5.0 TypeScript plugin system released (issue <a href="https://github.com/SuperClaude-Org/SuperClaude_Framework/issues/419" target="_blank" rel="noopener" class="text-claude underline hover:text-claude-soft">#419</a>, no ETA)</li>
+        </ul>
+        <div class="mt-4 flex flex-wrap gap-3 text-xs">
+          <a href="https://github.com/SuperClaude-Org/SuperClaude_Framework" target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">↗ GitHub</a>
+          <a href="https://pypi.org/project/superclaude/" target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">↗ PyPI</a>
+          <a href="https://superclaude.netlify.app/" target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">↗ Site</a>
+        </div>
+      </CaseStudySection>
+
+      <p class="text-center text-xs text-ink/50 font-mono pt-4">
+        Test mené 2026-05-10 sur PyPI v4.3.0 · protocole formalisé dans le skill <code>/test-tool</code>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

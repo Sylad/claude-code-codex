@@ -75,6 +75,8 @@ Look for :
 
 **Do NOT run `<tool> --help` blindly.** Learned 2026-05-10 with `claude-mem` : its `--help` triggered the full install (marketplace registered, plugin enabled, settings.json modified). Always read the README first; if `--help` is the only doc, run it in a sandbox or after explicit user confirmation.
 
+**Do NOT trust `--dry-run` on word.** Learned 2026-05-10 with `claude-code-templates` : the flag is documented (\"show what would be copied without actually copying\") but `--dry-run --agent X --yes` actually downloaded and wrote the file. Test the flag's truthfulness by running it in a sandbox and checking the post-state diff before relying on it. Apply the same skepticism to `--scope local`, `--no-global`, `--preview`.
+
 ### Step 4 — Sandbox install (if possible)
 
 For tools that genuinely support project-local mode :
@@ -109,6 +111,7 @@ Run 3-5 commands that exercise the tool's main value proposition. Aim for :
 - Smallest example from README
 - A "does it actually work" smoke test
 - An "edge case" check (empty input, missing arg, etc.)
+- **A `--dry-run` truthfulness check** : if the tool advertises `--dry-run` (or `--no-global`, `--scope local`, `--preview`), run it then immediately re-snapshot. If `~/.claude/`, `./.claude/`, or any state was actually written, the flag is a lie — record this as a major caveat in the verdict.
 
 Capture stdout + exit codes.
 
