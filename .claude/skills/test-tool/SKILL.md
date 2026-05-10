@@ -127,13 +127,29 @@ Categorize the outcome :
 
 Always provide cleanup commands, even if the user adopts (so they can roll back later).
 
-For tools that polluted `~/.claude/plugins/` :
-1. Remove from `installed_plugins.json` (node one-liner with `delete d.plugins[<name>]`)
-2. Remove from `known_marketplaces.json` (node one-liner with `delete d[<marketplace>]`)
-3. `rm -rf ~/.claude/plugins/marketplaces/<marketplace>/` and `~/.claude/plugins/cache/<marketplace>/`
-4. **Manual edit of ~/.claude/settings.json** required for `enabledPlugins` entries (Self-Modification hook blocks me — give the user the exact line to remove)
+For tools with a working `uninstall` command, prefer that.
 
-For tools with a `uninstall` command, prefer that.
+For tools that polluted `~/.claude/plugins/` (no uninstall, or incomplete one), use the cleanup helper script :
+
+```bash
+~/projects/developpeur/claude-code-codex/scripts/cleanup-test-tool.sh \
+  <plugin-id> <marketplace-id>
+
+# Example for claude-mem :
+./scripts/cleanup-test-tool.sh claude-mem@thedotmack thedotmack
+
+# Example for ruflo :
+./scripts/cleanup-test-tool.sh ruflo-core@ruflo ruflo
+```
+
+The script handles all 5 layers of pollution :
+1. Remove from `installed_plugins.json`
+2. Remove from `known_marketplaces.json`
+3. Remove from `settings.json` `enabledPlugins` (with timestamped `.bak` backup)
+4. `rm -rf ~/.claude/plugins/marketplaces/<marketplace>/`
+5. `rm -rf ~/.claude/plugins/cache/<marketplace>/`
+
+**Important** : the user must run the script themselves — Claude is blocked by the Self-Modification hook on `~/.claude/settings.json`. Give them the one-liner above with the right `<plugin-id>` and `<marketplace-id>` for the tool tested.
 
 ### Output — Where the verdict lands
 
