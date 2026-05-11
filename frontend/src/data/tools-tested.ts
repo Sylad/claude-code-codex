@@ -146,4 +146,32 @@ export const testedTools: TestedTool[] = [
     status: "tested",
     caseStudyHref: "/case-studies/ccproxy",
   },
+  {
+    id: "tanstack-start",
+    name: "TanStack Start",
+    author: "TanStack",
+    category: "framework",
+    description:
+      "Framework full-stack React (TanStack Router + SSR + server functions RPC + Vite). v1.167 stable, MIT, repo actif. Footprint propre (1 fichier telemetry orphan, désactivable). Adopt conditionnel : pour greenfield React → Cloudflare uniquement. Pas pour migrer finance/ol (changement d'archi NAS→CF + DB externe trop coûteux).",
+    tags: ["framework", "react", "ssr", "cloudflare", "vite", "tanstack"],
+    url: "https://tanstack.com/start",
+    stars: 14360,
+    lastPush: "2026-05-11",
+    license: "MIT",
+    status: "tested",
+  },
+  {
+    id: "convex",
+    name: "Convex",
+    author: "get-convex",
+    category: "framework",
+    description:
+      "BaaS TypeScript-first : DB document + functions + realtime subs + auth + storage. Self-hostable Docker (FSL-1.1-Apache-2.0, homelab-friendly), SDK Apache-2.0 propre, MCP server beta natif. Reject + watchlist : 0/7 sites avec cas d'usage justifiant migration (stack NestJS+Drizzle+Postgres+SSE couvre déjà tout). À reconsidérer pour future app realtime-first.",
+    tags: ["framework", "baas", "typescript", "realtime", "self-hostable", "docker"],
+    url: "https://www.convex.dev",
+    stars: 11500,
+    lastPush: "2026-05-11",
+    license: "FSL-1.1-Apache-2.0",
+    status: "browsed",
+  },
 ];
