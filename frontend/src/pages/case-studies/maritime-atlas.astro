@@ -1,0 +1,382 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import MermaidDiagram from "@/components/site/MermaidDiagram.vue";
+import CaseStudySection from "@/components/site/CaseStudySection.astro";
+---
+
+<BaseLayout
+  title="Maritime Atlas"
+  description="Atlas live du trafic maritime + météo + foudre + alerts engine sur France métropole. 14 services Docker, multi-source ingestion (AIS, NOAA, Météo-France, RainViewer, Blitzortung). Construit en pair-programming avec Claude Code en 2 jours."
+>
+  <PageHero
+    eyebrow="Case study · maritime-atlas"
+    title="Maritime Atlas — l'orchestre multi-source"
+    intro="Atlas live qui agrège 5 sources de données externes (AIS, météo NOAA + Météo-France, radar pluie, foudre) sur une carte time-scrubable. 14 services Docker, cluster GeoServer 3 replicas, alerts engine RabbitMQ topic. Le projet hommage / refonte du produit Neo de Campbell Scientific (où je bosse) mais en domaine maritime. 0 ligne de code humaine, ~23 commits en 2 jours."
+  />
+
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12 space-y-12">
+    <CaseStudySection eyebrow="Aperçu visuel">
+      <p>
+        Une carte unique, dix bascules. Le slider temporel en bas pilote
+        tout — vesselles passées/présentes, météo forecast +5j, radar pluie
+        replay -2h. Voici les principales layers en isolation, puis
+        l'animation des particules de vent (effet style windy.com).
+      </p>
+      <figure class="my-6">
+        <img src="/case-studies/maritime-atlas/01-vessels.jpg" alt="Navires AIS live + trajets daily aggregés" class="rounded-lg border border-white/10" loading="lazy" />
+        <figcaption class="text-xs text-ink-muted mt-2 font-mono">
+          Navires AIS live (2500+ positions) + trajets daily agrégés. Chaque couleur = catégorie de bateau (cargo bleu, tanker rose, pêche jaune, passenger vert).
+        </figcaption>
+      </figure>
+      <figure class="my-6">
+        <img src="/case-studies/maritime-atlas/02-sst.jpg" alt="SST — température mer NOAA OISST" class="rounded-lg border border-white/10" loading="lazy" />
+        <figcaption class="text-xs text-ink-muted mt-2 font-mono">
+          SST (température de surface de la mer) — NOAA OISST quotidien, gradient bleu→cyan→vert→jaune→rouge (-2°C → 30°C).
+        </figcaption>
+      </figure>
+      <figure class="my-6">
+        <img src="/case-studies/maritime-atlas/03-wind.jpg" alt="Vent raster + flèches directionnelles" class="rounded-lg border border-white/10" loading="lazy" />
+        <figcaption class="text-xs text-ink-muted mt-2 font-mono">
+          Vent (GFS) — raster magnitude + flèches directionnelles sample par 2×2 cellules grille. Sélecteur GFS / AROME inline.
+        </figcaption>
+      </figure>
+      <figure class="my-6">
+        <img src="/case-studies/maritime-atlas/04-waves.jpg" alt="Vagues hauteur + direction (WaveWatch III)" class="rounded-lg border border-white/10" loading="lazy" />
+        <figcaption class="text-xs text-ink-muted mt-2 font-mono">
+          Vagues — NOAA WaveWatch III. Raster hauteur sig. + flèches direction primaire DIRPW. Land mask = pas de flèches sur la terre.
+        </figcaption>
+      </figure>
+      <figure class="my-6">
+        <img src="/case-studies/maritime-atlas/05-rain-lightning.jpg" alt="Radar pluie + foudre live" class="rounded-lg border border-white/10" loading="lazy" />
+        <figcaption class="text-xs text-ink-muted mt-2 font-mono">
+          Radar pluie (RainViewer, XYZ tiles time-aware) + Foudre live (Blitzortung WSS, ~30 strikes/30s en bbox FR pendant un orage). Yellow halos = strikes &lt;5min, ambre = &lt;30min.
+        </figcaption>
+      </figure>
+      <figure class="my-6">
+        <img src="/case-studies/maritime-atlas/06-alerts.jpg" alt="Panel alertes maritimes — Vent fort sur cargos / tankers" class="rounded-lg border border-white/10" loading="lazy" />
+        <figcaption class="text-xs text-ink-muted mt-2 font-mono">
+          Alerts engine — règles RMQ qui croisent ais.positions + wind grid + lightning.strike. Ici : 17 alertes "Vent fort" sur cargos / tankers (MSC CALYPSO, MSC ALIYA, etc. à 10-16 m/s).
+        </figcaption>
+      </figure>
+      <figure class="my-6">
+        <video
+          src="/case-studies/maritime-atlas/07-particles.mp4"
+          autoplay
+          loop
+          muted
+          playsinline
+          class="rounded-lg border border-white/10 w-full"
+        ></video>
+        <figcaption class="text-xs text-ink-muted mt-2 font-mono">
+          Particules vent style windy.com — 1500 particules canvas 2D, advectées par interpolation IDW sur les 4 plus proches voisins de la grille GFS. ~60fps desktop, couleurs Beaufort-like (bleu calme → rouge tempête).
+        </figcaption>
+      </figure>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Pourquoi ce projet">
+      <p>
+        Au boulot je développe Neo (Campbell Scientific) pour les stations
+        météo et aéroports — Angular + OpenLayers + cluster Docker Swarm de
+        GeoServer + bus RabbitMQ pour synchroniser les replicas. J'adore le
+        pattern services-qui-causent-entre-eux, et j'avais envie d'en refaire
+        un dans un domaine totalement différent du météo aviation pour pas
+        empiéter sur le taff. <strong>Maritime</strong> est venu naturellement :
+        AIS gratuit (aisstream.io), modèles météo libres NOAA, et un panel de
+        sources visualisables très large pour quelqu'un qui aime mettre des
+        données sur des cartes.
+      </p>
+      <p>
+        Périmètre : <strong>bbox France métropole</strong>
+        [<code>-6, 41, 10, 51.5</code>] — Manche + Atlantique + Méditerranée
+        + Corse. Le tout sur un slider temporel qui pilote 11 layers
+        (navires live + replay, météo raster, radar pluie, foudre) avec un
+        engine d'alertes RMQ qui croise vessel + vent + foudre en temps réel.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Architecture — vue d'ensemble">
+      <MermaidDiagram
+        client:visible
+        caption="14 services Docker. Le frontend Angular OL n'attaque qu'un seul backend (GeoServer LB) — toute la complexité d'ingestion est en aval."
+        definition={`flowchart TB
+  subgraph SOURCES["Sources externes"]
+    ais["aisstream.io WSS<br/>(AIS navires)"]
+    noaa["NOAA NOMADS<br/>GFS · WW3 · OISST"]
+    mf["Météo-France PNT<br/>(bucket public AROME 2.5km)"]
+    rv["RainViewer API<br/>(radar pluie tiles)"]
+    blitz["Blitzortung WSS<br/>(foudre community)"]
+  end
+
+  subgraph INGESTERS["Ingesters"]
+    aing["ais-ingester"]
+    adec["ais-decoder"]
+    sst["sst-fetcher (Py)"]
+    wf["weather-fetcher (Py)"]
+    wfa["weather-fetcher-arome (Py)"]
+    lf["lightning-fetcher"]
+  end
+
+  subgraph BUS["RabbitMQ topic exchanges"]
+    raw["ais.raw"]
+    pos["ais.positions"]
+    rr["raster.ready (fanout)"]
+    ls["lightning.strike"]
+    al["alerts.maritime"]
+  end
+
+  subgraph STATE["Stockage"]
+    pg["PostgreSQL + PostGIS + TimescaleDB<br/>(hypertables vessel_positions, lightning_strikes, alerts)"]
+    cov["/coverage/ volume<br/>(GeoTIFF SST + GFS + AROME)"]
+    arr["/wind-arrows/ volume<br/>(GeoJSON arrows + manifest)"]
+  end
+
+  subgraph SERVE["Servir la carte"]
+    gs["GeoServer cluster<br/>(3 replicas + LB nginx)"]
+    api["api NestJS (auth + palettes)"]
+    fe["frontend Angular 19 + OL 10"]
+  end
+
+  subgraph ENGINE["Moteur"]
+    ae["alerts-engine<br/>(règles wind+lightning)"]
+  end
+
+  ais --> aing --> raw --> adec --> pg
+  adec --> pos
+  noaa --> sst & wf
+  mf --> wfa
+  sst & wf & wfa --> cov
+  wf & wfa --> arr
+  blitz --> lf --> pg
+  lf --> ls
+  pos & ls --> ae --> al
+  ae --> pg
+  cov --> gs
+  pg --> gs
+  gs --> fe
+  api --> fe
+  arr -->|nginx alias| fe
+  rv -->|direct browser| fe`}
+      />
+      <p>
+        L'arête importante : <strong>le frontend ne tape qu'un seul backend
+        public</strong> — l'alias DNS interne <code>geoserver:8080</code>
+        (qui est un LB nginx interne devant les 3 replicas GeoServer). Toute
+        l'ingestion (6 services), le bus RMQ, le moteur d'alertes, l'API
+        d'auth/palettes, sont privés au réseau Docker. Le RainViewer est la
+        seule source que le browser frappe directement (CORS open, tiles
+        XYZ time-aware).
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Multi-source ingestion — le détail par source">
+      <MermaidDiagram
+        client:visible
+        caption="Cinq pipelines indépendants, qui finissent tous par alimenter le même slider temporel côté frontend."
+        definition={`flowchart LR
+  subgraph A["AIS navires (live)"]
+    a1["aisstream.io WSS"] --> a2["ais-ingester"]
+    a2 -->|RMQ ais.raw| a3["ais-decoder"]
+    a3 -->|INSERT| a4["PostGIS vessel_positions<br/>(TimescaleDB hypertable, 30j)"]
+    a3 -->|UPSERT| a5["vessels (referentiel)"]
+    a4 --> a6["GeoServer SQL view vessels_at_time(at, window)<br/>(replay temporel paramétré)"]
+  end
+
+  subgraph B["Météo modèles (forecast)"]
+    b1["NOAA NOMADS<br/>GFS 25km · WW3"] --> b2["weather-fetcher"]
+    b3["Météo-France PNT bucket<br/>AROME 2.5km côtier"] --> b4["weather-fetcher-arome"]
+    b2 & b4 -->|GeoTIFF time-tagged| b5["/coverage/wind-speed/<br/>/coverage/wave-hs/<br/>/coverage/wave-dir/"]
+    b2 & b4 -->|GeoJSON arrows<br/>(direction + speed)| b6["/wind-arrows/"]
+    b5 --> b7["GeoServer ImageMosaic<br/>(time dim NEAREST)"]
+    b6 --> b8["nginx alias<br/>/wind-arrows/"]
+  end
+
+  subgraph C["SST raster (NOAA OISST quotidien)"]
+    c1["ncei.noaa.gov<br/>NetCDF OISST v2.1"] --> c2["sst-fetcher"]
+    c2 -->|xarray + rioxarray<br/>subset bbox + sortby lat desc| c3["GeoTIFF /coverage/sst-daily/"]
+    c3 --> c4["GeoServer ImageMosaic time-enabled"]
+  end
+
+  subgraph D["Radar pluie (RainViewer)"]
+    d1["api.rainviewer.com<br/>weather-maps.json"] -->|JSON manifest<br/>past 2h + nowcast 30min| d2["browser fetch direct"]
+    d2 --> d3["XYZ TileLayer<br/>find nearest TS to cursor"]
+  end
+
+  subgraph E["Foudre (Blitzortung)"]
+    e1["wss://ws1.blitzortung.org<br/>(LZW-compressed JSON)"] --> e2["lightning-fetcher<br/>(decode LZW + filter bbox)"]
+    e2 -->|INSERT| e3["lightning_strikes<br/>(hypertable, retention 7j)"]
+    e3 --> e4["GeoServer v_lightning_recent<br/>(last 30 min)"]
+  end`}
+      />
+      <p>
+        Les <strong>TTL différentiels</strong> sont standardisés :
+      </p>
+      <ul>
+        <li>
+          <strong>30j</strong> : <code>vessel_positions</code>,
+          <code>sst-daily</code> (cohérent navigation)
+        </li>
+        <li>
+          <strong>14j</strong> : <code>alerts</code> (analyse rétroactive
+          incident)
+        </li>
+        <li>
+          <strong>7j</strong> : <code>lightning_strikes</code>, weather GeoTIFFs,
+          wind-arrows GeoJSON (forecasts deviennent obsolètes vite)
+        </li>
+      </ul>
+      <p>
+        Chaque fetcher Python a une routine <code>cleanup_old_files()</code> en
+        début de cycle (sprint 10b), TimescaleDB gère les hypertables côté DB.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Particularités intéressantes">
+      <ul>
+        <li>
+          <strong>Time slider globale</strong> [-30j, +5j] pilote 9 layers
+          simultanément avec snap-to-latest (<code>TIME=1970/cursor</code>
+          range) pour qu'aucune layer raster n'affiche jamais "rien" si le
+          timestep exact n'existe pas.
+        </li>
+        <li>
+          <strong>Replay temporel des navires</strong> via SQL view paramétrée
+          GeoServer <code>vessels_at_time(at, window)</code> — JDBC virtual
+          table avec <code>DISTINCT ON (mmsi) ORDER BY ts DESC</code>, le
+          frontend appelle WFS avec <code>viewparams=at:ISO;window:300</code>.
+        </li>
+        <li>
+          <strong>Palettes utilisateur</strong> (sprint 5 APEX) : auth JWT +
+          chaque user peut créer jusqu'à 5 palettes SLD couleur custom →
+          mirror automatique en styles GeoServer
+          <code>user_&lt;id&gt;_&lt;slug&gt;</code> via REST POST/PUT, frontend
+          injecte <code>&amp;STYLES=maritime:user_42_marine</code> par user
+          par layer.
+        </li>
+        <li>
+          <strong>Cluster GeoServer 3 replicas</strong> avec catalog partagé
+          en Postgres via JDBCConfig (community extension), LB nginx interne
+          nommé <code>geoserver</code> (alias DNS) — rollout du single → cluster
+          sans toucher aux 5+ services métier qui appellent
+          <code>http://geoserver:8080/</code>.
+        </li>
+        <li>
+          <strong>Alerts engine</strong> souscrit
+          <code>ais.positions</code> + <code>lightning.strike</code>, applique
+          2 règles (high-wind sur cargo/tanker dans zone &gt;10 m/s, lightning à
+          &lt;10 km d'un navire actif), publie sur exchange
+          <code>alerts.maritime</code> avec routing key
+          <code>&lt;severity&gt;.&lt;kind&gt;</code>. Cooldown 30min par
+          (mmsi, kind) pour éviter le spam.
+        </li>
+        <li>
+          <strong>Vent particules canvas 2D</strong> style windy.com / Earth
+          Nullschool : 1500 particules advectées par interpolation IDW sur les
+          4 plus proches voisins du grid GFS, projection
+          <code>map.getPixelFromCoordinate</code>, fade alpha 0.97 pour les
+          trails. ~60fps desktop.
+        </li>
+        <li>
+          <strong>Exposition publique HTTPS</strong> via Cloudflare Tunnel
+          sortant (le NAS appelle CF, pas l'inverse) — zéro port ouvert sur
+          la box, SSL auto, CDN devant les WMS tiles. Domaine
+          <code>sladoire.dev</code> chez Cloudflare Registrar (~12$/an).
+        </li>
+      </ul>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Le process avec Claude Code">
+      <p>
+        Démarrage en pair sur du dialogue : "je veux un truc avec OL + cluster
+        GeoServer + RMQ comme au boulot, mais pas en météo aviation". Choix
+        domaine maritime collectif, scope initial Bretagne, première étape
+        scaffold sprint 1 en 2h. À partir de là, ~3 sprints/jour pendant 2
+        jours, le slider temporel ayant débloqué la vision (sprint 3.5) :
+        "tout pilote le temps, on ajoute des sources qui ont du sens à
+        timeshifter".
+      </p>
+      <p>
+        Pattern le plus impactant : <strong>multi-agent en background pour
+        paralléliser des sprints indépendants</strong>. Sprints 9 (cluster
+        GeoServer JDBCConfig) + 11 (AROME Météo-France) + un fix
+        ol-companion 2e jaune→rouge dérivé ont été livrés en parallèle par 3
+        agents pendant que je codais sprint 8 (particules vent) en main —
+        ~1h wall-clock pour 4 livrables. Ça demande de bien briefer chaque
+        agent sur les fichiers à éviter (conflits possibles sur
+        <code>map.component.ts</code>) et de <code>git status</code> avant
+        commit, mais c'est une vraie multiplication.
+      </p>
+      <p>
+        Aussi : <strong>APEX</strong> pour le sprint 5 (auth + palettes user)
+        qui était structurant et méritait l'analyze → plan → execute → validate
+        détaillé. Les autres sprints courts (6/7/10) en main-coding direct.
+        Le mix marche bien : APEX pour les gros chantiers, hand-code pour
+        l'itération rapide. <code>/save</code> en fin de session pour
+        capturer 7 memories techniques (pièges GeoServer, rioxarray
+        orientation, IDW pour smooth, Drizzle vs Prisma, etc.).
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Pivots & lessons learned">
+      <ul>
+        <li>
+          <strong>Bug orientation GeoTIFF</strong> : 1h de débug sur SST avant
+          de comprendre que xarray défaut lat ascending → rio.to_raster écrit
+          Origin = coin sud-ouest. Fix
+          <code>sortby('lat', ascending=False)</code> avant
+          <code>set_spatial_dims</code>. Le même piège a frappé wind/waves
+          (memory écrite).
+        </li>
+        <li>
+          <strong>NEAREST strategy silencieuse</strong> : sprint 4a wind/waves
+          publiés mais invisibles côté WMS GetCapabilities. Cause :
+          <code>defaultValue.strategy=NEAREST</code> sans
+          <code>referenceValue</code> lève une <code>ServiceException</code>
+          qui SKIP la layer silencieusement. Fix : utiliser
+          <code>MAXIMUM</code> par défaut.
+        </li>
+        <li>
+          <strong>Drizzle &gt; Prisma quand DB partagée</strong> : sprint 5
+          ajoutait 3 tables à une DB Postgres déjà peuplée d'hypertables
+          TimescaleDB d'autres services. Prisma aurait introspect tout et
+          risqué de drifter ; Drizzle SQL-first ne touche que ce qu'on déclare.
+          Réutilisable si on ajoute du Nest à finance ou warhammer.
+        </li>
+        <li>
+          <strong>IDW smoothing pour particules</strong> : v1 sprint 8
+          utilisait <code>nearestWind</code> (snap discret) → trajectoires
+          en zigzag visible aux frontières de cellule. v2 (8b sur feedback
+          user "trop rapide + arrondir les angles") : interpolation IDW
+          pondérée par 1/d² sur les 4 plus proches voisins + advectScale ÷
+          4. Champ vectoriel C¹ continu, courbes naturelles.
+        </li>
+        <li>
+          <strong>Cluster GeoServer non-breaking</strong> : sprint 9 passe de
+          1 à 3 replicas GeoServer + JDBCConfig (catalog partagé Postgres).
+          La clé pour ne casser AUCUN des 5+ services métier qui appellent
+          <code>http://geoserver:8080</code> : nommer le LB nginx interne
+          <code>geoserver</code> (alias DNS). Tous les
+          <code>proxy_pass</code> et envs continuent sans modif. Pattern à
+          appliquer ailleurs (API en N replicas plus tard).
+        </li>
+        <li>
+          <strong>TTL différentiels alignés</strong> : audit a révélé que les
+          retention TimescaleDB étaient OK (30j vessels, 7j lightning) mais
+          que les fichiers disque GeoTIFF/GeoJSON s'accumulaient sans limite.
+          Sprint 10b a ajouté
+          <code>cleanup_old_files()</code> dans chaque fetcher Python (30j sst,
+          7j weather). Volumes stabilisés autour de 20 MB pour la météo.
+        </li>
+        <li>
+          <strong>Bonus pédagogique</strong> : Cloudflare Tunnel pour
+          exposition publique. Le NAS reste tranquille sur le LAN sans port
+          ouvert, mais
+          <code>https://maritime.sladoire.dev</code> est accessible mondialement
+          avec SSL + DDoS protection + CDN cache des tiles, 0€/mois (juste
+          ~12$/an le domaine). Pattern réutilisable pour les autres apps
+          NAS.
+        </li>
+      </ul>
+    </CaseStudySection>
+  </section>
+</BaseLayout>
