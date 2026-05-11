@@ -317,6 +317,80 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
       </p>
     </CaseStudySection>
 
+    <CaseStudySection eyebrow="Sprint Auth refonte — du minimal au full-featured">
+      <p>
+        Le sprint 5 livrait un auth minimal (email + password + JWT 24h)
+        suffisant pour le CRUD palettes user. Quelques sessions plus tard,
+        besoin d'élargir : <strong>RBAC admin</strong> pour gérer les
+        comptes, <strong>vérification email</strong> pour limiter le spam,
+        <strong>Google OAuth</strong> en complément du mdp,
+        <strong>suppression auto des comptes dormants</strong>. 5 phases
+        livrées en une grosse session (~6h pair-coding), brique par brique,
+        chaque phase poussée séparément.
+      </p>
+      <ul>
+        <li>
+          <strong>P1 — Schema + RBAC + seed admin</strong> : ALTER TABLE
+          users idempotent (5 colonnes ajoutées : <code>username</code>,
+          <code>role</code>, <code>email_verified_at</code>,
+          <code>last_login_at</code>, <code>verification_token</code>).
+          Backfill <code>username</code> = email local-part avec suffix
+          <code>_N</code> si collision via PL/pgSQL <code>DO $$</code>.
+          <code>@Roles('admin')</code> decorator + <code>RolesGuard</code>
+          NestJS (Reflector + SetMetadata). <code>AdminSeedService</code>
+          <code>OnModuleInit</code> qui promote
+          <code>sylvain.ladoire&#64;gmail.com</code> en admin idempotent au
+          boot — pas besoin de lancer un script manuel.
+        </li>
+        <li>
+          <strong>P2 — Vérification email Resend</strong> : SDK Resend
+          (free 3000 mails/mois, signup sans CB). <code>MailService</code>
+          avec mode dégradé "log only" si <code>RESEND_API_KEY</code> vide
+          (utile en dev). Token UUID 24h, endpoint <code>GET /auth/verify</code>
+          idempotent. Frontend register affiche un écran "vérifie ton email"
+          + bouton "Renvoyer le mail".
+        </li>
+        <li>
+          <strong>P3 — Admin UI <code>/admin/users</code></strong> :
+          backend <code>AdminUsersController</code> protégé par
+          <code>@UseGuards(JwtAuthGuard, RolesGuard) + @Roles('admin')</code>
+          au niveau classe. 3 endpoints : list / setRole / delete. Garde-fous
+          serveur : un admin ne peut pas se rétrograder ni se supprimer
+          (anti-brick). Frontend Angular avec table responsive + boutons
+          "Promote", "Demote", "Suppr" + confirm + indicateur "tu" sur self.
+        </li>
+        <li>
+          <strong>P3.5 — Google OAuth (passport-google-oauth20)</strong> :
+          <code>GoogleStrategy</code> NestJS + 2 endpoints
+          <code>GET /auth/google</code> (302 vers Google) +
+          <code>GET /auth/google/callback</code> (return + sign JWT).
+          Le token est passé au frontend via <strong>URL fragment</strong>
+          (<code>#token=...</code>) — les fragments ne sont PAS envoyés
+          au serveur, moins de fuite logs vs query string.
+          <code>AuthService.loginOrCreateGoogleUser</code> : merge by email
+          si existe (update <code>last_login_at</code>), sinon create avec
+          username généré + random password + <code>email_verified_at</code>
+          = now (Google a déjà vérifié).
+        </li>
+        <li>
+          <strong>P4 — Cron dormants 3 mois</strong> :
+          <code>@nestjs/schedule</code> v5 (compat Nest 11) avec
+          <code>@Cron(EVERY_DAY_AT_3AM, timeZone: 'Europe/Paris')</code>.
+          Critère <code>COALESCE(last_login_at, created_at) &lt; now - 90j</code>
+          — comptes jamais connectés sont aussi nettoyés. Admins jamais
+          supprimés (anti-brick). Mode <code>DORMANT_DRY_RUN=true</code>
+          pour audit avant prod.
+        </li>
+      </ul>
+      <p>
+        Le pattern récurrent qui a marché : <strong>chaque phase = un
+        commit isolé + push immédiat</strong>. Plus simple à reviewer, plus
+        simple à revert si une phase casse. La phase Google OAuth a touché
+        13 fichiers (back + front) — un seul commit, mais clean dans son
+        scope, et les autres phases déjà sécurisées avant.
+      </p>
+    </CaseStudySection>
+
     <CaseStudySection eyebrow="Pivots & lessons learned">
       <ul>
         <li>
@@ -375,6 +449,35 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
           avec SSL + DDoS protection + CDN cache des tiles, 0€/mois (juste
           ~12$/an le domaine). Pattern réutilisable pour les autres apps
           NAS.
+        </li>
+        <li>
+          <strong>GeoServer community extensions : snapshot ≠ release</strong>.
+          JDBCConfig + JDBCStore plantent en 404 sur SourceForge
+          <code>/extensions/</code> et sur
+          <code>build.geoserver.org/.../community-latest/</code>. Première
+          tentative avec le ZIP snapshot
+          <code>geoserver-2.28-SNAPSHOT-jdbcconfig-plugin.zip</code> →
+          <code>NoClassDefFoundError org/geoserver/util/SortedProperties</code>
+          (le snapshot référence une classe du master dev absente du runtime
+          stable 2.28.2). Le bon chemin :
+          <code>repo.osgeo.org/repository/release/org/geoserver/community/</code>
+          qui héberge les JARs release tagués alignés au runtime exact.
+          Pour 2.28.3 : <code>gs-jdbcconfig-2.28.3.jar</code> (146 KB) +
+          <code>gs-jdbcstore-2.28.3.jar</code> (61 KB). curl direct au
+          build du Dockerfile, fini.
+        </li>
+        <li>
+          <strong>SeaweedFS server mode bundle vs MinIO maintenance mode</strong>.
+          MinIO est entré en maintenance mode (déc 2025), donc SeaweedFS
+          (<code>chrislusf/seaweedfs:3.97</code>) bundle master + volume +
+          filer + S3 gateway dans 1 container via
+          <code>command: server -dir=/data -filer -s3 -s3.config=...</code>.
+          Le flag <code>-filer</code> est obligatoire (sans lui le S3 gateway
+          attend en boucle). Credentials via JSON statique
+          <code>seaweedfs/s3.json</code>. GeoWebCache tile cache vit
+          maintenant dans le bucket <code>maritime-gwc-tiles</code> au lieu
+          du disque local — testé avec
+          <code>aws s3 ls --endpoint-url=http://seaweedfs:8333</code>.
         </li>
       </ul>
     </CaseStudySection>
