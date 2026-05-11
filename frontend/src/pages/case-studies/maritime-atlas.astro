@@ -391,6 +391,59 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
       </p>
     </CaseStudySection>
 
+    <CaseStudySection eyebrow="Sprint Layer UX V2 — groupes, opacity, reset, forgot password">
+      <p>
+        Suite du sprint Auth refonte. Sylvain ouvre la legend et constate
+        12 toggles à plat, sans hiérarchie ; il propose un regroupement par
+        catégorie de data. Cinq phases livrées en 1 session de pair-coding
+        (~6h), même pattern « 1 phase = 1 commit isolé » que l'auth refonte.
+      </p>
+      <ul>
+        <li>
+          <strong>Phase A — Layer groups + opacity slider</strong> : refactor
+          de la legend en 5 groupes (Info maritimes, Modèles océano,
+          Modèles atmo, Radar, Foudre) + un placeholder "Satellite à venir".
+          Chaque layer reçoit un slider d'opacité 0-100% visible quand le
+          toggle est actif (`@if (showXXX())` dans le template). Bind sur
+          <code>layer.setOpacity()</code> côté OL. Particules vent =
+          opacity CSS sur le canvas overlay (signal séparé du rAF loop).
+          Bouton « ↺ Réinitialiser » qui restore les defaults
+          visibility/opacity + clear localStorage. Persist localStorage
+          <code>maritime.layer-prefs-v1</code> sur chaque change.
+        </li>
+        <li>
+          <strong>Phase B — Forgot/reset password (Resend)</strong> : termine
+          l'auth refonte avec la P5 manquante. Schema <code>password_reset_token</code>
+          + <code>password_reset_expires_at</code>. Token UUID v4 TTL 1h.
+          <code>AuthService.forgotPassword(email)</code> renvoie un message
+          générique (anti-énumération OWASP) quoi qu'il arrive. Bonus dans
+          <code>resetPassword</code> : si l'email n'était pas vérifié, on
+          valide automatiquement — l'user a prouvé qu'il contrôle l'email
+          en cliquant le lien.
+        </li>
+        <li>
+          <strong>Phase C — Backend prefs étendu</strong> : <code>user_layer_preferences</code>
+          gagne 2 colonnes <code>visible BOOLEAN</code> + <code>opacity REAL</code>
+          (nullable — NULL = défaut app). Endpoints <code>PUT /me/layer-state</code>
+          (single layer, pour debounce 500ms du slider) et
+          <code>PUT /me/layer-states</code> (batch sync au login depuis le
+          localStorage anonymous). Le <code>layerKind</code> accepte
+          n'importe quel string (visible/opacity pour TOUTES les layers),
+          tandis que la palette reste contrainte aux rasters
+          <code>VALID_LAYER_KINDS</code>.
+        </li>
+      </ul>
+      <p>
+        <strong>Architecture localStorage-first</strong> : Phase A persiste
+        en localStorage pour les anonymous users, Phase C ajoute le sync DB
+        pour les connected. Au login, le frontend merge le localStorage
+        (state actuel browser) avec la DB (state cross-device). C'est l'inverse
+        du pattern « DB first, localStorage cache » classique — ici
+        l'anonymous a 100% des features sans backend, le DB devient une
+        couche optionnelle pour la portabilité.
+      </p>
+    </CaseStudySection>
+
     <CaseStudySection eyebrow="Pivots & lessons learned">
       <ul>
         <li>
@@ -465,6 +518,31 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
           Pour 2.28.3 : <code>gs-jdbcconfig-2.28.3.jar</code> (146 KB) +
           <code>gs-jdbcstore-2.28.3.jar</code> (61 KB). curl direct au
           build du Dockerfile, fini.
+        </li>
+        <li>
+          <strong>JDBC race condition au boot du cluster</strong> :
+          détecté en cours de session quand un agent bg CANDHIS a redémarré
+          les 3 replicas en parallèle. JDBCConfig + JDBCStore lancent
+          <code>CREATE TABLE</code> sans <code>IF NOT EXISTS</code> →
+          gs-1 réussit (premier arrivé), gs-2/gs-3 plantent en
+          <code>relation "resources" already exists</code> → context Spring
+          fail → web app dégradée (REST 404). Fix dans
+          <code>cluster-bootstrap.sh</code> : <code>psql</code> probe au
+          boot (<code>SELECT to_regclass('geoserver.object') IS NOT NULL</code>),
+          si tables présentes → <code>sed</code> sur
+          <code>initdb=true</code> pour le mettre à <code>false</code>
+          avant que GeoServer ne lise le fichier. Premier replica → init,
+          replicas suivants → skip. Élégant + 0 modif au plugin upstream.
+        </li>
+        <li>
+          <strong>LB healthcheck 302 false-unhealthy</strong> : le LB nginx
+          servait correctement les WMS (200 partout) mais le healthcheck
+          <code>wget -qO- /geoserver/web/</code> recevait 302 (redirect
+          vers la login UI) → considéré erreur → "unhealthy" perpétuel →
+          provisioner depend_on bloqué. Fix : <code>--max-redirect=0</code>
+          + accept exit code 8 (server-side redirect status code). Lesson :
+          un healthcheck doit accepter TOUS les codes qui prouvent que le
+          serveur répond, pas juste 200.
         </li>
         <li>
           <strong>SeaweedFS server mode bundle vs MinIO maintenance mode</strong>.
