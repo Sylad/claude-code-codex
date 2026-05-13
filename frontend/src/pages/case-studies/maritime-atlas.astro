@@ -559,5 +559,112 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         </li>
       </ul>
     </CaseStudySection>
+
+    <CaseStudySection eyebrow="GeoServer V3 — plugin WPS custom (2026-05-13)">
+      <p>
+        Les rasters source météo / océano sont sur grille grossière : GFS 0.25°
+        (~28km), OISST 0.25°, WW3 0.5°. Au rendu, on voit les pixels — pas joli,
+        et les isolignes <code>ras:Contour</code> sortent en escaliers. La solution
+        classique = densifier le raster côté serveur avant la color map. Mais
+        <strong>il ne faut surtout pas pré-sampler les données</strong> (les
+        rasters source doivent rester intacts pour GetFeatureInfo / WCS time
+        series). Donc : densification rendering-side uniquement.
+      </p>
+      <p>
+        On a écrit un <strong>plugin Java GeoServer WPS</strong> qui expose deux
+        processes custom :
+      </p>
+      <ul>
+        <li>
+          <code>idw:IDW</code> — Inverse Distance Weighting raster densifier.
+          Paralléle sur les rangées dst (<code>IntStream.range().parallel()</code>),
+          fast paths pour p=1 (linear) et p=2 (squared, skip <code>Math.pow</code>),
+          <code>Math.fma</code> pour les sommes pondérées, factory cache static
+          final. ~150 lignes Java 17.
+        </li>
+        <li>
+          <code>idw:IDWContour</code> — appelle <code>IDWProcess.execute()</code>
+          puis <code>ContourProcess.process()</code> de GeoTools en interne, retourne
+          la FeatureCollection des isolignes lisses. <em>Pourquoi pas un chaining
+          SLD natif ?</em> Voir bug ci-dessous.
+        </li>
+      </ul>
+
+      <h3 class="font-bold text-lg mt-6">Le bug GeoTools post-2.26.2 — débuggé avec Claude en miroir</h3>
+      <p>
+        Je connaissais le bug depuis un projet pro avec un autre Claude — il avait
+        fini par trouver la régression dans les sources GeoTools, commit d'Andrea
+        Aime (le mainteneur historique). En SLD avec rendering transformation, la
+        syntaxe <code>{`<Function name="parameter"><Literal>data</Literal></Function>`}</code>
+        sans valeur déclenche une auto-injection du coverage source côté pipeline
+        de rendu. Sauf qu'à partir de GeoTools 32 (= GS 2.26.2), si le process
+        bean Java ne contient AUCUNE des méthodes
+        <code>invertGridGeometry / invertQuery / customizeReadParams / clipOnRenderingArea</code>,
+        <code>AnnotationDrivenProcessFactory.create()</code> wrap le process en
+        plain <code>ProcessFunction</code> au lieu de
+        <code>InvokeMethodRenderingProcess</code> — l'auto-injection ne se déclenche
+        plus, <code>data</code> arrive null, et l'<code>execute()</code> jette
+        <em>"Parameter data is missing but has min multiplicity &gt; 0"</em>.
+      </p>
+      <p>
+        <strong>Fix dans le plugin :</strong> ajouter une méthode publique
+        <code>public GridGeometry invertGridGeometry(Query, GridGeometry)</code>
+        qui retourne le target tel quel. Sa simple <strong>existence</strong>
+        détectée par réflexion suffit à déclencher le bon wrapping. Pas
+        d'<code>implements RenderingProcess</code> requis — la réflexion sur le
+        nom de méthode est plus permissive que l'interface elle-même.
+      </p>
+      <p>
+        <strong>Le chaining SLD reste cassé</strong> entre processes externes même
+        avec le fix : <code>ras:Contour</code> avec un <code>idw:IDW</code> nested
+        dedans → le inner ne reçoit toujours rien (GS n'auto-injecte que sur la
+        transformation externe). D'où <code>idw:IDWContour</code> qui internalise
+        les 2 étapes — un seul process, plus de chaining, plus de bug.
+      </p>
+
+      <h3 class="font-bold text-lg mt-6">Le piège JDBCConfig — 1h perdue avant de comprendre</h3>
+      <p>
+        Le cluster GeoServer utilise JDBCConfig (catalog Postgres-backed) pour que
+        les 3 replicas partagent le même état. Quand on PUT un SLD via REST API
+        (<code>PUT /rest/workspaces/&lt;ws&gt;/styles/&lt;name&gt;?raw=true</code>), la DB
+        est bien mise à jour, et un GET sur la même URL retourne la nouvelle version
+        ✓. Mais le rendu continue d'utiliser <strong>l'ancienne version</strong>
+        — pourquoi ?
+      </p>
+      <p>
+        Réponse : GeoServer charge les SLDs depuis le filesystem
+        (<code>workspaces/&lt;ws&gt;/styles/&lt;name&gt;.sld</code>), pas depuis la DB. Les
+        REST writes à JDBCConfig ne ré-écrivent <strong>pas</strong> les fichiers
+        SLD sur disque — ils restent stales. <code>POST /reload</code> recharge le
+        catalog depuis DB mais pas les fichiers SLD. Donc tant qu'on ne docker cp
+        pas le SLD dans chaque replica, le rendu reste figé sur l'ancienne version
+        — alors même que tous les indicateurs catalog disent "à jour".
+      </p>
+      <p>
+        Workaround durable : un script <code>deploy-style.sh</code> qui fait les 3
+        étapes (REST PUT + <code>docker cp</code> dans les N replicas +
+        <code>POST /reload</code>). Idempotent, déployable en CI/CD. Le drift
+        catalog ↔ disk n'est pas documenté côté GeoServer — leçon à graver dans
+        la mémoire des projets cluster JDBCConfig.
+      </p>
+
+      <h3 class="font-bold text-lg mt-6">Burst protection — control-flow extension</h3>
+      <p>
+        Le frontend OpenLayers tile par tuiles 256×256 — un pan de carte peut
+        burst 30+ requêtes WMS GetMap en parallèle. Avec une rendering transformation
+        coûteuse (IDW densify × Contour), le pool de threads Tomcat saturait → LB
+        nginx en <code>upstream timed out</code> → cascade de 502 → GeoServer
+        s'effondrait pendant 1-2 minutes. Solution : l'extension stable
+        <strong>control-flow</strong> (Andrea Aime aussi, par contre celle-là est
+        documentée). On a calibré pour quad-core × 3 replicas :
+        <code>ows.global=16</code>, <code>ows.wms.getmap=6</code>,
+        <code>user=8</code>, <code>timeout=30s</code>. Les requêtes excédentaires
+        partent en file plutôt que de tuer le serveur.
+      </p>
+      <p>
+        Burst test validé : 30 requêtes WMS concurrentes → 30/30 réponses 200,
+        P95 = 6s (sous le timeout 30s), zéro 502, zéro effondrement.
+      </p>
+    </CaseStudySection>
   </section>
 </BaseLayout>
