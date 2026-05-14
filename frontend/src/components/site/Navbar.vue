@@ -9,6 +9,7 @@ const links = [
   { href: "/theory", label: "Théorie" },
   { href: "/ecosystem", label: "Écosystème" },
   { href: "/case-studies", label: "Case studies" },
+  { href: "/k8s-for-java-developers", label: "K8s pour Java" },
   { href: "/learning", label: "Learning" },
   { href: "/videos", label: "Vidéos" },
   { href: "/about", label: "À propos" },
