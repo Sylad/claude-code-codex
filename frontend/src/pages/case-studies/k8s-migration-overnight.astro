@@ -559,6 +559,204 @@ HTTP/2 200</pre>
       </p>
     </CaseStudySection>
 
+    <CaseStudySection eyebrow="Jour 2 · La nuit n'était pas finie">
+      <p>
+        Au réveil le 14 mai, la stack tournait sur le cluster Big-Blue
+        (mon laptop). Mais Big-Blue n'est pas allumé 24/7, et je
+        cherche un emploi : impossible d'envoyer un lien LinkedIn qui
+        meurt quand je ferme l'ordi. Le 14 mai a donc été consacré à
+        rendre la stack <strong>publiquement et durablement live</strong>.
+        Spoiler : 8 heures de plus, et 4 problèmes que je n'avais pas
+        anticipés.
+      </p>
+
+      <h3 class="text-xl font-mono text-claude mt-8 mb-3">1. Mini-Blue rejoint la danse</h3>
+      <p>
+        Big-Blue = laptop, donc fragile. <strong>Mini-Blue</strong> =
+        GEEKOM IT13 i9-13900HK 32 GB qui tourne déjà 24/7 chez moi
+        pour un sidecar grib-parser. J'y bootstrappe k3s en parallèle
+        avec le même script, je restore les dumps PG sur cette
+        seconde instance via <code class="text-xs font-mono">kubectl
+        cp + psql -f</code> (méthode binary-safe — un
+        <code class="text-xs font-mono">| psql</code> avait corrompu
+        un COPY plus tôt dans la nuit). En 1h30, Mini-Blue a le même
+        état que Big-Blue.
+      </p>
+      <p>
+        Le tunnel Cloudflare configuré sur un <strong>seul token</strong>
+        accepte plusieurs cloudflared en parallèle : je déploie un
+        cloudflared par cluster, et CF voit 2 connecteurs × 4 quic =
+        <strong>8 origins HA</strong> qui se load-balancent
+        automatiquement. Quand j'éteins Big-Blue, le traffic glisse
+        sur Mini-Blue sans intervention. Zero DNS failover, zero
+        keepalived.
+      </p>
+
+      <h3 class="text-xl font-mono text-claude mt-8 mb-3">
+        2. Le bug undici / Alpine musl libc
+      </h3>
+      <p>
+        L'orchestrateur de données déclenche des
+        <code class="text-xs font-mono">fetch()</code> HTTPS toutes les
+        N minutes vers USGS earthquakes, hubeau débits FR, METAR,
+        FIRMS MODIS, Météo-France. <strong>Toutes</strong> tombaient en
+        <em>"TypeError: fetch failed"</em> après 5 secondes. CoreDNS
+        résolvait pourtant correctement les hôtes externes, <code
+        class="text-xs font-mono">nc 1.1.1.1:443</code> passait,
+        <code class="text-xs font-mono">https.request()</code> de Node
+        renvoyait du 200… mais <code class="text-xs font-mono">fetch()</code>
+        timeoutait, y compris sur IP directe.
+      </p>
+      <p>
+        Diagnostic isolé : l'image
+        <code class="text-xs font-mono">node:22-alpine</code> (Alpine 3.23
+        + musl libc) déclenche un bug dans
+        <strong>undici</strong> (l'implémentation HTTP de
+        <code class="text-xs font-mono">fetch()</code>) qui ne se
+        reproduit pas sur Debian. Aucun
+        <code class="text-xs font-mono">--dns-result-order=ipv4first</code>
+        ni
+        <code class="text-xs font-mono">--no-network-family-autoselection</code>
+        ne contourne. Fix radical et durable : passer la base à
+        <strong><code class="text-xs font-mono">node:22-bookworm-slim</code></strong>.
+        L'image gagne 600 MB mais retrouve un HTTPS sortant fiable —
+        9/9 erreurs ingestion disparaissent en 2 minutes.
+      </p>
+      <p>
+        J'ai figé ça en mémoire Claude
+        (<code class="text-xs font-mono">undici_alpine_musl_external_fetch_bug.md</code>)
+        avec un test de reproduction et la liste des services à migrer
+        en Debian. <em>Découverte qui m'aurait coûté 2 jours sur un
+        prochain projet si je ne l'avais pas écrite ce soir-là.</em>
+      </p>
+
+      <h3 class="text-xl font-mono text-claude mt-8 mb-3">
+        3. La cérémonie deploy devient insoutenable
+      </h3>
+      <p>
+        Pour pousser une image custom sur les 2 clusters, je
+        répétais : <code class="text-xs font-mono">docker build</code>
+        →
+        <code class="text-xs font-mono">docker save -o /tmp/X.tar</code>
+        →
+        <code class="text-xs font-mono">scp -O /tmp/X.tar mini-blue</code>
+        →
+        <code class="text-xs font-mono">ssh mini-blue 'sudo k3s ctr -n
+        k8s.io images import …'</code> →
+        <code class="text-xs font-mono">sudo k3s ctr -n k8s.io images
+        import</code> côté Big-Blue → bump tag values.yaml → commit →
+        force ArgoCD refresh. <strong>~10 minutes par image, × 14
+        services à migrer = inacceptable.</strong>
+      </p>
+      <p>
+        À mi-après-midi je bascule sur <strong>GitHub Container
+        Registry</strong> (GHCR, gratuit avec mon compte) : token
+        write:packages, <code class="text-xs font-mono">docker login
+        ghcr.io</code>, tag/push chacune des 14 images, secret
+        <code class="text-xs font-mono">regcred</code> créé une fois
+        sur chaque cluster, et tous les Deployment templates
+        référencent <code class="text-xs font-mono">imagePullSecrets:
+        - name: regcred</code>.
+      </p>
+      <p>
+        Le workflow devient <strong>3 lignes</strong> :
+      </p>
+      <pre class="bg-zinc-900 border border-zinc-700 rounded p-4 text-sm font-mono overflow-x-auto"><code>{`docker push ghcr.io/sylad/maritime-X:vY
+./scripts/upgrade-app.sh maritime vY
+# → 2 clusters synchronisés en ~60s, zéro touche humaine`}</code></pre>
+      <p>
+        Cette pivot a changé toute la suite : les vagues 1 + 2 de
+        migration NAS se sont enchaînées sans friction.
+      </p>
+
+      <h3 class="text-xl font-mono text-claude mt-8 mb-3">
+        4. Parité totale NAS docker-compose en deux vagues
+      </h3>
+      <p>
+        Le chart maritime de la nuit ne couvrait que 5 services
+        (api, frontend, geoserver, ais-decoder, alerts-engine,
+        track-builder). Le NAS en avait <strong>20</strong>.
+        L'après-midi est consacré aux deux vagues de complétion :
+      </p>
+      <ul class="list-disc list-inside text-zinc-300 space-y-1 ml-4">
+        <li><strong>Vague 1 (45 min)</strong> : ais-ingester (image
+          rebuild Debian, Secret AISSTREAM_API_KEY), lightning-fetcher
+          (websocket continu), buoy-fetcher (EMODnet WFS, Python 3.12).</li>
+        <li><strong>Vague 2 (1h30)</strong> : grib-parser (sidecar
+          Python GDAL/cfgrib), weather-fetcher (GFS), weather-fetcher-arpege
+          (Météo-France ARPEGE), weather-fetcher-arome (AROME),
+          sst-fetcher (NOAA OISST). Ces 5 services partagent un volume
+          <code class="text-xs font-mono">/coverage/</code> via
+          <strong>hostPath</strong> (quick fix car k3s
+          <code class="text-xs font-mono">local-path</code> est RWO
+          uniquement). Lecture par GeoServer dans le même pod, écriture
+          par les fetchers.</li>
+      </ul>
+      <p class="mt-4">
+        Résultat à 14:50 du 14 mai : <strong>17 pods Running</strong>
+        sur chaque cluster, 8 layers WMS GeoServer alimentés, flux AIS
+        live à 11&nbsp;000 messages/min, foudre en streaming WSS,
+        bouées EMODnet seedées, vessels positions qui rentrent dans
+        TimescaleDB.
+      </p>
+
+      <h3 class="text-xl font-mono text-claude mt-8 mb-3">
+        5. Les vrais gotchas du quotidien post-migration
+      </h3>
+      <p>
+        Au-delà des 7 pièges de la nuit, le jour 2 a ajouté :
+      </p>
+      <ul class="list-disc list-inside text-zinc-300 space-y-1 ml-4">
+        <li><strong>ALTER OWNER en boucle DO</strong> à rejouer après
+          CHAQUE service applicatif qui crée une table/view au boot
+          (postgres reste owner par défaut → permission denied côté
+          user applicatif). Couvrir tables ET sequences ET <em>views</em>
+          — j'ai oublié les views au premier round.</li>
+        <li><strong>GeoServer datastore.xml hardcodé</strong> au
+          hostname Swarm
+          (<code class="text-xs font-mono">postgres</code>) au lieu du
+          service K8s
+          (<code class="text-xs font-mono">pg-data-rw.maritime.svc.cluster.local</code>).
+          Fix : sed in-place dans le PVC + restart pod GS.</li>
+        <li><strong>Liveness probe cloudflared</strong> par défaut
+          pointe
+          <code class="text-xs font-mono">:2000/ready</code> mais
+          cloudflared bind metrics sur un port aléatoire → 12 restarts
+          en 26 min de crashloop silencieux. Fix : arg explicite
+          <code class="text-xs font-mono">--metrics 0.0.0.0:2000</code>.</li>
+        <li><strong>kubectl wait --for=ready</strong> match l'ANCIEN
+          pod pendant un rollout restart (label sélecteur identique) —
+          préférer <code class="text-xs font-mono">kubectl rollout
+          status</code>.</li>
+      </ul>
+
+      <h3 class="text-xl font-mono text-claude mt-8 mb-3">
+        Bilan à H+14 du déclencheur initial
+      </h3>
+      <ul class="list-disc list-inside text-zinc-300 space-y-1 ml-4">
+        <li><strong>2 clusters k3s</strong> (Big-Blue + Mini-Blue) en
+          HA via Cloudflare tunnel</li>
+        <li><strong>17 services</strong> orchestrés en ArgoCD GitOps
+          (vs 20 sur NAS, 3 obsolètes)</li>
+        <li><strong>14 images Docker</strong> publiées sur GHCR,
+          pulled automatiquement</li>
+        <li><strong>~150 GeoTIFF / jour</strong> écrits par les
+          fetchers météo dans <code class="text-xs font-mono">/coverage/</code></li>
+        <li>Auth Google OAuth opérationnelle, NAS docker-compose
+          dépréciable</li>
+        <li>Coût mensuel : <strong>€0</strong>. Économie vs
+          Scaleway Kapsule équivalent : ~€47/mo</li>
+      </ul>
+      <p>
+        Ce que ces 14 heures m'ont surtout appris : <strong>une fois
+        la base solide, les déploiements suivants sont gratuits</strong>.
+        La friction des premières migrations est ce qui force à
+        construire un workflow propre. Le jour 3 (cette nuit, 24h
+        plus tard) je pousse une image en 2 commandes et tout est en
+        ligne.
+      </p>
+    </CaseStudySection>
+
     <CaseStudySection eyebrow="Méta · 0 ligne de code humaine">
       <p>
         Ce déploiement a été conduit en pair-programming avec
