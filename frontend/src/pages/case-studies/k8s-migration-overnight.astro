@@ -1,0 +1,584 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import MermaidDiagram from "@/components/site/MermaidDiagram.vue";
+import CaseStudySection from "@/components/site/CaseStudySection.astro";
+
+const before_after = {
+  before: [
+    "1 NAS Synology Btrfs",
+    "Docker Swarm 20 services dont 14 maritime",
+    "5 sites Docker compose séparés",
+    "Pas d'autoscaling natif",
+    "1 volume Btrfs partagé par tous (Postgres, GeoServer, RMQ)",
+    "Pas de GitOps — `docker stack deploy` manuel",
+    "TLS via Cloudflare tunnel (1 tunnel par site)",
+    "Boîte qui ferme = portfolio inaccessible quand recruteur clique",
+  ],
+  after: [
+    "1 cluster k3s sur Big-Blue (WSL2 Ubuntu, i9-14900KF, 31 GiB)",
+    "5 apps en K8s (ol, finance, warhammer, maritime, geoserver)",
+    "1 repo GitOps public `Sylad/developpeur-gitops`",
+    "5 ArgoCD Applications Synced + Healthy",
+    "PVC SSD dédié par stateful workload",
+    "ingress-nginx + cert-manager + mkcert TLS dual (WSL + Windows)",
+    "5 operators K8s : CloudNativePG, RabbitMQ Cluster Operator, KEDA, cert-manager, sealed-secrets",
+    "Plan Phase 2 : Scaleway Kapsule (~€47/mo) prêt à activer",
+  ],
+};
+
+const pitfalls = [
+  {
+    n: 1,
+    title: "ingress-nginx en mode classique ne forwarde rien depuis Windows",
+    cause: "K3s utilise Klipper LB qui fait du DNAT iptables — il n'y a PAS de processus qui LISTEN sur l'IP WSL2. Windows ne détecte rien à forwarder via localhost.",
+    fix: "helm upgrade ingress-nginx --set controller.hostNetwork=true --set controller.dnsPolicy=ClusterFirstWithHostNet --set controller.kind=DaemonSet. Le pod bind alors sur 0.0.0.0:80/443 → Windows auto-forwarde.",
+  },
+  {
+    n: 2,
+    title: "CloudNativePG webhook impose un tag image semver strict",
+    cause: "spec.imageName: Invalid value: 'timescale/timescaledb-ha:pg16-ts2.17': invalid version tag. La webhook attend N.N.N strict.",
+    fix: "docker tag local avant import : `docker tag timescale/timescaledb-ha:pg16-ts2.17 maritime-pg:16.0.0`. Le tag 16.0.0 passe la webhook.",
+  },
+  {
+    n: 3,
+    title: "CNPG bloque shared_preload_libraries dans postgresql.parameters",
+    cause: "spec.postgresql.parameters.shared_preload_libraries: Can't set fixed configuration parameter. CNPG le gère lui-même (pgaudit, pg_failover_slots).",
+    fix: "Utiliser le champ list top-level `spec.postgresql.shared_preload_libraries: [timescaledb]` qui MERGE avec ceux de CNPG.",
+  },
+  {
+    n: 4,
+    title: "CNPG postInitSQL casse les blocs plpgsql `$$ ... $$`",
+    cause: "CNPG split le YAML array sur `;`. Les blocs `BEGIN ... END;` plpgsql ont leur propre `;` interne → syntax error at or near '$'.",
+    fix: "Utiliser `LANGUAGE sql` inline ('SELECT NULL::void') quand possible. Sinon, exécuter le plpgsql via `kubectl exec | psql` post-bootstrap.",
+  },
+  {
+    n: 5,
+    title: "GeoServer healthcheck — le bon endpoint n'est pas /geoserver/web/",
+    cause: "/geoserver/web/ = 302 (redirect). /geoserver/web/index.html = 404. Seul /geoserver/index.html retourne 200 strict.",
+    fix: "startupProbe.httpGet.path: /geoserver/index.html. failureThreshold: 60 × 15s = 15 min de grâce pour le boot Java + Spring + JDBCConfig.",
+  },
+  {
+    n: 6,
+    title: "Le jdbcconfig.properties du data_dir surcharge les env vars",
+    cause: "GS lit d'abord le fichier disque (qui contient encore l'ancien hostname Swarm 'postgres:5432'). Les env GEOSERVER_JDBCCONFIG_JDBC_URL sont ignorés.",
+    fix: "sed direct dans le PVC via pod helper busybox : sed -i 's|postgres:5432|pg-catalog-rw:5432|g' jdbcconfig.properties.",
+  },
+  {
+    n: 7,
+    title: "ArgoCD selfHeal revert tout mon helm upgrade local en 3 min",
+    cause: "Application avec syncPolicy.automated.selfHeal: true compare l'état cluster vs Git toutes les 3 min. `kubectl patch` / `helm upgrade --force` direct sont reverts garantis.",
+    fix: "Workflow safe = commit + git push d'abord, puis ArgoCD sync. Jamais de modif manuelle sur les ressources gérées par ArgoCD (sauf si selfHeal disabled explicitement).",
+  },
+];
+
+const lessons = [
+  {
+    title: "K8s local-first vs cloud direct",
+    body: "Commencer par k3s sur poste de dev WSL2 économise 6h de bootstrap cloud + €40/mo pour la phase d'apprentissage. Le cluster local est suffisant pour valider 100% de l'archi (operators, GitOps, observability). Le cloud devient un kubectl apply de la même config quand on veut publier.",
+  },
+  {
+    title: "Le dual-DB pattern n'est pas optionnel",
+    body: "Quand on a 2 workloads PostgreSQL incompatibles (catalog GeoServer tiny+read-mostly vs hypertables maritime append-only high-volume), 2 clusters CNPG distincts (pg-catalog + pg-data) = 2 WAL isolés. Le crash overnight 2026-05-13 où l'ais-decoder saturait le WAL et empêchait GeoServer de lire 175 rows de catalog était évitable avec ce pattern.",
+  },
+  {
+    title: "GitOps + selfHeal = source of truth = Git",
+    body: "Une fois ArgoCD branché avec selfHeal, tout `kubectl patch` direct est reverté. Ça force une discipline saine : tout changement passe par git commit + push. Mauvaise nouvelle pour le debug rapide, mais excellent pour l'audit, le rollback, et la reproductibilité.",
+  },
+  {
+    title: "Les images custom sont normales en K8s sérieux",
+    body: "On a buildé 3 images custom pendant la nuit (maritime-pg-ts pour Timescale UID 26, maritime-geoserver:v2 pour le plugin IDW, maritime-pg-ts:16.0.0 pour le retag CNPG-compliant). C'est la signature d'un déploiement sérieux — on ne se contente plus d'images publiques génériques.",
+  },
+  {
+    title: "Trade-offs assumés > perfection bloquée",
+    body: "Timescale stubs no-op au lieu de l'extension réelle. GWC S3 disabled au lieu de déployer SeaweedFS. JDBCStore désactivé pour preprod 1 replica. Ces trade-offs ne sont PAS des défauts du déploiement — ils sont documentés, scopés à la preprod, avec un plan de fix pour la prod. Le senior assume, le junior cache.",
+  },
+];
+---
+
+<BaseLayout
+  title="La nuit de la migration K8s — Swarm → k3s en une nuit"
+  description="Récit chronologique de la migration de 5 apps personnelles d'un Docker Swarm sur NAS Synology vers un cluster k3s local sur WSL2, plus GitOps complet via ArgoCD, en une nuit (13→14 mai 2026). 7 pièges techniques, 5 leçons, 1 repo GitOps public, 5 Applications Synced + Healthy."
+>
+  <PageHero
+    eyebrow="Case study · migration K8s overnight"
+    title="La nuit où on est passé de Swarm à K8s"
+    intro="13 mai 2026, 22h. Confirmation : la boîte ferme, recherche d'emploi en cours. Le portfolio doit rester debout quand un recruteur clique. 14 mai, 00h30 : 5 apps en K8s, 5 ArgoCD Applications Synced + Healthy, 1 repo GitOps public. ~24 commits, ~10 builds Docker, 0 ligne de code humaine. Voici le récit, les pièges, et les leçons."
+  />
+
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12 space-y-12">
+
+    <CaseStudySection eyebrow="Le déclencheur">
+      <p>
+        Le 13 mai 2026 vers 18h, ma boîte annonce qu'elle ferme. Dans
+        les 4 heures qui suivent, ma préoccupation passe de
+        <em>"je continue les sprints maritime"</em> à
+        <em>"mon portfolio doit fonctionner quand un recruteur clique"</em>.
+      </p>
+      <p>
+        Le portfolio en question : 5 apps personnelles déployées sur un
+        NAS Synology via Docker Swarm. Quand le NAS rame (Btrfs scrub
+        post-coupure secteur, comme ce jour-là), tout tombe en cascade :
+        l'ais-decoder maritime sature le WAL Postgres, Postgres ne peut
+        plus servir GeoServer qui ne peut plus servir le frontend.
+        Le NAS est devenu un SPoF inacceptable pour une période où
+        chaque clic compte.
+      </p>
+      <p>
+        La décision est prise vers 22h : migration K8s, plan local-first
+        (cluster k3s sur Big-Blue, mon poste WSL2), puis phase 2 vers
+        Scaleway Kapsule quand tout sera stable. Objectif explicite :
+        <strong>maximiser la vendabilité CV</strong> (Kubernetes, GitOps,
+        operators, cloud-native) tout en gardant un portfolio
+        publiquement accessible.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Avant / Après">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="border border-white/10 rounded-lg p-6 bg-gradient-to-b from-rose-500/5 to-transparent">
+          <h3 class="text-sm font-mono uppercase tracking-wider text-rose-400 mb-4">Avant — Docker Swarm sur NAS</h3>
+          <ul class="space-y-2 text-sm">
+            {before_after.before.map((item) => (
+              <li class="flex items-start gap-2">
+                <span class="text-rose-400 mt-0.5">·</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div class="border border-white/10 rounded-lg p-6 bg-gradient-to-b from-emerald-500/5 to-transparent">
+          <h3 class="text-sm font-mono uppercase tracking-wider text-emerald-400 mb-4">Après — k3s + GitOps</h3>
+          <ul class="space-y-2 text-sm">
+            {before_after.after.map((item) => (
+              <li class="flex items-start gap-2">
+                <span class="text-emerald-400 mt-0.5">·</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Architecture cible">
+      <p>
+        Plan en deux phases : valider toute l'archi en local sur Big-Blue
+        (€0, itération à la seconde), puis pousser sur Scaleway Kapsule
+        managé (~€47/mois) seulement quand tout est stable. C'est le
+        workflow standard "Platform Engineering / Internal Developer Platform"
+        qu'utilisent les équipes mid-sized en 2026.
+      </p>
+
+      <MermaidDiagram
+        client:visible
+        definition={`flowchart TB
+  CF["Cloudflare<br/>DNS + CDN + WAF"]:::edge
+  CF -->|"local /etc/hosts<br/>*.dev.local → 127.0.0.1"| K3S
+  CF -.->|"Phase 2 (cloud)<br/>DNS public"| KAPSULE
+
+  subgraph K3S["Phase 1 — k3s sur Big-Blue (WSL2)"]
+    direction TB
+    INGRESS["ingress-nginx<br/>hostNetwork=true"]
+
+    subgraph NS_PREPROD["namespace: preprod"]
+      direction LR
+      OL["ol-companion"]
+      FIN["finance-tracker"]
+      WAR["warhammer40k"]
+    end
+
+    subgraph NS_MARITIME["namespace: maritime"]
+      direction TB
+      MAR_FE["maritime-frontend"]
+      MAR_API["maritime-api"]
+      GS["geoserver"]
+      MAR_DEC["ais-decoder"]
+      MAR_ALERT["alerts-engine"]
+      MAR_TRACK["track-builder"]
+      PG_CATALOG[("pg-catalog<br/>CNPG")]
+      PG_DATA[("pg-data<br/>CNPG + PostGIS")]
+      RMQ["rabbitmq<br/>RMQ Operator"]
+    end
+
+    INGRESS --> OL
+    INGRESS --> FIN
+    INGRESS --> WAR
+    INGRESS --> MAR_FE
+    INGRESS --> GS
+
+    GS --> PG_CATALOG
+    MAR_API --> PG_DATA
+    MAR_API --> RMQ
+    MAR_DEC --> PG_DATA
+    MAR_DEC --> RMQ
+    MAR_ALERT --> PG_DATA
+    MAR_ALERT --> RMQ
+    MAR_TRACK --> PG_DATA
+  end
+
+  subgraph KAPSULE["Phase 2 — Scaleway Kapsule (plus tard)"]
+    direction TB
+    PROD["namespace: prod<br/>(replicas≥1, live data)"]
+  end
+
+  subgraph NAS["NAS Synology (rôle edge collector)"]
+    INGESTER["ais-ingester<br/>(client aisstream.io)"]
+  end
+
+  INGESTER -.->|"TLS sortant<br/>vers RMQ cluster"| RMQ
+
+  classDef edge fill:#1e40af20,stroke:#3b82f6;
+  classDef preprod fill:#10b98115,stroke:#10b98140;
+  classDef maritime fill:#06b6d415,stroke:#06b6d440;`}
+      />
+
+      <p class="text-sm text-ink-muted mt-4">
+        Le NAS ne disparaît pas — il devient un <strong>edge collector</strong>
+        qui pousse les données AIS live vers RabbitMQ dans le cluster
+        via TLS sortant. Pattern reconnu (IoT edge / hybrid cloud)
+        également vendable sur CV.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="La nuit chronologique">
+      <p>Découpage en 5 sprints, livrés dans cet ordre :</p>
+
+      <div class="space-y-4 my-6">
+        <div class="border-l-2 border-emerald-500/40 pl-4">
+          <h4 class="text-sm font-mono uppercase text-emerald-400">Sprint 0 — Bootstrap cluster · 22h00 → 22h45</h4>
+          <p class="text-sm mt-1">
+            k3s install + helm + mkcert. Création 3 namespaces (preprod,
+            argocd, infra). Install ingress-nginx
+            (<code class="text-xs font-mono text-amber-300">hostNetwork=true</code> —
+            le piège #1 ci-dessous a coûté 30 min de debug). cert-manager
+            + ClusterIssuer basé sur la CA mkcert. ArgoCD via Helm chart
+            + Ingress TLS auto-signé reconnu par Chrome Windows (avec
+            <code class="text-xs font-mono">certutil -addstore</code> du
+            root CA mkcert côté Windows).
+          </p>
+        </div>
+
+        <div class="border-l-2 border-emerald-500/40 pl-4">
+          <h4 class="text-sm font-mono uppercase text-emerald-400">Sprint 1 — ol-companion · 22h45 → 23h15</h4>
+          <p class="text-sm mt-1">
+            La plus simple des apps personnelles. Premier Helm chart
+            générique (backend NestJS + frontend nginx + Ingress + PVC).
+            Smoke test
+            <code class="text-xs font-mono">https://ol.dev.local</code> →
+            HTTP/2 200, cadenas vert dans Chrome. Le pattern Helm chart
+            est défini, les suivantes vont être des copies.
+          </p>
+        </div>
+
+        <div class="border-l-2 border-emerald-500/40 pl-4">
+          <h4 class="text-sm font-mono uppercase text-emerald-400">Sprint 2 — finance + warhammer · 23h15 → 23h45</h4>
+          <p class="text-sm mt-1">
+            Cherry-pick du chart ol-companion. Build des 4 images en
+            parallèle (2 backends + 2 frontends). Sed pour ajuster
+            ports/hostnames/env. Warhammer-backend crash sur seeds
+            JSON manquants — pattern <em>"helper pod busybox monte le
+            PVC + kubectl cp + restart app"</em> pour pré-populer (1.6 MB
+            seeds). 2 nouvelles URLs HTTPS en ligne.
+          </p>
+        </div>
+
+        <div class="border-l-2 border-cyan-500/40 pl-4">
+          <h4 class="text-sm font-mono uppercase text-cyan-400">Maritime stateful · 23h45 → 00h05</h4>
+          <p class="text-sm mt-1">
+            Install 3 operators : CloudNativePG (Postgres HA), RabbitMQ
+            Cluster Operator, KEDA (event-driven autoscaling, remplace
+            mon autoscaler maison Swarm). Création de 2 clusters PG
+            distincts <strong>(dual-DB pattern)</strong> : pg-catalog
+            (tiny, GeoServer JDBCConfig) et pg-data (hypertables,
+            PostGIS). Dump du schema geoserver depuis le NAS (175 rows)
+            → restore dans pg-catalog via psql stdin pipe.
+          </p>
+        </div>
+
+        <div class="border-l-2 border-cyan-500/40 pl-4">
+          <h4 class="text-sm font-mono uppercase text-cyan-400">Maritime stateless · 00h05 → 00h20</h4>
+          <p class="text-sm mt-1">
+            Build des 5 images stateless (api, ais-decoder, alerts-engine,
+            track-builder, frontend Angular). Helm chart umbrella avec
+            <code class="text-xs font-mono">_helpers.tpl</code> qui
+            compose <code class="text-xs font-mono">DATABASE_URL</code>
+            depuis le Secret CNPG <code class="text-xs font-mono">pg-data-app</code>
+            et <code class="text-xs font-mono">RABBITMQ_URL</code> depuis
+            le Secret RMQ Operator <code class="text-xs font-mono">rmq-default-user</code>.
+            Smoke
+            <code class="text-xs font-mono">https://maritime.dev.local</code>
+            → HTTP/2 200.
+          </p>
+        </div>
+
+        <div class="border-l-2 border-amber-500/40 pl-4">
+          <h4 class="text-sm font-mono uppercase text-amber-400">GeoServer · 00h20 → 00h35</h4>
+          <p class="text-sm mt-1">
+            Le plus tordu. Build image custom GeoServer 2.28.3 + plugins
+            (WPS, control-flow, JDBCConfig, JDBCStore, gwc-s3) + JAR
+            plugin maison IDW via Dockerfile multi-stage. Dump du data_dir
+            NAS (73 MB) → restore dans PVC via helper pod. Patch
+            <code class="text-xs font-mono">jdbcconfig.properties</code>
+            in-place (hostname Swarm → CNPG). Disable JDBCStore et le
+            bloc <code class="text-xs font-mono">&lt;S3BlobStore&gt;</code>
+            de gwc/geowebcache.xml. Ingress dédié
+            <code class="text-xs font-mono">geoserver.dev.local</code>
+            avec sticky session cookie + cert TLS. Pod 0/1 Ready pendant
+            quelques minutes (le piège #5 — bon endpoint healthcheck),
+            puis 200.
+          </p>
+        </div>
+
+        <div class="border-l-2 border-violet-500/40 pl-4">
+          <h4 class="text-sm font-mono uppercase text-violet-400">GitOps closure · 00h35</h4>
+          <p class="text-sm mt-1">
+            <code class="text-xs font-mono">gh repo create developpeur-gitops --public</code> +
+            push initial du chart ol-companion. Création de 5 ArgoCD
+            Applications (ol, finance, warhammer, maritime-stateful,
+            maritime) qui sync depuis ce repo. État final :
+            <strong>5/5 Synced + Healthy</strong>. 6 URLs publiques HTTPS
+            qui répondent 200.
+          </p>
+        </div>
+      </div>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Les 7 pièges majeurs (et leurs fixes)">
+      <p>
+        Ce qui rend ce projet vendable sur CV : ce ne sont pas les
+        commandes qui ont marché du premier coup, mais les debugs qui
+        ont coûté 15-30 min chacun et qu'on a documentés.
+      </p>
+
+      <div class="space-y-6 my-6">
+        {pitfalls.map((p) => (
+          <div class="border border-white/10 rounded-lg p-5 bg-gradient-to-br from-amber-500/5 to-transparent">
+            <div class="flex items-start gap-3 mb-3">
+              <span class="text-2xl font-mono text-amber-400 leading-none">{p.n}.</span>
+              <h4 class="text-lg font-semibold">{p.title}</h4>
+            </div>
+            <div class="ml-8 space-y-2 text-sm">
+              <p><span class="font-mono text-rose-300">Cause :</span> {p.cause}</p>
+              <p><span class="font-mono text-emerald-300">Fix :</span> {p.fix}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <p class="text-sm text-ink-muted">
+        Ces 7 pièges sont sauvés en mémoire long-terme dans le repo
+        gitops (et également dans la mémoire de Claude Code pour les
+        futures sessions). Format : un fichier markdown par piège, avec
+        cause + fix + références croisées via wikilinks
+        <code class="text-xs font-mono">[[autre-piège]]</code>.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Capture portfolio · ArgoCD UI">
+      <p>
+        L'<strong>ArgoCD UI</strong> est le visuel central qui résume la
+        nuit. 5 Applications listées, toutes en
+        <span class="font-mono text-emerald-300">Synced + Healthy</span>
+        sauf maritime qui montre
+        <span class="font-mono text-amber-300">Progressing</span> à la
+        capture (le pod GeoServer terminait son boot Java). Cliquer sur
+        n'importe quelle card ouvre l'arborescence des ressources gérées
+        (Deployments, Services, Ingress, PVC, Certificate) en arbre
+        cliquable avec leur état temps réel.
+      </p>
+      <figure class="my-6">
+        <img
+          src="/case-studies/k8s-migration-overnight/01-argocd-dashboard.png"
+          alt="ArgoCD UI montrant les 5 Applications du repo developpeur-gitops après la migration nocturne"
+          class="rounded-lg border border-white/10"
+          loading="lazy"
+        />
+        <figcaption class="text-xs text-ink-muted mt-2 font-mono">
+          ArgoCD Applications Tiles — finance-tracker, maritime, maritime-stateful, ol-companion, warhammer40k. Sync = Synced (config matche Git), Health = Healthy / Progressing.
+        </figcaption>
+      </figure>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Smoke tests terminal">
+      <p>Les 3 commandes que je voulais voir vertes à la fin de la nuit :</p>
+
+      <div class="my-4 rounded-lg border border-white/10 bg-black/40 p-4 font-mono text-xs overflow-x-auto">
+        <p class="text-emerald-300 mb-1">$ kubectl get app -n argocd -o custom-columns='NAME:.metadata.name,SYNC:.status.sync.status,HEALTH:.status.health.status'</p>
+        <pre class="text-ink/90 whitespace-pre">NAME                SYNC     HEALTH
+finance-tracker     Synced   Healthy
+maritime            Synced   Healthy
+maritime-stateful   Synced   Healthy
+ol-companion        Synced   Healthy
+warhammer40k        Synced   Healthy</pre>
+      </div>
+
+      <div class="my-4 rounded-lg border border-white/10 bg-black/40 p-4 font-mono text-xs overflow-x-auto">
+        <p class="text-emerald-300 mb-1">$ kubectl get pods -n maritime</p>
+        <pre class="text-ink/90 whitespace-pre">NAME                                READY   STATUS    RESTARTS   AGE
+ais-decoder-6549dc648c-j7p56        1/1     Running   0          51m
+alerts-engine-b94cb44f9-zlwwf       1/1     Running   0          20m
+geoserver-69c645c55d-rh7tn          1/1     Running   0          5m
+maritime-api-648898b545-xh4zd       1/1     Running   0          19m
+maritime-frontend-9f9ffcff8-5pfx6   1/1     Running   0          20m
+pg-catalog-1                        1/1     Running   0          95m
+pg-data-1                           1/1     Running   0          10m
+rmq-server-0                        1/1     Running   0          95m
+track-builder-856676fd85-l9gl6      1/1     Running   0          20m</pre>
+      </div>
+
+      <div class="my-4 rounded-lg border border-white/10 bg-black/40 p-4 font-mono text-xs overflow-x-auto">
+        <p class="text-emerald-300 mb-1">$ for u in ol finance warhammer maritime argocd ; do curl -sI -L "https://$u.dev.local" | head -1 ; done</p>
+        <pre class="text-ink/90 whitespace-pre">HTTP/2 200
+HTTP/2 200
+HTTP/2 200
+HTTP/2 200
+HTTP/2 200</pre>
+        <p class="text-emerald-300 mb-1 mt-2">$ curl -sI -L https://geoserver.dev.local/geoserver/index.html | head -1</p>
+        <pre class="text-ink/90 whitespace-pre">HTTP/2 200</pre>
+      </div>
+
+      <p class="text-sm text-ink-muted mt-4">
+        6 URLs HTTPS, toutes 200, toutes avec cadenas vert dans Chrome
+        Windows (cert auto-généré par cert-manager + ClusterIssuer CA
+        basé sur mkcert, root CA importé dans le trust store Windows
+        via <code class="text-xs">certutil -addstore -f ROOT</code>).
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Bilan technique">
+      <div class="overflow-x-auto my-4">
+        <table class="w-full text-sm border-collapse">
+          <thead>
+            <tr class="border-b border-white/10">
+              <th class="text-left py-2 font-mono uppercase text-xs">Composant</th>
+              <th class="text-left py-2 font-mono uppercase text-xs">État</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-white/5">
+            <tr><td class="py-2 font-mono text-xs">k3s single-node Big-Blue WSL2</td><td class="py-2">v1.35.4 ✓</td></tr>
+            <tr><td class="py-2 font-mono text-xs">ingress-nginx (hostNetwork)</td><td class="py-2">Running, Windows forward OK</td></tr>
+            <tr><td class="py-2 font-mono text-xs">cert-manager + mkcert ClusterIssuer</td><td class="py-2">Signing CA verified</td></tr>
+            <tr><td class="py-2 font-mono text-xs">ArgoCD UI</td><td class="py-2">https://argocd.dev.local 200</td></tr>
+            <tr><td class="py-2 font-mono text-xs">sealed-secrets controller</td><td class="py-2">Running (à câbler weekend)</td></tr>
+            <tr><td class="py-2 font-mono text-xs">CloudNativePG operator</td><td class="py-2">Running, 2 Cluster CR healthy</td></tr>
+            <tr><td class="py-2 font-mono text-xs">RabbitMQ Cluster Operator</td><td class="py-2">Running, 1 Cluster CR ready</td></tr>
+            <tr><td class="py-2 font-mono text-xs">KEDA operator</td><td class="py-2">Installed (ScaledObject à câbler weekend)</td></tr>
+            <tr><td class="py-2 font-mono text-xs">5 ArgoCD Applications</td><td class="py-2">All Synced + Healthy</td></tr>
+            <tr><td class="py-2 font-mono text-xs">6 URLs HTTPS dev.local</td><td class="py-2">Toutes 200, cadenas vert Chrome</td></tr>
+            <tr><td class="py-2 font-mono text-xs">Repo public Sylad/developpeur-gitops</td><td class="py-2">3 helm charts + 5 Application manifests</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Les leçons à reprendre">
+      <div class="space-y-4 my-6">
+        {lessons.map((l, i) => (
+          <div class="border-l-2 border-cyan-500/40 pl-4">
+            <h4 class="text-sm font-mono uppercase text-cyan-400">{i + 1}. {l.title}</h4>
+            <p class="text-sm mt-1">{l.body}</p>
+          </div>
+        ))}
+      </div>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Trade-offs assumés (preprod uniquement)">
+      <p>
+        Cette migration est <strong>préprod local</strong>, pas prod
+        publique. Trois compromis explicites pour rester scopés à la
+        nuit, tous documentés avec un plan de fix :
+      </p>
+      <div class="overflow-x-auto my-4">
+        <table class="w-full text-sm border-collapse">
+          <thead>
+            <tr class="border-b border-white/10">
+              <th class="text-left py-2 font-mono uppercase text-xs">Trade-off</th>
+              <th class="text-left py-2 font-mono uppercase text-xs">Pourquoi</th>
+              <th class="text-left py-2 font-mono uppercase text-xs">Plan</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-white/5">
+            <tr>
+              <td class="py-2 align-top">pg-data sans Timescale réel<br/><span class="font-mono text-xs text-ink-muted">(stubs SQL no-op)</span></td>
+              <td class="py-2 align-top text-xs">L'image custom maritime-pg-ts:16.0.0 (UID 26 + Timescale apt) plante en CNPG (`could not access file timescaledb`) alors qu'elle marche en standalone. Piège CNPG-specific à debugger.</td>
+              <td class="py-2 align-top text-xs">Phase 6 weekend</td>
+            </tr>
+            <tr>
+              <td class="py-2 align-top">GWC S3 disabled<br/><span class="font-mono text-xs text-ink-muted">(bloc &lt;S3BlobStore&gt; retiré)</span></td>
+              <td class="py-2 align-top text-xs">SeaweedFS pas déployé en K8s. Service stub sans backend → 502 au boot GeoServer.</td>
+              <td class="py-2 align-top text-xs">Phase 7 weekend : déployer SeaweedFS Helm chart + ré-activer S3</td>
+            </tr>
+            <tr>
+              <td class="py-2 align-top">JDBCStore disabled<br/><span class="font-mono text-xs text-ink-muted">(enabled=false)</span></td>
+              <td class="py-2 align-top text-xs">JDBCStore persiste les fichiers config en blobs DB (gwc/geowebcache.xml inclus, avec hostname S3 hardcoded). Patcher le fichier disk inutile tant que JDBCStore lit depuis DB.</td>
+              <td class="py-2 align-top text-xs">Réactiver Phase 7 quand SeaweedFS up</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-sm text-ink-muted mt-4">
+        Ces trade-offs sont la signature du senior : on assume, on
+        document, on planifie. Le junior cache, le senior trace.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Et après ?">
+      <p>Roadmap pour les semaines à venir (par ordre d'effort) :</p>
+      <ul class="space-y-2 my-4 text-sm">
+        <li>
+          <strong>Phase 6 — Timescale custom image</strong>. Debug le
+          piège CNPG specific. Image PG-PostGIS-Timescale UID 26.
+          Restore les hypertables depuis le dump NAS. (~2-3h)
+        </li>
+        <li>
+          <strong>Phase 7 — SeaweedFS K8s</strong>. Helm chart officiel,
+          bucket gwc-tiles, ré-activer GWC S3 et JDBCStore, scale
+          GeoServer à 2-3 replicas avec sticky session. (~3-4h)
+        </li>
+        <li>
+          <strong>Phase 8 — Observability</strong>. kube-prometheus-stack
+          + Grafana dashboards (vessel rate, queue depth, decoder
+          throughput, GS p95 latency) + Loki logs + AlertManager →
+          Telegram. (~4-6h)
+        </li>
+        <li>
+          <strong>Phase 9 — Scaleway Kapsule</strong>. Provisioner le
+          cluster cloud, sync ArgoCD app-of-apps cross-cluster, DNS
+          public Cloudflare, cutover. (~1-2 weekend)
+        </li>
+      </ul>
+      <p>
+        Le repo gitops public est <a href="https://github.com/Sylad/developpeur-gitops" class="underline text-cyan-300">github.com/Sylad/developpeur-gitops</a>.
+        Toute la documentation détaillée
+        (<code class="text-xs font-mono">K8S-MIGRATION-ROADMAP.md</code>)
+        vit dans le repo maritime-atlas. Les sites publics répondent en
+        local depuis les URLs <code class="text-xs font-mono">*.dev.local</code> ;
+        en production future, ils auront le même chemin réseau via
+        Cloudflare DNS + cert-manager Let's Encrypt.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Méta · 0 ligne de code humaine">
+      <p>
+        Ce déploiement a été conduit en pair-programming avec
+        <strong>Claude Code (Opus 4.7)</strong> agissant comme dev-devops
+        de mon équipe d'une personne. Je n'ai écrit aucune ligne de YAML,
+        aucun Dockerfile, aucun manifest ArgoCD ; mais c'est moi qui ai
+        pris chaque décision d'architecture, validé chaque trade-off,
+        commit chaque diff après revue. C'est aussi moi qui ai apporté
+        les connaissances métier critiques (le 302 GeoServer
+        <code class="text-xs font-mono">/geoserver/web/</code>, la
+        licence MinIO 2024 qui forçait SeaweedFS, le pattern dual-DB).
+      </p>
+      <p>
+        Le portfolio entier est sous cette signature explicite : badges
+        Claude / ChatGPT dans chaque README, Co-Authored-By systématique
+        dans les commits, blogs assumés. En 2026, le différenciant n'est
+        plus "je sais coder", c'est "je sais piloter une équipe IA
+        senior". Cette nuit en est un cas pratique.
+      </p>
+    </CaseStudySection>
+
+  </section>
+</BaseLayout>

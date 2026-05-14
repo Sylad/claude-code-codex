@@ -157,6 +157,51 @@ const apps = [
       ))}
     </div>
 
+    <div class="mt-16 mb-16">
+      <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude mb-2">
+        Récits transverses
+      </p>
+      <h2 class="text-2xl sm:text-3xl font-semibold text-ink mb-3">
+        Migrations & deep dives
+      </h2>
+      <p class="text-ink-muted leading-relaxed max-w-2xl mb-8">
+        Articles qui couvrent plusieurs apps ou racontent un chantier
+        d'infrastructure transverse. Format narratif, avec pièges
+        techniques et leçons.
+      </p>
+      <div class="grid gap-5 sm:grid-cols-2">
+        <article class="group relative overflow-hidden rounded-xl border border-white/10 bg-paper-elevated p-6 hover:border-claude/40 transition-colors motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-claude/10">
+          <div class="absolute inset-0 bg-gradient-to-br from-violet-500/20 to-transparent opacity-50 group-hover:opacity-80 transition-opacity pointer-events-none"></div>
+          <div class="relative">
+            <p class="font-mono text-sm text-claude mb-3">k8s-migration-overnight</p>
+            <h3 class="text-xl font-medium text-ink mb-2">
+              <a href="/case-studies/k8s-migration-overnight" class="hover:text-claude transition-colors">
+                La nuit où on est passé de Swarm à K8s
+              </a>
+            </h3>
+            <p class="text-sm text-ink-muted mb-4 leading-relaxed">
+              5 apps perso migrées d'un Docker Swarm sur NAS vers k3s
+              local + GitOps complet via ArgoCD, en une nuit (13→14 mai
+              2026). 7 pièges techniques documentés (ingress hostNetwork,
+              CNPG webhook, JDBCConfig hardcode, plugins custom Java…),
+              5 leçons, 1 repo public.
+            </p>
+            <p class="font-mono text-xs text-ink/60 pt-3 border-t border-white/5 mb-3">
+              k3s · Helm · ArgoCD · CloudNativePG · RabbitMQ Operator · KEDA · cert-manager · GeoServer cluster
+            </p>
+            <div class="flex flex-wrap items-center gap-2">
+              <a href="/case-studies/k8s-migration-overnight" class="font-mono text-[10px] uppercase tracking-wider text-claude/80 hover:text-claude transition-colors">
+                Lire le récit →
+              </a>
+              <a href="https://github.com/Sylad/developpeur-gitops" target="_blank" rel="noopener" class="ml-auto font-mono text-[10px] uppercase tracking-wider text-ink-muted hover:text-claude transition-colors">
+                ↗ Repo GitOps
+              </a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+
     <div class="mt-16">
       <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude mb-2">
         Tools tested · {totalTools} entrées
