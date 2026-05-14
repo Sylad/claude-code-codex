@@ -1,0 +1,757 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import MermaidDiagram from "@/components/site/MermaidDiagram.vue";
+import CaseStudySection from "@/components/site/CaseStudySection.astro";
+
+const globalArchi = `flowchart TB
+    subgraph Internet["🌍 Internet (visiteur recruteur)"]
+      U[Browser]
+    end
+
+    subgraph CF["☁️ Cloudflare"]
+      DNS[DNS *.sladoire.dev]
+      TUN{{Tunnel HA<br/>1 token · 2 connectors}}
+    end
+
+    subgraph BB["🟦 Big-Blue · tower gaming RGB (24h ON quand sylvain code)"]
+      BB_K3S[k3s cluster · WSL2 Ubuntu]
+      BB_PODS[17 pods Running]
+      BB_CFD[cloudflared connector]
+      BB_K3S --> BB_PODS
+      BB_K3S --> BB_CFD
+    end
+
+    subgraph MB["🟩 Mini-Blue · GEEKOM IT13 (always-on)"]
+      MB_K3S[k3s cluster · Ubuntu native]
+      MB_PODS[17 pods Running]
+      MB_CFD[cloudflared connector]
+      MB_K3S --> MB_PODS
+      MB_K3S --> MB_CFD
+    end
+
+    subgraph GH["🐙 GitHub"]
+      REPO1[maritime-atlas · code]
+      REPO2[developpeur-gitops · charts]
+      GHCR[GHCR registry<br/>ghcr.io/sylad/*]
+      ACTIONS[GH Actions<br/>build + push]
+      REPO1 -->|push| ACTIONS
+      ACTIONS -->|docker push| GHCR
+    end
+
+    subgraph ARGO["🚀 ArgoCD (sur chaque cluster)"]
+      ARGOCD[argocd-server]
+      REPO2 -->|webhook 2s| ARGOCD
+      ARGOCD -->|sync| BB_K3S
+      ARGOCD -->|sync| MB_K3S
+      GHCR -.->|pull privé via regcred| BB_K3S
+      GHCR -.->|pull privé via regcred| MB_K3S
+    end
+
+    U -->|HTTPS| DNS
+    DNS -->|CNAME| TUN
+    TUN <-->|QUIC 8 connexions| BB_CFD
+    TUN <-->|QUIC 8 connexions| MB_CFD
+
+    style BB fill:#1e3a5f,stroke:#3b82f6,color:#fff
+    style MB fill:#1f4d3a,stroke:#10b981,color:#fff
+    style CF fill:#5a3a1f,stroke:#f59e0b,color:#fff
+    style GH fill:#3a1f3a,stroke:#a855f7,color:#fff
+    style ARGO fill:#1f3a3a,stroke:#06b6d4,color:#fff`;
+
+const gitopsFlow = `sequenceDiagram
+    autonumber
+    participant SYL as 👤 Sylvain
+    participant CODE as 🟦 maritime-atlas<br/>(repo code)
+    participant GHA as 🟪 GH Actions
+    participant GHCR as 📦 GHCR
+    participant GOPS as 🟧 developpeur-gitops<br/>(repo charts)
+    participant ARGO as 🚀 ArgoCD
+    participant CLU as ☸️ Cluster k3s
+
+    SYL->>CODE: git push (fix wind arrows)
+    CODE->>GHA: trigger workflow
+    GHA->>GHA: docker build (path filter)
+    GHA->>GHCR: docker push ghcr.io/sylad/maritime-frontend:sha-ca78bf9
+    SYL->>GOPS: bump tag values.yaml<br/>sha-XXX → sha-ca78bf9
+    GOPS->>ARGO: webhook GitHub (HMAC signed)
+    Note over ARGO: ~2 sec, pas 3min de polling
+    ARGO->>GHCR: pull image
+    ARGO->>CLU: kubectl apply (rolling update)
+    CLU-->>SYL: 🌐 https://aetherwx.sladoire.dev affiche le fix`;
+
+const ingestionFlow = `flowchart LR
+    subgraph EXT["Sources externes"]
+      AIS[AIS TCP stream<br/>11k msg/min]
+      LIGHT[Blitzortung WSS<br/>~360 strikes/h]
+      EMOD[EMODnet WFS<br/>612 plateformes]
+      GFS[NOAA GFS<br/>4×/jour]
+      AROME[Météo-France AROME]
+      ARPEGE[Météo-France ARPEGE]
+      SST[NOAA OISST<br/>quotidien]
+      USGS[USGS earthquakes]
+      METAR[NOAA METAR obs]
+      HUBEAU[Hubeau débits FR]
+      FIRMS[NASA FIRMS feux]
+    end
+
+    subgraph FETCH["Fetchers k3s (cron + daemons)"]
+      AIS --> AIS_ING[ais-ingester]
+      AIS_ING --> AIS_DEC[ais-decoder]
+      LIGHT --> LIGHT_F[lightning-fetcher]
+      EMOD --> BUOY_F[buoy-fetcher · cron 1d]
+      GFS --> WF_GFS[weather-fetcher · cron 6h]
+      AROME --> WF_AROME[weather-fetcher-arome]
+      ARPEGE --> WF_ARPEGE[weather-fetcher-arpege]
+      SST --> SST_F[sst-fetcher · cron 1d<br/>fallback _preliminary.nc]
+    end
+
+    subgraph ORCH["Orchestrator (maritime-api)"]
+      USGS --> ORC[orchestrator-runner]
+      METAR --> ORC
+      HUBEAU --> ORC
+      FIRMS --> ORC
+      ORC -->|skipIfMissing| FILTER[Data quality filter]
+    end
+
+    subgraph DB["TimescaleDB (CNPG)"]
+      PG[(maritime PG<br/>hypertables)]
+      AIS_DEC --> PG
+      LIGHT_F --> PG
+      BUOY_F --> PG
+      FILTER --> PG
+    end
+
+    subgraph GS["GeoServer cluster · 3 replicas"]
+      JDBC[JDBCConfig catalog<br/>shared PG]
+      WF_GFS --> GTIFF[/GeoTIFF mosaics<br/>Longhorn RWX/]
+      WF_AROME --> GTIFF
+      WF_ARPEGE --> GTIFF
+      SST_F --> GTIFF
+      GTIFF --> GS_R[GS replicas read]
+      JDBC --> GS_R
+    end
+
+    subgraph UI["Frontend Angular"]
+      PG -->|WFS/GeoJSON| MAP[Map OL multi-projection]
+      GS_R -->|WMS GetMap| MAP
+      MAP --> USER[👤 user]
+    end
+
+    style EXT fill:#3a1f1f,stroke:#ef4444,color:#fff
+    style FETCH fill:#1e3a5f,stroke:#3b82f6,color:#fff
+    style ORCH fill:#1f4d3a,stroke:#10b981,color:#fff
+    style DB fill:#3a2a1f,stroke:#f59e0b,color:#fff
+    style GS fill:#3a1f3a,stroke:#a855f7,color:#fff
+    style UI fill:#1f3a3a,stroke:#06b6d4,color:#fff`;
+
+const tokenFlow = `flowchart LR
+    subgraph SYL["🔐 Coffre Sylvain"]
+      T1[GHCR_TOKEN<br/>PAT write:packages]
+      T2[Webhook secret<br/>ArgoCD HMAC]
+      T3[Cloudflare tunnel<br/>token]
+      T4[Google OAuth<br/>client_secret]
+      T5[Resend API key]
+      T6[Anthropic API key]
+    end
+
+    subgraph USES["Où ils sont utilisés"]
+      T1 -->|repo secret| GHA1[GH Actions push GHCR]
+      T1 -->|regcred Secret| K8S1[K8s imagePullSecrets]
+      T2 -->|stringData secret| ARG[argocd-secret · webhook.github.secret]
+      T2 -->|Repository webhook| GH1[GitHub repo Settings]
+      T3 -->|Deployment env| CFD[cloudflared pods × 2]
+      T4 -->|maritime-google-oauth Secret| API1[maritime-api OAuth callback]
+      T5 -->|maritime-shared-env Secret| API2[maritime-api Resend client]
+      T6 -.->|env var| FT[finance-tracker NestJS]
+      T6 -.->|env var| WH[warhammer40k NestJS]
+      T6 -.->|env var| OL[ol-companion NestJS]
+    end
+
+    style SYL fill:#5a1f1f,stroke:#ef4444,color:#fff
+    style USES fill:#1e3a5f,stroke:#3b82f6,color:#fff`;
+---
+
+<BaseLayout
+  title="L'encyclopédie AetherWX — comment Claude a kubernetisé tout ça"
+  description="Encyclopédie pour développeurs Java qui débarquent sur K8s : architecture dual-cluster AetherWX, 17 services, 6 tokens expliqués, GitOps complet, 5 leçons. Construit en pair-programming avec Claude Code en 14h."
+>
+  <PageHero
+    eyebrow="Case study · encyclopédie aetherwx"
+    title="L'encyclopédie AetherWX"
+    intro="« 12 ans que je fais du GeoServer et de l'OpenLayers, je ne comprends rien aux technos que tu utilises. » — Sylvain, 2026-05-14, 22h, juste avant que la tour Big-Blue arrête de clignoter. Cette page raconte ce qui a été déployé pendant 14h de marathon : 17 services par cluster, 2 clusters HA, GitOps complet, et pourquoi des dizaines de tokens ont été générés — un par un."
+  />
+
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12 space-y-12">
+
+    <CaseStudySection eyebrow="01 · Le truc qui tourne ça">
+      <p>
+        Une <strong>tour gaming RGB watercooled</strong> (et non pas un
+        laptop comme je l'ai écrit par erreur) — c'est <strong>Big-Blue</strong>.
+        Au-dessus, depuis 14h, un cluster k3s tourne dans WSL2 Ubuntu et
+        sert publiquement l'atlas maritime AetherWX. À côté, sur un
+        bureau au calme, le <strong>Mini-Blue</strong> — un GEEKOM IT13
+        mini-PC always-on qui réplique la même stack en miroir.
+      </p>
+
+      <figure class="my-6">
+        <img
+          src="/case-studies/aetherwx-encyclopedia/big-blue-tower.jpg"
+          alt="Big-Blue — tour gaming RGB watercooled qui héberge le cluster k3s AetherWX"
+          class="rounded-lg border border-white/10"
+          loading="lazy"
+        />
+        <figcaption class="text-xs text-ink-muted mt-2 font-mono">
+          Big-Blue — RTX SUPRIM + AIO Liquid (CPU @31°C en idle), 6 fans
+          RGB, WSL2 Ubuntu + Docker Desktop + k3s. Watercooled parce qu'à
+          chaque cycle GFS (4×/jour) le pod weather-fetcher mouline 65
+          GeoTIFFs en quelques secondes.
+        </figcaption>
+      </figure>
+
+      <p>
+        <strong>Spec</strong> : i9-14900KF, 32 GiB RAM, RTX SUPRIM, 2 To
+        NVMe. <strong>Spec Mini-Blue</strong> : Intel i7-1360P, 32 GiB,
+        1 To NVMe, ~12 W idle. Les deux exposent leurs services via un
+        <strong>Cloudflare Tunnel</strong> (1 token, 2 connectors, 8
+        connexions QUIC HA) → le visiteur ne voit qu'un nom de domaine,
+        jamais une IP maison.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="02 · Vue d'oiseau">
+      <p>
+        Quand un recruteur clique sur <code>aetherwx.sladoire.dev</code>,
+        voilà ce qui se passe en moins de 200 ms :
+      </p>
+
+      <MermaidDiagram
+        client:visible
+        definition={globalArchi}
+        caption="Architecture globale AetherWX — 2 clusters k3s HA, GitOps via ArgoCD + GHCR, expo publique via Cloudflare Tunnel. Le visiteur tape une URL, Cloudflare DNS résout vers le tunnel, et le tunnel route vers l'un des deux connecteurs (Big-Blue ou Mini-Blue). Si l'un tombe, l'autre encaisse seul."
+      />
+
+      <p>
+        Trois principes qui pilotent toute l'archi :
+      </p>
+
+      <ul class="list-disc list-inside space-y-2 text-ink-muted">
+        <li>
+          <strong class="text-ink">Aucun port ouvert sur la box</strong> —
+          Cloudflare initie la connexion vers le tunnel, pas l'inverse.
+          Pas de NAT, pas de DDNS, pas de port 443 exposé. Le pare-feu
+          domestique reste fermé.
+        </li>
+        <li>
+          <strong class="text-ink">Aucune action manuelle pour déployer</strong>
+          — tu push du code → GH Actions build + push GHCR → tu bump le
+          tag GitOps → ArgoCD sync les 2 clusters en ~2 sec. C'est la
+          chaîne complète.
+        </li>
+        <li>
+          <strong class="text-ink">Tout doublé</strong> — Big-Blue ET
+          Mini-Blue tournent les mêmes 17 pods. Si Big-Blue plante ou que
+          Sylvain ferme l'ordi pour partir, Mini-Blue prend tout le trafic.
+        </li>
+      </ul>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="03 · Le glossaire 5-minutes pour un dev Java">
+      <p>
+        Tu connais Spring Boot, Tomcat, peut-être Kafka. K8s parle un
+        autre dialecte. Voilà la table de traduction (cf aussi la page
+        dédiée <a href="/k8s-for-java-developers">k8s pour devs Java</a>) :
+      </p>
+
+      <div class="overflow-x-auto my-6">
+        <table class="w-full text-sm border-collapse">
+          <thead class="font-mono text-xs uppercase tracking-wider text-claude border-b border-white/10">
+            <tr>
+              <th class="text-left py-2 pr-4">Côté Java/Docker</th>
+              <th class="text-left py-2 pr-4">Côté K8s</th>
+              <th class="text-left py-2">Ce que ça fait</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-white/5 text-ink-muted">
+            <tr><td class="py-2 pr-4 font-mono">java -jar app.jar</td><td class="py-2 pr-4 font-mono">Pod</td><td class="py-2">1 instance qui tourne</td></tr>
+            <tr><td class="py-2 pr-4 font-mono">docker-compose service</td><td class="py-2 pr-4 font-mono">Deployment</td><td class="py-2">Maintient N pods identiques</td></tr>
+            <tr><td class="py-2 pr-4 font-mono">application.yml</td><td class="py-2 pr-4 font-mono">ConfigMap</td><td class="py-2">Variables non-sensibles</td></tr>
+            <tr><td class="py-2 pr-4 font-mono">vault secrets</td><td class="py-2 pr-4 font-mono">Secret</td><td class="py-2">Variables sensibles (en base64)</td></tr>
+            <tr><td class="py-2 pr-4 font-mono">localhost:8080</td><td class="py-2 pr-4 font-mono">Service</td><td class="py-2">DNS interne entre pods</td></tr>
+            <tr><td class="py-2 pr-4 font-mono">nginx reverse-proxy</td><td class="py-2 pr-4 font-mono">Ingress</td><td class="py-2">Route HTTP externe → Service</td></tr>
+            <tr><td class="py-2 pr-4 font-mono">/var/data volume</td><td class="py-2 pr-4 font-mono">PVC + Longhorn</td><td class="py-2">Stockage persistant cluster</td></tr>
+            <tr><td class="py-2 pr-4 font-mono">Maven build + scp</td><td class="py-2 pr-4 font-mono">GH Actions + GHCR</td><td class="py-2">CI build + image privée</td></tr>
+            <tr><td class="py-2 pr-4 font-mono">ssh prod && deploy.sh</td><td class="py-2 pr-4 font-mono">ArgoCD GitOps</td><td class="py-2">Sync auto depuis Git</td></tr>
+            <tr><td class="py-2 pr-4 font-mono">@Scheduled cron</td><td class="py-2 pr-4 font-mono">CronJob</td><td class="py-2">Tâche périodique (ex: GFS 4×/j)</td></tr>
+            <tr><td class="py-2 pr-4 font-mono">Helm Maven plugin</td><td class="py-2 pr-4 font-mono">Helm chart</td><td class="py-2">Template paramétrable</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>
+        Une fois ces 11 mots intégrés, 80% du jargon K8s devient
+        respirable. Le reste (StatefulSet, DaemonSet, Operator, CRD…)
+        sont des variations qu'on rencontre quand on tape sur des cas
+        spécifiques.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="04 · Les 17 services qui tournent">
+      <p>
+        Chaque cluster fait tourner 17 pods. Voici le découpage par rôle :
+      </p>
+
+      <div class="overflow-x-auto my-6">
+        <table class="w-full text-sm border-collapse">
+          <thead class="font-mono text-xs uppercase tracking-wider text-claude border-b border-white/10">
+            <tr>
+              <th class="text-left py-2 pr-3">Service</th>
+              <th class="text-left py-2 pr-3">Rôle</th>
+              <th class="text-left py-2">Réplicas</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-white/5 text-ink-muted">
+            <tr class="bg-claude/[0.04]"><td colspan="3" class="py-2 px-3 font-mono text-[11px] uppercase text-claude/70">Ingestion data temps réel</td></tr>
+            <tr><td class="py-2 pr-3 font-mono">ais-ingester</td><td class="py-2 pr-3">Reçoit le flux AIS TCP brut (11k msg/min)</td><td class="py-2">1</td></tr>
+            <tr><td class="py-2 pr-3 font-mono">ais-decoder</td><td class="py-2 pr-3">Décode NMEA → JSON → Postgres</td><td class="py-2">1</td></tr>
+            <tr><td class="py-2 pr-3 font-mono">lightning-fetcher</td><td class="py-2 pr-3">WebSocket Blitzortung (foudre live)</td><td class="py-2">1</td></tr>
+            <tr class="bg-claude/[0.04]"><td colspan="3" class="py-2 px-3 font-mono text-[11px] uppercase text-claude/70">Ingestion data périodique (cron)</td></tr>
+            <tr><td class="py-2 pr-3 font-mono">weather-fetcher (GFS)</td><td class="py-2 pr-3">NOAA GFS 4×/jour → 65 GeoTIFF</td><td class="py-2">1</td></tr>
+            <tr><td class="py-2 pr-3 font-mono">weather-fetcher-arome</td><td class="py-2 pr-3">Météo-France AROME (haute résolution)</td><td class="py-2">1</td></tr>
+            <tr><td class="py-2 pr-3 font-mono">weather-fetcher-arpege</td><td class="py-2 pr-3">Météo-France ARPEGE (Europe élargie)</td><td class="py-2">1</td></tr>
+            <tr><td class="py-2 pr-3 font-mono">sst-fetcher</td><td class="py-2 pr-3">NOAA OISST quotidien (température mer)</td><td class="py-2">1</td></tr>
+            <tr><td class="py-2 pr-3 font-mono">buoy-fetcher</td><td class="py-2 pr-3">EMODnet WFS 1×/jour (612 plateformes)</td><td class="py-2">1</td></tr>
+            <tr><td class="py-2 pr-3 font-mono">track-builder</td><td class="py-2 pr-3">Agrège trajets AIS journaliers</td><td class="py-2">1</td></tr>
+            <tr class="bg-claude/[0.04]"><td colspan="3" class="py-2 px-3 font-mono text-[11px] uppercase text-claude/70">API + orchestration</td></tr>
+            <tr><td class="py-2 pr-3 font-mono">maritime-api</td><td class="py-2 pr-3">NestJS · endpoints REST + orchestrator USGS/METAR/Hubeau/FIRMS</td><td class="py-2">1</td></tr>
+            <tr><td class="py-2 pr-3 font-mono">alerts-engine</td><td class="py-2 pr-3">Croise positions + vent + foudre → alertes RMQ</td><td class="py-2">1</td></tr>
+            <tr class="bg-claude/[0.04]"><td colspan="3" class="py-2 px-3 font-mono text-[11px] uppercase text-claude/70">Stockage + rendering</td></tr>
+            <tr><td class="py-2 pr-3 font-mono">postgres (CNPG)</td><td class="py-2 pr-3">TimescaleDB hypertables · 5 GiB</td><td class="py-2">1 primary</td></tr>
+            <tr><td class="py-2 pr-3 font-mono">geoserver</td><td class="py-2 pr-3">WMS multi-projection · plugin IDW custom Java</td><td class="py-2">3 (HA)</td></tr>
+            <tr><td class="py-2 pr-3 font-mono">rabbitmq</td><td class="py-2 pr-3">Bus alerts engine</td><td class="py-2">1</td></tr>
+            <tr class="bg-claude/[0.04]"><td colspan="3" class="py-2 px-3 font-mono text-[11px] uppercase text-claude/70">Frontend + expo</td></tr>
+            <tr><td class="py-2 pr-3 font-mono">maritime-frontend</td><td class="py-2 pr-3">Angular 19 · OpenLayers 10 multi-projection</td><td class="py-2">2</td></tr>
+            <tr><td class="py-2 pr-3 font-mono">cloudflared</td><td class="py-2 pr-3">Tunnel Cloudflare (4 connexions QUIC)</td><td class="py-2">1 par cluster</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>
+        <strong>17 pods × 2 clusters = 34 instances qui tournent en
+        permanence</strong>, pour un coût électrique total estimé de
+        ~15 W (Mini-Blue idle) + ~80 W (Big-Blue actif quand sylvain
+        code), soit ~€4/mois si on facture l'électricité.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="05 · L'inventaire des tokens (le vrai sujet)">
+      <p>
+        Sylvain : « <em>j'ai généré des dizaines de tokens donné à plein
+        de monde sans trop savoir pourquoi</em> ». Voici la vérité — il y
+        en a <strong>6</strong>, et chacun a un rôle précis et borné.
+      </p>
+
+      <MermaidDiagram
+        client:visible
+        definition={tokenFlow}
+        caption="Inventaire des secrets utilisés par AetherWX. Aucun n'est dupliqué — chaque token a une mission unique."
+      />
+
+      <div class="space-y-6 my-6">
+        <div class="rounded-lg border border-white/10 bg-paper-elevated p-5">
+          <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">Token #1 · GHCR_TOKEN</p>
+          <p class="text-sm text-ink-muted leading-relaxed">
+            <strong class="text-ink">Type :</strong> GitHub Personal
+            Access Token (classic, scope <code>write:packages</code>).
+            <br/><strong class="text-ink">Pourquoi :</strong> GitHub
+            Actions ne peut pas pousser sur le registry GHCR au nom de
+            l'utilisateur <code>sylad</code> avec le <code>GITHUB_TOKEN</code>
+            par défaut (403). Un PAT user-scoped est obligatoire.
+            <br/><strong class="text-ink">Où vit-il :</strong> repo
+            secret <code>GHCR_TOKEN</code> sur chaque repo qui build
+            (visible dans Settings → Secrets). Et en clone dans
+            <code>regcred</code> Secret K8s pour le pull privé côté
+            cluster.
+            <br/><strong class="text-ink">Rotation :</strong> tu peux
+            le régénérer sur github.com/settings/tokens à tout moment.
+          </p>
+        </div>
+
+        <div class="rounded-lg border border-white/10 bg-paper-elevated p-5">
+          <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">Token #2 · ArgoCD webhook secret</p>
+          <p class="text-sm text-ink-muted leading-relaxed">
+            <strong class="text-ink">Type :</strong> chaîne hex 32 bytes
+            (<code>openssl rand -hex 32</code>).
+            <br/><strong class="text-ink">Pourquoi :</strong> partagé
+            entre GitHub (qui signe les webhooks HMAC) et ArgoCD (qui
+            vérifie la signature). Sans ce secret, ArgoCD pollerait
+            le repo toutes les 3 minutes au lieu de réagir en 2 secondes.
+            <br/><strong class="text-ink">Où vit-il :</strong> dans
+            <code>kubectl get secret argocd-secret -n argocd</code> en
+            stringData, ET dans GitHub repo Settings → Webhooks → Secret.
+            <br/><strong class="text-ink">Rotation :</strong> recette dans
+            la <a href="/case-studies/aetherwx-encyclopedia#rotation">section
+            rotation</a> ci-dessous (jamais en arg shell, toujours via
+            stdin <code>read -s</code>).
+          </p>
+        </div>
+
+        <div class="rounded-lg border border-white/10 bg-paper-elevated p-5">
+          <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">Token #3 · Cloudflare tunnel token</p>
+          <p class="text-sm text-ink-muted leading-relaxed">
+            <strong class="text-ink">Type :</strong> JWT long-lived émis
+            par Cloudflare.
+            <br/><strong class="text-ink">Pourquoi :</strong> un seul
+            token permet d'attacher N connecteurs cloudflared (sur Big-Blue
+            ET Mini-Blue). Cloudflare load-balance entre eux. Si l'un
+            tombe, l'autre encaisse.
+            <br/><strong class="text-ink">Où vit-il :</strong> Secret
+            K8s <code>cloudflared-token</code>, monté en env var
+            <code>TUNNEL_TOKEN</code> dans le Deployment cloudflared.
+            <br/><strong class="text-ink">Rotation :</strong> dashboard
+            Cloudflare Zero Trust → Networks → Tunnels → AetherWX → Refresh.
+          </p>
+        </div>
+
+        <div class="rounded-lg border border-white/10 bg-paper-elevated p-5">
+          <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">Token #4 · Google OAuth client_secret</p>
+          <p class="text-sm text-ink-muted leading-relaxed">
+            <strong class="text-ink">Type :</strong> string fournie par
+            Google Cloud Console quand on crée une app OAuth 2.0.
+            <br/><strong class="text-ink">Pourquoi :</strong> permettre
+            le login « Sign in with Google » dans l'interface AetherWX
+            (utilisateurs invités pour la démo). Le client_id est public,
+            le secret reste serveur-side.
+            <br/><strong class="text-ink">Où vit-il :</strong> Secret K8s
+            <code>maritime-google-oauth</code>, monté dans maritime-api
+            comme <code>GOOGLE_CLIENT_SECRET</code>.
+            <br/><strong class="text-ink">Rotation :</strong> Google
+            Cloud Console → Credentials → ton OAuth Client → ⟳ Reset
+            secret. (Note : ce token a été rotaté le 2026-05-14 après
+            une fuite accidentelle dans un terminal.)
+          </p>
+        </div>
+
+        <div class="rounded-lg border border-white/10 bg-paper-elevated p-5">
+          <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">Token #5 · Resend API key</p>
+          <p class="text-sm text-ink-muted leading-relaxed">
+            <strong class="text-ink">Type :</strong> API key SaaS Resend
+            (envoi d'emails transactionnels).
+            <br/><strong class="text-ink">Pourquoi :</strong> envoyer le
+            mail de reset password dans le flux « Mot de passe oublié ».
+            Plan gratuit suffit (3000 mails/mois).
+            <br/><strong class="text-ink">Où vit-il :</strong> Secret K8s
+            <code>maritime-shared-env</code>, key <code>RESEND_API_KEY</code>.
+            <br/><strong class="text-ink">Rotation :</strong> dashboard
+            Resend → API Keys → Revoke + Create.
+          </p>
+        </div>
+
+        <div class="rounded-lg border border-white/10 bg-paper-elevated p-5">
+          <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">Token #6 · Anthropic API key (côté apps perso)</p>
+          <p class="text-sm text-ink-muted leading-relaxed">
+            <strong class="text-ink">Type :</strong> sk-ant-XXX clé API
+            Anthropic.
+            <br/><strong class="text-ink">Pourquoi :</strong> les 3
+            backends NestJS (finance-tracker, warhammer40k, ol-companion)
+            appellent Claude via SDK pour analyser les PDF bancaires,
+            chercher le lore Warhammer, etc. <strong>Pas utilisé dans
+            AetherWX</strong> — mais dans la même famille de secrets.
+            <br/><strong class="text-ink">Où vit-il :</strong> env var
+            <code>ANTHROPIC_API_KEY</code> dans le <code>.env</code> de
+            chaque app, ou en Secret K8s.
+            <br/><strong class="text-ink">Rotation :</strong> console
+            Anthropic → API Keys.
+          </p>
+        </div>
+      </div>
+
+      <p class="text-sm text-ink-muted italic">
+        Plus quelques tokens internes auto-gérés par les operators :
+        password Postgres (CNPG le génère et fait tourner), user RabbitMQ
+        (operator-managed), ArgoCD admin (initial bootstrap, à changer
+        au premier login). Pas besoin de les rotater à la main.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="06 · Le flux GitOps · « tu push, ça déploie »">
+      <p>
+        C'est le moment où K8s arrête de faire peur et commence à devenir
+        agréable. Une fois cette chaîne en place, <strong>il n'y a plus
+        rien à faire à la main</strong>. Tu modifies du code en local, tu
+        push, et 30 secondes plus tard, l'URL publique affiche le fix.
+      </p>
+
+      <MermaidDiagram
+        client:visible
+        definition={gitopsFlow}
+        caption="Le pipeline complet entre un git push et l'utilisateur qui voit le fix. ~30 secondes end-to-end. Pas un seul kubectl manuel."
+      />
+
+      <p>
+        Deux repos GitHub orchestrent ça :
+      </p>
+
+      <ul class="list-disc list-inside space-y-2 text-ink-muted">
+        <li>
+          <strong class="text-ink">maritime-atlas</strong> · le code source
+          des 17 services. Quand tu push, GH Actions lit les fichiers
+          modifiés (path filter), build seulement les images concernées,
+          et push sur GHCR avec un tag <code>sha-XXXXXXX</code> (les 7
+          premiers chars du commit).
+        </li>
+        <li>
+          <strong class="text-ink">developpeur-gitops</strong> · les charts
+          Helm + les <code>values.yaml</code>. Quand tu bumpes un tag dans
+          ce repo et que tu push, ArgoCD reçoit le webhook GitHub en ~2
+          sec et sync les 2 clusters en parallèle.
+        </li>
+      </ul>
+
+      <p>
+        Le découpage en 2 repos est <strong>volontaire</strong> : le code
+        source est ce qui change tous les jours, les charts Helm changent
+        rarement. Séparer les deux évite que chaque commit code re-déclenche
+        un sync ArgoCD.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="07 · Le flux d'ingestion data">
+      <p>
+        AetherWX agrège 11 sources externes (AIS, foudre, météo, vagues,
+        SST, séismes, débits fleuves, etc.). Chacune a son propre rythme
+        et son propre service dédié :
+      </p>
+
+      <MermaidDiagram
+        client:visible
+        definition={ingestionFlow}
+        caption="Flux d'ingestion data. Les fetchers cron déposent dans Postgres (hypertables Timescale) et/ou sur Longhorn RWX (rasters GeoTIFF). GeoServer lit les rasters depuis le volume partagé et expose en WMS multi-projection. Le frontend OpenLayers consomme."
+      />
+
+      <p>
+        Un détail qui a coûté 90 minutes de debug : le fetcher SST tombe
+        régulièrement sur des données <code>_preliminary.nc</code> au
+        lieu du fichier final (NOAA publie le preliminary 1 jour après
+        l'observation, le final 14-21 jours après). On itère maintenant
+        sur les deux URLs candidates et prend la première qui répond.
+      </p>
+
+      <p>
+        Autre détail : <code>skipIfMissing</code> dans la config
+        orchestrator. Quand l'API Hubeau (débits de fleuves) renvoie un
+        record sans <code>code_station</code> (data quality moisie côté
+        amont), on saute ce record au lieu de planter le pg_insert. Le
+        compteur <code>recordsSkipped</code> remonte en métriques pour
+        garder la trace.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="08 · Les 5 leçons qui ont coûté 6 heures">
+      <p>
+        Cette journée n'a pas été un long fleuve tranquille. Voici les 5
+        pièges qui ont consommé le plus de temps — documentés pour qu'un
+        autre dev Java qui débarque sur K8s ne les refasse pas :
+      </p>
+
+      <div class="space-y-5 my-6">
+        <div class="rounded-lg border border-rose-500/20 bg-rose-500/[0.04] p-5">
+          <p class="font-mono text-xs uppercase tracking-wider text-rose-400 mb-2">Piège #1 · WSL2 mount propagation (45 min)</p>
+          <p class="text-sm text-ink-muted leading-relaxed">
+            Longhorn (le stockage distribué K8s) a besoin que la racine
+            <code>/</code> soit en mode <code>rshared</code>. Sur WSL2
+            par défaut, c'est <code>private</code>. Symptôme :
+            longhorn-manager en CrashLoopBackOff avec
+            <code>CreateContainerError</code>.
+            <br/><strong class="text-ink mt-2 block">Fix :</strong>
+            <code>sudo mount --make-rshared /</code> + persistance dans
+            <code>/etc/wsl.conf</code> section <code>[boot]</code>.
+          </p>
+        </div>
+
+        <div class="rounded-lg border border-rose-500/20 bg-rose-500/[0.04] p-5">
+          <p class="font-mono text-xs uppercase tracking-wider text-rose-400 mb-2">Piège #2 · undici + Alpine musl libc (60 min)</p>
+          <p class="text-sm text-ink-muted leading-relaxed">
+            Node 22 sur Alpine déclenche un bug undici (fetch côté
+            client) où les requêtes externes timeout systématiquement.
+            <code>https.request</code> classique fonctionne, <code>fetch()</code>
+            non. Issue upstream undici référencée.
+            <br/><strong class="text-ink mt-2 block">Fix :</strong>
+            basculer la base image de
+            <code>node:22-alpine</code> à <code>node:22-bookworm-slim</code>.
+            Coût : +30 MB par image, mais plus de timeouts mystérieux.
+          </p>
+        </div>
+
+        <div class="rounded-lg border border-rose-500/20 bg-rose-500/[0.04] p-5">
+          <p class="font-mono text-xs uppercase tracking-wider text-rose-400 mb-2">Piège #3 · OpenLayers multi-projection (2 h)</p>
+          <p class="text-sm text-ink-muted leading-relaxed">
+            L'option <code>projection</code> sur une source WMS
+            OpenLayers désigne la projection <strong>source</strong> (ce
+            que le serveur sait servir), <strong>pas</strong> celle de la
+            View. Je l'ai compris à l'envers et perdu 2 heures à itérer
+            entre <code>viewProj</code>, <code>undefined</code>, et
+            <code>'EPSG:3857'</code> avant que Sylvain me dise « tu veux
+            pas lire la doc ? ». La doc disait noir sur blanc :
+            <em>« the source projection is the projection it serves,
+            reprojection happens automatically »</em>.
+            <br/><strong class="text-ink mt-2 block">Fix :</strong>
+            <code>projection: 'EPSG:3857'</code> sur toutes les sources
+            WMS (stable, GS sait servir natif), et la View peut être en
+            EPSG:3035 Lambert ou 4326 sans souci. OL reprojete côté
+            client via proj4js.
+            <br/><strong class="text-ink mt-2 block">Leçon meta :</strong>
+            sur une API spécialisée que je ne maîtrise pas, lire la doc
+            officielle <em>avant</em> de deviner. Une mémoire dédiée
+            existe pour ça maintenant.
+          </p>
+        </div>
+
+        <div class="rounded-lg border border-rose-500/20 bg-rose-500/[0.04] p-5">
+          <p class="font-mono text-xs uppercase tracking-wider text-rose-400 mb-2">Piège #4 · GeoServer JDBCConfig SLD disk drift (1 h)</p>
+          <p class="text-sm text-ink-muted leading-relaxed">
+            Quand GeoServer tourne en mode JDBCConfig (catalog stocké
+            dans Postgres pour cluster HA), la REST API qui met à jour
+            un SLD écrit dans la DB <strong>mais pas sur le disque</strong>.
+            Le rendu lit depuis le disque (workspaces/.../*.sld) → tu
+            vois la nouvelle config en GUI mais le rendu reste stale.
+            <br/><strong class="text-ink mt-2 block">Fix :</strong>
+            <code>docker cp</code> direct dans le pod + reload manuel.
+            Ou mieux : monter <code>/opt/geoserver_data/workspaces</code>
+            en PVC partagé Longhorn (déjà fait).
+          </p>
+        </div>
+
+        <div class="rounded-lg border border-rose-500/20 bg-rose-500/[0.04] p-5">
+          <p class="font-mono text-xs uppercase tracking-wider text-rose-400 mb-2">Piège #5 · Plugin Java IDW + raster origin (90 min)</p>
+          <p class="text-sm text-ink-muted leading-relaxed">
+            Le plugin custom Java IDW (interpolation inverse distance
+            weighting) crashait avec
+            <code>ArrayIndexOutOfBoundsException: Invalid coordinates</code>
+            quand la View était en EPSG:3035 Lambert. Cause : après
+            reprojection EPSG:4326 → EPSG:3857 côté serveur, le raster
+            résultant a un <code>minX</code> non-nul. Mon code appelait
+            <code>raster.getSamples(0, 0, width, height, ...)</code> qui
+            sort des bornes.
+            <br/><strong class="text-ink mt-2 block">Fix :</strong>
+            <code>raster.getSamples(raster.getMinX(),
+            raster.getMinY(), width, height, ...)</code>. Une ligne. 90
+            minutes de stacktrace lecture.
+          </p>
+        </div>
+      </div>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="09 · Combien ça coûte ?">
+      <p>
+        AetherWX tourne en <strong>home-prod</strong> — l'infra est
+        entièrement chez moi. Le seul coût récurrent est l'électricité :
+      </p>
+
+      <div class="my-6 grid grid-cols-2 gap-4 font-mono text-sm">
+        <div class="rounded-lg border border-white/10 bg-paper-elevated p-4">
+          <p class="text-claude text-xs uppercase tracking-wider mb-2">Big-Blue (intermittent)</p>
+          <p class="text-ink"><strong>~80 W</strong> · ON quand sylvain code (8-12h/j)</p>
+          <p class="text-ink-muted text-xs mt-1">≈ 8 kWh/mois → ~€2</p>
+        </div>
+        <div class="rounded-lg border border-white/10 bg-paper-elevated p-4">
+          <p class="text-claude text-xs uppercase tracking-wider mb-2">Mini-Blue (always-on)</p>
+          <p class="text-ink"><strong>~12 W</strong> · 24h/24</p>
+          <p class="text-ink-muted text-xs mt-1">≈ 9 kWh/mois → ~€2</p>
+        </div>
+      </div>
+
+      <p>
+        <strong>Total : ~€4/mois.</strong> Compare avec un cluster Kapsule
+        Scaleway équivalent (3 nodes, GeoServer cluster, Postgres
+        managé) : ~€80-120/mois. Le ROI de la stratégie home-prod est
+        de l'ordre de <strong>20× moins cher</strong>, en échange
+        d'une dépendance à mon LAN + box. Cloudflare tunnel gère la
+        partie réseau, donc même si l'IP publique change, le service
+        reste up.
+      </p>
+
+      <p class="text-sm text-ink-muted italic">
+        Plan B (si la box meurt) : redéploiement sur Scaleway Kapsule
+        en ~2 heures via le même repo GitOps. Les Helm charts sont
+        portables — il faut juste swapper la StorageClass Longhorn →
+        scw-bssd. Doc dans le repo developpeur-gitops.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="10 · Quoi maintenant ?">
+      <p>
+        Le marathon 2026-05-14 a livré le strict nécessaire. Le backlog
+        post-ship :
+      </p>
+
+      <ul class="list-disc list-inside space-y-2 text-ink-muted">
+        <li>
+          <strong class="text-ink">ArgoCD Image Updater</strong> — pour
+          aller <em>vraiment</em> zero-touch : ne plus bumper le tag à la
+          main dans values.yaml. Image Updater scan GHCR et commit le
+          bump tout seul. ~1h d'install.
+        </li>
+        <li>
+          <strong class="text-ink">SealedSecrets</strong> — chiffrer
+          les Secrets dans le repo gitops (regcred, maritime-google-oauth,
+          maritime-shared-env). Aujourd'hui ils sont stockés en clair
+          dans GitHub (repo privé), demain ils seront publics par
+          défaut. <code>kubeseal</code> CLI déjà installé.
+        </li>
+        <li>
+          <strong class="text-ink">Rebrand <code>maritime-atlas</code>
+          → <code>aetherwx</code></strong> — couche 3 (rename repo,
+          mise à jour des imports, redirect 301 sur les anciennes
+          URLs).
+        </li>
+        <li>
+          <strong class="text-ink">App Android AetherWX (Expo)</strong>
+          — MVP weekend, écrans Map + Alerts, push notifications via
+          Cloudflare Worker → APNs/FCM.
+        </li>
+      </ul>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="11 · Pour aller plus loin">
+      <p>
+        Cette page est un récit-tour. Pour les détails techniques par
+        thème :
+      </p>
+
+      <ul class="list-disc list-inside space-y-2 text-ink-muted">
+        <li>
+          <a href="/k8s-for-java-developers">k8s pour développeurs Java</a>
+          — la page glossaire complète, avec tous les concepts K8s
+          mappés au monde Spring Boot / Tomcat / Docker Compose.
+        </li>
+        <li>
+          <a href="/case-studies/k8s-migration-overnight">La nuit où on
+          est passé de Swarm à K8s</a> — le récit narratif de la
+          migration initiale (13→14 mai), avec les 7 pièges détaillés.
+        </li>
+        <li>
+          <a href="/case-studies/maritime-atlas">AetherWX (ex Maritime
+          Atlas) — fonctionnel</a> — la case study orientée
+          fonctionnalités : ce que voit l'utilisateur, les layers, les
+          alerts, le slider temps.
+        </li>
+        <li>
+          <a href="https://github.com/Sylad/maritime-atlas" target="_blank" rel="noopener">
+          Repo code maritime-atlas ↗</a> ·
+          <a href="https://github.com/Sylad/developpeur-gitops" target="_blank" rel="noopener">
+          Repo GitOps developpeur-gitops ↗</a>
+        </li>
+      </ul>
+
+      <p class="mt-8 text-sm text-ink-muted italic">
+        Encyclopédie écrite en pair-programming avec Claude Opus 4.7 le
+        2026-05-14, en fin de journée d'un marathon de 14 heures. Si
+        quelque chose ne te paraît pas clair, ouvre une issue sur le
+        repo claude-code-codex — c'est probablement que j'ai sauté une
+        étape.
+      </p>
+    </CaseStudySection>
+
+  </section>
+</BaseLayout>

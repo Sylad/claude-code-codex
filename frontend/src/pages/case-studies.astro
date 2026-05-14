@@ -199,6 +199,37 @@ const apps = [
             </div>
           </div>
         </article>
+
+        <article class="group relative overflow-hidden rounded-xl border border-white/10 bg-paper-elevated p-6 hover:border-claude/40 transition-colors motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-claude/10">
+          <div class="absolute inset-0 bg-gradient-to-br from-teal-500/20 to-transparent opacity-50 group-hover:opacity-80 transition-opacity pointer-events-none"></div>
+          <div class="relative">
+            <p class="font-mono text-sm text-claude mb-3">aetherwx-encyclopedia</p>
+            <h3 class="text-xl font-medium text-ink mb-2">
+              <a href="/case-studies/aetherwx-encyclopedia" class="hover:text-claude transition-colors">
+                L'encyclopédie AetherWX
+              </a>
+            </h3>
+            <p class="text-sm text-ink-muted mb-4 leading-relaxed">
+              Récit-tour pour développeurs Java qui débarquent sur K8s :
+              archi dual-cluster Big-Blue + Mini-Blue, 17 services
+              expliqués, <strong>6 tokens inventoriés</strong> (PAT
+              GHCR, webhook ArgoCD, tunnel Cloudflare, Google OAuth,
+              Resend, Anthropic), 5 leçons qui ont coûté 6h. 4 diagrammes
+              Mermaid, table de traduction Spring Boot ↔ K8s.
+            </p>
+            <p class="font-mono text-xs text-ink/60 pt-3 border-t border-white/5 mb-3">
+              k3s dual-cluster · GHCR · GH Actions · ArgoCD webhook · Longhorn RWX · Cloudflare Tunnel HA
+            </p>
+            <div class="flex flex-wrap items-center gap-2">
+              <a href="/case-studies/aetherwx-encyclopedia" class="font-mono text-[10px] uppercase tracking-wider text-claude/80 hover:text-claude transition-colors">
+                Lire l'encyclopédie →
+              </a>
+              <a href="/case-studies/maritime-atlas" class="ml-auto font-mono text-[10px] uppercase tracking-wider text-ink-muted hover:text-claude transition-colors">
+                Vue fonctionnelle →
+              </a>
+            </div>
+          </div>
+        </article>
       </div>
     </div>
 
