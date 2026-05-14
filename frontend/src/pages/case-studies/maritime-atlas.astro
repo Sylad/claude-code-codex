@@ -186,19 +186,19 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
     b1["NOAA NOMADS<br/>GFS 25km · WW3"] --> b2["weather-fetcher"]
     b3["Météo-France PNT bucket<br/>AROME 2.5km côtier"] --> b4["weather-fetcher-arome"]
     b2 & b4 -->|GeoTIFF time-tagged| b5["/coverage/wind-speed/<br/>/coverage/wave-hs/<br/>/coverage/wave-dir/"]
-    b2 & b4 -->|GeoJSON arrows<br/>(direction + speed)| b6["/wind-arrows/"]
+    b2 & b4 -->|"GeoJSON arrows (direction + speed)"| b6["/wind-arrows/"]
     b5 --> b7["GeoServer ImageMosaic<br/>(time dim NEAREST)"]
     b6 --> b8["nginx alias<br/>/wind-arrows/"]
   end
 
   subgraph C["SST raster (NOAA OISST quotidien)"]
     c1["ncei.noaa.gov<br/>NetCDF OISST v2.1"] --> c2["sst-fetcher"]
-    c2 -->|xarray + rioxarray<br/>subset bbox + sortby lat desc| c3["GeoTIFF /coverage/sst-daily/"]
+    c2 -->|"xarray + rioxarray — subset bbox + sortby lat desc"| c3["GeoTIFF /coverage/sst-daily/"]
     c3 --> c4["GeoServer ImageMosaic time-enabled"]
   end
 
   subgraph D["Radar pluie (RainViewer)"]
-    d1["api.rainviewer.com<br/>weather-maps.json"] -->|JSON manifest<br/>past 2h + nowcast 30min| d2["browser fetch direct"]
+    d1["api.rainviewer.com<br/>weather-maps.json"] -->|"JSON manifest — past 2h + nowcast 30min"| d2["browser fetch direct"]
     d2 --> d3["XYZ TileLayer<br/>find nearest TS to cursor"]
   end
 
