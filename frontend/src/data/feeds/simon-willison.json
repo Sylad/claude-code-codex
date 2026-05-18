@@ -1,5 +1,41 @@
 [
   {
+    "id": "dab5068a10f001dc",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/May/15/datasette-llm-limits/#atom-everything",
+    "title": "datasette-llm-limits 0.1a0",
+    "summary": "Limiter les dépenses LLM par utilisateur dans Datasette avec des budgets quotidiens configurables.",
+    "publishedAt": "2026-05-15T00:42:09+00:00",
+    "fetchedAt": "2026-05-18T09:56:58.037Z"
+  },
+  {
+    "id": "c533eb9ba1b6d17a",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/May/14/not-so-locked-in/#atom-everything",
+    "title": "Not so locked in any more",
+    "summary": "Les agents IA réduisent le verrouillage technologique : migrer entre stacks devient moins risqué et plus faisable.",
+    "publishedAt": "2026-05-14T22:53:49+00:00",
+    "fetchedAt": "2026-05-18T09:56:58.037Z"
+  },
+  {
+    "id": "581522dde77cbd5f",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/May/13/boris-mann/#atom-everything",
+    "title": "Quoting Boris Mann",
+    "summary": "Le nombre d'agents IA est aussi peu significatif que compter des onglets navigateur - ce qui compte, c'est ce qu'ils accomplissent réellement.",
+    "publishedAt": "2026-05-13T16:15:50+00:00",
+    "fetchedAt": "2026-05-18T09:56:58.037Z"
+  },
+  {
+    "id": "0b61ddc929ed2668",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/May/13/csp-allow/#atom-everything",
+    "title": "CSP Allow-list Experiment",
+    "summary": "[off-topic]\n\nCe contenu concerne une expérience CSP (Content Security Policy) avec iframes, sans lien avec Claude Code, les API Anthropic, les agents IA ou le tooling LLM.",
+    "publishedAt": "2026-05-13T04:50:45+00:00",
+    "fetchedAt": "2026-05-18T09:56:58.037Z"
+  },
+  {
     "id": "55bf5e37506c112a",
     "source": "simon-willison",
     "url": "https://simonwillison.net/2026/May/9/luke-curley/#atom-everything",
