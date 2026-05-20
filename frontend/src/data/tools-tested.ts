@@ -181,13 +181,13 @@ export const testedTools: TestedTool[] = [
     author: "tirth8205",
     category: "mcp",
     description:
-      "MCP server Python + Tree-sitter AST + blast-radius graph SQLite. Annonce 8.2× moins de tokens en code review vs ingestion brute. Auto-install Claude Code / Cursor / Codex. À tester sandbox sur maritime-atlas (Angular+NestJS monorepo) pour valider le ROI réel.",
-    tags: ["claude-code", "mcp", "code-review", "tree-sitter", "ast", "tokens"],
+      "MCP server Python + Tree-sitter AST + blast-radius graph SQLite. Testé 2026-05-20 sur maritime-atlas via venv isolé : build 4.7s pour 127 files / 929 nodes / 7939 edges / 94 flows. detect-changes sur commit cascade WMS = 11 fns modifiées + 11 test gaps + risk 0.65, output ultra-utile vs re-lire 6000 lignes. Adopt-conditional : venv-only, éviter `install --platform claude-code` (modifie config sans dry-run). Pour sprint 0 rebrand maritime→aetherwx, parfait compagnon detect-changes pre-commit.",
+    tags: ["claude-code", "mcp", "code-review", "tree-sitter", "ast", "tokens", "tested"],
     url: "https://github.com/tirth8205/code-review-graph",
-    stars: 16900,
+    stars: 16940,
     lastPush: "2026-05-16",
     license: "MIT",
-    status: "to-test",
+    status: "tested",
   },
   {
     id: "alexgreensh-token-optimizer",
