@@ -33,3 +33,4 @@ Thumbs.db
 
 # Batch artifacts (regenerated)
 scripts/cache/
+.token-savior-cache.json
