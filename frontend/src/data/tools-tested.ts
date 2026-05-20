@@ -273,5 +273,6 @@ export const testedTools: TestedTool[] = [
     lastPush: "2026-04-22",
     license: "MIT",
     status: "browsed",
+    caseStudyHref: "/case-studies/drona23-token-efficient",
   },
 ];

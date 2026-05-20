@@ -1,0 +1,225 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+
+const rules = [
+  {
+    n: 1,
+    anti: "Démarre à coder sans contexte",
+    fix: "Think first ; read files before writing",
+  },
+  {
+    n: 2,
+    anti: "Réponses longues, sycophantes",
+    fix: "Keep output concise ; no \"Great question!\" / \"Absolutely!\" / \"I hope this helps!\"",
+  },
+  {
+    n: 3,
+    anti: "Réécrit des fichiers entiers",
+    fix: "Préférer des edits ciblés (Edit tool, pas Write)",
+  },
+  {
+    n: 4,
+    anti: "Re-lit les mêmes fichiers",
+    fix: "Read once unless changed",
+  },
+  {
+    n: 5,
+    anti: "Annonce \"done\" sans tests",
+    fix: "Run validation before claiming completion",
+  },
+  {
+    n: 6,
+    anti: "Flagornerie",
+    fix: "No flattering preamble or closing fluff",
+  },
+  {
+    n: 7,
+    anti: "Over-engineering",
+    fix: "Simple direct fixes ; pas d'abstraction non demandée",
+  },
+  {
+    n: 8,
+    anti: "Rules > user prompt",
+    fix: "User wins : prompt override > rule file",
+  },
+];
+
+const variants = [
+  {
+    title: "Pas de récap inutile en fin de réponse",
+    body: "Quand la tâche est triviale et que le résultat est visible (diff appliqué, test passé), ne pas re-lister les étapes. La règle 2 étendue.",
+  },
+  {
+    title: "Verbe-action + résultat, pas le chemin",
+    body: "\"crg installé, version 2.3.3 vérifiée\" plutôt que \"J'ai fait X puis Y puis Z, et finalement le résultat est…\". Économie 50% sur les bullets de status.",
+  },
+  {
+    title: "Pas de jargon enchaîné dans les récap user-facing",
+    body: "Garder le jargon K8s/CI/Drizzle dans le code. Dans les bullets user-facing, traduire entre parenthèses. Vient d'un feedback explicite : \"par moment tu me parles chinois\".",
+  },
+  {
+    title: "Curl/smoke test obligatoires (TDD blind spot)",
+    body: "Mocker fetch() teste la transfo, pas l'URL. Toujours valider runtime avant de claim done. Variant maison de la règle 5.",
+  },
+  {
+    title: "Commencer par le moins ambitieux qui marche",
+    body: "Éditeur HTML SVG simple bat 5 itérations OpenCV. Background statique bat un BG animé low-opacity. Variant maison de la règle 7.",
+  },
+];
+---
+
+<BaseLayout
+  title="Test bench · drona23/claude-token-efficient"
+  description="Retour d'expérience sur drona23/claude-token-efficient — fichier CLAUDE.md de règles anti-verbosity, 5.4k★. Browsed sans install, on a piqué les 7 règles."
+>
+  <PageHero
+    eyebrow="Test bench · 2026-05-20"
+    title="drona23/claude-token-efficient"
+    intro="Pas un binaire à installer, pas une commande à exécuter. Juste un CLAUDE.md à copier-coller, qui code en 7 règles l'anti-verbosity attendue de Claude Code. 5.4k★ pour 7 lignes de texte. On l'a pas adopté en l'état mais on a piqué l'ensemble — et ajouté nos variantes maison."
+  />
+
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12">
+    <div class="space-y-12">
+
+      <article class="space-y-4">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+          Pourquoi le browser
+        </p>
+        <p class="text-ink leading-relaxed text-base sm:text-lg">
+          Le repo
+          <a href="https://github.com/drona23/claude-token-efficient"
+             target="_blank" rel="noopener"
+             class="text-claude hover:text-claude-soft underline underline-offset-4"
+            >drona23/claude-token-efficient</a>
+          a un README ultra minimaliste : un fichier CLAUDE.md de 7 règles qui réduit
+          la verbosité par défaut de Claude Code. Le tableau de bord annonce
+          <strong>17% cost reduction</strong> mesuré sur Sonnet à payload identique.
+          Pas de daemon, pas de hook, pas de SQLite, pas de venv : juste du texte.
+          5.4k stars, MIT, push fréquent. La question : est-ce que les 7 règles
+          tiennent la route en pratique, et est-ce qu'elles s'appliquent à <em>notre</em>
+          workflow Sylvain/Claude ?
+        </p>
+      </article>
+
+      <article class="space-y-4">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+          Les 7 règles (v8)
+        </p>
+        <p class="text-ink-muted leading-relaxed">
+          Format anti-pattern → fix. Court par design (la verbosity du tableau lui-même est un anti-pattern).
+        </p>
+        <ol class="grid gap-3 sm:grid-cols-2">
+          {rules.map((r) => (
+            <li class="rounded-xl border border-white/10 bg-paper-elevated p-5">
+              <p class="font-mono text-xs text-claude/80 mb-2">
+                {String(r.n).padStart(2, "0")}
+              </p>
+              <p class="text-sm text-rose-300/80 leading-relaxed mb-2">
+                <span class="font-mono text-xs uppercase tracking-wider text-rose-400/70 mr-1.5">Anti</span>
+                {r.anti}
+              </p>
+              <p class="text-sm text-emerald-300/80 leading-relaxed">
+                <span class="font-mono text-xs uppercase tracking-wider text-emerald-400/70 mr-1.5">Fix</span>
+                {r.fix}
+              </p>
+            </li>
+          ))}
+        </ol>
+      </article>
+
+      <article class="space-y-4">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+          Verdict
+        </p>
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div class="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-5">
+            <p class="font-mono text-xs uppercase tracking-wider text-emerald-400 mb-2">
+              Ce qui marche
+            </p>
+            <ul class="text-sm text-ink-muted leading-relaxed space-y-1.5">
+              <li>• <strong>Zéro install</strong> : un copy-paste dans <code class="font-mono text-emerald-300/80 text-[0.9em]">CLAUDE.md</code>, fini</li>
+              <li>• <strong>Format anti-pattern → fix</strong>, hyper-actionnable</li>
+              <li>• Règle 8 (<em>user override</em>) explicite — pas de "rules absolues" qui frustrent</li>
+              <li>• 17% cost reduction mesuré (bench Sonnet)</li>
+              <li>• Licence MIT, scope minuscule, projet sain</li>
+            </ul>
+          </div>
+          <div class="rounded-xl border border-amber-500/20 bg-amber-500/5 p-5">
+            <p class="font-mono text-xs uppercase tracking-wider text-amber-400 mb-2">
+              Caveats
+            </p>
+            <ul class="text-sm text-ink-muted leading-relaxed space-y-1.5">
+              <li>• Les règles 1, 3, 4, 5 sont des <strong>évidences</strong> qu'un dev expérimenté donnerait déjà à son agent</li>
+              <li>• La règle 7 (<em>over-engineering</em>) est vague — sans signal explicite "ne fais pas X", l'agent peut sur-interpréter et brider une feature</li>
+              <li>• Pas de FR : utiliser un CLAUDE.md anglais quand tu parles français au quotidien rajoute une couche de mismatch</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="rounded-xl border border-claude/20 bg-claude/5 p-5 sm:p-6 mt-2">
+          <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">
+            Décision
+          </p>
+          <p class="text-ink leading-relaxed">
+            <strong>Browsed, pas adopté en l'état.</strong> On ne copy-paste pas
+            le fichier brut dans nos <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">CLAUDE.md</code> ;
+            on consolide les 7 règles avec nos variantes maison (cf section suivante)
+            dans un memo dédié : <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">feedback_terse_responses_pattern.md</code>.
+            Le memo est référencé depuis le CLAUDE.md projet (pas dupliqué — pour
+            économiser des input tokens à chaque session).
+          </p>
+        </div>
+      </article>
+
+      <article class="space-y-4">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+          Variantes maison ({variants.length})
+        </p>
+        <p class="text-ink-muted leading-relaxed">
+          Règles spécifiques à notre workflow, extraites de feedbacks explicites
+          de Sylvain au fil des sessions. Empilées sur les 7 règles drona23.
+        </p>
+        <ol class="grid gap-3">
+          {variants.map((v, i) => (
+            <li class="rounded-xl border border-white/10 bg-paper-elevated p-5">
+              <p class="font-mono text-xs text-claude/80 mb-2">
+                {String(i + 1).padStart(2, "0")}
+              </p>
+              <h3 class="text-base font-medium text-ink mb-1.5">{v.title}</h3>
+              <p class="text-sm text-ink-muted leading-relaxed">{v.body}</p>
+            </li>
+          ))}
+        </ol>
+      </article>
+
+      <article class="space-y-4 pt-2">
+        <div class="rounded-xl border border-white/10 bg-paper-elevated p-6 sm:p-8">
+          <p class="font-mono text-xs uppercase tracking-wider text-claude mb-3">
+            Méta-observation
+          </p>
+          <p class="text-ink leading-relaxed">
+            5.4k★ pour 7 lignes de texte, c'est un signal fort : la communauté
+            Claude Code souffre par défaut de verbosité, sycophancie, et
+            sur-explication. Le fix est principalement <em>politique</em> (mettre
+            des limites explicites), pas technique (pas de plugin). Un bon
+            rappel que les meilleurs outils sont parfois <em>juste des règles
+            écrites</em> — et qu'on peut souvent éviter l'install d'un binaire
+            en consolidant l'idée dans un <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">CLAUDE.md</code>.
+          </p>
+          <div class="mt-4 flex flex-wrap gap-3 text-xs">
+            <a href="https://github.com/drona23/claude-token-efficient"
+               target="_blank" rel="noopener"
+               class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">
+              ↗ Repo GitHub
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <p class="text-center text-xs text-ink/50 font-mono pt-4">
+        Browse mené 2026-05-20 · version v8 · règles consolidées dans memo feedback_terse_responses_pattern.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
