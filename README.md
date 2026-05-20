@@ -22,7 +22,7 @@ officielle avec Anthropic.
 | `/start` | **Démarrer** — Claude Code pour les vrais débutants. Pas de jargon, 7 sections progressives, exemples copy-pastable. La porte d'entrée du site. |
 | `/theory` | Comment Claude Code fonctionne sous le capot — architecture agentique, context window, sessions, hooks, slash commands, MCP, skills, agents SDK |
 | `/ecosystem` | Catalogue triable des plugins, MCP servers, skills officiels Anthropic et SDKs |
-| `/case-studies` | 6 deep-dives d'apps perso construites en pair-programming + section **Tools tested** (RTK adopté, Ruflo testé puis rejeté avec 8 leçons capitalisées) |
+| `/case-studies` | 7 deep-dives d'apps perso construites en pair-programming + récits transverses (K8s migration overnight, AetherWX encyclopedia) + section **Tools tested** (RTK adopté, Ruflo rejeté+8 leçons, code-review-graph adopt-conditional) |
 | `/learning` | **Preview RSS live** (Simon Willison, Anthropic, Human Coders FR filtré sur Claude/MCP) + catalogue curé de blogs et podcasts |
 | `/videos` | Chaînes YouTube EN/FR spécifiques Claude Code, filtrables par langue/officiel |
 | `/about` | Genèse du site, stack technique, crédits IA (Claude Code + openart.ai) |
