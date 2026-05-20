@@ -1,0 +1,243 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+
+type Verdict = "adopt" | "adopt-conditional" | "browsed" | "to-test" | "skip";
+
+const tools: Array<{
+  name: string;
+  author: string;
+  approach: string;
+  claim: string;
+  verdict: Verdict;
+  verdictLabel: string;
+  reason: string;
+  caseStudyHref?: string;
+  repoHref: string;
+}> = [
+  {
+    name: "RTK (Rust Token Killer)",
+    author: "syladoire",
+    approach: "CLI proxy Rust + hook Bash automatique",
+    claim: "60-90% sur dev ops",
+    verdict: "adopt",
+    verdictLabel: "Adopt",
+    reason: "Construit maison, intercepte Bash via hook PreToolUse, filtre les outputs git/ls/grep/find. Mesuré, observable via `rtk gain`.",
+    repoHref: "/case-studies/rtk",
+  },
+  {
+    name: "code-review-graph",
+    author: "tirth8205",
+    approach: "MCP Tree-sitter + blast-radius graph SQLite",
+    claim: "8.2× moins de tokens vs ingestion brute",
+    verdict: "adopt-conditional",
+    verdictLabel: "Adopt-conditional",
+    reason: "Build 4.7s sur maritime-atlas (929 nodes), detect-changes ultra-utile. Conditional : venv-only, éviter `install --platform claude-code` (modifie ~/.claude/ sans dry-run).",
+    caseStudyHref: "/case-studies/code-review-graph",
+    repoHref: "https://github.com/tirth8205/code-review-graph",
+  },
+  {
+    name: "drona23/claude-token-efficient",
+    author: "drona23",
+    approach: "Fichier CLAUDE.md de 7 règles anti-verbosity",
+    claim: "17% cost reduction (bench Sonnet)",
+    verdict: "browsed",
+    verdictLabel: "Browsed, piqué 7 règles",
+    reason: "5.4k★ pour 7 lignes de texte = signal fort. On a consolidé les 7 règles + 5 variantes maison dans un memo référencé depuis CLAUDE.md projet.",
+    caseStudyHref: "/case-studies/drona23-token-efficient",
+    repoHref: "https://github.com/drona23/claude-token-efficient",
+  },
+  {
+    name: "nadimtuhin/claude-token-optimizer",
+    author: "nadimtuhin",
+    approach: "CLI `npx ... init` qui restructure les docs projet",
+    claim: "Restructure CLAUDE.md slim + .claudeignore + learnings",
+    verdict: "browsed",
+    verdictLabel: "Browsed, piqué .claudeignore",
+    reason: "Notre topologie MEMORY.md/CLAUDE.md per-projet couvre déjà l'essentiel. On a juste piqué le pattern `.claudeignore` (4 repos updated).",
+    repoHref: "https://github.com/nadimtuhin/claude-token-optimizer",
+  },
+  {
+    name: "token-savior",
+    author: "Mibayy",
+    approach: "MCP server Python : navigation structurelle + mémoire persistante + compaction Bash",
+    claim: "-80% tokens sur Opus 4.7",
+    verdict: "to-test",
+    verdictLabel: "À tester",
+    reason: "RTK-inspired pour la compaction CLI. Navigation structurelle ≠ filtrage RTK donc potentielle complémentarité. Test prévu prochaine fenêtre.",
+    repoHref: "https://github.com/Mibayy/token-savior",
+  },
+  {
+    name: "ooples/token-optimizer-mcp",
+    author: "ooples",
+    approach: "MCP server TypeScript cache + compression tool outputs",
+    claim: "95% reduction",
+    verdict: "browsed",
+    verdictLabel: "Skip (double-up RTK)",
+    reason: "Promesses floues. Double-up direct avec RTK qui couvre déjà la compaction Bash côté Rust. À surveiller mais pas prioritaire.",
+    repoHref: "https://github.com/ooples/token-optimizer-mcp",
+  },
+  {
+    name: "zilliztech/claude-context",
+    author: "zilliztech",
+    approach: "MCP recherche sémantique via Milvus/Zilliz Cloud",
+    claim: "Vector search sur tout le codebase",
+    verdict: "browsed",
+    verdictLabel: "Skip (deps externes)",
+    reason: "Requiert Zilliz Cloud + OpenAI API key (deux deps externes payantes). Trop d'attache pour usage perso solo. À reconsidérer pour gros monorepos.",
+    repoHref: "https://github.com/zilliztech/claude-context",
+  },
+  {
+    name: "alexgreensh/token-optimizer",
+    author: "alexgreensh",
+    approach: "Plugin marketplace + dashboard live + daemon port 24843",
+    claim: "Compaction-survival cross-session",
+    verdict: "skip",
+    verdictLabel: "Skip (license)",
+    reason: "License **PolyForm Noncommercial** bloque tout usage pro futur. Pattern install invasive (cf Ruflo/SuperClaude déjà rejetés). Deal-breaker license avant tout test.",
+    repoHref: "https://github.com/alexgreensh/token-optimizer",
+  },
+];
+
+const verdictStyle: Record<Verdict, string> = {
+  "adopt": "border-emerald-500/30 bg-emerald-500/10 text-emerald-300",
+  "adopt-conditional": "border-emerald-500/20 bg-emerald-500/5 text-emerald-300/80",
+  "browsed": "border-amber-500/20 bg-amber-500/5 text-amber-300/80",
+  "to-test": "border-claude/20 bg-claude/5 text-claude",
+  "skip": "border-rose-500/20 bg-rose-500/5 text-rose-300/80",
+};
+
+const lessons = [
+  {
+    title: "Screening license avant tout test",
+    body: "PolyForm Noncommercial = deal-breaker pour usage pro futur (même perso). Avant de cloner / installer, vérifier la license. 1 tool écarté avant test (alexgreensh).",
+  },
+  {
+    title: "Sandbox venv > install global pour Python MCPs",
+    body: "Tout MCP Python qui propose `install --platform X` doit être testé en venv isolé d'abord, jamais install global direct. Garde-fou wrapper script qui refuse explicitement l'auto-install (pattern code-review-graph).",
+  },
+  {
+    title: "RTK + 1 autre = couverture saine",
+    body: "RTK couvre la compaction CLI (Bash hook PreToolUse). Pour le code review, code-review-graph en complément (Tree-sitter graph, scope différent). Pas besoin de 5 optimizers — la couverture devient redondante au-delà de 2.",
+  },
+  {
+    title: "Texte > daemon : drona23 prouve le ROI rules-only",
+    body: "5.4k★ pour 7 lignes de CLAUDE.md = la communauté valide qu'écrire des règles claires marche aussi bien (souvent mieux) qu'un binaire. Tester rules-only avant binaire pour tout besoin \"verbosity\".",
+  },
+  {
+    title: ".claudeignore pattern à propager",
+    body: "Pattern `.claudeignore` à la racine des repos, similaire à `.gitignore`, pour exclure les artefacts (dist/, node_modules/, .venv/, snapshots, logs) que Claude n'a aucun intérêt à lire. Appliqué à 4 repos. À industrialiser sur les 7.",
+  },
+];
+---
+
+<BaseLayout
+  title="Test bench · Token-optimizers landscape 2026"
+  description="Bench de 8 outils token-optimizers Claude Code (RTK adopté, code-review-graph adopt-conditional, drona23 + nadimtuhin piqués, alexgreensh/ooples/zilliz/Mibayy écartés). Méta-leçons sur le screening écosystème."
+>
+  <PageHero
+    eyebrow="Test bench · 2026-05-20"
+    title="Token-optimizers landscape 2026"
+    intro="L'écosystème Claude Code a explosé en outils d'optimisation tokens : MCP servers, plugins marketplace, fichiers CLAUDE.md, daemons, CLI wrappers. Bench de 8 candidats en mai 2026 — qui marche, qui est gadget, et les 5 méta-leçons sur le screening."
+  />
+
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12">
+    <div class="space-y-12">
+
+      <article class="space-y-4">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+          La grille
+        </p>
+        <p class="text-ink-muted leading-relaxed">
+          Tri par verdict : <em>adopt</em> en haut, <em>skip</em> en bas. Lien
+          repo + lien case study quand on a fait un deep-dive dédié.
+        </p>
+
+        <div class="space-y-3">
+          {tools.map((t) => (
+            <div class="rounded-xl border border-white/10 bg-paper-elevated p-5">
+              <div class="flex flex-wrap items-baseline gap-3 mb-3">
+                <h3 class="text-base font-medium text-ink">{t.name}</h3>
+                <p class="font-mono text-xs text-ink-muted/70">par {t.author}</p>
+                <span class={`ml-auto font-mono text-xs uppercase tracking-wider px-2 py-0.5 rounded border ${verdictStyle[t.verdict]}`}>
+                  {t.verdictLabel}
+                </span>
+              </div>
+              <p class="text-sm text-ink-muted leading-relaxed mb-2">
+                <span class="font-mono text-xs uppercase tracking-wider text-claude/60 mr-1.5">Approche</span>
+                {t.approach}
+              </p>
+              <p class="text-sm text-ink-muted leading-relaxed mb-2">
+                <span class="font-mono text-xs uppercase tracking-wider text-claude/60 mr-1.5">Claim</span>
+                {t.claim}
+              </p>
+              <p class="text-sm text-ink leading-relaxed">
+                {t.reason}
+              </p>
+              <div class="mt-3 flex flex-wrap gap-2 text-xs">
+                {t.caseStudyHref && (
+                  <a href={t.caseStudyHref}
+                     class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-claude/40 text-claude hover:text-claude-soft transition-colors">
+                    → Case study
+                  </a>
+                )}
+                <a href={t.repoHref}
+                   target={t.repoHref.startsWith("http") ? "_blank" : undefined}
+                   rel={t.repoHref.startsWith("http") ? "noopener" : undefined}
+                   class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">
+                  ↗ {t.repoHref.startsWith("http") ? "Repo" : "Repo interne"}
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </article>
+
+      <article class="space-y-4">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+          Méta-leçons ({lessons.length})
+        </p>
+        <p class="text-ink-muted leading-relaxed">
+          Patterns qui émergent du bench global, transférables à toute nouvelle
+          évaluation d'outil écosystème Claude :
+        </p>
+        <ol class="grid gap-3 sm:grid-cols-2">
+          {lessons.map((l, i) => (
+            <li class="rounded-xl border border-white/10 bg-paper-elevated p-5">
+              <p class="font-mono text-xs text-claude/80 mb-2">
+                {String(i + 1).padStart(2, "0")}
+              </p>
+              <h3 class="text-base font-medium text-ink mb-1.5">{l.title}</h3>
+              <p class="text-sm text-ink-muted leading-relaxed">{l.body}</p>
+            </li>
+          ))}
+        </ol>
+      </article>
+
+      <article class="space-y-4 pt-2">
+        <div class="rounded-xl border border-claude/20 bg-claude/5 p-6 sm:p-8">
+          <p class="font-mono text-xs uppercase tracking-wider text-claude mb-3">
+            Bilan
+          </p>
+          <ul class="text-sm text-ink-muted space-y-2">
+            <li>• <strong>2 adoptés</strong> : RTK + code-review-graph (couvrent CLI compaction + code review, scopes différents)</li>
+            <li>• <strong>2 piqués sans adopter</strong> : drona23 (7 règles) + nadimtuhin (.claudeignore pattern)</li>
+            <li>• <strong>3 écartés</strong> : ooples (double-up RTK), zilliztech (deps payantes externes), alexgreensh (license PolyForm)</li>
+            <li>• <strong>1 à tester</strong> : token-savior Mibayy (RTK-inspired + navigation structurelle)</li>
+          </ul>
+          <p class="text-ink leading-relaxed mt-4 text-sm">
+            Le ROI du bench global : ~3h pour écarter 4 candidats, valider 1
+            adoption, et piquer 2 patterns sans payer le coût d'install. Sans le
+            screening, on aurait probablement adopté 1-2 outils invasifs qui
+            auraient pollué <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">~/.claude/</code>
+            ou créé du double-up avec RTK.
+          </p>
+        </div>
+      </article>
+
+      <p class="text-center text-xs text-ink/50 font-mono pt-4">
+        Bench mené 2026-05-20 · 8 candidats · 2 adoptés / 2 piqués / 3 écartés / 1 à tester.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
