@@ -1,0 +1,195 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+
+const lessons = [
+  {
+    title: "detect-changes en pre-commit, sur tout gros monorepo",
+    body: "4.7s pour parser 127 fichiers et sortir test gaps + risk score sur le delta HEAD~1. Plus rapide qu'un eslint sur les mêmes fichiers, et infiniment plus utile pour prioriser ce qu'on va vraiment relire. À skillifier en hook pre-commit sur maritime-atlas.",
+  },
+  {
+    title: "Garde-fou wrapper script pour outils mutants",
+    body: "Pattern : wrapper `crg` qui exec le binary du venv MAIS refuse `install --platform <X>` (exit 2) sauf flag explicite `--i-know-what-i-am-doing`. Évite la mutation silencieuse de `~/.claude/settings.json` + CLAUDE.md quand un sub-command innocent enchaîne sur install. Réutilisable pour tout outil avec auto-config invasive.",
+  },
+  {
+    title: "Venv-only adoption pattern",
+    body: "Install Python dans `~/projects/developpeur/<tool>-sandbox/.venv`, wrapper exposé via `bin/`. Zéro pollution `~/.claude/`, zéro impact système, rollback = `rm -rf` dossier. Méthode standard à industrialiser pour tout outil Python qui propose une intégration plugin invasive en option.",
+  },
+  {
+    title: "Tree-sitter AST > LSP pour analyse cross-files rapide",
+    body: "127 fichiers TS + Python + SQL + Bash en 4.7s, c'est 27 fichiers/s. Tree-sitter est suffisamment rapide pour tourner avant chaque commit sans douleur — là où des linters LSP-based prendraient 10× plus. Bon à savoir pour nos propres outils d'analyse internes.",
+  },
+];
+---
+
+<BaseLayout
+  title="Test bench · code-review-graph"
+  description="Retour d'expérience sur code-review-graph (tirth8205) — MCP Tree-sitter + blast-radius graph pour Claude Code. Adopt-conditional, leçons à reprendre."
+>
+  <PageHero
+    eyebrow="Test bench · 2026-05-20"
+    title="code-review-graph"
+    intro="Serveur MCP Python qui construit un graphe de dépendances code (Tree-sitter AST + blast-radius SQLite) pour servir des extraits ciblés aux agents Claude — au lieu de leur faire ingérer tout le repo. Annonce 8.2× moins de tokens vs ingestion brute. Testé en sandbox venv sur maritime-atlas (Angular + NestJS + Python)."
+  />
+
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12">
+    <div class="space-y-12">
+
+      <article class="space-y-4">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+          Pourquoi le tester
+        </p>
+        <p class="text-ink leading-relaxed text-base sm:text-lg">
+          Le repo
+          <a href="https://github.com/tirth8205/code-review-graph"
+             target="_blank" rel="noopener"
+             class="text-claude hover:text-claude-soft underline underline-offset-4"
+            >tirth8205/code-review-graph</a>
+          (16.9k★, MIT, push très récent) propose de remplacer le pattern
+          "lis 3000 lignes pour comprendre l'impact d'un changement" par un graphe
+          précalculé : Tree-sitter parse le repo, écrit nodes + edges + flows dans
+          SQLite, et le serveur MCP sert à l'agent juste les bouts pertinents pour
+          la question posée. La promesse <em>"8.2× moins de tokens"</em> méritait
+          vérification, surtout pour <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">maritime-atlas</code>
+          (monorepo Angular 19 + NestJS 11 + sidecars Python) où l'ingestion brute
+          coûte cher.
+        </p>
+      </article>
+
+      <article class="space-y-4">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+          Ce qu'on a testé
+        </p>
+        <ul class="space-y-2.5 text-ink leading-relaxed">
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span><strong class="text-ink">Sandbox venv isolée</strong> dans
+              <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">~/projects/developpeur/code-review-graph-sandbox/.venv</code>,
+              install via <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">pip install code-review-graph</code>.
+              Snapshot md5 avant/après sur <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">~/.claude/CLAUDE.md</code> + <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">settings.json</code> pour vérifier l'empreinte globale.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span><strong class="text-ink">Évitement explicite</strong> de
+              <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">code-review-graph install --platform claude-code</code> —
+              le README annonce <em>"injects graph-aware instructions into your platform rules"</em>
+              sans <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">--dry-run</code> documenté.
+              Test du wrapping CLI standalone uniquement.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span><strong class="text-ink">Build sur maritime-atlas</strong> :
+              <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">crg build --repo maritime-atlas --data-dir ./graphs/maritime</code>,
+              measuring time + node count.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span><strong class="text-ink">detect-changes sur commit cascade WMS</strong> :
+              <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">crg detect-changes --base HEAD~1 --brief</code>
+              sur un commit récent qui touchait 3 fichiers de la couche cascade. Verification du risk score + test gaps reported vs ce qu'on savait déjà manuellement.</span>
+          </li>
+        </ul>
+      </article>
+
+      <article class="space-y-4">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+          Verdict
+        </p>
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div class="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-5">
+            <p class="font-mono text-xs uppercase tracking-wider text-emerald-400 mb-2">
+              Ce qui fonctionne
+            </p>
+            <ul class="text-sm text-ink-muted leading-relaxed space-y-1.5">
+              <li>• Build <strong>4.7s</strong> sur maritime-atlas (127 fichiers → 929 nodes, 7939 edges, 94 flows)</li>
+              <li>• <strong>Zéro pollution</strong> <code class="font-mono text-emerald-300/80 text-[0.9em]">~/.claude/</code> tant qu'on saute <code class="font-mono text-emerald-300/80 text-[0.9em]">install --platform</code></li>
+              <li>• <code class="font-mono text-emerald-300/80 text-[0.9em]">detect-changes</code> donne <strong>11 test gaps + risk 0.65</strong> sur commit cascade WMS, signal actionnable immédiat</li>
+              <li>• 24 langages supportés (TS, Python, Vue, Go, Rust, Solidity…) + Jupyter <code class="font-mono text-emerald-300/80 text-[0.9em]">.ipynb</code></li>
+              <li>• Flag <code class="font-mono text-emerald-300/80 text-[0.9em]">--data-dir</code> permet SQLite externe (pas de pollution dans le repo target)</li>
+              <li>• License MIT, 16.9k★, push fréquent — projet sain</li>
+            </ul>
+          </div>
+          <div class="rounded-xl border border-amber-500/20 bg-amber-500/5 p-5">
+            <p class="font-mono text-xs uppercase tracking-wider text-amber-400 mb-2">
+              Caveats
+            </p>
+            <ul class="text-sm text-ink-muted leading-relaxed space-y-1.5">
+              <li>• <code class="font-mono text-amber-300/80 text-[0.9em]">install --platform claude-code</code> non testé — modifie probablement <code class="font-mono text-amber-300/80 text-[0.9em]">settings.json</code> + injecte du CLAUDE.md, pas de <code class="font-mono text-amber-300/80 text-[0.9em]">--dry-run</code></li>
+              <li>• Pas de <code class="font-mono text-amber-300/80 text-[0.9em]">uninstall</code> standalone — rollback = <code class="font-mono text-amber-300/80 text-[0.9em]">rm -rf sandbox/</code> (335 MB)</li>
+              <li>• Claim <strong>8.2×</strong> tokens benché sur 6 repos publics, pas mesuré chez nous (à confirmer par usage prolongé)</li>
+              <li>• Stockage SQLite des signatures + embeddings → ne pas builder sur des repos privés sensibles tant qu'on n'a pas inspecté le contenu</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="rounded-xl border border-claude/20 bg-claude/5 p-5 sm:p-6 mt-2">
+          <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">
+            Décision
+          </p>
+          <p class="text-ink leading-relaxed">
+            <strong>Adopt-conditional</strong> (venv-only). On garde le sandbox,
+            on expose un wrapper <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">crg</code>
+            qui refuse <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">install --platform</code>
+            sauf flag explicite, et on l'utilise comme outil standalone — pas
+            comme MCP auto-installé. L'intégration MCP propre nécessite d'abord
+            d'inspecter ce que <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">install --platform claude-code</code>
+            écrirait dans un sandbox jetable, puis de l'appliquer manuellement.
+          </p>
+        </div>
+      </article>
+
+      <article class="space-y-4">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+          Leçons à reprendre ({lessons.length})
+        </p>
+        <p class="text-ink-muted leading-relaxed">
+          Au-delà de l'adoption, les patterns piqués au passage et réutilisables sur d'autres outils :
+        </p>
+
+        <ol class="grid gap-3 sm:grid-cols-2">
+          {lessons.map((l, i) => (
+            <li class="rounded-xl border border-white/10 bg-paper-elevated p-5">
+              <p class="font-mono text-xs text-claude/80 mb-2">
+                {String(i + 1).padStart(2, "0")}
+              </p>
+              <h3 class="text-base font-medium text-ink mb-1.5">{l.title}</h3>
+              <p class="text-sm text-ink-muted leading-relaxed">{l.body}</p>
+            </li>
+          ))}
+        </ol>
+      </article>
+
+      <article class="space-y-4 pt-2">
+        <div class="rounded-xl border border-white/10 bg-paper-elevated p-6 sm:p-8">
+          <p class="font-mono text-xs uppercase tracking-wider text-claude mb-3">
+            Adoption en cours
+          </p>
+          <ul class="text-sm text-ink-muted space-y-2">
+            <li>✓ Sandbox venv installée + verrouillée (335 MB, isolée du système)</li>
+            <li>✓ Wrapper <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">crg</code> avec garde-fou anti <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">install --platform</code></li>
+            <li>✓ README sandbox documentant layout + PATH + anti-patterns</li>
+            <li>◯ <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">export PATH</code> dans <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">~/.bashrc</code> (Sylvain — Self-Modification hook bloque Claude)</li>
+            <li>◯ Git hook pre-commit <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">crg detect-changes --base HEAD~1 --brief</code> sur maritime-atlas — backlog Sprint E</li>
+            <li>◯ Inspection sandbox de <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">install --platform claude-code</code> pour récupérer le template MCP propre</li>
+          </ul>
+          <div class="mt-4 flex flex-wrap gap-3 text-xs">
+            <a href="https://github.com/tirth8205/code-review-graph"
+               target="_blank" rel="noopener"
+               class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">
+              ↗ Repo GitHub
+            </a>
+            <a href="https://pypi.org/project/code-review-graph/"
+               target="_blank" rel="noopener"
+               class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">
+              ↗ PyPI 2.3.3
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <p class="text-center text-xs text-ink/50 font-mono pt-4">
+        Test mené 2026-05-20 · version 2.3.3 · cible maritime-atlas (929 nodes / 7939 edges).
+      </p>
+    </div>
+  </section>
+</BaseLayout>

@@ -188,6 +188,7 @@ export const testedTools: TestedTool[] = [
     lastPush: "2026-05-16",
     license: "MIT",
     status: "tested",
+    caseStudyHref: "/case-studies/code-review-graph",
   },
   {
     id: "alexgreensh-token-optimizer",
