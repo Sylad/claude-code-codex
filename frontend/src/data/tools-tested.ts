@@ -246,6 +246,7 @@ export const testedTools: TestedTool[] = [
     lastPush: "2026-05-19",
     license: "MIT",
     status: "tested",
+    caseStudyHref: "/case-studies/token-savior",
   },
   {
     id: "nadimtuhin-claude-token-optimizer",

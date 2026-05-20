@@ -1,0 +1,209 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+
+const lessons = [
+  {
+    title: "Wrapper guard contre `ts init` aveugle",
+    body: "Le binary du venv expose `ts init` qui mute `~/.claude/settings.json` (ajoute PostToolUse + PreToolUse hooks). Le wrapper `bin/ts` refuse `init` sans `--dry-run` ou `--i-know-what-i-am-doing`. Même pattern que pour code-review-graph (`crg` qui refuse `install --platform`). Pattern réutilisable.",
+  },
+  {
+    title: "Tree-sitter parsing rapide multi-langage",
+    body: "196 fichiers / 31363 lignes / 748 functions / 191 classes parsés en 0.22s sur maritime-atlas (Angular 19 + NestJS 11 + Python sidecars + Java GeoServer plugins + SQL migrations). Incremental update même vitesse. Permet d'avoir `ts structure` en routine sans douleur.",
+  },
+  {
+    title: "`--dry-run` truthful",
+    body: "`ts init --agent claude --dry-run` montre exactement le diff settings.json sans rien écrire. Vérifié post-coup : md5 settings.json identique. Pattern qu'on ne tient jamais pour acquis (cf claude-code-templates où `--dry-run --agent X --yes` écrit quand même).",
+  },
+  {
+    title: "Profile `optimized` pour réduire le manifest",
+    body: "Par défaut `ts` charge 52/69 tools = manifest verbeux. `TOKEN_SAVIOR_PROFILE=optimized` ship le subset Pareto-optimum benché sur tsbench. À set systématiquement avant intégration MCP.",
+  },
+  {
+    title: "Stack complémentaire avec RTK + code-review-graph",
+    body: "RTK = compaction bash. code-review-graph = blast-radius graph SQLite. token-savior = MCP navigation + memory + bash compaction overlap. Les trois coexistent sans collision (PreToolUse hooks chainables, scopes différents). 3 outils adoptés sans redondance = bench écosystème sain.",
+  },
+];
+---
+
+<BaseLayout
+  title="Test bench · token-savior"
+  description="Retour d'expérience sur Mibayy/token-savior v4.3.2 — MCP server Python tree-sitter + bash compaction + memory. 97.9% tsbench à -80% tokens. Adopt-conditional venv-only."
+>
+  <PageHero
+    eyebrow="Test bench · 2026-05-20"
+    title="token-savior (Mibayy)"
+    intro="Serveur MCP Python qui combine 3 axes : navigation structurelle code (tree-sitter), mémoire persistante cross-session, et compaction des outputs Bash. Bench public : 97.9% sur tsbench (188/192 tâches) à -80% tokens sur Claude Opus 4.7. Testé en sandbox venv sur maritime-atlas — zéro pollution ~/.claude/."
+  />
+
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12">
+    <div class="space-y-12">
+
+      <article class="space-y-4">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+          Pourquoi le tester
+        </p>
+        <p class="text-ink leading-relaxed text-base sm:text-lg">
+          Le repo
+          <a href="https://github.com/Mibayy/token-savior"
+             target="_blank" rel="noopener"
+             class="text-claude hover:text-claude-soft underline underline-offset-4"
+            >Mibayy/token-savior</a>
+          annonce des chiffres difficiles à ignorer : <strong>188/192</strong>
+          sur tsbench (97.9%), <strong>-80%</strong> tokens, <strong>-83%</strong>
+          wall time vs Claude Code "vanilla". Le repo expose <em>tsbench</em>
+          (benchmark source + fixtures) — pas juste un README de promesses.
+          Notre intérêt : voir si la couverture (tree-sitter nav + memory
+          persistence + bash compaction) se télescope avec
+          <a href="/case-studies/code-review-graph" class="text-claude hover:text-claude-soft underline underline-offset-4">code-review-graph</a>
+          déjà adopté, ou si c'est complémentaire.
+        </p>
+      </article>
+
+      <article class="space-y-4">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+          Ce qu'on a testé
+        </p>
+        <ul class="space-y-2.5 text-ink leading-relaxed">
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span><strong class="text-ink">Sandbox venv</strong> dans
+              <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">~/projects/developpeur/token-savior-sandbox/.venv</code>,
+              install via <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">pip install "token-savior-recall[mcp]"</code>.
+              Snapshot md5 avant/après sur <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">~/.claude/</code>.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span><strong class="text-ink"><code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">ts init --agent claude --dry-run</code></strong>
+              pour vérifier la <em>truthfulness</em> du flag sans risquer la mutation
+              de <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">settings.json</code>.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span><strong class="text-ink">CLI directe</strong> sur maritime-atlas :
+              <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">ts use</code>,
+              <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">ts structure</code>,
+              <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">ts git-status</code>,
+              <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">ts find-dead-code</code> — sans toucher
+              à l'intégration MCP.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span><strong class="text-ink">Wrapper <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">ts</code></strong>
+              avec garde-fou : refuse <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">ts init</code>
+              sans <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">--dry-run</code> ou
+              <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">--i-know-what-i-am-doing</code>.</span>
+          </li>
+        </ul>
+      </article>
+
+      <article class="space-y-4">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+          Verdict
+        </p>
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div class="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-5">
+            <p class="font-mono text-xs uppercase tracking-wider text-emerald-400 mb-2">
+              Ce qui fonctionne
+            </p>
+            <ul class="text-sm text-ink-muted leading-relaxed space-y-1.5">
+              <li>• Index <strong>0.22s</strong> sur maritime-atlas (196 files / 31363 lignes / 748 fns / 191 classes)</li>
+              <li>• <strong>Zéro pollution</strong> <code class="font-mono text-emerald-300/80 text-[0.9em]">~/.claude/</code> sans <code class="font-mono text-emerald-300/80 text-[0.9em]">ts init</code></li>
+              <li>• <code class="font-mono text-emerald-300/80 text-[0.9em]">ts structure file.ts</code> = imports + classes + méthodes en 1 paragraphe (vs Read full file)</li>
+              <li>• <code class="font-mono text-emerald-300/80 text-[0.9em]">ts git-status</code> JSON structuré (vs porcelain wall)</li>
+              <li>• <code class="font-mono text-emerald-300/80 text-[0.9em]">ts find-dead-code</code> trouve 2 symboles non-référencés en Java sur maritime</li>
+              <li>• <code class="font-mono text-emerald-300/80 text-[0.9em]">ts init --dry-run</code> <strong>truthful</strong> — md5 settings.json identique post-run</li>
+              <li>• Bench public reproductible (tsbench source + fixtures)</li>
+              <li>• License MIT, 891★, push fréquent</li>
+            </ul>
+          </div>
+          <div class="rounded-xl border border-amber-500/20 bg-amber-500/5 p-5">
+            <p class="font-mono text-xs uppercase tracking-wider text-amber-400 mb-2">
+              Caveats
+            </p>
+            <ul class="text-sm text-ink-muted leading-relaxed space-y-1.5">
+              <li>• <code class="font-mono text-amber-300/80 text-[0.9em]">ts init</code> sans dry-run mute <code class="font-mono text-amber-300/80 text-[0.9em]">~/.claude/settings.json</code> — wrapper guard requis</li>
+              <li>• Profile par défaut <code class="font-mono text-amber-300/80 text-[0.9em]">full</code> charge 52/69 tools, manifest verbeux. <code class="font-mono text-amber-300/80 text-[0.9em]">TOKEN_SAVIOR_PROFILE=optimized</code> obligatoire</li>
+              <li>• <code class="font-mono text-amber-300/80 text-[0.9em]">.token-savior-cache.json</code> écrit dans le projet (1.3 MB sur maritime) — à <code class="font-mono text-amber-300/80 text-[0.9em]">.gitignore</code> partout</li>
+              <li>• Bash compaction overlap potentiel avec RTK (PreToolUse hooks chaînés à tester)</li>
+              <li>• PostToolUse matcher large (Bash + Read + Grep + WebFetch + Playwright + own MCP) — overhead à mesurer</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="rounded-xl border border-claude/20 bg-claude/5 p-5 sm:p-6 mt-2">
+          <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">
+            Décision
+          </p>
+          <p class="text-ink leading-relaxed">
+            <strong>Adopt-conditional</strong> (venv-only, CLI seul pour l'instant).
+            Le sandbox reste, le wrapper <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">ts</code>
+            avec garde-fou expose la CLI safe. L'intégration MCP via <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">ts init</code>
+            attend une fenêtre où on peut review le diff complet de settings.json + tester
+            le chaînage avec le PreToolUse RTK existant. <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">.token-savior-cache.json</code>
+            ajouté preemptively aux <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">.gitignore</code>
+            des 7 repos perso.
+          </p>
+        </div>
+      </article>
+
+      <article class="space-y-4">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+          Leçons à reprendre ({lessons.length})
+        </p>
+        <ol class="grid gap-3 sm:grid-cols-2">
+          {lessons.map((l, i) => (
+            <li class="rounded-xl border border-white/10 bg-paper-elevated p-5">
+              <p class="font-mono text-xs text-claude/80 mb-2">
+                {String(i + 1).padStart(2, "0")}
+              </p>
+              <h3 class="text-base font-medium text-ink mb-1.5">{l.title}</h3>
+              <p class="text-sm text-ink-muted leading-relaxed">{l.body}</p>
+            </li>
+          ))}
+        </ol>
+      </article>
+
+      <article class="space-y-4 pt-2">
+        <div class="rounded-xl border border-white/10 bg-paper-elevated p-6 sm:p-8">
+          <p class="font-mono text-xs uppercase tracking-wider text-claude mb-3">
+            Adoption en cours
+          </p>
+          <ul class="text-sm text-ink-muted space-y-2">
+            <li>✓ Sandbox venv installée (token-savior-recall 4.3.2, MIT)</li>
+            <li>✓ Wrapper <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">ts</code> avec garde-fou anti <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">init</code> aveugle</li>
+            <li>✓ <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">.token-savior-cache.json</code> dans 7 <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">.gitignore</code></li>
+            <li>◯ <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">export PATH</code> dans <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">~/.bashrc</code> (Self-Modification hook bloque Claude)</li>
+            <li>◯ <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">ts init --dry-run</code> review du diff settings.json avant intégration MCP</li>
+            <li>◯ <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">TOKEN_SAVIOR_PROFILE=optimized</code> à exporter au shell</li>
+          </ul>
+          <div class="mt-4 flex flex-wrap gap-3 text-xs">
+            <a href="https://github.com/Mibayy/token-savior"
+               target="_blank" rel="noopener"
+               class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">
+              ↗ Repo GitHub
+            </a>
+            <a href="https://github.com/Mibayy/tsbench"
+               target="_blank" rel="noopener"
+               class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">
+              ↗ tsbench (benchmark source)
+            </a>
+            <a href="https://pypi.org/project/token-savior-recall/"
+               target="_blank" rel="noopener"
+               class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">
+              ↗ PyPI 4.3.2
+            </a>
+            <a href="/case-studies/code-review-graph"
+               class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-claude/40 text-claude hover:text-claude-soft transition-colors">
+              → code-review-graph (complémentaire)
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <p class="text-center text-xs text-ink/50 font-mono pt-4">
+        Test mené 2026-05-20 · version 4.3.2 · cible maritime-atlas (196 files / 31363 lignes / 0.22s index).
+      </p>
+    </div>
+  </section>
+</BaseLayout>
