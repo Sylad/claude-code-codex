@@ -203,6 +203,7 @@ export const testedTools: TestedTool[] = [
     lastPush: "2026-05-19",
     license: "PolyForm-Noncommercial-1.0.0",
     status: "browsed",
+    caseStudyHref: "/case-studies/alexgreensh-polyform",
   },
   {
     id: "ooples-token-optimizer-mcp",

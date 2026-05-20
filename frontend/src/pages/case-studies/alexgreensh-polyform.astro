@@ -1,0 +1,191 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+
+const polyformBlockers = [
+  {
+    title: "Pas d'usage commercial",
+    body: "Toute activité dont la revenue dépasse ~10k$/an est interdite. Inclut consulting, freelancing, intégration dans un produit qui se vend — même si l'outil reste open source pour le dev.",
+  },
+  {
+    title: "Pas de modification redistributable",
+    body: "Tu peux forker pour ton usage perso, mais publier le fork ou contribuer en patchs te place légalement dans une zone grise (la PolyForm est moins permissive que MIT/Apache sur ce point).",
+  },
+  {
+    title: "Migration future contaminée",
+    body: "Si tu rends ton projet perso public sous MIT/Apache, mais que le code consomme/embed un binaire PolyForm Noncommercial, ton dépôt n'est plus compatible avec sa propre license affichée.",
+  },
+  {
+    title: "Pas d'arbitrage clair en cas de litige",
+    body: "PolyForm est récent (2020), peu de jurisprudence. Risque non-quantifiable à 5 ans si tu construis un workflow autour.",
+  },
+];
+
+const screeningRules = [
+  {
+    title: "Screening license AVANT de cloner",
+    body: "Avant de lancer `git clone`, lire le badge license du repo. PolyForm Noncommercial / Confluent Community / Elastic 2.0 / SSPL = écarter automatiquement pour usage perso à long terme. Coût d'opportunité ~30s.",
+  },
+  {
+    title: "MIT / Apache 2.0 / BSD = green pass",
+    body: "Pas de garde-fou supplémentaire requis côté license. Compatibles avec quasi tous les usages futurs.",
+  },
+  {
+    title: "AGPL = attention si serveur",
+    body: "AGPL force la publication du code source de toute app qui sert l'outil via réseau. Pour un outil CLI local, AGPL est ok. Pour un MCP server intégré dans une app web propriétaire, risqué.",
+  },
+  {
+    title: "License absente = quasi-PolyForm",
+    body: "Si le repo n'a pas de license, par défaut c'est 'all rights reserved'. Donc même contrainte que PolyForm Noncommercial : pas d'usage redistributable. Écarter sauf si le repo est manifestement public-domain (README explicite).",
+  },
+];
+---
+
+<BaseLayout
+  title="Test bench · alexgreensh/token-optimizer (PolyForm)"
+  description="Pourquoi on n'a pas testé alexgreensh/token-optimizer : license PolyForm Noncommercial. Dissuasion avant install, méthode de screening license appliquée à 8 candidats."
+>
+  <PageHero
+    eyebrow="Test bench · 2026-05-20"
+    title="alexgreensh/token-optimizer"
+    intro="On n'a même pas cloné. La license PolyForm Noncommercial est un deal-breaker pour usage pro futur (même perso peut basculer). Cas d'école sur le screening license en amont du test."
+  />
+
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12">
+    <div class="space-y-12">
+
+      <article class="space-y-4">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+          Le pitch (intéressant pourtant)
+        </p>
+        <p class="text-ink leading-relaxed text-base sm:text-lg">
+          <a href="https://github.com/alexgreensh/token-optimizer"
+             target="_blank" rel="noopener"
+             class="text-claude hover:text-claude-soft underline underline-offset-4"
+            >alexgreensh/token-optimizer</a>
+          est un plugin marketplace Claude Code (~1k★) qui promet du
+          <em>compaction-survival</em> cross-session, un dashboard live de
+          consommation tokens, un daemon port 24843 qui orchestre tout. Sur
+          le papier, la couverture annoncée est ambitieuse : hooks
+          SessionStart, persistance d'état entre sessions, métriques temps-réel.
+          Le repo a un README sérieux, push fréquent, README mature.
+        </p>
+        <p class="text-ink-muted leading-relaxed">
+          Et pourtant, on a fermé l'onglet sans cloner.
+        </p>
+      </article>
+
+      <article class="space-y-4">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+          Le deal-breaker
+        </p>
+        <div class="rounded-xl border border-rose-500/30 bg-rose-500/10 p-5 sm:p-6">
+          <div class="flex items-baseline gap-3 mb-3">
+            <span class="font-mono text-xs uppercase tracking-wider text-rose-400">License</span>
+            <code class="font-mono text-base text-rose-300">PolyForm Noncommercial 1.0.0</code>
+          </div>
+          <p class="text-ink leading-relaxed text-sm">
+            La PolyForm Noncommercial interdit tout usage qui génère du revenu
+            (au sens large : consulting, intégration dans un produit commercial,
+            même freelance). Pour un outil <em>token optimizer</em> qui
+            s'incruste dans le workflow dev, c'est un piège différé.
+          </p>
+        </div>
+
+        <p class="text-ink leading-relaxed mt-4">
+          Pourquoi c'est bloquant même pour un usage perso :
+        </p>
+
+        <ol class="grid gap-3">
+          {polyformBlockers.map((b, i) => (
+            <li class="rounded-xl border border-white/10 bg-paper-elevated p-5">
+              <p class="font-mono text-xs text-rose-400/80 mb-2">
+                {String(i + 1).padStart(2, "0")}
+              </p>
+              <h3 class="text-base font-medium text-ink mb-1.5">{b.title}</h3>
+              <p class="text-sm text-ink-muted leading-relaxed">{b.body}</p>
+            </li>
+          ))}
+        </ol>
+      </article>
+
+      <article class="space-y-4">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+          Verdict
+        </p>
+        <div class="rounded-xl border border-claude/20 bg-claude/5 p-5 sm:p-6">
+          <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">
+            Décision
+          </p>
+          <p class="text-ink leading-relaxed">
+            <strong>Skip sans test.</strong> La license est suffisamment claire
+            pour qu'on n'investisse même pas 30 min à cloner et benchmarker.
+            L'outil pourrait être brillant techniquement — ça ne change rien
+            quand on ne peut pas l'utiliser de façon durable. Coût opportunité
+            économisé : ~1h de test + ~2h de rollback potentiel si l'install
+            était invasive (cf <a href="/case-studies/ruflo" class="text-claude hover:text-claude-soft underline underline-offset-4">Ruflo</a>).
+          </p>
+        </div>
+      </article>
+
+      <article class="space-y-4">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+          Méthode de screening license ({screeningRules.length})
+        </p>
+        <p class="text-ink-muted leading-relaxed">
+          Règles appliquées avant tout test d'un outil tiers Claude Code. Les
+          quatre du dessous résument le filtrage qu'on fait en amont du
+          banc d'essai.
+        </p>
+
+        <ol class="grid gap-3 sm:grid-cols-2">
+          {screeningRules.map((r, i) => (
+            <li class="rounded-xl border border-white/10 bg-paper-elevated p-5">
+              <p class="font-mono text-xs text-claude/80 mb-2">
+                {String(i + 1).padStart(2, "0")}
+              </p>
+              <h3 class="text-base font-medium text-ink mb-1.5">{r.title}</h3>
+              <p class="text-sm text-ink-muted leading-relaxed">{r.body}</p>
+            </li>
+          ))}
+        </ol>
+      </article>
+
+      <article class="space-y-4 pt-2">
+        <div class="rounded-xl border border-white/10 bg-paper-elevated p-6 sm:p-8">
+          <p class="font-mono text-xs uppercase tracking-wider text-claude mb-3">
+            Bilan
+          </p>
+          <p class="text-ink leading-relaxed text-sm">
+            Sur les 8 outils token-optimizer benchés en mai 2026,
+            <strong>alexgreensh est le seul écarté sans test</strong> à cause
+            de sa license. Les 7 autres ont eu droit à au moins un README
+            scan + npm/PyPI metadata check. Le ratio "écarté avant test
+            pour license" devrait rester &lt; 15% d'un bench d'écosystème
+            sain ; ici 1/8 = 12.5%, dans la norme.
+          </p>
+          <div class="mt-4 flex flex-wrap gap-3 text-xs">
+            <a href="/case-studies/token-optimizers-2026"
+               class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-claude/40 text-claude hover:text-claude-soft transition-colors">
+              → Voir le landscape complet
+            </a>
+            <a href="https://polyformproject.org/licenses/noncommercial/1.0.0/"
+               target="_blank" rel="noopener"
+               class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">
+              ↗ PolyForm Noncommercial 1.0.0
+            </a>
+            <a href="https://github.com/alexgreensh/token-optimizer"
+               target="_blank" rel="noopener"
+               class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">
+              ↗ Repo GitHub
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <p class="text-center text-xs text-ink/50 font-mono pt-4">
+        Skip décidé 2026-05-20 · screening license seul · pas de clone effectué.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
