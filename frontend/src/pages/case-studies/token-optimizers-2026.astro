@@ -60,11 +60,11 @@ const tools: Array<{
   {
     name: "token-savior",
     author: "Mibayy",
-    approach: "MCP server Python : navigation structurelle + mémoire persistante + compaction Bash",
-    claim: "-80% tokens sur Opus 4.7",
-    verdict: "to-test",
-    verdictLabel: "À tester",
-    reason: "RTK-inspired pour la compaction CLI. Navigation structurelle ≠ filtrage RTK donc potentielle complémentarité. Test prévu prochaine fenêtre.",
+    approach: "MCP server Python : tree-sitter nav + bash compaction + memory",
+    claim: "97.9% tsbench à -80% tokens sur Opus 4.7",
+    verdict: "adopt-conditional",
+    verdictLabel: "Adopt-conditional",
+    reason: "Testé 2026-05-20 en venv. Zéro pollution ~/.claude/, index maritime-atlas 196 files / 31363 lignes en 0.22s. `ts init --dry-run` truthful. Adopt-conditional : venv-only + profile `optimized` + `ts init` à appliquer manuellement après inspection diff (Self-Modification hook). Complémentaire à RTK + code-review-graph.",
     repoHref: "https://github.com/Mibayy/token-savior",
   },
   {
@@ -220,10 +220,9 @@ const lessons = [
             Bilan
           </p>
           <ul class="text-sm text-ink-muted space-y-2">
-            <li>• <strong>2 adoptés</strong> : RTK + code-review-graph (couvrent CLI compaction + code review, scopes différents)</li>
+            <li>• <strong>3 adoptés</strong> : RTK + code-review-graph + token-savior (compaction, code review, MCP navigation — scopes complémentaires)</li>
             <li>• <strong>2 piqués sans adopter</strong> : drona23 (7 règles) + nadimtuhin (.claudeignore pattern)</li>
             <li>• <strong>3 écartés</strong> : ooples (double-up RTK), zilliztech (deps payantes externes), alexgreensh (license PolyForm)</li>
-            <li>• <strong>1 à tester</strong> : token-savior Mibayy (RTK-inspired + navigation structurelle)</li>
           </ul>
           <p class="text-ink leading-relaxed mt-4 text-sm">
             Le ROI du bench global : ~3h pour écarter 4 candidats, valider 1
@@ -236,7 +235,7 @@ const lessons = [
       </article>
 
       <p class="text-center text-xs text-ink/50 font-mono pt-4">
-        Bench mené 2026-05-20 · 8 candidats · 2 adoptés / 2 piqués / 3 écartés / 1 à tester.
+        Bench mené 2026-05-20 · 8 candidats · 3 adoptés / 2 piqués / 3 écartés.
       </p>
     </div>
   </section>

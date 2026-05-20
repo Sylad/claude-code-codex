@@ -239,13 +239,13 @@ export const testedTools: TestedTool[] = [
     author: "Mibayy",
     category: "mcp",
     description:
-      "MCP server Python (pip install) avec navigation structurelle + mémoire persistante + compaction Bash. Annonce -80% tokens sur Opus 4.7 (mai 2026). RTK-inspired pour la compaction côté CLI. À tester pour vérifier overlap réel vs RTK et complémentarité (navigation structurelle ≠ filtrage commands).",
-    tags: ["claude-code", "mcp", "tokens", "memory", "navigation", "compaction"],
+      "MCP server Python tree-sitter + bash compaction + persistent memory. Bench 97.9% tsbench à -80% tokens sur Opus 4.7. Testé 2026-05-20 en venv : 0 pollution ~/.claude/, index maritime-atlas 196 files / 31363 lignes en 0.22s, `ts init --dry-run` truthful, `ts structure` / `ts git-status` / `ts find-dead-code` clean. Verdict adopt-conditional venv-only (`ts init` à faire manuellement avec dry-run préalable + profile `optimized`). Complémentaire à RTK (nav structurelle ≠ filtrage bash) et à code-review-graph (MCP vs blast-radius graph).",
+    tags: ["claude-code", "mcp", "tokens", "memory", "navigation", "compaction", "tested"],
     url: "https://github.com/Mibayy/token-savior",
-    stars: 886,
+    stars: 891,
     lastPush: "2026-05-19",
     license: "MIT",
-    status: "to-test",
+    status: "tested",
   },
   {
     id: "nadimtuhin-claude-token-optimizer",
