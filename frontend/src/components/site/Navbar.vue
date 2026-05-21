@@ -1,16 +1,25 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue";
-import { Menu, X, BookOpenText } from "lucide-vue-next";
+import { ref, onMounted, onUnmounted, computed } from "vue";
+import { Menu, X, BookOpenText, ChevronDown } from "lucide-vue-next";
 
-defineProps<{ pathname: string }>();
+const props = defineProps<{ pathname: string }>();
 
-const links = [
+type NavLink =
+  | { href: string; label: string }
+  | { label: string; children: { href: string; label: string }[] };
+
+const links: NavLink[] = [
   { href: "/start", label: "Démarrer" },
   { href: "/theory", label: "Théorie" },
   { href: "/ecosystem", label: "Écosystème" },
   { href: "/case-studies", label: "Case studies" },
-  { href: "/k8s-for-java-developers", label: "K8s pour Java" },
-  { href: "/argocd-k8s-pour-les-nuls", label: "ArgoCD pour les nuls" },
+  {
+    label: "Guides",
+    children: [
+      { href: "/k8s-for-java-developers", label: "K8s pour Java" },
+      { href: "/argocd-k8s-pour-les-nuls", label: "ArgoCD pour les nuls" },
+    ],
+  },
   { href: "/learning", label: "Learning" },
   { href: "/videos", label: "Vidéos" },
   { href: "/about", label: "À propos" },
@@ -18,23 +27,40 @@ const links = [
 
 const open = ref(false);
 const scrolled = ref(false);
+const openDropdown = ref<string | null>(null);
 
 function onScroll() {
   scrolled.value = window.scrollY > 8;
 }
 
+function onClickOutside(e: MouseEvent) {
+  if (!openDropdown.value) return;
+  const target = e.target as HTMLElement;
+  if (!target.closest("[data-dropdown]")) openDropdown.value = null;
+}
+
 onMounted(() => {
   onScroll();
   window.addEventListener("scroll", onScroll, { passive: true });
+  document.addEventListener("click", onClickOutside);
 });
 
 onUnmounted(() => {
   window.removeEventListener("scroll", onScroll);
+  document.removeEventListener("click", onClickOutside);
 });
 
 function isActive(href: string, pathname: string) {
   if (href === "/") return pathname === "/";
   return pathname.startsWith(href);
+}
+
+function isGroupActive(children: { href: string }[], pathname: string) {
+  return children.some((c) => isActive(c.href, pathname));
+}
+
+function toggleDropdown(label: string) {
+  openDropdown.value = openDropdown.value === label ? null : label;
 }
 </script>
 
@@ -64,19 +90,73 @@ function isActive(href: string, pathname: string) {
       </a>
 
       <ul class="hidden md:flex items-center gap-1">
-        <li v-for="link in links" :key="link.href">
-          <a
-            :href="link.href"
-            :class="[
-              'px-3 py-2 text-sm rounded-md transition-colors motion-safe:active:scale-95',
-              isActive(link.href, pathname)
-                ? 'text-claude bg-claude/10'
-                : 'text-ink-muted hover:text-ink hover:bg-white/5',
-            ]"
-          >
-            {{ link.label }}
-          </a>
-        </li>
+        <template v-for="link in links" :key="link.label">
+          <!-- Lien simple -->
+          <li v-if="'href' in link">
+            <a
+              :href="link.href"
+              :class="[
+                'px-3 py-2 text-sm rounded-md transition-colors motion-safe:active:scale-95',
+                isActive(link.href, props.pathname)
+                  ? 'text-claude bg-claude/10'
+                  : 'text-ink-muted hover:text-ink hover:bg-white/5',
+              ]"
+            >
+              {{ link.label }}
+            </a>
+          </li>
+          <!-- Dropdown groupé -->
+          <li v-else class="relative" data-dropdown>
+            <button
+              type="button"
+              :class="[
+                'flex items-center gap-1 px-3 py-2 text-sm rounded-md transition-colors motion-safe:active:scale-95',
+                isGroupActive(link.children, props.pathname)
+                  ? 'text-claude bg-claude/10'
+                  : 'text-ink-muted hover:text-ink hover:bg-white/5',
+              ]"
+              :aria-expanded="openDropdown === link.label"
+              @click="toggleDropdown(link.label)"
+            >
+              {{ link.label }}
+              <ChevronDown
+                :size="14"
+                :class="[
+                  'transition-transform duration-200',
+                  openDropdown === link.label ? 'rotate-180' : '',
+                ]"
+              />
+            </button>
+            <Transition
+              enter-active-class="transition duration-150 ease-out"
+              enter-from-class="opacity-0 -translate-y-1"
+              enter-to-class="opacity-100 translate-y-0"
+              leave-active-class="transition duration-100 ease-in"
+              leave-from-class="opacity-100"
+              leave-to-class="opacity-0"
+            >
+              <div
+                v-if="openDropdown === link.label"
+                class="absolute left-0 mt-2 min-w-56 rounded-md border border-white/10 bg-paper/95 backdrop-blur-md shadow-xl py-1"
+              >
+                <a
+                  v-for="child in link.children"
+                  :key="child.href"
+                  :href="child.href"
+                  :class="[
+                    'block px-3 py-2 text-sm transition-colors',
+                    isActive(child.href, props.pathname)
+                      ? 'text-claude bg-claude/10'
+                      : 'text-ink-muted hover:text-ink hover:bg-white/5',
+                  ]"
+                  @click="openDropdown = null"
+                >
+                  {{ child.label }}
+                </a>
+              </div>
+            </Transition>
+          </li>
+        </template>
       </ul>
 
       <button
@@ -103,20 +183,42 @@ function isActive(href: string, pathname: string) {
         class="md:hidden border-t border-white/5 bg-paper/95 backdrop-blur-md"
       >
         <ul class="px-5 py-4 flex flex-col gap-1">
-          <li v-for="link in links" :key="link.href">
-            <a
-              :href="link.href"
-              :class="[
-                'block px-3 py-3 rounded-md text-base transition-colors',
-                isActive(link.href, pathname)
-                  ? 'text-claude bg-claude/10'
-                  : 'text-ink-muted hover:text-ink hover:bg-white/5',
-              ]"
-              @click="open = false"
-            >
-              {{ link.label }}
-            </a>
-          </li>
+          <template v-for="link in links" :key="link.label">
+            <li v-if="'href' in link">
+              <a
+                :href="link.href"
+                :class="[
+                  'block px-3 py-3 rounded-md text-base transition-colors',
+                  isActive(link.href, props.pathname)
+                    ? 'text-claude bg-claude/10'
+                    : 'text-ink-muted hover:text-ink hover:bg-white/5',
+                ]"
+                @click="open = false"
+              >
+                {{ link.label }}
+              </a>
+            </li>
+            <!-- Mobile : flatten les children sous un label de groupe -->
+            <li v-else>
+              <div class="px-3 pt-3 pb-1 text-xs uppercase tracking-wider text-ink-muted/70">
+                {{ link.label }}
+              </div>
+              <a
+                v-for="child in link.children"
+                :key="child.href"
+                :href="child.href"
+                :class="[
+                  'block px-6 py-3 rounded-md text-base transition-colors',
+                  isActive(child.href, props.pathname)
+                    ? 'text-claude bg-claude/10'
+                    : 'text-ink-muted hover:text-ink hover:bg-white/5',
+                ]"
+                @click="open = false"
+              >
+                {{ child.label }}
+              </a>
+            </li>
+          </template>
         </ul>
       </div>
     </Transition>
