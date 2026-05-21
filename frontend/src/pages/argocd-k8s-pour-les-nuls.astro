@@ -1,0 +1,650 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import CaseStudySection from "@/components/site/CaseStudySection.astro";
+import CodeBlock from "@/components/site/CodeBlock.astro";
+---
+
+<BaseLayout
+  title="Bible ArgoCD + K8s pour les nuls"
+  description="Pourquoi faut-il 8 fichiers YAML pour déployer un service ? GitOps c'est quoi ? Tour pédagogique d'ArgoCD, Helm et K8s pour qui en a marre de mémoriser sans comprendre. Avec incidents vécus sur maritime-atlas."
+>
+  <PageHero
+    eyebrow="Tuto · pour qui en a marre du devops"
+    title="ArgoCD + K8s pour les nuls"
+    intro="Si tu as ouvert cette page c'est probablement parce que tu te demandes pourquoi diable il faut autant de YAML par service, pourquoi ArgoCD existe quand kubectl apply marche très bien, et pourquoi un pod a planté à 22h hier sans que tu comprennes. Cette page raconte tout ça en partant des fondamentaux et en s'appuyant sur le projet maritime-atlas (apps perso : tracker AIS + météo marine, 17 services en prod K8s). Lecture ~25 min. Si tu débutes carrément K8s, voir aussi /k8s-for-java-developers qui couvre l'introduction côté dev Java."
+  />
+
+  <section class="case-study-section">
+
+    <CaseStudySection eyebrow="0. Pour qui est ce tuto">
+      <p>
+        Tu es développeur. Tu sais coder. Tu déployais ton appli avec
+        un <code class="text-xs font-mono">scp app.jar prod:</code> +
+        <code class="text-xs font-mono">systemctl restart</code> et ça
+        marchait très bien. Maintenant on te dit qu'il te faut un
+        cluster Kubernetes, qu'il faut écrire 8 fichiers YAML pour
+        déployer un seul service, qu'il faut installer ArgoCD, Helm,
+        sealed-secrets, cert-manager, et tu te demandes si l'industrie
+        s'est pas un peu emballée.
+      </p>
+      <p>
+        <strong>Spoiler</strong> : non, ils se sont pas emballés.
+        L'écosystème a juste explosé pour répondre à 4 besoins très
+        concrets qu'on découvre dès qu'on met des trucs en prod. Cette
+        page t'explique <strong>pourquoi</strong> chaque couche existe,
+        avec des analogies que tu connais déjà. Pas pour t'apprendre
+        l'API K8s par coeur — pour que demain matin, quand tu rouvres
+        ArgoCD, tu comprennes ce que tu lis.
+      </p>
+      <p class="rounded-lg border border-claude/30 bg-claude/[0.06] p-4 text-sm">
+        <strong class="text-ink">Hypothèse de base :</strong> tu as déjà
+        utilisé Docker (<code class="text-xs font-mono">docker run</code>,
+        <code class="text-xs font-mono">docker-compose</code>) et tu sais
+        ce qu'est une image. Si non, commence par là — K8s c'est de
+        l'orchestration de containers Docker, donc sans la brique du
+        dessous c'est dur.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="1. Pourquoi tant de YAML ? La vraie réponse">
+      <p>
+        La question légitime quand on débarque sur K8s : <em>"j'ai un
+        seul container Node.js à faire tourner, pourquoi 8 fichiers
+        YAML ?"</em>
+      </p>
+      <p>
+        Réponse : parce qu'<strong>un service en production a 4 jobs
+        séparés</strong>, et chaque job mérite son propre fichier
+        (déclaratif, reviewable en PR, modifiable indépendamment).
+      </p>
+      <ul class="list-disc list-inside text-zinc-300 space-y-2 ml-4 mt-2">
+        <li>
+          <strong>Job 1 — Faire tourner le code.</strong> Combien de
+          copies, quelle image Docker, quelles ressources CPU/RAM,
+          comment redémarrer quand ça crash. → <code class="text-xs font-mono">Deployment.yaml</code>
+        </li>
+        <li>
+          <strong>Job 2 — Être joignable depuis d'autres services.</strong>
+          DNS interne stable, load-balancing entre les copies. →
+          <code class="text-xs font-mono">Service.yaml</code>
+        </li>
+        <li>
+          <strong>Job 3 — Être joignable depuis Internet</strong> (si
+          c'est un frontend ou une API publique). Routing par host,
+          HTTPS, certificats. → <code class="text-xs font-mono">Ingress.yaml</code>
+          + <code class="text-xs font-mono">Certificate.yaml</code>
+        </li>
+        <li>
+          <strong>Job 4 — Configuration externalisée</strong> (URL de la
+          DB, clés API, feature flags). Le code est figé dans l'image,
+          la config varie selon l'env. →
+          <code class="text-xs font-mono">ConfigMap.yaml</code> +
+          <code class="text-xs font-mono">Secret.yaml</code>
+        </li>
+      </ul>
+      <p>
+        Ajoute "stockage persistant" (PVC), "scheduled tasks" (CronJob),
+        "permissions cluster" (ServiceAccount + RBAC), et tu arrives à
+        ~8 fichiers. C'est <strong>infrastructure-as-code reviewable</strong> :
+        chaque préoccupation a son fichier, ton équipe peut review en
+        PR comme du code applicatif.
+      </p>
+      <p>
+        L'erreur de débutant c'est de comparer K8s à
+        <code class="text-xs font-mono">docker run --rm -p 3000:3000 monapp</code>.
+        Compare-le plutôt à <strong>"Docker + nginx + systemd +
+        Ansible + dotenv + cert-manager + supervisor"</strong> tous
+        réunis sous une API déclarative. Là c'est plus juste.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="2. Le mental model en 1 minute">
+      <p>
+        4 mots à retenir, dans cet ordre :
+      </p>
+      <ul class="list-disc list-inside text-zinc-300 space-y-2 ml-4">
+        <li>
+          <strong>Pod</strong> = un (ou plusieurs) container Docker
+          qui tourne. C'est l'unité atomique. Quand on parle d'une
+          "copie de l'appli qui tourne", c'est un pod.
+        </li>
+        <li>
+          <strong>Deployment</strong> = le cahier des charges qui dit
+          "je veux 2 pods de l'image <code class="text-xs font-mono">maritime/api:v1.4.2</code>
+          en permanence". Si un pod meurt, K8s en recrée un. Si on
+          change l'image, il fait un rolling update (1 nouveau pod up
+          → 1 ancien tué → suivant).
+        </li>
+        <li>
+          <strong>Service</strong> = un balanceur DNS interne. Tu as 2
+          pods derrière, mais les autres services tapent
+          <code class="text-xs font-mono">http://api:3010</code> et K8s
+          load-balance. Le pod peut être recréé 10 fois par jour, son IP
+          change, mais le Service garde la même adresse.
+        </li>
+        <li>
+          <strong>Ingress</strong> = la porte d'entrée HTTPS depuis
+          Internet. Règle déclarative "host
+          <code class="text-xs font-mono">aetherwx.sladoire.dev</code>
+          → Service <code class="text-xs font-mono">maritime-frontend</code>
+          port 80". Le contrôleur Ingress (nginx en backstage) applique
+          + cert TLS auto via cert-manager.
+        </li>
+      </ul>
+      <CodeBlock
+        language="text"
+        filename="Les couches (du bas vers le haut)"
+        code={`Internet
+   |
+   v
+[ Ingress ] ----- "aetherwx.sladoire.dev" -----+
+                                                |
+                                                v
+                                          [ Service "api" ]
+                                          (DNS + load-balancer)
+                                              /        \\
+                                             v          v
+                                         [ Pod ]    [ Pod ]
+                                         api-abc   api-def
+                                         |           |
+                                         v           v
+                                       container   container
+                                       node.js     node.js
+                                       (image v1.4.2)`}
+      />
+      <p>
+        Tout le reste (ConfigMap, Secret, PVC, ServiceAccount, etc.)
+        c'est des <strong>compléments</strong> qu'on injecte dans le Pod.
+        Mais le mental model de base c'est ces 4 briques.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="3. Helm = les templates qui sauvent ta santé mentale">
+      <p>
+        Imagine que tu as <strong>14 services</strong>, chacun avec ses
+        ~8 fichiers YAML. Ça fait <strong>112 fichiers</strong>
+        quasi-identiques (90% du Deployment d'un service ressemble à
+        99% du Deployment du voisin, juste l'image change et 3 env vars).
+      </p>
+      <p>
+        Pire : tu veux faire un environnement preprod et un prod, donc
+        c'est <strong>x2 = 224 fichiers</strong>. C'est ingérable.
+      </p>
+      <p>
+        <strong>Helm</strong> c'est juste "templating + values" pour
+        K8s. Tu écris UNE fois la structure (template) avec des
+        placeholders, et tu fournis un <code class="text-xs font-mono">values.yaml</code>
+        par environnement.
+      </p>
+      <CodeBlock
+        language="yaml"
+        filename="charts/maritime/templates/deployment.yaml"
+        code={`apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.name }}
+spec:
+  replicas: {{ .Values.replicas }}
+  template:
+    spec:
+      containers:
+        - name: app
+          image: {{ .Values.image.repo }}:{{ .Values.image.tag }}
+          resources:
+            limits:
+              memory: {{ .Values.resources.memory }}`}
+      />
+      <CodeBlock
+        language="yaml"
+        filename="charts/maritime/values.yaml"
+        code={`name: maritime-api
+replicas: 2
+image:
+  repo: ghcr.io/sylad/maritime-api
+  tag: v1.4.2
+resources:
+  memory: 512Mi`}
+      />
+      <p>
+        Bump le tag dans values.yaml, <code class="text-xs font-mono">helm upgrade</code>,
+        K8s applique le rolling update. <strong>1 template = N
+        déploiements.</strong> Sur maritime-atlas le chart Helm fait
+        ~9 templates et génère ~130 manifests K8s à l'install.
+      </p>
+      <p>
+        Analogie : c'est comme un Maven <code class="text-xs font-mono">pom.xml</code>
+        parent avec profiles, ou un package npm scopé que tu paramètres
+        depuis l'extérieur. Sauf qu'au lieu de produire un .jar, ça
+        produit du YAML K8s.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="4. GitOps = stop kubectl apply à la main">
+      <p>
+        Avant GitOps, le workflow K8s c'était :
+      </p>
+      <ol class="list-decimal list-inside text-zinc-300 space-y-1 ml-4">
+        <li>SSH sur ta machine de dev</li>
+        <li>Éditer les YAML</li>
+        <li>
+          <code class="text-xs font-mono">kubectl apply -f deploy.yaml</code>
+        </li>
+        <li>Croiser les doigts</li>
+        <li>Oublier de commit les modifs</li>
+        <li>2 mois plus tard, drift entre Git et le cluster, plus personne ne sait quelle version tourne vraiment</li>
+      </ol>
+      <p>
+        <strong>GitOps inverse le flux</strong> : Git devient la
+        <strong>source de vérité unique</strong>. Tu ne fais
+        <strong>plus jamais</strong> <code class="text-xs font-mono">kubectl apply</code>.
+        Tu commits dans un repo (chez moi : <code class="text-xs font-mono">developpeur-gitops</code>),
+        et un agent installé dans le cluster détecte le commit et
+        applique automatiquement. Cet agent c'est <strong>ArgoCD</strong>.
+      </p>
+      <CodeBlock
+        language="text"
+        filename="Le flux GitOps maritime-atlas"
+        code={`[1] code Big-Blue (WSL)
+       |
+       v  git push main
+[2] GitHub repo "maritime-atlas"
+       |
+       v  GitHub Actions
+[3] build Docker + push ghcr.io/sylad/maritime-api:sha-abc1234
+       |
+       v  workflow bump-tag
+[4] commit dans "developpeur-gitops" → values.yaml: tag = sha-abc1234
+       |
+       v  webhook GitHub → ArgoCD (Mini-Blue)
+[5] ArgoCD detect diff entre Git et cluster
+       |
+       v  helm template + kubectl apply (que ArgoCD fait pour toi)
+[6] K8s rolling update : pods anciens tués, nouveaux up avec :sha-abc1234
+       |
+       v
+[7] users voient nouvelle version, zéro downtime
+
+Total : ~3 min (build) + 15 sec (sync ArgoCD via webhook).`}
+      />
+      <p>
+        Bénéfices concrets que tu touches du doigt après 2 semaines :
+      </p>
+      <ul class="list-disc list-inside text-zinc-300 space-y-1 ml-4">
+        <li>
+          <strong>Audit trail</strong> : "qui a déployé v1.4.2 et
+          quand ?" → <code class="text-xs font-mono">git blame</code>
+          values.yaml.
+        </li>
+        <li>
+          <strong>Rollback en 30 sec</strong> : <code class="text-xs font-mono">git revert</code>
+          + push, ArgoCD réapplique l'ancien état.
+        </li>
+        <li>
+          <strong>Disaster recovery</strong> : cluster cramé ? Réinstalle
+          K8s vierge + ArgoCD + pointe sur le repo. ArgoCD reconstruit
+          tout. Vécu sur maritime quand j'ai migré dual-cluster →
+          single-cluster.
+        </li>
+        <li>
+          <strong>Selfheal</strong> : un collègue fait
+          <code class="text-xs font-mono">kubectl edit</code> à la main
+          pour "tester un truc" ? ArgoCD détecte le drift et réverte
+          dans les 3 min. Annoying au début, vital en prod.
+        </li>
+      </ul>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="5. ArgoCD au quotidien (UI tour)">
+      <p>
+        Quand tu ouvres <code class="text-xs font-mono">https://argocd.aetherwx.sladoire.dev</code>,
+        tu vois une grille d'<strong>Applications</strong> (chaque
+        Application = un chart Helm watché par ArgoCD). 3 états
+        possibles, dans 2 dimensions :
+      </p>
+      <ul class="list-disc list-inside text-zinc-300 space-y-2 ml-4">
+        <li>
+          <strong>Sync status</strong> :
+          <span class="text-emerald-400">Synced</span> (Git = cluster),
+          <span class="text-amber-400">OutOfSync</span> (Git a divergé,
+          ArgoCD va appliquer dans les 3 min sauf si autosync off).
+        </li>
+        <li>
+          <strong>Health status</strong> :
+          <span class="text-emerald-400">Healthy</span> (tous les pods
+          running, probes OK),
+          <span class="text-amber-400">Progressing</span> (rolling update
+          en cours),
+          <span class="text-rose-400">Degraded</span> (au moins un pod
+          en crashloop ou un Job qui failed).
+        </li>
+      </ul>
+      <p>
+        <strong>3 actions essentielles</strong> à connaître :
+      </p>
+      <ul class="list-disc list-inside text-zinc-300 space-y-2 ml-4">
+        <li>
+          <strong>Click sur l'app</strong> → tu vois le graphe de toutes
+          les ressources (Deployments, Pods, Services, Ingress). Visuel,
+          ça aide énormément à comprendre les relations.
+        </li>
+        <li>
+          <strong>Click sur un Pod</strong> → onglet "Logs" pour voir
+          stdout/stderr. Onglet "Events" pour voir pourquoi K8s a tué le
+          pod (OOMKilled, liveness probe failed, image pull error...).
+        </li>
+        <li>
+          <strong>Bouton "Sync"</strong> en haut → force l'apply
+          immédiat sans attendre les 3 min de polling. Pratique pour
+          débloquer ou debug.
+        </li>
+      </ul>
+      <p>
+        Tu peux tout faire en CLI aussi
+        (<code class="text-xs font-mono">argocd app sync maritime</code>,
+        <code class="text-xs font-mono">argocd app get maritime</code>),
+        mais l'UI bat la CLI pour 90% des usages quotidiens.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="6. Pipeline complet maritime-atlas">
+      <p>
+        Voici concrètement ce qui se passe quand je modifie une ligne
+        de code TypeScript dans <code class="text-xs font-mono">maritime/services/api/src/health.ts</code>
+        et que je push :
+      </p>
+      <ol class="list-decimal list-inside text-zinc-300 space-y-2 ml-4">
+        <li>
+          <strong>Big-Blue (mon PC)</strong> :
+          <code class="text-xs font-mono">git push origin main</code>
+          dans le repo <code class="text-xs font-mono">maritime-atlas</code>.
+        </li>
+        <li>
+          <strong>GitHub Actions</strong> détecte le push, lance le
+          workflow <code class="text-xs font-mono">build-and-push.yml</code> :
+          <ul class="list-disc list-inside ml-6 mt-1 space-y-1">
+            <li><code class="text-xs font-mono">npm ci + npm run build</code></li>
+            <li>
+              <code class="text-xs font-mono">docker build -t ghcr.io/sylad/maritime-api:sha-abc1234</code>
+            </li>
+            <li>
+              <code class="text-xs font-mono">docker push ghcr.io/sylad/maritime-api:sha-abc1234</code>
+            </li>
+            <li>
+              Workflow <code class="text-xs font-mono">bump-tag</code> :
+              git clone <code class="text-xs font-mono">developpeur-gitops</code>,
+              modifie <code class="text-xs font-mono">charts/maritime/values.yaml</code>
+              (champ <code class="text-xs font-mono">api.image.tag</code>),
+              commit + push.
+            </li>
+          </ul>
+          <p class="mt-1 ml-6 text-xs text-ink-muted">Total ~3 min selon la taille du build.</p>
+        </li>
+        <li>
+          <strong>Webhook GitHub → ArgoCD</strong> : GitHub pousse une
+          notif HTTP à ArgoCD dès que le repo gitops change. ArgoCD
+          détecte le diff en ~15 sec (sans webhook : polling 3 min).
+        </li>
+        <li>
+          <strong>ArgoCD sync</strong> : helm template avec le nouveau
+          values.yaml → diff avec l'état cluster → kubectl apply des
+          changes. Le seul diff c'est l'image du Deployment.
+        </li>
+        <li>
+          <strong>K8s rolling update</strong> : K8s tue les pods avec
+          l'ancien tag un par un, démarre les nouveaux. Si la liveness
+          probe répond, il continue. Si elle fail, il rollback auto.
+        </li>
+        <li>
+          <strong>Zéro downtime</strong> côté users si le Service avait
+          ≥2 pods (et c'était le cas).
+        </li>
+      </ol>
+      <p>
+        <strong>Ce que tu remarques</strong> : je n'ai jamais touché à
+        un serveur. Pas de SSH. Pas de kubectl apply. Juste un git push
+        + un workflow GitHub qui bump le tag. Le reste est automatique.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="7. Incident vécu #1 — Le CronJob retention qui a tué ArgoCD pendant 48h">
+      <p>
+        Hier soir, ArgoCD passe l'application <code class="text-xs font-mono">maritime</code>
+        en <span class="text-rose-400">Degraded</span> sans raison
+        apparente. Tous les pods Deployment sont Healthy. Le frontend
+        marche. L'API marche. Mais ArgoCD dit Degraded.
+      </p>
+      <p>
+        Je clique pour voir le détail. ArgoCD pointe un CronJob :
+        <code class="text-xs font-mono">maritime-retention-cleanup</code>
+        (le job qui purge les données obs > 7 jours, cf politique data
+        layer). Il tourne tous les jours à 3h du mat. Le dernier run a
+        échoué avec exit code 1.
+      </p>
+      <CodeBlock
+        language="bash"
+        filename="Investigation"
+        code={`# Lister les jobs de ce CronJob
+kubectl get jobs -n maritime | grep retention
+
+# Logs du dernier job échoué
+kubectl logs -n maritime job/maritime-retention-cleanup-29384567
+# date: invalid date '7 days ago'
+# date: invalid date '7 days ago'
+# date: invalid date '7 days ago'
+# ...`}
+      />
+      <p>
+        <strong>La cause :</strong> mon script CronJob fait
+        <code class="text-xs font-mono">date -d '7 days ago' +%Y-%m-%d</code>
+        pour calculer la date de cutoff. Ça marche très bien sur
+        GNU date (mon WSL, Big-Blue). Mais l'image de base du CronJob
+        c'est <code class="text-xs font-mono">alpine:3.20</code>, qui
+        utilise <strong>BusyBox date</strong>. BusyBox ne supporte PAS
+        l'option <code class="text-xs font-mono">-d</code> avec syntax
+        relative. Il faut <code class="text-xs font-mono">date -D '%s' -d
+        "$(($(date +%s) - 604800))"</code> ou utiliser
+        <code class="text-xs font-mono">coreutils</code>.
+      </p>
+      <p>
+        <strong>Pourquoi ArgoCD est passé Degraded :</strong> ArgoCD
+        considère un CronJob avec son dernier Job en
+        <code class="text-xs font-mono">Failed</code> comme une ressource
+        unhealthy. Donc <strong>tout</strong> le chart maritime apparaît
+        Degraded, même si l'API et le frontend tournent nickel.
+      </p>
+      <p>
+        <strong>Fix :</strong> remplacer Alpine par
+        <code class="text-xs font-mono">debian:bookworm-slim</code> dans
+        le CronJob (10 lignes Dockerfile), ou utiliser
+        <code class="text-xs font-mono">apk add coreutils</code> avant
+        d'invoquer date.
+      </p>
+      <p class="rounded-lg border border-amber-500/30 bg-amber-500/[0.06] p-4 text-sm">
+        <strong class="text-ink">Leçon transversale :</strong> en
+        Docker/K8s, "ça marche sur ma machine" inclut la libc et les
+        coreutils. Alpine (musl + BusyBox) ≠ Debian (glibc + GNU). Si
+        ton script utilise des options non-POSIX, soit tu installes les
+        outils GNU, soit tu changes de base. Et toujours surveiller les
+        CronJobs : ils peuvent fail silencieusement pendant des jours.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="8. Incident vécu #2 — Sprint 0 rebrand, 9 images manquantes">
+      <p>
+        Sprint 0 du rebrand maritime → aetherwx. J'ai changé le préfixe
+        des images Docker de <code class="text-xs font-mono">maritime-*</code>
+        vers <code class="text-xs font-mono">aetherwx-*</code> dans le
+        chart Helm + values.yaml. Push, commit gitops, ArgoCD sync.
+      </p>
+      <p>
+        <span class="text-rose-400">ImagePullBackOff</span> sur 9 pods.
+        Logique : les images <code class="text-xs font-mono">ghcr.io/sylad/aetherwx-*</code>
+        n'existaient pas encore — j'avais bumpé le YAML AVANT que la CI
+        rebuilde les nouvelles images sous le nouveau nom. Classic.
+      </p>
+      <p>
+        <strong>Pourquoi ça arrive :</strong> dans un pipeline GitOps
+        bien fait, tu as <strong>2 repos</strong> : code (qui produit
+        les images) et gitops (qui décrit ce qui tourne). Si tu fais un
+        rebrand global, il faut le faire dans cet ordre :
+      </p>
+      <ol class="list-decimal list-inside text-zinc-300 space-y-1 ml-4">
+        <li>Modifier les workflows CI pour build sous le nouveau nom (dual-tag pour transition)</li>
+        <li>Push code → workflow construit ET pousse les nouvelles images</li>
+        <li>VÉRIFIER que les images existent sur GHCR (curl + GitHub UI)</li>
+        <li>SEULEMENT APRÈS, modifier le repo gitops</li>
+      </ol>
+      <p>
+        <strong>Fix de l'urgence :</strong>
+        <code class="text-xs font-mono">workflow_dispatch</code> manuel
+        sur GitHub Actions pour relancer les builds, puis bump SHA dans
+        values.yaml pour pointer sur les nouvelles images.
+      </p>
+      <p class="rounded-lg border border-amber-500/30 bg-amber-500/[0.06] p-4 text-sm">
+        <strong class="text-ink">Leçon transversale :</strong> GitOps
+        introduit un découplage entre "le code est buildé" et "le code
+        est déployé". Les deux peuvent se désynchroniser. Toujours
+        bumper le gitops <strong>après</strong> avoir confirmé que
+        l'image cible existe.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="9. Cheat sheet kubectl + argocd">
+      <p>
+        Les ~15 commandes qui couvrent 90% du quotidien. Copy-paste
+        friendly, garde cette section ouverte dans un onglet.
+      </p>
+      <CodeBlock
+        language="bash"
+        filename="kubectl essentiels"
+        code={`# Voir ce qui tourne dans un namespace
+kubectl get pods -n maritime
+kubectl get pods -n maritime -o wide          # + node + IP
+kubectl get pods -A | grep -v Running         # tout ce qui n'est pas OK
+
+# Logs d'un pod (ou suivre en live avec -f)
+kubectl logs -n maritime maritime-api-7d9c8f4b6-abc12
+kubectl logs -n maritime maritime-api-7d9c8f4b6-abc12 -f
+kubectl logs -n maritime -l app=maritime-api --tail=200   # par label
+
+# Pourquoi le pod est en CrashLoopBackOff ?
+kubectl describe pod -n maritime maritime-api-7d9c8f4b6-abc12
+kubectl get events -n maritime --sort-by='.lastTimestamp' | tail -30
+
+# Exec dans un pod (comme docker exec -it)
+kubectl exec -n maritime -it maritime-api-7d9c8f4b6-abc12 -- sh
+
+# Restart un Deployment (utile si une env var ConfigMap a bougé)
+kubectl rollout restart deployment/maritime-api -n maritime
+
+# Forwarder un port local vers un pod (debug)
+kubectl port-forward -n maritime svc/maritime-api 3010:3010
+
+# Voir les ressources et leurs usages
+kubectl top pods -n maritime
+kubectl top nodes`}
+      />
+      <CodeBlock
+        language="bash"
+        filename="argocd essentiels"
+        code={`# Login (1 fois par session)
+argocd login argocd.aetherwx.sladoire.dev
+
+# Lister les apps
+argocd app list
+
+# Voir le détail d'une app + sync status
+argocd app get maritime
+
+# Forcer un sync (au lieu d'attendre les 3 min de polling)
+argocd app sync maritime
+
+# Voir le diff entre Git et cluster
+argocd app diff maritime
+
+# Rollback à un commit précédent
+argocd app rollback maritime <revision>
+
+# Suspendre l'auto-sync (pour debug ponctuel)
+argocd app set maritime --sync-policy none
+# ... debug ...
+argocd app set maritime --sync-policy automated --auto-prune --self-heal`}
+      />
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="10. Les 5 réflexes à acquérir en premier">
+      <ol class="list-decimal list-inside text-zinc-300 space-y-3 ml-4">
+        <li>
+          <strong>Ne jamais <code class="text-xs font-mono">kubectl apply</code> à la main en prod.</strong>
+          Si tu le fais, ArgoCD va réverte dans les 3 min (selfHeal=true).
+          Passe par Git. Toujours.
+        </li>
+        <li>
+          <strong>Toujours bumper le tag d'image, jamais <code class="text-xs font-mono">:latest</code>.</strong>
+          K8s avec <code class="text-xs font-mono">imagePullPolicy: IfNotPresent</code>
+          (le défaut) ne re-pull pas. Utilise <code class="text-xs font-mono">:sha-abc1234</code>
+          ou <code class="text-xs font-mono">:v1.4.2</code>.
+        </li>
+        <li>
+          <strong>Vérifier que l'image cible existe AVANT de bump le gitops.</strong>
+          Workflow GitHub → vérifie le tag sur GHCR → bump values. Sinon
+          ImagePullBackOff garanti.
+        </li>
+        <li>
+          <strong>Lire les Events autant que les Logs.</strong>
+          <code class="text-xs font-mono">kubectl get events</code> te
+          dit pourquoi K8s a tué un pod (OOMKilled, probe failed,
+          ImagePullBackOff). Les Logs te disent ce que l'app affichait
+          juste avant. Les deux sont complémentaires.
+        </li>
+        <li>
+          <strong>Quand ArgoCD passe Degraded, regarde TOUTES les
+          ressources, pas que les Pods.</strong> Un CronJob qui fail,
+          un Job qui n'a pas terminé, un Certificate en erreur — tout
+          peut faire Degraded. L'UI ArgoCD affiche un cadenas
+          rouge/orange sur la ressource problématique.
+        </li>
+      </ol>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Conclusion · Ce que tu sais déjà vaut cher">
+      <p>
+        Si tu maîtrises les concepts de cette page, tu sais déjà :
+        <strong>infrastructure-as-code</strong>,
+        <strong>déploiement continu</strong>,
+        <strong>GitOps</strong>,
+        <strong>observabilité de base</strong>,
+        <strong>rolling updates</strong>,
+        <strong>disaster recovery</strong>,
+        <strong>multi-environnement via templating</strong>.
+      </p>
+      <p>
+        Sur le marché 2026, c'est un skillset que les boîtes mid-size
+        (50-500 personnes) cherchent à payer 70-100k€/an. Pas parce que
+        c'est ultra-complexe (tu vois bien, ça tient en 10 sections),
+        mais parce que peu de devs ont mis les mains dedans
+        end-to-end. La plupart connaissent kubectl mais pas le pipeline
+        GitOps complet. La plupart connaissent Helm mais n'ont jamais
+        debug un CronJob Alpine qui plante.
+      </p>
+      <p>
+        Si tu débutes en 2026 et que tu as un projet perso à migrer
+        (même petit, une app perso, un site, n'importe quoi), fais le.
+        Pas pour la techno en soi, mais pour avoir vécu une fois le
+        cycle complet : code → CI → registry → gitops → sync → prod.
+        Après ça, l'API K8s ce n'est plus qu'un manuel à feuilleter
+        quand tu en as besoin.
+      </p>
+      <p class="mt-6 rounded-lg border border-claude/30 bg-claude/[0.06] p-4 text-sm">
+        <strong class="text-ink">Pour aller plus loin :</strong>
+        <a href="/k8s-for-java-developers">K8s pour développeurs Java</a>
+        (mêmes concepts mais via les analogies Spring), et
+        <a href="/case-studies/aetherwx-encyclopedia">l'encyclopédie
+        AetherWX</a> qui détaille l'archi complète des 17 services avec
+        diagrammes Mermaid. Les deux complètent cette page.
+      </p>
+    </CaseStudySection>
+
+  </section>
+</BaseLayout>
