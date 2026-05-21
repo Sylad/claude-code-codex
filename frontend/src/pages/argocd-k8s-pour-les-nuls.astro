@@ -135,23 +135,24 @@ import CodeBlock from "@/components/site/CodeBlock.astro";
       <CodeBlock
         language="text"
         filename="Les couches (du bas vers le haut)"
-        code={`Internet
-   |
-   v
-[ Ingress ] ----- "aetherwx.sladoire.dev" -----+
-                                                |
-                                                v
-                                          [ Service "api" ]
-                                          (DNS + load-balancer)
-                                              /        \\
-                                             v          v
-                                         [ Pod ]    [ Pod ]
-                                         api-abc   api-def
-                                         |           |
-                                         v           v
-                                       container   container
-                                       node.js     node.js
-                                       (image v1.4.2)`}
+        code={`           Internet
+              |
+              v
+        [ Ingress ]
+"aetherwx.sladoire.dev"
+              |
+              v
+       [ Service "api" ]
+     (DNS + load-balancer)
+          /         \\
+         v           v
+     [ Pod ]      [ Pod ]
+     api-abc      api-def
+        |           |
+        v           v
+    container    container
+     node.js      node.js
+        (image v1.4.2)`}
       />
       <p>
         Tout le reste (ConfigMap, Secret, PVC, ServiceAccount, etc.)
