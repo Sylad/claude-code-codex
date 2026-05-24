@@ -132,7 +132,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
   end
 
   subgraph SERVE["Servir la carte"]
-    gs["GeoServer cluster<br/>(3 replicas + LB nginx)"]
+    gs["GeoServer cluster<br/>(2 replicas + LB nginx + Hazelcast)"]
     api["api NestJS (auth + palettes)"]
     fe["frontend Angular 19 + OL 10"]
   end
@@ -161,7 +161,8 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
       <p>
         L'arête importante : <strong>le frontend ne tape qu'un seul backend
         public</strong> — l'alias DNS interne <code>geoserver:8080</code>
-        (qui est un LB nginx interne devant les 3 replicas GeoServer). Toute
+        (qui est un Service K8s ClusterIP load-balancé sur les 2 replicas
+        GeoServer synchronisés par Hazelcast). Toute
         l'ingestion (6 services), le bus RMQ, le moteur d'alertes, l'API
         d'auth/palettes, sont privés au réseau Docker. Le RainViewer est la
         seule source que le browser frappe directement (CORS open, tiles
@@ -254,9 +255,11 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
           par layer.
         </li>
         <li>
-          <strong>Cluster GeoServer 3 replicas</strong> avec catalog partagé
-          en Postgres via JDBCConfig (community extension), LB nginx interne
-          nommé <code>geoserver</code> (alias DNS) — rollout du single → cluster
+          <strong>Cluster GeoServer 2 replicas</strong> avec catalog partagé
+          en Postgres via JDBCConfig (community extension), Hazelcast
+          <code>gs-hz-cluster</code> pour synchroniser l'état in-memory entre
+          replicas (GWC locks, tile seeds), LB nginx interne nommé
+          <code>geoserver</code> (alias DNS) — rollout du single → cluster
           sans toucher aux 5+ services métier qui appellent
           <code>http://geoserver:8080/</code>.
         </li>
@@ -478,13 +481,18 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
           4. Champ vectoriel C¹ continu, courbes naturelles.
         </li>
         <li>
-          <strong>Cluster GeoServer non-breaking</strong> : sprint 9 passe de
-          1 à 3 replicas GeoServer + JDBCConfig (catalog partagé Postgres).
-          La clé pour ne casser AUCUN des 5+ services métier qui appellent
-          <code>http://geoserver:8080</code> : nommer le LB nginx interne
-          <code>geoserver</code> (alias DNS). Tous les
-          <code>proxy_pass</code> et envs continuent sans modif. Pattern à
-          appliquer ailleurs (API en N replicas plus tard).
+          <strong>Cluster GeoServer non-breaking</strong> : marathon 2026-05-24
+          passe de 1 à 2 replicas GeoServer synchronisés par
+          <strong>Hazelcast K8s</strong> (plugin community
+          <code>gs-hz-cluster</code>) — RBAC ServiceAccount + Role pod-reader,
+          gossip TCP 5701 sur Service headless. JDBCConfig partagé en Postgres
+          (CNPG <code>pg-catalog</code>) ; le cache GWC est posé sur un bucket
+          SeaweedFS S3 partagé (<code>maritime-gwc-tiles</code>) pour zéro
+          re-cache à froid lors d'un rolling restart. Le Service ClusterIP
+          K8s <code>geoserver:8080</code> load-balance, donc les 6 sidecars
+          fetchers + l'API + le frontend n'ont aucune modif à faire — l'alias
+          DNS K8s est l'arête stable. La 3ème replica est gardée en réserve
+          pour la migration Hetzner CAX41 (32 Gi RAM, 8g heap × 3).
         </li>
         <li>
           <strong>TTL différentiels alignés</strong> : audit a révélé que les
@@ -522,9 +530,9 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         <li>
           <strong>JDBC race condition au boot du cluster</strong> :
           détecté en cours de session quand un agent bg CANDHIS a redémarré
-          les 3 replicas en parallèle. JDBCConfig + JDBCStore lancent
+          les replicas en parallèle. JDBCConfig + JDBCStore lancent
           <code>CREATE TABLE</code> sans <code>IF NOT EXISTS</code> →
-          gs-1 réussit (premier arrivé), gs-2/gs-3 plantent en
+          gs-1 réussit (premier arrivé), gs-2 plante en
           <code>relation "resources" already exists</code> → context Spring
           fail → web app dégradée (REST 404). Fix dans
           <code>cluster-bootstrap.sh</code> : <code>psql</code> probe au
@@ -556,6 +564,24 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
           maintenant dans le bucket <code>maritime-gwc-tiles</code> au lieu
           du disque local — testé avec
           <code>aws s3 ls --endpoint-url=http://seaweedfs:8333</code>.
+        </li>
+        <li>
+          <strong>Plugin Java <code>maritime-gwc-init</code> — la config GS durable cross-restart.</strong>
+          Le vrai pivot architectural du sprint cluster-ready : les REST PUT
+          GeoServer (blobstore, tile layer assignments) sont <em>in-memory only</em>
+          — ils ne survivent pas au redémarrage du pod. L'approche durable ?
+          Un module Maven (<code>geoserver/maritime-gwc-init/</code>) embarqué dans
+          <code>WEB-INF/lib</code> de l'image Docker, avec un bean Spring
+          <code>@PostConstruct</code> qui crée le S3 blobstore + assigne
+          16 layers GWC au boot, idempotent (check-before-create).
+          Pattern repris de Neo au boulot : la config reproductible vit dans
+          le code, pas dans l'état runtime. Résultat : le cluster rebuild
+          complet en CI restaure <em>exactement</em> la configuration GWC en
+          ~30 s de boot, sans script post-deploy ni intervention manuelle.
+          L'isolation workspace <code>aetherwx-sat</code> (7 layers NASA)
+          a suivi le même schéma : GetCap cold-start 250 ms vs 36 s avant
+          split (le catalog JDBCConfig chargeait tous les layers en un seul
+          GET /ows).
         </li>
       </ul>
     </CaseStudySection>
@@ -625,7 +651,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
       <h3 class="font-bold text-lg mt-6">Le piège JDBCConfig — 1h perdue avant de comprendre</h3>
       <p>
         Le cluster GeoServer utilise JDBCConfig (catalog Postgres-backed) pour que
-        les 3 replicas partagent le même état. Quand on PUT un SLD via REST API
+        les 2 replicas partagent le même état. Quand on PUT un SLD via REST API
         (<code>PUT /rest/workspaces/&lt;ws&gt;/styles/&lt;name&gt;?raw=true</code>), la DB
         est bien mise à jour, et un GET sur la même URL retourne la nouvelle version
         ✓. Mais le rendu continue d'utiliser <strong>l'ancienne version</strong>
@@ -656,7 +682,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         nginx en <code>upstream timed out</code> → cascade de 502 → GeoServer
         s'effondrait pendant 1-2 minutes. Solution : l'extension stable
         <strong>control-flow</strong> (Andrea Aime aussi, par contre celle-là est
-        documentée). On a calibré pour quad-core × 3 replicas :
+        documentée). On a calibré pour quad-core × 2 replicas Hazelcast :
         <code>ows.global=16</code>, <code>ows.wms.getmap=6</code>,
         <code>user=8</code>, <code>timeout=30s</code>. Les requêtes excédentaires
         partent en file plutôt que de tuer le serveur.
