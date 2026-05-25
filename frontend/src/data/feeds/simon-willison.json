@@ -1,5 +1,59 @@
 [
   {
+    "id": "e7c40babf6b02277",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/May/24/datasette-agent/#atom-everything",
+    "title": "datasette-agent 0.1a4",
+    "summary": "datasette-agent 0.1a4 ajoute un interface de chat agent dans le menu Jump de Datasette via un hook JavaScript.",
+    "publishedAt": "2026-05-24T23:19:34+00:00",
+    "fetchedAt": "2026-05-25T09:59:35.523Z"
+  },
+  {
+    "id": "bab7b4bab5ccc8e9",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/May/24/armin-ronacher/#atom-everything",
+    "title": "Quoting Armin Ronacher",
+    "summary": "Armin Ronacher dénonce les rapports de bugs générés par IA : privilégier l'observation brute (commande, résultat attendu, résultat réel, logs).",
+    "publishedAt": "2026-05-24T18:46:53+00:00",
+    "fetchedAt": "2026-05-25T09:59:35.523Z"
+  },
+  {
+    "id": "7ea449e12be43061",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/May/21/datasette-agent-sprites/#atom-everything",
+    "title": "datasette-agent-sprites 0.1a0",
+    "summary": "Plugin Datasette Agent pour exécuter des commandes dans un sandbox Fly Sprites, utile pour les agents Claude.",
+    "publishedAt": "2026-05-21T18:21:07+00:00",
+    "fetchedAt": "2026-05-25T09:59:35.523Z"
+  },
+  {
+    "id": "efb2ba214b08463e",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/May/21/datasette-agent-2/#atom-everything",
+    "title": "datasette-agent 0.1a3",
+    "summary": "datasette-agent 0.1a3 améliore l'UX avec boutons SQL, meilleure gestion des réponses tronquées et affichage optimisé des résultats d'outils.",
+    "publishedAt": "2026-05-21T15:04:09+00:00",
+    "fetchedAt": "2026-05-25T09:59:35.523Z"
+  },
+  {
+    "id": "bedb4be20cc8667c",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/May/20/spacex-s1/#atom-everything",
+    "title": "Quoting SpaceX S-1",
+    "summary": "SpaceX fournira 1,25 milliard $/mois de compute à Anthropic jusqu'en 2029 sur ses clusters COLOSSUS.",
+    "publishedAt": "2026-05-20T22:26:36+00:00",
+    "fetchedAt": "2026-05-25T09:59:35.523Z"
+  },
+  {
+    "id": "1a725cefd7d55fbd",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/May/20/tokens-per-second/#atom-everything",
+    "title": "How fast is 10 tokens per second really?",
+    "summary": "Simulateur interactif pour visualiser les vitesses de génération de tokens (5-800/s) et comprendre réellement ce que signifie une latence donnée.",
+    "publishedAt": "2026-05-20T17:57:45+00:00",
+    "fetchedAt": "2026-05-25T09:59:35.523Z"
+  },
+  {
     "id": "dab5068a10f001dc",
     "source": "simon-willison",
     "url": "https://simonwillison.net/2026/May/15/datasette-llm-limits/#atom-everything",
