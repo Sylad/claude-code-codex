@@ -583,6 +583,33 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
           split (le catalog JDBCConfig chargeait tous les layers en un seul
           GET /ows).
         </li>
+        <li>
+          <strong>Plugin Java <code>maritime-cascade-time-forward</code> — fix un bug GeoTools.</strong>
+          Sprint G65 (2026-05-27). Symptôme : l'animation cascade HRV/RSS/MTG/radar
+          affichait toujours la même image quel que soit <code>TIME</code>. Cause racine
+          trouvée en lisant <code>gt-wms</code> (538 + 215 lignes) : <strong>0 occurrence
+          du mot <em>time</em> case-insensitive</strong>. GeoTools ne forwarde
+          tout simplement pas <code>&amp;TIME=...</code> à l'upstream pour
+          <code>WMSLayerInfo</code> cascade — par design, pas un bug de config.
+          Approches échouées avant de trouver le bon point d'extension :
+          REST PUT (500 UnsupportedOperationException), SQL UPDATE direct sur
+          le blob XStream (silent no-op), <code>HTTPClientFactory</code> SPI (ordering
+          FactoryRegistry non garanti), <code>BeanPostProcessor</code> sur
+          <code>ResourcePool</code> (GS ne l'expose pas comme bean Spring direct).
+          Solution finale : remplacer le champ privé <code>ResourcePool.wmsCache</code>
+          (un <code>SoftValueHashMap</code>) via réflexion par une <code>HashMap</code>
+          custom qui override <code>put()</code> pour auto-wrap le
+          <code>WebMapServer.httpClient</code>. Couplé à un
+          <code>DispatcherCallback.operationDispatched()</code> qui stash <code>TIME</code>
+          du KVP dans un ThreadLocal et un décorateur <code>HTTPClient.get(URL)</code>
+          qui réécrit l'URL upstream avec <code>&amp;TIME=...</code>. 11 commits
+          de marathon dont 4h coincées sur le pitfall <em>"<code>init()</code>
+          fire AVANT parse KVP donc <code>request.getService()</code> est null"</em>.
+          Validation prod : HRV à 08:00/10:00/12:00/14:00 UTC → 4 md5 distincts
+          (avant 1 seul). Le pattern « <em>wrap cache via réflexion</em> » est
+          réutilisable pour toute interception HTTP outbound GS (auth headers,
+          retry, rate limiting, mock pour tests).
+        </li>
       </ul>
     </CaseStudySection>
 
