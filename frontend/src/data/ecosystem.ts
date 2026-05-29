@@ -357,4 +357,125 @@ export const ecosystemEntries: EcosystemEntry[] = [
     source:
       "https://github.com/anthropics/skills/tree/main/skills/webapp-testing",
   },
+  {
+    id: "skill-docx",
+    name: "docx",
+    category: "skill",
+    official: true,
+    description:
+      "Créer, lire, éditer, manipuler des documents Word (.docx). Complète pdf + xlsx pour la suite Office.",
+    tags: ["office", "docx", "document"],
+    install: "Clone anthropics/skills/skills/docx dans ton dossier skills",
+    source: "https://github.com/anthropics/skills/tree/main/skills/docx",
+  },
+  {
+    id: "skill-pptx",
+    name: "pptx",
+    category: "skill",
+    official: true,
+    description:
+      "Créer/lire/éditer des présentations PowerPoint (.pptx) — slide decks, pitch decks, templates.",
+    tags: ["office", "pptx", "slides"],
+    install: "Clone anthropics/skills/skills/pptx dans ton dossier skills",
+    source: "https://github.com/anthropics/skills/tree/main/skills/pptx",
+  },
+  {
+    id: "skill-claude-api",
+    name: "claude-api",
+    category: "skill",
+    official: true,
+    description:
+      "Build/debug/optimize des apps Claude API & SDK Anthropic, avec prompt caching par défaut. Gère aussi les migrations entre versions de modèles.",
+    tags: ["api", "sdk", "caching", "dev"],
+    install: "Clone anthropics/skills/skills/claude-api dans ton dossier skills",
+    source: "https://github.com/anthropics/skills/tree/main/skills/claude-api",
+  },
+  {
+    id: "skill-canvas-design",
+    name: "canvas-design",
+    category: "skill",
+    official: true,
+    description:
+      "Crée de l'art visuel (.png / .pdf) selon une philosophie de design — posters, visuels, affiches.",
+    tags: ["design", "art", "visual"],
+    install: "Clone anthropics/skills/skills/canvas-design dans ton dossier skills",
+    source: "https://github.com/anthropics/skills/tree/main/skills/canvas-design",
+  },
+  {
+    id: "skill-theme-factory",
+    name: "theme-factory",
+    category: "skill",
+    official: true,
+    description:
+      "Toolkit pour styliser des artefacts (slides, docs, landing HTML…) avec 10 thèmes pré-définis (couleurs/fonts) ou un thème custom.",
+    tags: ["design", "theme", "styling"],
+    install: "Clone anthropics/skills/skills/theme-factory dans ton dossier skills",
+    source: "https://github.com/anthropics/skills/tree/main/skills/theme-factory",
+  },
+  {
+    id: "skill-web-artifacts-builder",
+    name: "web-artifacts-builder",
+    category: "skill",
+    official: true,
+    description:
+      "Suite d'outils pour des artefacts claude.ai HTML multi-composants élaborés (React, Tailwind, shadcn/ui).",
+    tags: ["artifacts", "react", "tailwind", "shadcn"],
+    install: "Clone anthropics/skills/skills/web-artifacts-builder dans ton dossier skills",
+    source: "https://github.com/anthropics/skills/tree/main/skills/web-artifacts-builder",
+  },
+  {
+    id: "skill-doc-coauthoring",
+    name: "doc-coauthoring",
+    category: "skill",
+    official: true,
+    description:
+      "Workflow structuré de co-rédaction de docs : documentation, proposals, specs techniques, decision docs.",
+    tags: ["docs", "writing", "specs"],
+    install: "Clone anthropics/skills/skills/doc-coauthoring dans ton dossier skills",
+    source: "https://github.com/anthropics/skills/tree/main/skills/doc-coauthoring",
+  },
+  {
+    id: "skill-algorithmic-art",
+    name: "algorithmic-art",
+    category: "skill",
+    official: true,
+    description:
+      "Art algorithmique en p5.js avec randomness seedée + exploration interactive de paramètres.",
+    tags: ["art", "p5js", "generative"],
+    install: "Clone anthropics/skills/skills/algorithmic-art dans ton dossier skills",
+    source: "https://github.com/anthropics/skills/tree/main/skills/algorithmic-art",
+  },
+  {
+    id: "skill-brand-guidelines",
+    name: "brand-guidelines",
+    category: "skill",
+    official: true,
+    description:
+      "Applique les couleurs + typographie officielles de la marque Anthropic à tout artefact qui bénéficie de ce look.",
+    tags: ["brand", "design", "anthropic"],
+    install: "Clone anthropics/skills/skills/brand-guidelines dans ton dossier skills",
+    source: "https://github.com/anthropics/skills/tree/main/skills/brand-guidelines",
+  },
+  {
+    id: "skill-internal-comms",
+    name: "internal-comms",
+    category: "skill",
+    official: true,
+    description:
+      "Ressources pour rédiger toutes sortes de communications internes dans les formats appréciés par l'entreprise.",
+    tags: ["writing", "comms", "knowledge-work"],
+    install: "Clone anthropics/skills/skills/internal-comms dans ton dossier skills",
+    source: "https://github.com/anthropics/skills/tree/main/skills/internal-comms",
+  },
+  {
+    id: "skill-slack-gif-creator",
+    name: "slack-gif-creator",
+    category: "skill",
+    official: true,
+    description:
+      "Crée des GIFs animés optimisés pour Slack — contraintes, outils de validation, concepts d'animation.",
+    tags: ["gif", "slack", "animation"],
+    install: "Clone anthropics/skills/skills/slack-gif-creator dans ton dossier skills",
+    source: "https://github.com/anthropics/skills/tree/main/skills/slack-gif-creator",
+  },
 ];
