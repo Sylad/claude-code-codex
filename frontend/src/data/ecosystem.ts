@@ -249,6 +249,66 @@ export const ecosystemEntries: EcosystemEntry[] = [
       "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/mcp-server-dev",
   },
   {
+    id: "plugin-lsp-family",
+    name: "LSP plugins (12 langages)",
+    category: "plugin",
+    official: true,
+    description:
+      "Famille de plugins Language Server Protocol officiels : intelligence de code (go-to-def, références, diagnostics, rename) directement dans Claude Code. 12 langages — pyright (Python), jdtls (Java), typescript, gopls (Go), rust-analyzer, clangd (C/C++), csharp, kotlin, swift, php, ruby, lua.",
+    tags: ["lsp", "code-intelligence", "coding", "2026"],
+    install: "/plugin install pyright-lsp@claude-plugins-official",
+    source:
+      "https://github.com/anthropics/claude-plugins-official/tree/main/plugins",
+  },
+  {
+    id: "plugin-code-simplifier",
+    name: "code-simplifier",
+    category: "plugin",
+    official: true,
+    description:
+      "Simplifie et raffine le code récemment modifié pour clarté/cohérence/maintenabilité, sans changer le comportement.",
+    tags: ["coding", "refactor", "quality"],
+    install: "/plugin install code-simplifier@claude-plugins-official",
+    source:
+      "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/code-simplifier",
+  },
+  {
+    id: "plugin-claude-md-management",
+    name: "claude-md-management",
+    category: "plugin",
+    official: true,
+    description:
+      "Audit + amélioration des fichiers CLAUDE.md d'un repo : scan, évaluation qualité vs templates, updates ciblées. Inclut une commande de révision depuis les learnings de session.",
+    tags: ["claude-md", "memory", "docs"],
+    install: "/plugin install claude-md-management@claude-plugins-official",
+    source:
+      "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/claude-md-management",
+  },
+  {
+    id: "plugin-security-guidance",
+    name: "security-guidance",
+    category: "plugin",
+    official: true,
+    description:
+      "Guidance sécurité officielle pour le code généré/édité — bonnes pratiques, garde-fous OWASP. Complément léger du reference harness defending-code (threat-model / vuln-scan / triage / patch).",
+    tags: ["security", "owasp", "review"],
+    install: "/plugin install security-guidance@claude-plugins-official",
+    source:
+      "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/security-guidance",
+  },
+  {
+    id: "plugin-commit-commands",
+    name: "commit-commands",
+    category: "plugin",
+    official: true,
+    description:
+      "Slash commands git : créer un commit, commit+push+PR, nettoyer les branches [gone]. Workflow git standardisé.",
+    tags: ["git", "commit", "workflow"],
+    install: "/plugin install commit-commands@claude-plugins-official",
+    source:
+      "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/commit-commands",
+  },
+  {
     id: "skill-pdf",
     name: "pdf",
     category: "skill",
