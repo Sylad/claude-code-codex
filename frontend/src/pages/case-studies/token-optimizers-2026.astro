@@ -69,6 +69,16 @@ const tools: Array<{
     repoHref: "https://github.com/Mibayy/token-savior",
   },
   {
+    name: "ccusage",
+    author: "ryoppippi",
+    approach: "CLI read-only : parse les logs JSONL locaux (15 agents) → coût/tokens",
+    claim: "Analytics usage par jour/semaine/mois/session",
+    verdict: "adopt",
+    verdictLabel: "Adopt (le plus propre)",
+    reason: "Testé 2026-05-29 via `npx ccusage@latest`. ZÉRO pollution (md5 CLAUDE.md + settings.json inchangés, aucun marketplace, rien dans ~/.config|~/.cache). Pur read-only, MIT, 15k⭐, v20 pushé le jour même, multi-agent (Claude/Codex/Gemini/Copilot). N'est PAS un optimizer mais le complément : RTK/token-savior réduisent les tokens, ccusage les mesure. Caveat : coût = pricing API public × tokens, donc proxy de volume (sur-estime sous abonnement Max/Team).",
+    repoHref: "https://github.com/ryoppippi/ccusage",
+  },
+  {
     name: "ooples/token-optimizer-mcp",
     author: "ooples",
     approach: "MCP server TypeScript cache + compression tool outputs",
@@ -134,12 +144,12 @@ const lessons = [
 
 <BaseLayout
   title="Test bench · Token-optimizers landscape 2026"
-  description="Bench de 8 outils token-optimizers Claude Code (RTK adopté, code-review-graph adopt-conditional, drona23 + nadimtuhin piqués, alexgreensh/ooples/zilliz/Mibayy écartés). Méta-leçons sur le screening écosystème."
+  description="Bench de 9 outils token-optimizers (+ ccusage analytics) Claude Code (RTK adopté, code-review-graph adopt-conditional, drona23 + nadimtuhin piqués, alexgreensh/ooples/zilliz/Mibayy écartés). Méta-leçons sur le screening écosystème."
 >
   <PageHero
     eyebrow="Test bench · 2026-05-20"
     title="Token-optimizers landscape 2026"
-    intro="L'écosystème Claude Code a explosé en outils d'optimisation tokens : MCP servers, plugins marketplace, fichiers CLAUDE.md, daemons, CLI wrappers. Bench de 8 candidats en mai 2026 — qui marche, qui est gadget, et les 5 méta-leçons sur le screening."
+    intro="L'écosystème Claude Code a explosé en outils d'optimisation tokens : MCP servers, plugins marketplace, fichiers CLAUDE.md, daemons, CLI wrappers. Bench de 9 candidats (mai 2026) — qui marche, qui est gadget, et les 5 méta-leçons sur le screening."
   />
 
   <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12">
@@ -221,22 +231,29 @@ const lessons = [
             Bilan
           </p>
           <ul class="text-sm text-ink-muted space-y-2">
-            <li>• <strong>3 adoptés</strong> : RTK + code-review-graph + token-savior (compaction, code review, MCP navigation — scopes complémentaires)</li>
+            <li>• <strong>4 adoptés</strong> : RTK + code-review-graph + token-savior + ccusage (compaction, code review, MCP navigation, mesure coût — scopes complémentaires)</li>
             <li>• <strong>2 piqués sans adopter</strong> : drona23 (7 règles) + nadimtuhin (.claudeignore pattern)</li>
             <li>• <strong>3 écartés</strong> : ooples (double-up RTK), zilliztech (deps payantes externes), alexgreensh (license PolyForm)</li>
           </ul>
           <p class="text-ink leading-relaxed mt-4 text-sm">
-            Le ROI du bench global : ~3h pour écarter 4 candidats, valider 1
-            adoption, et piquer 2 patterns sans payer le coût d'install. Sans le
+            Le ROI du bench global : ~3h pour écarter 4 candidats, valider 2
+            adoptions, et piquer 2 patterns sans payer le coût d'install. Sans le
             screening, on aurait probablement adopté 1-2 outils invasifs qui
             auraient pollué <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">~/.claude/</code>
             ou créé du double-up avec RTK.
+          </p>
+          <p class="text-ink leading-relaxed mt-3 text-sm">
+            <strong>Leçon ccusage (2026-05-29)</strong> : ne pas confondre
+            <em>réduire</em> et <em>mesurer</em>. RTK/token-savior optimisent la
+            conso ; ccusage la quantifie (read-only, npx, zéro footprint — le
+            test-tool le plus propre du lot). Les deux familles cohabitent : on
+            optimise avec l'un, on vérifie le gain avec l'autre.
           </p>
         </div>
       </article>
 
       <p class="text-center text-xs text-ink/50 font-mono pt-4">
-        Bench mené 2026-05-20 · 8 candidats · 3 adoptés / 2 piqués / 3 écartés.
+        Bench mené 2026-05-20 (+ ccusage 2026-05-29) · 9 candidats · 4 adoptés / 2 piqués / 3 écartés.
       </p>
     </div>
   </section>
