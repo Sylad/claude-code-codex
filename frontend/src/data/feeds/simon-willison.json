@@ -1,5 +1,59 @@
 [
   {
+    "id": "60b11007e147b840",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/May/31/the-solution-might-be-cancelling-my-ai-subscription/#atom-everything",
+    "title": "The solution might be cancelling my AI subscription",
+    "summary": "Les agents IA facilitent la création de projets mais risquent de devenir une distraction coûteuse sans discipline stricte.",
+    "publishedAt": "2026-05-31T16:31:32+00:00",
+    "fetchedAt": "2026-06-01T11:27:25.487Z"
+  },
+  {
+    "id": "2c1945d7d6694c7b",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/May/30/how-we-contain-claude/#atom-everything",
+    "title": "How we contain Claude across products",
+    "summary": "Anthropic documente ses techniques de sandboxing pour Claude Code : Seatbelt sur macOS, Bubblewrap sur Linux, avec isolation filesystem et contrôle d'egress.",
+    "publishedAt": "2026-05-30T21:36:24+00:00",
+    "fetchedAt": "2026-06-01T11:27:25.487Z"
+  },
+  {
+    "id": "99ce3b2883d241e5",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/May/28/claude-opus-4-8/#atom-everything",
+    "title": "Claude Opus 4.8: \"a modest but tangible improvement\"",
+    "summary": "Claude Opus 4.8 améliore l'honnêteté du modèle : moins d'hallucinations, meilleur flagging des incertitudes et détection 4x plus fiable des bugs de code.",
+    "publishedAt": "2026-05-28T23:59:50+00:00",
+    "fetchedAt": "2026-06-01T11:27:25.487Z"
+  },
+  {
+    "id": "93da7554933827fb",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/May/28/llm-anthropic/#atom-everything",
+    "title": "llm-anthropic 0.25.1",
+    "summary": "llm-anthropic 0.25.1 ajoute Claude Opus 4.8, le mode rapide et ajuste les limites de tokens par modèle.",
+    "publishedAt": "2026-05-28T23:54:56+00:00",
+    "fetchedAt": "2026-06-01T11:27:25.487Z"
+  },
+  {
+    "id": "79b4bf4594434f95",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/May/27/sqlite-agents/#atom-everything",
+    "title": "sqlite AGENTS.md",
+    "summary": "SQLite renforce sa politique contre le code généré par IA mais accepte les rapports de bugs IA avec cas de test reproductibles.",
+    "publishedAt": "2026-05-27T23:44:37+00:00",
+    "fetchedAt": "2026-06-01T11:27:25.487Z"
+  },
+  {
+    "id": "9531c79f6646d4b5",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/May/27/product-market-fit/#atom-everything",
+    "title": "I think Anthropic and OpenAI have found product-market fit",
+    "summary": "Anthropic atteint la rentabilité : Claude Code et les agents IA deviennent essentiels en entreprise malgré les coûts API croissants.",
+    "publishedAt": "2026-05-27T16:38:35+00:00",
+    "fetchedAt": "2026-06-01T11:27:25.487Z"
+  },
+  {
     "id": "e7c40babf6b02277",
     "source": "simon-willison",
     "url": "https://simonwillison.net/2026/May/24/datasette-agent/#atom-everything",
