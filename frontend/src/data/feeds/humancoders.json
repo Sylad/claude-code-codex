@@ -7,5 +7,14 @@
     "summary": "Le Model Context Protocol d’Anthropic permet aux LLM de se connecter à Slack, PostgreSQL, Stripe et plus. Fonctionnement, cas d’usage et lim",
     "publishedAt": "Mon, 12 May 2025 13:34:46 GMT",
     "fetchedAt": "2026-05-09T08:12:03.309Z"
+  },
+  {
+    "id": "af1b2596766ff2ea",
+    "source": "humancoders",
+    "url": "https://blog.humancoders.com/apres-formation-claude-code-aller-plus-loin/",
+    "title": "Claude Code, et après ? 3 formations pour aller plus loin avec l'IA",
+    "summary": "3 formations pour progresser : Claude Code avancé, IA pour devs avancé et Agents IA avec Claude.",
+    "publishedAt": "Fri, 05 Jun 2026 13:31:17 GMT",
+    "fetchedAt": "2026-06-08T10:47:34.300Z"
   }
 ]

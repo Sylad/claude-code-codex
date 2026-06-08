@@ -1,5 +1,50 @@
 [
   {
+    "id": "5ae9cda0a6ea1672",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jun/7/datasette-agent-edit/#atom-everything",
+    "title": "datasette-agent-edit 0.1a0",
+    "summary": "Plugin Datasette pour agents IA : outils éditeurs de texte réutilisables (view, str_replace, insert) pour modifications collaboratives.",
+    "publishedAt": "2026-06-07T23:56:38+00:00",
+    "fetchedAt": "2026-06-08T10:47:16.890Z"
+  },
+  {
+    "id": "cb24507f42289185",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jun/4/ai-enthusiasts-ai-skeptics/#atom-everything",
+    "title": "AI enthusiasts are in a race against time, AI skeptics are in a race against entropy",
+    "summary": "Les enthousiastes IA gagnent en vitesse mais risquent la dette technique ; créer des boucles de feedback entre devs est essentiel.",
+    "publishedAt": "2026-06-04T23:55:27+00:00",
+    "fetchedAt": "2026-06-08T10:47:16.890Z"
+  },
+  {
+    "id": "2d52428acfe96e9a",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jun/3/uber-caps-usage/#atom-everything",
+    "title": "Uber Caps Usage of AI Tools Like Claude Code to Manage Costs",
+    "summary": "Uber plafonne l'usage de Claude Code à 1500$/mois par tool pour contrôler les coûts après avoir épuisé son budget IA en 4 mois.",
+    "publishedAt": "2026-06-03T12:01:27+00:00",
+    "fetchedAt": "2026-06-08T10:47:16.890Z"
+  },
+  {
+    "id": "1b60ad396cb5e531",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jun/2/datasette-agent-micropython/#atom-everything",
+    "title": "datasette-agent-micropython 0.1a0",
+    "summary": "datasette-agent-micropython 0.1a0 : sandbox sécurisé pour exécuter du code Python généré par des agents IA sans risque d'échappement.",
+    "publishedAt": "2026-06-02T19:28:36+00:00",
+    "fetchedAt": "2026-06-08T10:47:16.890Z"
+  },
+  {
+    "id": "45855882c4c28111",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jun/2/pasted-file-editor/#atom-everything",
+    "title": "Pasted File Editor",
+    "summary": "Éditeur local pour coller du texte volumineux qui le convertit en attachement fichier, comme Claude.ai le fait nativement.",
+    "publishedAt": "2026-06-02T04:13:36+00:00",
+    "fetchedAt": "2026-06-08T10:47:16.890Z"
+  },
+  {
     "id": "60b11007e147b840",
     "source": "simon-willison",
     "url": "https://simonwillison.net/2026/May/31/the-solution-might-be-cancelling-my-ai-subscription/#atom-everything",
