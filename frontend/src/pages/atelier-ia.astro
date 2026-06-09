@@ -1,0 +1,189 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import MermaidDiagram from "@/components/site/MermaidDiagram.vue";
+import CaseStudySection from "@/components/site/CaseStudySection.astro";
+
+const tools = [
+  {
+    name: "Claude Code",
+    role: "Gros chantiers projet",
+    detail:
+      "Agent terminal pour construire des apps complètes, garder le contexte repo, exécuter les tests et itérer longtemps.",
+    fit: "Refontes, features épaisses, migrations, exploration codebase.",
+  },
+  {
+    name: "Codex",
+    role: "Second regard + intégration",
+    detail:
+      "Très utile pour reprendre un projet déjà riche, vérifier, documenter, créer des ponts locaux et faire des commits ciblés.",
+    fit: "Reviews, refactors, docs, glue code, extensions, vérification locale.",
+  },
+  {
+    name: "Ollama",
+    role: "IA locale privacy-first",
+    detail:
+      "Modèles locaux pour traiter des données sensibles sans quitter la machine, comme les mails JobMail.",
+    fit: "Classification, extraction prudente, prototypage offline.",
+  },
+  {
+    name: "ChatGPT",
+    role: "Cadrage et prompts",
+    detail:
+      "Bon compagnon de réflexion pour clarifier une idée, générer des listes, préparer des prompts ou challenger une approche.",
+    fit: "Brainstorm, prompts OpenArt, architecture initiale, pédagogie.",
+  },
+  {
+    name: "OpenArt / DALL-E",
+    role: "Assets visuels",
+    detail:
+      "Images et animations pour enrichir les sites cadeaux : dinosaures, ambiances, scènes de vie, posters.",
+    fit: "Hero images, scènes illustrées, assets vidéo courts.",
+  },
+  {
+    name: "Kombai",
+    role: "UI depuis design",
+    detail:
+      "Outil à suivre pour transformer maquettes/UI en composants exploitables, surtout sur les écrans applicatifs.",
+    fit: "Découpage UI, accélération front, extraction depuis Figma/design.",
+  },
+  {
+    name: "GitHub + Cloudflare",
+    role: "Chaîne de livraison",
+    detail:
+      "Pas des IA, mais les rails autour : repos publics, Actions, Pages, previews, déploiements et historique.",
+    fit: "Build, publication, audit de changements, rollbacks.",
+  },
+];
+---
+
+<BaseLayout
+  title="Atelier IA"
+  description="Cartographie personnelle des outils IA utilisés : Claude Code, Codex, Ollama, ChatGPT, OpenArt/DALL-E, Kombai, GitHub et Cloudflare."
+>
+  <PageHero
+    eyebrow="Atelier IA · multi-outils"
+    title="Le vrai atelier n'a plus un seul outil"
+    intro="Ce site a commencé comme un codex Claude Code. Il devient aussi le carnet de terrain d'un développeur qui construit avec plusieurs IA : certaines codent, certaines raisonnent, certaines génèrent des images, certaines restent locales pour protéger les données."
+  />
+
+  <section class="mx-auto max-w-6xl px-5 sm:px-8 py-14">
+    <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+      {tools.map((tool) => (
+        <article class="rounded-xl border border-white/10 bg-paper-elevated p-6">
+          <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude mb-3">
+            {tool.name}
+          </p>
+          <h2 class="text-xl font-semibold text-ink mb-3">{tool.role}</h2>
+          <p class="text-sm text-ink-muted leading-relaxed mb-4">{tool.detail}</p>
+          <p class="text-sm text-ink leading-relaxed border-t border-white/5 pt-4">
+            <span class="font-mono text-xs text-ink/60">Bon usage · </span>{tool.fit}
+          </p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12 space-y-12">
+    <CaseStudySection eyebrow="Pourquoi pivoter">
+      <p>
+        Le nom <em>claude-code-codex</em> garde l'histoire : Claude Code a été
+        le premier outil central, celui qui a permis de construire les grosses
+        apps perso. Mais la pratique réelle est devenue plus riche. Un site
+        dinosaure utilise OpenArt pour les images et vidéos. JobMail utilise
+        Ollama pour rester local. Codex intervient comme second agent pour
+        revoir, documenter et créer une extension Thunderbird. ChatGPT aide à
+        cadrer des prompts ou des listes. L'atelier est devenu polyphonique.
+      </p>
+      <p>
+        Le pivot n'est pas de dire que tous les outils se valent. C'est plutôt
+        de noter <strong>où chacun est bon</strong>, où il coûte trop cher, où
+        il hallucine, où il abîme le workflow, et où la combinaison devient plus
+        forte qu'un outil isolé.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Architecture mentale">
+      <MermaidDiagram
+        client:visible
+        caption="L'atelier IA perso : chaque outil a un rôle, et les frontières comptent autant que les capacités."
+        definition={`flowchart LR
+  user["Sylvain : intention, arbitrage, tests réels"]
+  repo["Repos WSL + GitHub"]
+  deploy["Cloudflare / NAS / K8s"]
+  data["Données sensibles locales"]
+  assets["Images / vidéos"]
+
+  claude["Claude Code"]
+  codex["Codex"]
+  ollama["Ollama local"]
+  chatgpt["ChatGPT"]
+  openart["OpenArt / DALL-E"]
+  kombai["Kombai"]
+
+  user --> chatgpt
+  user --> claude
+  user --> codex
+  claude --> repo
+  codex --> repo
+  repo --> deploy
+  data --> ollama
+  ollama --> repo
+  chatgpt --> openart
+  openart --> assets
+  assets --> repo
+  kombai -. UI experiments .-> repo
+
+  codex -->|"review, docs, bridge local"| claude
+  claude -->|"features longues"| codex`}
+      />
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Règles perso qui émergent">
+      <ul class="space-y-2.5 leading-relaxed">
+        <li class="flex gap-3">
+          <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+          <span>
+            <strong>Données sensibles : local d'abord.</strong> JobMail ne doit
+            pas envoyer toute la mailbox à un cloud. Filtrage local, puis LLM
+            seulement si le mail passe la règle.
+          </span>
+        </li>
+        <li class="flex gap-3">
+          <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+          <span>
+            <strong>Un agent ne remplace pas l'outil propriétaire des données.</strong>
+            Pour Thunderbird, l'extension doit exécuter les déplacements, pas
+            un script qui réécrit les MBOX pendant que l'app tourne.
+          </span>
+        </li>
+        <li class="flex gap-3">
+          <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+          <span>
+            <strong>Les images IA doivent finir en assets maîtrisés.</strong>
+            OpenArt/DALL-E accélèrent la création, mais il faut ensuite
+            compresser, nommer, sourcer et intégrer proprement.
+          </span>
+        </li>
+        <li class="flex gap-3">
+          <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+          <span>
+            <strong>Deux agents valent parfois mieux qu'un.</strong> Claude Code
+            peut porter le chantier long ; Codex peut relire, vérifier,
+            documenter et challenger l'architecture.
+          </span>
+        </li>
+      </ul>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Prochaine étape">
+      <p>
+        Cette section va devenir le carnet de bord des usages réels : coûts,
+        limites de tokens, modèles testés, prompts utiles, échecs, outils
+        adoptés ou rejetés. Le but n'est pas de vendre du rêve IA, mais de
+        garder une trace honnête de ce qui aide vraiment un développeur solo à
+        construire, maintenir et livrer.
+      </p>
+    </CaseStudySection>
+  </section>
+</BaseLayout>

@@ -10,6 +10,7 @@ type NavLink =
 
 const links: NavLink[] = [
   { href: "/start", label: "Démarrer" },
+  { href: "/atelier-ia", label: "Atelier IA" },
   { href: "/theory", label: "Théorie" },
   { href: "/ecosystem", label: "Écosystème" },
   { href: "/case-studies", label: "Case studies" },
