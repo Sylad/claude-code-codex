@@ -1,0 +1,169 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import MermaidDiagram from "@/components/site/MermaidDiagram.vue";
+import CaseStudySection from "@/components/site/CaseStudySection.astro";
+---
+
+<BaseLayout
+  title="Case study · JobMail Assistant"
+  description="JobMail Assistant — assistant local privacy-first pour la recherche d'emploi, avec pont Thunderbird WebExtension construit avec Codex."
+>
+  <PageHero
+    eyebrow="Case study · 2026-06-09"
+    title="JobMail Assistant"
+    intro="Assistant local pour trier les mails de recrutement sans exposer la mailbox complète : filtrage local, extraction LLM seulement sur les mails pertinents, dashboard FastAPI, cleaner Thunderbird et extension WebExtension pour déléguer les actions à Thunderbird."
+  />
+
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12">
+    <div class="space-y-12">
+      <CaseStudySection eyebrow="Pourquoi ce projet">
+        <p>
+          JobMail est né d'un besoin très concret : suivre une recherche
+          d'emploi depuis des boîtes mail réelles, très bruyantes, sans envoyer
+          toute la messagerie à un provider cloud. Le premier invariant est donc
+          simple : <strong>les règles locales passent avant le LLM</strong>.
+          Les newsletters, pubs et mails hors sujet restent en local ; seuls les
+          mails classés comme opportunités passent éventuellement à Ollama,
+          Claude ou OpenAI selon la configuration.
+        </p>
+        <p>
+          Le projet a ensuite touché un point plus délicat : Thunderbird. Lire
+          un fichier MBOX hors ligne est faisable, mais déplacer des messages
+          pendant que Thunderbird tourne peut produire des erreurs de profil,
+          d'index ou de verrouillage. Le chantier Codex de juin 2026 a donc
+          pivoté vers une architecture plus saine : JobMail décide, Thunderbird
+          exécute via une extension locale.
+        </p>
+      </CaseStudySection>
+
+      <CaseStudySection eyebrow="Architecture">
+        <MermaidDiagram
+          client:visible
+          caption="Le pont Thunderbird sépare décision et exécution : JobMail filtre/analyse, l'extension lit et déplace via les APIs Thunderbird."
+          definition={`flowchart TB
+  subgraph TBIRD["Thunderbird"]
+    inbox["Inbox / messages"]
+    ext["JobMail WebExtension"]
+    trash["Corbeille Thunderbird"]
+  end
+
+  subgraph LOCAL["JobMail local : FastAPI + SQLite"]
+    api["API locale : 127.0.0.1:8765"]
+    filter["Filtre privacy-first local"]
+    cleaner["Cleaner dry-run : age, regex, jobs, doublons"]
+    db["SQLite offers + emails"]
+    bridge["Etat Pont Thunderbird"]
+  end
+
+  subgraph LLM["LLM optionnel"]
+    ollama["Ollama local"]
+    cloud["Claude / OpenAI si configuré"]
+  end
+
+  inbox --> ext
+  ext -->|POST /api/thunderbird/import| api
+  api --> filter
+  filter -->|non job| db
+  filter -->|job only| ollama
+  filter -.->|provider cloud seulement après filtre| cloud
+  ollama --> db
+  cloud --> db
+
+  cleaner -->|GET /api/thunderbird/cleaner/latest-request| ext
+  ext -->|resolve Message-Id| inbox
+  ext -->|messages.delete(deletePermanently=false)| trash
+  ext -->|POST /api/thunderbird/bridge/event| bridge`}
+        />
+        <p>
+          La première version savait lire des MBOX Thunderbird et scanner des
+          milliers de mails très vite côté Python. Elle reste utile pour produire
+          des rapports : pubs anciennes, règles regex, jobs déjà extraits,
+          doublons Orange/Gmail. Mais le mouvement vers la corbeille est mieux
+          placé dans Thunderbird lui-même. L'extension devient donc une sorte de
+          bras local : elle reçoit une demande, retrouve les messages par
+          <code>Message-Id</code>, demande confirmation, puis utilise l'API
+          Thunderbird pour déplacer sans suppression définitive.
+        </p>
+      </CaseStudySection>
+
+      <CaseStudySection eyebrow="Le chantier Codex">
+        <p>
+          Le déclencheur a été un bug très humain : Thunderbird affichait une
+          erreur d'enregistrement de messages après des opérations cleaner. On a
+          d'abord sécurisé le profil : vérifier que Thunderbird était fermé,
+          nettoyer les index <code>.msf</code>, déplacer les backups hors des
+          dossiers <code>Mail/&lt;compte&gt;</code>, et stopper le serveur local
+          qui pouvait garder du contexte actif. Puis le vrai fix est apparu :
+          arrêter de considérer les MBOX comme l'interface d'écriture normale.
+        </p>
+        <p>
+          Codex a posé une extension Thunderbird minimale, puis l'a fait évoluer
+          par boucles courtes : import de la sélection, import des non lus,
+          CORS FastAPI, scan cleaner, délégation du dernier scan JobMail,
+          affichage des candidats, et tableau de bord "Pont Thunderbird" dans
+          JobMail. Chaque étape a été testée en réel dans Thunderbird, pas
+          seulement simulée.
+        </p>
+      </CaseStudySection>
+
+      <CaseStudySection eyebrow="Ce qui a bien marché">
+        <ul class="space-y-2.5 leading-relaxed">
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span>
+              <strong>Un pont local plutôt qu'un plugin magique</strong> :
+              l'extension ne contient pas le métier. Elle lit, envoie, reçoit
+              une décision et exécute. Le code critique reste dans JobMail,
+              testable avec pytest.
+            </span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span>
+              <strong>Message-Id comme clé de réconciliation</strong> :
+              les scans Python voient le MBOX, Thunderbird voit ses messages
+              internes. Le champ commun fiable est le header
+              <code>Message-Id</code>, avec fallback sujet/expéditeur/date.
+            </span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span>
+              <strong>Retour utilisateur explicite</strong> :
+              demandé, retrouvé, déplacé, introuvable. Sans ces compteurs,
+              impossible de savoir si "Corbeille scan JobMail" a vraiment
+              travaillé ou seulement échoué silencieusement.
+            </span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span>
+              <strong>Une seule source de configuration</strong> :
+              l'extension lit <code>/cleaner/state</code>. L'âge minimum et la
+              limite de scan restent pilotés par JobMail, pas dupliqués dans la
+              popup.
+            </span>
+          </li>
+        </ul>
+      </CaseStudySection>
+
+      <CaseStudySection eyebrow="Limites actuelles">
+        <p>
+          Le pont est volontairement prudent. Le nettoyage n'est jamais
+          automatique, et la corbeille passe par une confirmation utilisateur.
+          La résolution peut encore échouer si le mail a déjà été déplacé, si le
+          <code>Message-Id</code> est absent, ou si Thunderbird expose un dossier
+          inattendu. Le résultat est alors visible : mails demandés, retrouvés,
+          déplacés et introuvables.
+        </p>
+        <p>
+          La leçon importante dépasse JobMail : quand une application mature
+          comme Thunderbird possède déjà l'API qui manipule ses données, un
+          agent IA ne devrait pas forcer l'écriture bas niveau dans ses fichiers.
+          Il doit plutôt construire un pont propre, observable et réversible.
+        </p>
+      </CaseStudySection>
+    </div>
+  </section>
+</BaseLayout>
