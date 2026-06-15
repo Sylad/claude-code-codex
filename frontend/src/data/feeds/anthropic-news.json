@@ -1,1 +1,65 @@
-[]
+[
+  {
+    "id": "091b61caa9d6ad3b",
+    "source": "anthropic-news",
+    "url": "https://www.anthropic.com/news/claude-is-a-space-to-think",
+    "title": "Claude is a space to think | Anthropic",
+    "summary": "Claude restera sans publicité pour préserver sa neutralité et son efficacité comme assistant pour le travail professionnel et la réflexion profonde.",
+    "publishedAt": "Wed, 04 Feb 2026 05:00:00 GMT",
+    "fetchedAt": "2026-06-15T11:57:53.003Z"
+  },
+  {
+    "id": "c4a45eed67ee9087",
+    "source": "anthropic-news",
+    "url": "https://www.anthropic.com/news/claude-sonnet-4-6",
+    "title": "Claude Sonnet 4.6",
+    "summary": "Claude Sonnet 4.6 améliore la vitesse et les performances pour les tâches de coding, optimisant l'expérience API et Claude Code.",
+    "publishedAt": "Tue, 17 Feb 2026 17:45:59 GMT",
+    "fetchedAt": "2026-06-15T11:57:53.003Z"
+  },
+  {
+    "id": "e11fcea9cd94bb20",
+    "source": "anthropic-news",
+    "url": "https://www.anthropic.com/news/claude-fable-5-mythos-5",
+    "title": "Claude Fable 5 and Claude Mythos 5",
+    "summary": "Lancement de Claude Fable 5, le modèle le plus capable d'Anthropic, avec safeguards pour usage général et meilleure performance en ingénierie logicielle.",
+    "publishedAt": "Tue, 09 Jun 2026 04:00:00 GMT",
+    "fetchedAt": "2026-06-15T11:57:53.003Z"
+  },
+  {
+    "id": "5348a7d239028e9b",
+    "source": "anthropic-news",
+    "url": "https://www.anthropic.com/news/claude-opus-4-8",
+    "title": "Introducing Claude Opus 4.8",
+    "summary": "Claude Opus 4.8 offre une meilleure fiabilité pour les agents, des workflows dynamiques dans Claude Code et un fast mode 3× moins cher.",
+    "publishedAt": "Thu, 28 May 2026 04:00:00 GMT",
+    "fetchedAt": "2026-06-15T11:57:53.003Z"
+  },
+  {
+    "id": "b8af8104c423c106",
+    "source": "anthropic-news",
+    "url": "https://www.anthropic.com/news/claude-opus-4-7",
+    "title": "Introducing Claude Opus 4.7",
+    "summary": "Claude Opus 4.7 est dispo : meilleure ingénierie logicielle, vision améliorée, et peut gérer les tâches complexes en autonomie.",
+    "publishedAt": "Thu, 16 Apr 2026 04:00:00 GMT",
+    "fetchedAt": "2026-06-15T11:57:53.003Z"
+  },
+  {
+    "id": "6c20810f6d90adf9",
+    "source": "anthropic-news",
+    "url": "https://www.anthropic.com/news/claude-opus-4-6",
+    "title": "Claude Opus 4.6",
+    "summary": "Claude Opus 4.6 avec contexte 1M tokens améliore le coding, le debug et les tâches agents pour les devs Claude Code.",
+    "publishedAt": "Thu, 05 Feb 2026 05:00:00 GMT",
+    "fetchedAt": "2026-06-15T11:57:53.003Z"
+  },
+  {
+    "id": "57f01cae307e1cb1",
+    "source": "anthropic-news",
+    "url": "https://www.anthropic.com/news/claude-opus-4-5",
+    "title": "Introducing Claude Opus 4.5",
+    "summary": "Claude Opus 4.5 disponible: meilleur modèle pour coding/agents/computer use, 5$/25$ par million tokens, accessible via API.",
+    "publishedAt": "Mon, 24 Nov 2025 05:00:00 GMT",
+    "fetchedAt": "2026-06-15T11:57:53.003Z"
+  }
+]

@@ -1,5 +1,41 @@
 [
   {
+    "id": "e464b7a63a6a0397",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jun/13/us-government-directive-to-suspend-access/#atom-everything",
+    "title": "Statement on the US government directive to suspend access to Fable 5 and Mythos 5",
+    "summary": "Les modèles Fable 5 et Mythos 5 d'Anthropic sont suspendus suite à un directive gouvernementale US, les autres modèles restent accessibles.",
+    "publishedAt": "2026-06-13T01:01:50+00:00",
+    "fetchedAt": "2026-06-15T11:58:04.196Z"
+  },
+  {
+    "id": "c9ab8f8aa14fe295",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jun/11/fable-is-relentlessly-proactive/#atom-everything",
+    "title": "Claude Fable is relentlessly proactive",
+    "summary": "Claude Fable excelle à explorer les dépendances et fichiers locaux pour déboguer efficacement les problèmes de code.",
+    "publishedAt": "2026-06-11T23:35:17+00:00",
+    "fetchedAt": "2026-06-15T11:58:04.196Z"
+  },
+  {
+    "id": "2c271f0703109132",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jun/11/anthropic-walks-back-policy/#atom-everything",
+    "title": "Anthropic Walks Back Policy That Could Have ‘Sabotaged’ AI Researchers Using Claude",
+    "summary": "Anthropic rend visibles les protections de Claude pour la recherche LLM au lieu de les appliquer en silence.",
+    "publishedAt": "2026-06-11T03:45:49+00:00",
+    "fetchedAt": "2026-06-15T11:58:04.196Z"
+  },
+  {
+    "id": "1897011829237f97",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jun/10/datasette-agent/#atom-everything",
+    "title": "datasette-agent 0.2a0",
+    "summary": "datasette-agent 0.2a0 ajoute ask_user() pour poser des questions pendant l'exécution et save_query pour approuver les requêtes SQL.",
+    "publishedAt": "2026-06-10T23:57:27+00:00",
+    "fetchedAt": "2026-06-15T11:58:04.196Z"
+  },
+  {
     "id": "5ae9cda0a6ea1672",
     "source": "simon-willison",
     "url": "https://simonwillison.net/2026/Jun/7/datasette-agent-edit/#atom-everything",
