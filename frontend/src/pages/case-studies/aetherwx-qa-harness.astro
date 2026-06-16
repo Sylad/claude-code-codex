@@ -1,0 +1,337 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import CaseStudySection from "@/components/site/CaseStudySection.astro";
+import CodeBlock from "@/components/site/CodeBlock.astro";
+---
+
+<BaseLayout
+  title="Un harnais QA déterministe qui a trouvé 9 bugs que l'œil ratait"
+  description="Sur AetherWX (carte météo/maritime GIS), des layers cassaient en silence après chaque modif. On a construit un harnais QA déterministe — manifest auto-dérivé, HTTP pixel-level, Playwright runtime-derived — et il a trouvé 9 bugs d'opacity d'un coup."
+>
+  <PageHero
+    eyebrow="Case study · aetherwx · QA harness"
+    title="Un harnais QA déterministe qui a trouvé 9 bugs que l'œil ratait"
+    intro="Sur AetherWX (atlas météo/maritime, ma vitrine GIS), les layers cassaient en silence après chaque modif. Tests existants : fragmentés, manuels, zéro couverture vector, listes en dur. On a construit un harnais Node qui dérive son manifest depuis la source de vérité frontend, vérifie les données HTTP pixel-level, et teste le câblage UI via Playwright en lisant l'état MapLibre en live. Lancé une fois : 9 bugs d'opacity détectés, corrigés, validés en prod. FAIL=0."
+  />
+
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12 space-y-12">
+    <CaseStudySection eyebrow="Le problème — layers silencieux">
+      <p>
+        AetherWX affiche une quinzaine de layers simultanément : SST, vent
+        GFS, vagues WW3, foudre Blitzortung, satellites GOES/Meteosat, radar
+        pluie RainViewer, navires AIS, alertes maritimes… Le tout pilotable
+        par un slider temporel [-7j, +7j]. Visuellement, ça tient. Mais
+        à chaque refactoring du composant principal
+        <code>globe.component.ts</code> (8 000+ lignes), quelque chose cassait
+        discrètement.
+      </p>
+      <p>
+        Symptôme concret : <strong>le slider d'opacité semblait marcher</strong>
+        sur certains layers — l'UI répondait, la valeur changeait — mais la
+        carte ne bougeait pas. Pas de 500, pas de console error. Le layer
+        restait opaque. L'animation "fonctionnait 1 fois sur 100", selon
+        l'humeur du timestamp GWC.
+      </p>
+      <p>
+        Les tests existants : 5 skills séparés,
+        tous partiels. Aucune couverture des layers vector (WFS/API). Les
+        listes de layers étaient codées en dur — donc drifteuses dès
+        qu'on en ajoutait un. Confiance = zéro.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="L'insight — 3 classes de bugs, 1 philosophie">
+      <p>
+        Avant d'écrire la moindre ligne, on a posé le cadre. Il existe
+        <strong>3 classes de bugs distinctes</strong> sur une appli GIS comme
+        celle-ci :
+      </p>
+      <ul>
+        <li>
+          <strong>Données/rendu</strong> : le backend produit-il vraiment des
+          tuiles non-vides ? GeoServer répond-il ? Le PNG GetMap contient-il
+          quelque chose ou c'est un placeholder transparent ?
+        </li>
+        <li>
+          <strong>Câblage UI</strong> : le slider d'opacité que l'user bouge
+          a-t-il un effet réel sur MapLibre — pas juste un changement de valeur
+          dans un signal Angular, mais une mutation visible du layer rendu ?
+        </li>
+        <li>
+          <strong>Animation/temps</strong> : quand la time-bar avance, les
+          layers WMS reçoivent-ils un <code>&amp;TIME=</code> mis à jour, et
+          les tuiles se rafraîchissent-elles ?
+        </li>
+      </ul>
+      <p>
+        Et surtout, la règle fondatrice :
+        <strong>une IA locale est le mauvais outil pour détecter les
+        régressions.</strong> Un LLM peut halluciner un PASS sur un screenshot
+        ambigu. Un vrai test doit être déterministe — HTTP + pixels + état
+        MapLibre. L'IA garde sa place, mais seulement au <strong>triage des
+        échecs</strong> après que le harnais a tranché : PASS ou FAIL. Jamais
+        dans le verdict lui-même.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Ce qui a été construit — maritime-atlas/qa/">
+      <p>
+        Trois modules Node dans <code>maritime-atlas/qa/</code>, lancés en
+        séquence ou indépendamment :
+      </p>
+
+      <h3 class="font-bold text-lg mt-6">1. Manifest auto-dérivé</h3>
+      <p>
+        Le premier problème avec les listes en dur, c'est qu'elles dérivent.
+        On ajoute un layer côté Angular, on oublie de mettre à jour le test,
+        et la régression passe inaperçue.
+      </p>
+      <p>
+        Solution : le manifest est <strong>dérivé au runtime depuis
+        <code>globe.component.ts</code></strong> — la source de vérité
+        frontend. Un script parse le fichier TypeScript (regex ciblé sur
+        <code>LAYER_PROFILES</code> et <code>animatableLayers</code>), extrait
+        les IDs + types (raster/vector/cascade), et génère le JSON de contexte
+        pour les checks suivants. Si un layer est ajouté dans le composant,
+        le test le voit automatiquement la prochaine exécution.
+      </p>
+
+      <h3 class="font-bold text-lg mt-6">2. Check données HTTP</h3>
+      <p>
+        Pour chaque layer raster, le check fait un <code>GetMap</code> WMS
+        (ou <code>GetFeatureInfo</code> pour les vector) et inspecte la
+        réponse à deux niveaux :
+      </p>
+      <ul>
+        <li>
+          Le statut HTTP et le <code>Content-Type</code> — un
+          <code>ServiceException</code> GeoServer sort en <code>text/xml</code>
+          avec un 200, pas en 500 ; ça trompe curl naïf.
+        </li>
+        <li>
+          Pour les PNG, <strong>décodage IDAT</strong> : un tile
+          "placeholder" (tuile vide que GeoServer sert quand il n'a pas de
+          données pour ce timestamp) a une structure IDAT caractéristique —
+          tous les pixels à RGBA(0,0,0,0). On lit les 4 premiers octets du
+          chunk IDAT pour distinguer "tile réelle avec de la data" de "tile
+          vide qui dit rien". Verdict : <code>PASS</code> (data réelle),
+          <code>BLANK</code> (tuile vide mais valide — souvent normal hors
+          bbox), <code>UPSTREAM</code> (le provider externe est down, pas
+          notre bug), ou <code>FAIL</code>.
+        </li>
+      </ul>
+
+      <CodeBlock
+        language="typescript"
+        filename="qa/check-data.ts — classification tuile"
+        code={`type TileVerdict = "PASS" | "BLANK" | "UPSTREAM" | "FAIL" | "SKIP";
+
+async function checkRasterTile(layer: LayerSpec): Promise<TileVerdict> {
+  const url = buildGetMapUrl(layer, { time: layer.sampleTimestamp });
+  const res = await fetch(url, { signal: AbortSignal.timeout(8000) });
+
+  if (!res.ok) return "FAIL";
+  const ct = res.headers.get("content-type") ?? "";
+  if (ct.includes("xml") || ct.includes("text")) return "FAIL"; // ServiceException
+
+  const buf = Buffer.from(await res.arrayBuffer());
+  // Decode IDAT: si tous pixels alpha=0 → tuile placeholder
+  const isBlank = isPngBlank(buf);
+  return isBlank ? "BLANK" : "PASS";
+}`}
+      />
+
+      <h3 class="font-bold text-lg mt-6">3. Check câblage UI via Playwright</h3>
+      <p>
+        C'est la brique la plus délicate. Le principe : ouvrir la carte,
+        activer un layer, bouger le slider d'opacité de 100% → 30%, et
+        vérifier que l'opacité réelle du layer MapLibre a changé — pas
+        juste la valeur affichée dans l'UI Angular.
+      </p>
+      <p>
+        Deux contraintes majeures :
+      </p>
+      <ul>
+        <li>
+          <strong>Accès à l'état MapLibre sans faille de sécurité.</strong>
+          Avant ce harnais, un flag <code>window.__mapInstance</code> avait
+          été retiré après audit sécurité — il exposait trop. Solution :
+          un <strong>hook read-only gelé</strong> exposé uniquement avec
+          <code>?qa=1</code> dans l'URL, que le build de production inclut
+          mais ne rend jamais accessible sans le paramètre. Il expose
+          <code>window.__qaReadOnly.getLayerOpacity(id)</code> et
+          <code>window.__qaReadOnly.getActiveLayerIds()</code>, rien d'autre.
+        </li>
+        <li>
+          <strong>ID du layer dérivé au runtime.</strong> L'approche naïve
+          serait de hard-coder "quand on bouge le slider du layer
+          <code>sst-raster</code>, son id MapLibre est
+          <code>aetherwx:sst-daily</code>". Sauf que la fonction
+          <code>mapLibreLayerIds()</code> peut avoir des branches manquantes
+          — c'est exactement le bug qu'on cherche à détecter. On ne peut
+          pas présupposer l'id. La solution : on demande à MapLibre
+          lui-même <em>quel layer a changé d'opacité</em> entre l'avant
+          et l'après slider.
+        </li>
+      </ul>
+
+      <CodeBlock
+        language="typescript"
+        filename="qa/check-ui.ts — runtime-derived layer id"
+        code={`// Snapshot des opacités AVANT le déplacement du slider
+const before = await page.evaluate(() =>
+  window.__qaReadOnly.getActiveLayerIds().map((id) => ({
+    id,
+    opacity: window.__qaReadOnly.getLayerOpacity(id),
+  }))
+);
+
+// Simuler le glissement du slider d'opacité : 100 → 30
+await page.locator(\`[data-qa-slider="\${layerKey}"]\`).fill("30");
+await page.waitForTimeout(200); // laisser le signal Angular propager
+
+// Snapshot APRÈS
+const after = await page.evaluate(() =>
+  window.__qaReadOnly.getActiveLayerIds().map((id) => ({
+    id,
+    opacity: window.__qaReadOnly.getLayerOpacity(id),
+  }))
+);
+
+// Quel layer a changé ? Si aucun → FAIL (câblage manquant)
+const changed = after.filter((a) => {
+  const b = before.find((b) => b.id === a.id);
+  return b && Math.abs(a.opacity - b.opacity) > 0.05;
+});
+
+if (changed.length === 0) return { verdict: "FAIL", reason: "opacity unchanged in MapLibre" };
+return { verdict: "PASS", changedLayer: changed[0].id };`}
+      />
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Le payoff — 9 bugs d'un coup">
+      <p>
+        Le harnais lancé pour la première fois contre la prod. Résultat :
+        <strong>9 FAIL sur le check UI opacité</strong>, tous le même symptôme
+        — slider bouge, MapLibre ne change rien.
+      </p>
+      <p>
+        Cause racine identifiée en 10 minutes : la fonction
+        <code>mapLibreLayerIds(layerKey: string): string[]</code> dans
+        <code>globe.component.ts</code> avait <strong>des branches
+        manquantes</strong> pour 9 layers. Ces layers passaient par un
+        <code>default: return []</code> silencieux — le slider Angular appelait
+        <code>setOpacity([])</code> sur zéro layers MapLibre. L'UI Angular
+        répondait (signal mis à jour), MapLibre ne faisait rien, zéro erreur.
+      </p>
+      <p>
+        Un fix manuel à l'œil avait été fait le même jour sur certains layers
+        évidents — il en avait corrigé 3, raté les 9 autres (trop de
+        branches, trop similaires). Le harnais a trouvé tous les 9 d'un coup.
+      </p>
+      <p>
+        Fix : ajout des branches manquantes dans <code>mapLibreLayerIds()</code>.
+        Build → tag → deploy (2 rollouts car un premier tag avait une coquille
+        dans le gitops). Re-run du harnais contre prod : <strong>FAIL=0</strong>.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="La méta-leçon — le harnais s'est auto-corrigé">
+      <p>
+        La partie la plus intéressante n'est pas les 9 bugs. C'est ce qui
+        s'est passé avec <strong>la première version du test lui-même</strong>.
+      </p>
+      <p>
+        La v1 présupposait l'id MapLibre du layer testé — elle hard-codait
+        <code>"aetherwx:sst-daily"</code> comme id attendu après glissement
+        du slider SST. Résultat : un faux positif. Le test déclarait PASS pour
+        SST alors que la fonction <code>mapLibreLayerIds()</code> renvoyait
+        en fait <code>["aetherwx:sst-raster"]</code> (le vrai nom du layer
+        MapLibre). Le slider touchait bien le bon layer, mais le test
+        comparait le mauvais id — il validait l'absence de changement sur
+        un layer qui n'existait pas.
+      </p>
+      <p>
+        Détecté en live en croisant le résultat du check avec un screenshot
+        Playwright : le layer visuel avait changé, le test disait PASS pour
+        la mauvaise raison. Rendu robuste en passant au pattern
+        "quel layer a changé" (voir le bloc de code ci-dessus). Revalidé.
+        Le test a ensuite correctement catchant les 9 FAIL réels.
+      </p>
+      <p>
+        Principe réaffirmé : <strong>un test qu'on n'a jamais vu échouer
+        ne vaut rien.</strong> Et corollaire : un test qui passe pour la
+        mauvaise raison est pire qu'un test absent — il donne une fausse
+        confiance.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Pourquoi ça compte — ingénierie de fiabilité démontrable">
+      <p>
+        Ce harnais n'est pas un gadget. C'est une pratique d'ingénierie de
+        fiabilité sur une vraie appli GIS complexe, avec les contraintes
+        réelles d'une telle stack :
+      </p>
+      <ul>
+        <li>
+          <strong>Manifest auto-dérivé</strong> → la suite ne peut pas dériver
+          silencieusement de la source de vérité frontend. Un layer ajouté
+          est automatiquement testé.
+        </li>
+        <li>
+          <strong>Détection IDAT PNG</strong> → on distingue "données
+          présentes" de "tuile placeholder" sans regarder l'image à l'œil.
+          Déterministe, scriptable en CI.
+        </li>
+        <li>
+          <strong>Hook read-only <code>?qa=1</code></strong> → accès à l'état
+          interne MapLibre sans rouvrir une surface d'attaque. Pattern
+          réutilisable sur toute appli Angular+MapLibre.
+        </li>
+        <li>
+          <strong>Runtime-derived layer id</strong> → le test ne présuppose
+          pas l'implémentation interne. Il observe le comportement. C'est
+          la différence entre un test qui valide le contrat et un test qui
+          valide le code source.
+        </li>
+        <li>
+          <strong>Philosophie IA au triage, pas au verdict</strong> → le
+          harnais sort une liste JSON de FAIL avec contexte (layer, verdict,
+          reason, screenshot). Claude peut analyser la liste et proposer
+          les branches <code>mapLibreLayerIds()</code> manquantes. Mais c'est
+          le harnais déterministe qui a le dernier mot sur PASS/FAIL.
+        </li>
+      </ul>
+      <p>
+        C'est exactement le genre de pipeline QA qu'on peut démontrer
+        en entretien sur un vrai projet : une suite E2E avec une philosophie
+        claire, un résultat mesurable (9 bugs trouvés, 0 faux négatif après
+        correction), et une architecture qui résiste à la dérive.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Le process avec Claude Code">
+      <p>
+        Le harnais a été construit en une session de pair-programming avec
+        Claude Code. Le découpage en 3 modules indépendants est venu dès
+        l'analyse — un agent background a pu scaffolder le check données
+        pendant qu'on écrivait le check UI en main.
+      </p>
+      <p>
+        Le moment le plus utile a été le diagnostic du faux positif SST :
+        Claude a proposé le pattern "runtime-derived" immédiatement, sans
+        qu'il soit nécessaire de décrire le problème en détail. Le contexte
+        (screenshot Playwright + diff JSON avant/après) était suffisant.
+        C'est un bon exemple de la niche où l'IA est réellement utile :
+        pas pour décider si le test passe, mais pour suggérer comment le
+        rendre plus robuste une fois qu'on a identifié sa faiblesse.
+      </p>
+      <p>
+        <code>/save</code> en fin de session a capturé les patterns
+        réutilisables : hook read-only <code>?qa=1</code>, IDAT blank
+        detection, runtime-derived layer id via delta snapshot.
+      </p>
+    </CaseStudySection>
+  </section>
+</BaseLayout>

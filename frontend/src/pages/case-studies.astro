@@ -267,6 +267,38 @@ const apps = [
             </div>
           </div>
         </article>
+
+        <article class="group relative overflow-hidden rounded-xl border border-white/10 bg-paper-elevated p-6 hover:border-claude/40 transition-colors motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-claude/10">
+          <div class="absolute inset-0 bg-gradient-to-br from-teal-500/20 to-transparent opacity-50 group-hover:opacity-80 transition-opacity pointer-events-none"></div>
+          <div class="relative">
+            <p class="font-mono text-sm text-claude mb-3">aetherwx-qa-harness</p>
+            <h3 class="text-xl font-medium text-ink mb-2">
+              <a href="/case-studies/aetherwx-qa-harness" class="hover:text-claude transition-colors">
+                Un harnais QA déterministe qui a trouvé 9 bugs que l'œil ratait
+              </a>
+            </h3>
+            <p class="text-sm text-ink-muted mb-4 leading-relaxed">
+              Sur AetherWX, des layers cassaient en silence après chaque
+              modif (opacité sans effet, animation aléatoire, zéro error
+              console). Manifest auto-dérivé depuis la source de vérité
+              frontend, détection IDAT PNG, Playwright runtime-derived layer
+              id via delta snapshot, hook read-only <code>?qa=1</code>. Lancé
+              une fois : <strong>9 bugs d'opacity trouvés d'un coup</strong>,
+              corrigés, FAIL=0 en prod.
+            </p>
+            <p class="font-mono text-xs text-ink/60 pt-3 border-t border-white/5 mb-3">
+              Node.js · Playwright · MapLibre · Angular 19 · GeoServer WMS · TypeScript
+            </p>
+            <div class="flex flex-wrap items-center gap-2">
+              <a href="/case-studies/aetherwx-qa-harness" class="font-mono text-[10px] uppercase tracking-wider text-claude/80 hover:text-claude transition-colors">
+                Lire le récit →
+              </a>
+              <a href="/case-studies/maritime-atlas" class="ml-auto font-mono text-[10px] uppercase tracking-wider text-ink-muted hover:text-claude transition-colors">
+                Vue fonctionnelle →
+              </a>
+            </div>
+          </div>
+        </article>
       </div>
     </div>
 
