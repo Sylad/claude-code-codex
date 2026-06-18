@@ -1,0 +1,245 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+
+const lessons = [
+  {
+    title: "Flag --hermes-home pour sandboxer un installer global",
+    body: "Hermes utilise le pattern `curl|bash` (red flag classique) mais expose `--hermes-home` + `--dir` qui redirigent TOUT dans un dossier de ton choix. Le `md5sum ~/.claude/CLAUDE.md` avant/après est strictement identique. Pattern à exiger de tout installer qui propose un `curl|bash` : si t'as pas de redirect-prefix, t'installes pas.",
+  },
+  {
+    title: "Messaging gateway = mobile-first sans rebuild d'app",
+    body: "Le pattern bot Telegram (token BotFather → DM bot perso → réponses) résout le problème 'pilotage dev/prod depuis mobile' sans coder d'app native. 5 min de setup vs des semaines de React Native + push notifications + auth. Réutilisable pour TOUT outil CLI qu'on voudrait piloter à distance.",
+  },
+  {
+    title: "Self-host > cloud quand t'as une stack à toi",
+    body: "Claude Code Remote tourne sur AWS Anthropic et n'a pas accès à mon `kubectl --context mini-blue`, mon `ssh nas`, mon repo gitops. Hermes tourne sur Big-Blue et a tout ça nativement. Pour quiconque a une homelab ou un VPS, self-host gagne sur l'accès à la stack locale.",
+  },
+  {
+    title: "agentskills.io 'standard' = compat partielle",
+    body: "Hermes ET Claude Code revendiquent agentskills.io. En vrai les frontmatter divergent : Hermes attend `version` + `author` + `license` + `platforms` + `metadata.hermes.tags`, Claude Code attend `argument-hint` + `allowed-tools`. La conversion est mécanique mais c'est PAS plug-and-play. Standard à durcir.",
+  },
+  {
+    title: "Provider switch en 4 lignes config.yaml",
+    body: "Le `hermes config set model.default / model.provider / model.base_url` permet de basculer Ollama local ↔ Anthropic ↔ OpenRouter ↔ DeepSeek en 30s. Vendor lock = ZÉRO. Architecture à reprendre pour tout outil qui touche à un LLM : 1 fichier config, providers interchangeables.",
+  },
+  {
+    title: "Allowlist par user_id Telegram = sécu publique propre",
+    body: "Bots Telegram sont accessibles par username public mais Hermes blacklist tout user_id qui n'est pas dans TELEGRAM_ALLOWED_USERS. Premier message d'un user non-autorisé → log warning + reject silencieux. Pattern simple pour exposer un bot LLM sans risque d'usage par des tiers.",
+  },
+  {
+    title: "Doctor + Security comme commandes first-class",
+    body: "`hermes doctor` (SSL/Python/deps/configs/auth) + `hermes security` (OSV.dev audit sur venv + plugins + MCP) ne sont pas des plugins, c'est dans le core. À reprendre quand on shippe un outil maintenant — la dette ops démarre dès le commit 1.",
+  },
+  {
+    title: "Hub massif = écosystème > tooling solo",
+    body: "85 722 skills sur le hub Nous + 100 official = 100× plus qu'une marketplace Claude Code typique. Le multiplicateur réseau écrase la qualité individuelle. Patterns observables : skills `email/himalaya`, `software-development/python-debugpy`, `software-development/systematic-debugging` — tooling dev complet déjà fait.",
+  },
+];
+---
+
+<BaseLayout
+  title="Test bench · Hermes Agent"
+  description="Test live de Hermes Agent (NousResearch) — install propre malgré curl|bash, gateway Telegram pour piloter ma stack K8s prod depuis le téléphone via Anthropic Sonnet 4.6. Verdict adopt-conditional, 8 leçons à reprendre."
+>
+  <PageHero
+    eyebrow="Test bench · 2026-06-18"
+    title="Hermes Agent (NousResearch)"
+    intro="Agent self-improving + messaging gateway multi-plateforme + hub 85 722 skills + MCP first-class. 196 852 ⭐ MIT, push aujourd'hui. Testé en sandbox 100 % contenu, puis branché en live sur Anthropic Sonnet 4.6 pour piloter maritime-atlas depuis Telegram."
+  />
+
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12">
+    <div class="space-y-12">
+
+      <article class="space-y-4">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">Pourquoi le tester</p>
+        <p class="text-ink leading-relaxed text-base sm:text-lg">
+          Le repo
+          <a href="https://github.com/NousResearch/hermes-agent" target="_blank" rel="noopener" class="text-claude hover:text-claude-soft underline underline-offset-4">NousResearch/hermes-agent</a>
+          propose une couche d'agent self-improving avec un angle unique : un <strong>messaging gateway</strong> qui expose l'agent sur Telegram / Discord / Slack / WhatsApp / Signal / email. Le pitch
+          <em>"l'agent qui pousse avec toi"</em> couvre les classiques (skills, MCP, mémoire) mais le vrai différenciateur c'est la possibilité de
+          <strong>piloter sa stack à distance depuis n'importe quelle plateforme messaging</strong> — alors que Claude Code Remote tourne sur l'infra Anthropic et ne peut pas
+          atteindre mon <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">kubectl --context mini-blue</code>. À voir en pratique.
+        </p>
+      </article>
+
+      <article class="space-y-4">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">Ce qu'on a testé</p>
+        <ul class="space-y-2.5 text-ink leading-relaxed">
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span><strong class="text-ink">Sandbox 100 % contenu</strong> dans <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">~/projects/developpeur/hermes-sandbox/</code> via les flags
+              <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">--hermes-home / --dir / --skip-setup / --skip-browser / --no-skills / --non-interactive</code>.
+              Snapshot md5 de <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">~/.claude/CLAUDE.md</code> et
+              <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">settings.json</code> avant/après — strictement identiques.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span><strong class="text-ink">Commandes de surface</strong> :
+              <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">hermes doctor</code>,
+              <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">hermes security</code>,
+              <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">hermes mcp catalog</code>,
+              <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">hermes skills browse</code>,
+              <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">hermes uninstall --help</code>.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span><strong class="text-ink">Round-trip live Ollama llama3.1:8b en local</strong> via le custom provider OpenAI-compatible — pour valider le pipe avant de cramer des tokens cloud.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span><strong class="text-ink">Setup bot Telegram complet</strong> : création via <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">@BotFather</code>,
+              token dans <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">.env chmod 600</code>, allowlist user_id récupéré depuis les logs,
+              <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">hermes gateway run --replace</code> en background.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+            <span><strong class="text-ink">Switch provider Ollama → Anthropic Sonnet 4.6</strong> en 4 commandes
+              <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">hermes config set</code>
+              pour valider une qualité Claude réelle depuis Telegram, sans vendor lock.</span>
+          </li>
+        </ul>
+      </article>
+
+      <article class="space-y-4">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">Verdict</p>
+
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div class="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-5">
+            <p class="font-mono text-xs uppercase tracking-wider text-emerald-400 mb-2">Ce qui fonctionne</p>
+            <ul class="text-sm text-ink-muted leading-relaxed space-y-1.5">
+              <li>• Install <code class="font-mono text-emerald-300/80 text-[0.9em]">curl|bash</code> mais respecte rigoureusement <code class="font-mono text-emerald-300/80 text-[0.9em]">--hermes-home</code> → sandbox propre</li>
+              <li>• <code class="font-mono text-emerald-300/80 text-[0.9em]">uninstall.py</code> 39 KB de vraie logique (issue #46359 ouvre un mode <code class="font-mono text-emerald-300/80 text-[0.9em]">--dry-run</code>)</li>
+              <li>• 16 providers LLM supportés, switch en 4 lignes <code class="font-mono text-emerald-300/80 text-[0.9em]">hermes config set</code></li>
+              <li>• Round-trip Telegram → Big-Blue → Anthropic → Sonnet 4.6 → réponse Claude en ~3 s</li>
+              <li>• Hub 85 722 skills + 100 official Nous browsable via <code class="font-mono text-emerald-300/80 text-[0.9em]">hermes skills browse</code></li>
+              <li>• Allowlist <code class="font-mono text-emerald-300/80 text-[0.9em]">TELEGRAM_ALLOWED_USERS</code> bloque tout user_id inconnu</li>
+              <li>• Prompt caching activé par défaut (cache TTL 5 min) → coût réel bien sous le théorique</li>
+            </ul>
+          </div>
+          <div class="rounded-xl border border-rose-500/20 bg-rose-500/5 p-5">
+            <p class="font-mono text-xs uppercase tracking-wider text-rose-400 mb-2">Ce qui pète</p>
+            <ul class="text-sm text-ink-muted leading-relaxed space-y-1.5">
+              <li>• Footprint sandbox <strong>1,8 GB</strong> même avec <code class="font-mono text-rose-300/80 text-[0.9em]">--skip-browser --no-skills</code></li>
+              <li>• Compat agentskills.io <strong>partielle</strong> : frontmatter Claude Code n'est pas auto-importé, conversion mécanique nécessaire (<code class="font-mono text-rose-300/80 text-[0.9em]">version</code> / <code class="font-mono text-rose-300/80 text-[0.9em]">author</code> / <code class="font-mono text-rose-300/80 text-[0.9em]">license</code> / <code class="font-mono text-rose-300/80 text-[0.9em]">platforms</code> à ajouter)</li>
+              <li>• <code class="font-mono text-rose-300/80 text-[0.9em]">~/.local/bin/hermes</code> launcher 165 B reste après <code class="font-mono text-rose-300/80 text-[0.9em]">hermes uninstall --full</code> (mineur)</li>
+              <li>• <code class="font-mono text-rose-300/80 text-[0.9em]">hermes config set agent.model</code> ≠ <code class="font-mono text-rose-300/80 text-[0.9em]">model.default</code> — la première forme passe sans erreur mais ne fait rien</li>
+              <li>• Pas de <code class="font-mono text-rose-300/80 text-[0.9em]">--dry-run</code> sur l'installer (red flag <code class="font-mono text-rose-300/80 text-[0.9em]">curl|bash</code> partiel)</li>
+              <li>• Setup wizard pousse OAuth Nous Portal — skippable via <code class="font-mono text-rose-300/80 text-[0.9em]">--skip-setup</code> mais à savoir</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="rounded-xl border border-claude/20 bg-claude/5 p-5 sm:p-6 mt-2">
+          <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">Décision</p>
+          <p class="text-ink leading-relaxed">
+            <strong>Adopt-conditional.</strong> Hermes ne remplace pas Claude Code pour le dev pur (80 % overlap, Claude Code reste plus tight côté CLI). Mais il <strong>complète</strong>
+            sur un angle où Claude Code Remote ne peut pas : tourner sur ma propre infra avec accès <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">kubectl</code> /
+            <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">git</code> / <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">ssh</code> natif, pilotable depuis Telegram.
+            Adopté pour le pilotage maritime-atlas depuis mobile. Provider Anthropic Sonnet 4.6, budget alarmé à $10 / mois côté console.
+          </p>
+        </div>
+      </article>
+
+      <article class="space-y-4">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">Le use case unique : Claude Code mobile sans Anthropic vendor lock</p>
+        <p class="text-ink leading-relaxed">
+          Le pattern résume bien la différence entre <strong>Claude Code Remote</strong> (cloud Anthropic, sandbox géré, pas d'accès à ta stack locale) et <strong>Hermes self-hosted</strong>
+          (tourne sur Big-Blue, accès <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">kubectl --context mini-blue</code> /
+          <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">ssh nas</code> / repo gitops natif). Pour quelqu'un avec une homelab ou un VPS, ça change le ratio :
+        </p>
+
+        <div class="rounded-xl border border-white/10 bg-paper-elevated p-5 sm:p-6">
+          <table class="w-full text-sm text-left">
+            <thead>
+              <tr class="border-b border-white/10">
+                <th class="py-2 pr-3 font-medium text-ink"></th>
+                <th class="py-2 px-3 font-medium text-ink">Claude Code Remote</th>
+                <th class="py-2 pl-3 font-medium text-claude">Hermes + Telegram</th>
+              </tr>
+            </thead>
+            <tbody class="text-ink-muted">
+              <tr class="border-b border-white/5">
+                <td class="py-2 pr-3 font-mono text-xs">Tourne sur</td>
+                <td class="py-2 px-3">Cloud Anthropic (sandbox)</td>
+                <td class="py-2 pl-3 text-ink">Ta machine (Big-Blue / NAS / Mini-Blue / VPS)</td>
+              </tr>
+              <tr class="border-b border-white/5">
+                <td class="py-2 pr-3 font-mono text-xs">Accès stack locale</td>
+                <td class="py-2 px-3">Limité (sync git)</td>
+                <td class="py-2 pl-3 text-ink">Total (kubectl, git, ssh, docker, /coverage GS)</td>
+              </tr>
+              <tr class="border-b border-white/5">
+                <td class="py-2 pr-3 font-mono text-xs">Pilotage</td>
+                <td class="py-2 px-3">App Claude Code mobile/desktop</td>
+                <td class="py-2 pl-3 text-ink">DM Telegram (ou Discord/Slack/WhatsApp/Signal/email)</td>
+              </tr>
+              <tr class="border-b border-white/5">
+                <td class="py-2 pr-3 font-mono text-xs">Coût</td>
+                <td class="py-2 px-3">Tier Anthropic Pro/Max</td>
+                <td class="py-2 pl-3 text-ink">Ta clé API (estim. $1–5 / mois en usage casual)</td>
+              </tr>
+              <tr>
+                <td class="py-2 pr-3 font-mono text-xs">Provider</td>
+                <td class="py-2 px-3">Anthropic only</td>
+                <td class="py-2 pl-3 text-ink">16 providers (Anthropic / OpenRouter / Ollama local / etc.)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="text-ink-muted leading-relaxed text-sm">
+          Pour mon cas concret : je DM <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">@aetherwx_bot</code> <em>"lance le smoke maritime"</em>,
+          l'agent qui tourne sur Big-Blue exécute <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">/maritime-layer-smoke-all</code>,
+          me renvoie le résultat. Je réponds <em>"redeploy frontend si tout green"</em>, il bumpe le tag dans
+          <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">developpeur-gitops</code> et push.
+          Claude Code Remote ne peut pas faire ça : il n'a ni mon kubeconfig Mini-Blue ni mon ssh NAS.
+        </p>
+      </article>
+
+      <article class="space-y-4">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">Leçons à reprendre (8)</p>
+        <p class="text-ink-muted leading-relaxed">
+          Hermes adopté ne ferme aucune des leçons — au contraire, le patterns d'install propre, de provider switch, et de bot security sont à reprendre dans nos propres tools.
+        </p>
+
+        <ol class="grid gap-3 sm:grid-cols-2">
+          {lessons.map((l, i) => (
+            <li class="rounded-xl border border-white/10 bg-paper-elevated p-5">
+              <p class="font-mono text-xs text-claude/80 mb-2">{String(i + 1).padStart(2, "0")}</p>
+              <h3 class="text-base font-medium text-ink mb-1.5">{l.title}</h3>
+              <p class="text-sm text-ink-muted leading-relaxed">{l.body}</p>
+            </li>
+          ))}
+        </ol>
+      </article>
+
+      <article class="space-y-4 pt-2">
+        <div class="rounded-xl border border-white/10 bg-paper-elevated p-6 sm:p-8">
+          <p class="font-mono text-xs uppercase tracking-wider text-claude mb-3">Ressources</p>
+          <ul class="text-sm text-ink-muted space-y-1.5">
+            <li>✓ Setup live exécuté sur Big-Blue (WSL2 Ubuntu, RTX 4080 pour Ollama)</li>
+            <li>✓ Bot Telegram <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">@aetherwx_bot</code> opérationnel</li>
+            <li>✓ Provider Anthropic Sonnet 4.6 (clé API dédiée, billing isolé via Console workspace)</li>
+            <li>✓ Memory note détaillée <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">hermes_agent_test_2026_06_18.md</code> indexée dans MEMORY.md</li>
+          </ul>
+          <div class="mt-4 flex flex-wrap gap-3 text-xs">
+            <a href="https://github.com/NousResearch/hermes-agent" target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">
+              ↗ GitHub
+            </a>
+            <a href="https://hermes-agent.nousresearch.com/" target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">
+              ↗ Site officiel
+            </a>
+            <a href="https://hermes-agent.nousresearch.com/docs/" target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">
+              ↗ Docs
+            </a>
+            <a href="/tools-tested" class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">
+              ← Tous les tools tested
+            </a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+</BaseLayout>

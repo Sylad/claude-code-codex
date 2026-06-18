@@ -108,13 +108,14 @@ export const testedTools: TestedTool[] = [
     author: "NousResearch",
     category: "tool",
     description:
-      "Agent self-improving + messaging gateway (Telegram/Discord/Slack/WhatsApp/Signal/email) + cron natural-language + hub 85 000 skills (100 official) + MCP first-class. Testé 2026-06-18 : ADOPT-CONDITIONAL. Installation `curl|bash` MAIS flags propres `--hermes-home`/`--dir`/`--skip-setup`/`--skip-browser`/`--no-skills`/`--non-interactive` permettent un sandbox 100 % contenu — md5 `~/.claude/` strictement inchangé. uninstall.py 39 KB (vraie logique, issue #46359 ouvre `--dry-run`). Multi-provider zéro lock-in (OpenRouter / OpenAI / DeepSeek / xAI / NVIDIA NIM / Z.AI / Kimi / MiniMax / Anthropic via OpenRouter / Ollama local). Différenciateur réel vs Claude Code : tourne LITTÉRALEMENT sur ta machine donc accès kubectl/git/ssh full, pilotable depuis Telegram (DM bot @BotFather, zéro serveur) ou Discord (nécessite serveur perso 30s). Caveat : footprint 1.8 GB, skill format frontmatter divergent de Claude Code (version/author/license/platforms requis), conversion mécanique faisable. Adopt si messaging gateway concret OU démo CV agent OSS.",
+      "Agent self-improving + messaging gateway (Telegram/Discord/Slack/WhatsApp/Signal/email) + cron natural-language + hub 85 000 skills (100 official) + MCP first-class. Testé 2026-06-18 puis pilotage live réussi : DM Telegram → Anthropic Sonnet 4.6 → skill discovery → `bash scripts/smoke.sh` sur Big-Blue → résumé sur Telegram, le tout en 59 s pour ~$0.10 (cache 99 %). ADOPT-CONDITIONAL. Sandbox 100 % contenu via `--hermes-home`/`--dir`/`--skip-setup`. uninstall.py 39 KB. 16 providers, zéro vendor lock. Différenciateur clé vs Claude Code Remote : tourne sur ta propre infra, accès kubectl/git/ssh full. Skill compat agentskills.io partielle (frontmatter à convertir). Footprint 1.8 GB.",
     tags: ["agent", "messaging-gateway", "telegram", "discord", "self-hosted", "skills", "mcp", "tested"],
     url: "https://github.com/NousResearch/hermes-agent",
     stars: 196852,
     lastPush: "2026-06-18",
     license: "MIT",
     status: "tested",
+    caseStudyHref: "/case-studies/hermes-agent",
   },
   {
     id: "superclaude-framework",
