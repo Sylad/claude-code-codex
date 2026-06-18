@@ -103,6 +103,20 @@ export const testedTools: TestedTool[] = [
     status: "to-test",
   },
   {
+    id: "hermes-agent",
+    name: "Hermes Agent",
+    author: "NousResearch",
+    category: "tool",
+    description:
+      "Agent self-improving + messaging gateway (Telegram/Discord/Slack/WhatsApp/Signal/email) + cron natural-language + hub 85 000 skills (100 official) + MCP first-class. Testé 2026-06-18 : ADOPT-CONDITIONAL. Installation `curl|bash` MAIS flags propres `--hermes-home`/`--dir`/`--skip-setup`/`--skip-browser`/`--no-skills`/`--non-interactive` permettent un sandbox 100 % contenu — md5 `~/.claude/` strictement inchangé. uninstall.py 39 KB (vraie logique, issue #46359 ouvre `--dry-run`). Multi-provider zéro lock-in (OpenRouter / OpenAI / DeepSeek / xAI / NVIDIA NIM / Z.AI / Kimi / MiniMax / Anthropic via OpenRouter / Ollama local). Différenciateur réel vs Claude Code : tourne LITTÉRALEMENT sur ta machine donc accès kubectl/git/ssh full, pilotable depuis Telegram (DM bot @BotFather, zéro serveur) ou Discord (nécessite serveur perso 30s). Caveat : footprint 1.8 GB, skill format frontmatter divergent de Claude Code (version/author/license/platforms requis), conversion mécanique faisable. Adopt si messaging gateway concret OU démo CV agent OSS.",
+    tags: ["agent", "messaging-gateway", "telegram", "discord", "self-hosted", "skills", "mcp", "tested"],
+    url: "https://github.com/NousResearch/hermes-agent",
+    stars: 196852,
+    lastPush: "2026-06-18",
+    license: "MIT",
+    status: "tested",
+  },
+  {
     id: "superclaude-framework",
     name: "SuperClaude Framework",
     author: "SuperClaude-Org",
