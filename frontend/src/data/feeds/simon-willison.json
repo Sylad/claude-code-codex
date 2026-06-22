@@ -1,5 +1,59 @@
 [
   {
+    "id": "ed140b4e4c38f7b0",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jun/21/temporary-cloudflare-accounts/#atom-everything",
+    "title": "Temporary Cloudflare Accounts for AI agents",
+    "summary": "Cloudflare permet de déployer des Workers sans compte via `wrangler deploy --temporary` pour 60 min, idéal pour tester rapidement avec des agents IA.",
+    "publishedAt": "2026-06-21T22:01:04+00:00",
+    "fetchedAt": "2026-06-22T11:47:51.002Z"
+  },
+  {
+    "id": "9370d60ff069b1f4",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jun/19/sean-lynch/#atom-everything",
+    "title": "Quoting Sean Lynch",
+    "summary": "MCP isole l'authentification hors du contexte de l'agent, simplifiant l'intégration d'APIs sans surcharger le LLM.",
+    "publishedAt": "2026-06-19T22:45:49+00:00",
+    "fetchedAt": "2026-06-22T11:47:51.002Z"
+  },
+  {
+    "id": "f789678befe69c04",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jun/17/glm-52/#atom-everything",
+    "title": "GLM-5.2 is probably the most powerful text-only open weights LLM",
+    "summary": "GLM-5.2 (753B params) devient le meilleur modèle open-weights texte, classé 2e en codage web, mais consomme beaucoup plus de tokens.",
+    "publishedAt": "2026-06-17T23:58:39+00:00",
+    "fetchedAt": "2026-06-22T11:47:51.002Z"
+  },
+  {
+    "id": "25776de53c589c57",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jun/17/charity-majors/#atom-everything",
+    "title": "Quoting Charity Majors",
+    "summary": "En 2025, la production de code est devenue gratuite et instantanée : il faut maintenant privilégier la discipline d'ingénierie sur la quantité générée.",
+    "publishedAt": "2026-06-17T17:12:41+00:00",
+    "fetchedAt": "2026-06-22T11:47:51.002Z"
+  },
+  {
+    "id": "99a1d4516e1b7851",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jun/16/georgi-gerganov/#atom-everything",
+    "title": "Quoting Georgi Gerganov",
+    "summary": "Qwen 3.6-27B s'avère efficace en local pour les tâches de coding, utile pour les devs cherchant une alternative offline à Claude Code.",
+    "publishedAt": "2026-06-16T16:04:59+00:00",
+    "fetchedAt": "2026-06-22T11:47:51.002Z"
+  },
+  {
+    "id": "5d3028816a29c80e",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jun/16/fable-5-export-controls/#atom-everything",
+    "title": "The Fable 5 Export Controls Harm US Cyber Defense",
+    "summary": "Les contrôles d'export américains menacent de bloquer les capacités essentielles des modèles IA pour sécuriser le code, comme la correction de vulnérabilités.",
+    "publishedAt": "2026-06-16T05:20:29+00:00",
+    "fetchedAt": "2026-06-22T11:47:51.002Z"
+  },
+  {
     "id": "e464b7a63a6a0397",
     "source": "simon-willison",
     "url": "https://simonwillison.net/2026/Jun/13/us-government-directive-to-suspend-access/#atom-everything",
