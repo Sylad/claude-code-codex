@@ -118,6 +118,20 @@ export const testedTools: TestedTool[] = [
     caseStudyHref: "/case-studies/hermes-agent",
   },
   {
+    id: "fable-mode",
+    name: "fable-mode (+ fable-sonnet + fable-haiku)",
+    author: "mrtooher",
+    category: "framework",
+    description:
+      "3 skills markdown pour Claude Code qui codifient un loop de discipline en 4 étapes (stage map → délégation conditionnelle → failable verification check → self-critique sceptique), avec 3 variantes pinnées par tier modèle (Opus inline / Sonnet via Agent / Haiku via Agent). Testé 2026-06-22 : install = `cp -r` dans `~/.claude/skills/`, zéro pollution (md5 CLAUDE.md + settings.json inchangés), hot-reload détecté instantanément (Claude Code a listé les 3 skills sans redémarrage). Verdict ADOPT pour 4 patterns vraiment uniques vs superpowers/apex : (1) warning threshold @3 qui force un halt+report à 3 concerns accumulés, (2) sed word-boundary safety `\\bword\\b` + grep post-pass pour les compounds mangled, (3) variantes pinned-by-tier pour router workload cost/qualité, (4) anti-pattern \"manufactured doubt\" (warning raised because evidence wasn't found = error). Core loop ~80 % redondant avec mes superpowers existants. Caveat license=null : usage perso OK, redistribution interdite par défaut.",
+    tags: ["claude-code", "skill", "discipline", "stage-map", "verification", "tested"],
+    url: "https://github.com/mrtooher/fable-mode",
+    stars: 539,
+    lastPush: "2026-06-19",
+    license: "unlicensed",
+    status: "tested",
+  },
+  {
     id: "superclaude-framework",
     name: "SuperClaude Framework",
     author: "SuperClaude-Org",

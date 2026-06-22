@@ -478,4 +478,18 @@ export const ecosystemEntries: EcosystemEntry[] = [
     install: "Clone anthropics/skills/skills/slack-gif-creator dans ton dossier skills",
     source: "https://github.com/anthropics/skills/tree/main/skills/slack-gif-creator",
   },
+  // ─── Community testés ─────────────────────────────────────────────
+  // Section additive 2026-06-22 : skills/plugins community soumis à test-tool
+  // protocol, install footprint clean, valeur unique vs nos skills existantes.
+  {
+    id: "fable-mode",
+    name: "fable-mode",
+    category: "skill",
+    official: false,
+    description:
+      "Skill (+ variantes fable-sonnet / fable-haiku) qui codifie un loop de discipline 4-étapes : stage map → délégation conditionnelle → failable verification check → self-critique sceptique. Variantes pinnées par tier modèle (Opus inline / Sonnet via Agent / Haiku via Agent) pour router workload par coût/qualité. Install = cp -r dans ~/.claude/skills/, 0 pollution.",
+    tags: ["skill", "discipline", "verification", "community"],
+    install: "Clone mrtooher/fable-mode et copie fable-mode/ fable-sonnet/ fable-haiku/ dans ~/.claude/skills/",
+    source: "https://github.com/mrtooher/fable-mode",
+  },
 ];

@@ -3,11 +3,14 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
 import EcosystemCatalog from "@/components/site/EcosystemCatalog.vue";
 import { ecosystemEntries } from "@/data/ecosystem";
+
+const officialEntries = ecosystemEntries.filter((e) => e.official);
+const communityEntries = ecosystemEntries.filter((e) => !e.official);
 ---
 
 <BaseLayout
   title="Écosystème"
-  description="Catalogue triable de plugins, MCP servers, skills et SDKs Claude Code — sources officielles Anthropic uniquement."
+  description="Catalogue triable de plugins, MCP servers, skills et SDKs Claude Code — officiel Anthropic + community testés."
 >
   <PageHero
     eyebrow="02 · Écosystème"
@@ -16,7 +19,7 @@ import { ecosystemEntries } from "@/data/ecosystem";
   />
 
   <section class="mx-auto max-w-6xl px-5 sm:px-8 py-12">
-    <EcosystemCatalog entries={ecosystemEntries} client:load />
+    <EcosystemCatalog entries={officialEntries} client:load />
 
     <div
       class="mt-12 rounded-xl border border-claude/20 bg-claude/5 p-6 sm:p-8"
@@ -64,4 +67,36 @@ import { ecosystemEntries } from "@/data/ecosystem";
       </p>
     </div>
   </section>
+
+  {
+    communityEntries.length > 0 && (
+      <section class="mx-auto max-w-6xl px-5 sm:px-8 pb-16">
+        <div class="mb-8 border-t border-white/10 pt-12">
+          <p class="font-mono text-xs uppercase tracking-wider text-claude mb-3">
+            Section community · soumise au test-tool protocol
+          </p>
+          <h2 class="text-2xl font-medium text-ink mb-3">
+            Skills / plugins community testés
+          </h2>
+          <p class="text-ink-muted leading-relaxed max-w-3xl">
+            Composants <strong class="text-ink">non-officiels</strong>{" "}
+            que j'ai passés par mon protocole `/test-tool` (snapshot{" "}
+            → install sandbox → diff pollution → smoke test → verdict){" "}
+            et pour lesquels la valeur unique vs les skills existantes
+            justifie la place. Chaque entrée vient avec son verdict
+            détaillé sur la page{" "}
+            <a
+              href="/case-studies"
+              class="text-claude hover:text-claude-soft underline underline-offset-4"
+            >
+              Tools tested
+            </a>
+            .
+          </p>
+        </div>
+
+        <EcosystemCatalog entries={communityEntries} client:load />
+      </section>
+    )
+  }
 </BaseLayout>
