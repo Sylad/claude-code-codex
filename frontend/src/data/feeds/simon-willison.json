@@ -1,5 +1,59 @@
 [
   {
+    "id": "968fc5e2f5c07411",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jun/28/jon-udell/#atom-everything",
+    "title": "Quoting Jon Udell",
+    "summary": "Garder les agents comme assistants dans votre workflow, pas comme boîtes noires autonomes qui génèrent du code non-reviewable.",
+    "publishedAt": "2026-06-28T21:57:41+00:00",
+    "fetchedAt": "2026-06-29T10:51:20.276Z"
+  },
+  {
+    "id": "ae29768dabe40988",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jun/26/timothy-b-lee/#atom-everything",
+    "title": "Quoting Timothy B. Lee",
+    "summary": "Maîtriser les LLMs demande une courbe d'apprentissage réelle, tout comme manager demande des compétences au-delà des ordres simples.",
+    "publishedAt": "2026-06-26T21:15:09+00:00",
+    "fetchedAt": "2026-06-29T10:51:20.276Z"
+  },
+  {
+    "id": "cd2ad53be65824e8",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jun/26/hack-my-ai-assistant/#atom-everything",
+    "title": "What happened after 2,000 people tried to hack my AI assistant",
+    "summary": "6000 tentatives de prompt injection sur Opus 4.6 ont échoué : les modèles frontière résistent mieux aux injections, mais évite les systèmes en prod critiques.",
+    "publishedAt": "2026-06-26T18:33:14+00:00",
+    "fetchedAt": "2026-06-29T10:51:20.276Z"
+  },
+  {
+    "id": "5e81afa6f8567587",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jun/26/incident-report/#atom-everything",
+    "title": "Incident Report: CVE-2026-LGTM",
+    "summary": "Scénario satirique sur les risques des agents IA en désaccord : boucles infinies, coûts exponentiels et chaos supply-chain.",
+    "publishedAt": "2026-06-26T17:58:54+00:00",
+    "fetchedAt": "2026-06-29T10:51:20.276Z"
+  },
+  {
+    "id": "802363aee5105ca5",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jun/24/browser-compat-db/#atom-everything",
+    "title": "simonw/browser-compat-db",
+    "summary": "[off-topic]\n\nCe post parle principalement de la conversion de données MDN en SQLite et du déploiement via GitHub Actions. Bien qu'il mentionne Claude Code pour le script de conversion, le focus n'est pas sur Claude Code ou les agents IA comme outils pour les devs, mais sur un projet de base de données.",
+    "publishedAt": "2026-06-24T23:59:03+00:00",
+    "fetchedAt": "2026-06-29T10:51:20.276Z"
+  },
+  {
+    "id": "f26c96cfcb192832",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jun/22/prompt-injection-as-role-confusion/#atom-everything",
+    "title": "Prompt Injection as Role Confusion",
+    "summary": "Les modèles confondent le style du texte avec son rôle : des attaques par injection peuvent contourner les protections en imitant le format interne.",
+    "publishedAt": "2026-06-22T23:59:53+00:00",
+    "fetchedAt": "2026-06-29T10:51:20.276Z"
+  },
+  {
     "id": "ed140b4e4c38f7b0",
     "source": "simon-willison",
     "url": "https://simonwillison.net/2026/Jun/21/temporary-cloudflare-accounts/#atom-everything",
@@ -393,24 +447,6 @@
     "title": "llm-echo 0.5a0",
     "summary": "<p><strong>Release:</strong> <a href=\"https://github.com/simonw/llm-echo/releases/tag/0.5a0\">llm-echo 0.5a0</a></p> <blockquote> <ul> <li>Ne",
     "publishedAt": "2026-05-05T01:31:54+00:00",
-    "fetchedAt": "2026-05-09T08:11:56.108Z"
-  },
-  {
-    "id": "e246958d7aa5b07c",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/May/5/john-gruber/#atom-everything",
-    "title": "Quoting John Gruber",
-    "summary": "<blockquote cite=\"https://daringfireball.net/2026/05/y_combinators_stake_in_openai\"><p>So it’s well known that Y Combinator owns <em>some</e",
-    "publishedAt": "2026-05-05T00:46:29+00:00",
-    "fetchedAt": "2026-05-09T08:11:56.108Z"
-  },
-  {
-    "id": "9e2378534e2ce27c",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/May/4/granite-41-3b-svg-pelican-gallery/#atom-everything",
-    "title": "Granite 4.1 3B SVG Pelican Gallery",
-    "summary": "<p><strong><a href=\"https://simonw.github.io/granite-4.1-3b-gguf-pelicans/\">Granite 4.1 3B SVG Pelican Gallery</a></strong></p> IBM released",
-    "publishedAt": "2026-05-04T23:49:24+00:00",
     "fetchedAt": "2026-05-09T08:11:56.108Z"
   }
 ]
