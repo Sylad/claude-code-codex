@@ -9,6 +9,15 @@
     "fetchedAt": "2026-06-15T11:57:53.003Z"
   },
   {
+    "id": "fdd9745edc3aad4e",
+    "source": "anthropic-news",
+    "url": "https://www.anthropic.com/news/redeploying-fable-5",
+    "title": "Redeploying Claude Fable 5",
+    "summary": "Fable 5 redéployé globalement dès le 1er juillet après levée des contrôles d'export, disponible sur Claude Code avec crédits d'usage.",
+    "publishedAt": "Tue, 30 Jun 2026 04:00:00 GMT",
+    "fetchedAt": "2026-07-06T10:12:39.698Z"
+  },
+  {
     "id": "c4a45eed67ee9087",
     "source": "anthropic-news",
     "url": "https://www.anthropic.com/news/claude-sonnet-4-6",
