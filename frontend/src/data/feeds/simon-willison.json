@@ -1,5 +1,59 @@
 [
   {
+    "id": "2546e8c5277b1da9",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jul/12/directly-responsible-individuals/#atom-everything",
+    "title": "Directly Responsible Individuals (DRI)",
+    "summary": "Les agents IA ne doivent jamais être DRI d'un projet : la responsabilité doit rester humaine car seuls les humains peuvent être tenus accountables.",
+    "publishedAt": "2026-07-12T23:57:14+00:00",
+    "fetchedAt": "2026-07-13T09:19:48.162Z"
+  },
+  {
+    "id": "abbfea7aa0789a5d",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jul/12/bump/#atom-everything",
+    "title": "Fable gets another bump",
+    "summary": "Anthropic prolonge l'accès à Fable 5 jusqu'en juillet sur tous les plans payants, maintenant les limites de Claude Code 50% plus élevées.",
+    "publishedAt": "2026-07-12T21:20:07+00:00",
+    "fetchedAt": "2026-07-13T09:19:48.162Z"
+  },
+  {
+    "id": "6786dc227c1f3563",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jul/9/gpt-5-6/#atom-everything",
+    "title": "The new GPT-5.6 family: Luna, Terra, Sol",
+    "summary": "GPT-5.6 arrive en trois tailles avec contexte 1M tokens et perfs agentiques fortes, mais Claude Fable 5 domine toujours en coding (SWE-Bench Pro 80% vs 64,6%).",
+    "publishedAt": "2026-07-09T19:46:38+00:00",
+    "fetchedAt": "2026-07-13T09:19:48.162Z"
+  },
+  {
+    "id": "903087bd5201a8c2",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jul/9/llm/#atom-everything",
+    "title": "llm 0.31.1",
+    "summary": "llm 0.31.1 corrige un bug avec OpenAI où les appels d'outils sans arguments causaient des erreurs JSON.",
+    "publishedAt": "2026-07-09T16:06:15+00:00",
+    "fetchedAt": "2026-07-13T09:19:48.162Z"
+  },
+  {
+    "id": "f159d9ad36573be3",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jul/8/rewriting-bun-in-rust/#atom-everything",
+    "title": "Rewriting Bun in Rust",
+    "summary": "Les agents IA rendent possible la réécriture complète de Bun en Rust, défiant le dogme du no-rewrite en software engineering.",
+    "publishedAt": "2026-07-08T23:57:21+00:00",
+    "fetchedAt": "2026-07-13T09:19:48.162Z"
+  },
+  {
+    "id": "f4006669ac4434d9",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jul/8/kenton-varda/#atom-everything",
+    "title": "Quoting Kenton Varda",
+    "summary": "Moratorium sur les descriptions IA pour PR/commits: elles détaillent le code visible mais omettent le contexte stratégique nécessaire.",
+    "publishedAt": "2026-07-08T20:03:34+00:00",
+    "fetchedAt": "2026-07-13T09:19:48.162Z"
+  },
+  {
     "id": "ef10e0f5c9baeb91",
     "source": "simon-willison",
     "url": "https://simonwillison.net/2026/Jul/5/sqlite-utils-fable/#atom-everything",
@@ -394,59 +448,5 @@
     "summary": "Le nombre d'agents IA est aussi peu significatif que compter des onglets navigateur - ce qui compte, c'est ce qu'ils accomplissent réellement.",
     "publishedAt": "2026-05-13T16:15:50+00:00",
     "fetchedAt": "2026-05-18T09:56:58.037Z"
-  },
-  {
-    "id": "0b61ddc929ed2668",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/May/13/csp-allow/#atom-everything",
-    "title": "CSP Allow-list Experiment",
-    "summary": "[off-topic]\n\nCe contenu concerne une expérience CSP (Content Security Policy) avec iframes, sans lien avec Claude Code, les API Anthropic, les agents IA ou le tooling LLM.",
-    "publishedAt": "2026-05-13T04:50:45+00:00",
-    "fetchedAt": "2026-05-18T09:56:58.037Z"
-  },
-  {
-    "id": "55bf5e37506c112a",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/May/9/luke-curley/#atom-everything",
-    "title": "Quoting Luke Curley",
-    "summary": "<blockquote cite=\"https://moq.dev/blog/webrtc-is-the-problem/\"><p>WebRTC is designed to <strong>degrade and drop my prompt</strong> during p",
-    "publishedAt": "2026-05-09T01:03:58+00:00",
-    "fetchedAt": "2026-05-09T08:11:56.108Z"
-  },
-  {
-    "id": "0abd127d4083ebc6",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/May/8/unreasonable-effectiveness-of-html/#atom-everything",
-    "title": "Using Claude Code: The Unreasonable Effectiveness of HTML",
-    "summary": "<p><strong><a href=\"https://twitter.com/trq212/status/2052809885763747935\">Using Claude Code: The Unreasonable Effectiveness of HTML</a></st",
-    "publishedAt": "2026-05-08T21:00:11+00:00",
-    "fetchedAt": "2026-05-09T08:11:56.108Z"
-  },
-  {
-    "id": "8179ec5fd21c4cf7",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/May/7/llm-gemini/#atom-everything",
-    "title": "llm-gemini 0.31",
-    "summary": "<p><strong>Release:</strong> <a href=\"https://github.com/simonw/llm-gemini/releases/tag/0.31\">llm-gemini 0.31</a></p> <blockquote> <ul> <li>",
-    "publishedAt": "2026-05-07T19:57:06+00:00",
-    "fetchedAt": "2026-05-09T08:11:56.108Z"
-  },
-  {
-    "id": "b04200899d48186e",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/May/7/big-words/#atom-everything",
-    "title": "Big Words",
-    "summary": "<p><strong>Tool:</strong> <a href=\"https://tools.simonwillison.net/big-words\">Big Words</a></p> <p>I'm using my <a href=\"https://simonwillis",
-    "publishedAt": "2026-05-07T18:47:09+00:00",
-    "fetchedAt": "2026-05-09T08:11:56.108Z"
-  },
-  {
-    "id": "446f5a8605ef2e79",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/May/7/firefox-claude-mythos/#atom-everything",
-    "title": "Behind the Scenes Hardening Firefox with Claude Mythos Preview",
-    "summary": "<p><strong><a href=\"https://hacks.mozilla.org/2026/05/behind-the-scenes-hardening-firefox/\">Behind the Scenes Hardening Firefox with Claude",
-    "publishedAt": "2026-05-07T17:56:25+00:00",
-    "fetchedAt": "2026-05-09T08:11:56.108Z"
   }
 ]
