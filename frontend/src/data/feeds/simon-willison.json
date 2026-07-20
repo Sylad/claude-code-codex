@@ -1,5 +1,50 @@
 [
   {
+    "id": "eb24893336d648f2",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jul/19/claude-code-in-bun-in-rust/#atom-everything",
+    "title": "Claude Code uses Bun written in Rust now",
+    "summary": "Claude Code v2.1.181+ embarque Bun réécrit en Rust pour +10% de démarrage plus rapide sur Linux.",
+    "publishedAt": "2026-07-19T03:54:09+00:00",
+    "fetchedAt": "2026-07-20T08:52:03.357Z"
+  },
+  {
+    "id": "efd351343b074a48",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jul/18/claude-make-fable-5-permanent/#atom-everything",
+    "title": "Claude make Fable 5 permanent",
+    "summary": "Fable 5 devient permanent dans les plans Max/Team Premium à partir du 20 juillet, accessible à 50% des limites.",
+    "publishedAt": "2026-07-18T06:00:13+00:00",
+    "fetchedAt": "2026-07-20T08:52:03.357Z"
+  },
+  {
+    "id": "1371fbba18fd875e",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jul/17/llm-cliche-highlighter/#atom-everything",
+    "title": "LLM cliché highlighter",
+    "summary": "Outil web pour détecter les clichés de textes générés par IA (formules toutes faites, patterns répétitifs).",
+    "publishedAt": "2026-07-17T12:11:11+00:00",
+    "fetchedAt": "2026-07-20T08:52:03.357Z"
+  },
+  {
+    "id": "d8ca3e3a6045eb55",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jul/16/bad-codex-bug/#atom-everything",
+    "title": "Quoting Thibault Sottiaux",
+    "summary": "GPT-5.6 supprime les fichiers en mode full access sans sandboxing : toujours activer l'auto-review et les protections.",
+    "publishedAt": "2026-07-16T17:45:59+00:00",
+    "fetchedAt": "2026-07-20T08:52:03.357Z"
+  },
+  {
+    "id": "46c8dc21ff9066cd",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jul/16/linus-torvalds/#atom-everything",
+    "title": "Quoting Linus Torvalds",
+    "summary": "Linus Torvalds affirme que l'IA est un outil utile et indispensable pour Linux, rejetant les critiques anti-IA du projet open-source.",
+    "publishedAt": "2026-07-16T13:26:10+00:00",
+    "fetchedAt": "2026-07-20T08:52:03.357Z"
+  },
+  {
     "id": "2546e8c5277b1da9",
     "source": "simon-willison",
     "url": "https://simonwillison.net/2026/Jul/12/directly-responsible-individuals/#atom-everything",
@@ -403,50 +448,5 @@
     "summary": "datasette-agent 0.1a3 améliore l'UX avec boutons SQL, meilleure gestion des réponses tronquées et affichage optimisé des résultats d'outils.",
     "publishedAt": "2026-05-21T15:04:09+00:00",
     "fetchedAt": "2026-05-25T09:59:35.523Z"
-  },
-  {
-    "id": "bedb4be20cc8667c",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/May/20/spacex-s1/#atom-everything",
-    "title": "Quoting SpaceX S-1",
-    "summary": "SpaceX fournira 1,25 milliard $/mois de compute à Anthropic jusqu'en 2029 sur ses clusters COLOSSUS.",
-    "publishedAt": "2026-05-20T22:26:36+00:00",
-    "fetchedAt": "2026-05-25T09:59:35.523Z"
-  },
-  {
-    "id": "1a725cefd7d55fbd",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/May/20/tokens-per-second/#atom-everything",
-    "title": "How fast is 10 tokens per second really?",
-    "summary": "Simulateur interactif pour visualiser les vitesses de génération de tokens (5-800/s) et comprendre réellement ce que signifie une latence donnée.",
-    "publishedAt": "2026-05-20T17:57:45+00:00",
-    "fetchedAt": "2026-05-25T09:59:35.523Z"
-  },
-  {
-    "id": "dab5068a10f001dc",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/May/15/datasette-llm-limits/#atom-everything",
-    "title": "datasette-llm-limits 0.1a0",
-    "summary": "Limiter les dépenses LLM par utilisateur dans Datasette avec des budgets quotidiens configurables.",
-    "publishedAt": "2026-05-15T00:42:09+00:00",
-    "fetchedAt": "2026-05-18T09:56:58.037Z"
-  },
-  {
-    "id": "c533eb9ba1b6d17a",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/May/14/not-so-locked-in/#atom-everything",
-    "title": "Not so locked in any more",
-    "summary": "Les agents IA réduisent le verrouillage technologique : migrer entre stacks devient moins risqué et plus faisable.",
-    "publishedAt": "2026-05-14T22:53:49+00:00",
-    "fetchedAt": "2026-05-18T09:56:58.037Z"
-  },
-  {
-    "id": "581522dde77cbd5f",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/May/13/boris-mann/#atom-everything",
-    "title": "Quoting Boris Mann",
-    "summary": "Le nombre d'agents IA est aussi peu significatif que compter des onglets navigateur - ce qui compte, c'est ce qu'ils accomplissent réellement.",
-    "publishedAt": "2026-05-13T16:15:50+00:00",
-    "fetchedAt": "2026-05-18T09:56:58.037Z"
   }
 ]
