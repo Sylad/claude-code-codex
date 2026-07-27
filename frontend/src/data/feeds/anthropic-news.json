@@ -70,5 +70,14 @@
     "summary": "Claude Opus 4.5 disponible: meilleur modèle pour coding/agents/computer use, 5$/25$ par million tokens, accessible via API.",
     "publishedAt": "Mon, 24 Nov 2025 05:00:00 GMT",
     "fetchedAt": "2026-06-15T11:57:53.003Z"
+  },
+  {
+    "id": "c34a327604b5be4a",
+    "source": "anthropic-news",
+    "url": "https://www.anthropic.com/news/claude-opus-5",
+    "title": "Introducing Claude Opus 5",
+    "summary": "Claude Opus 5 est le nouvel état de l'art pour le coding, 2x moins cher que Fable 5 avec performances supérieures sur Frontier-Bench et CursorBench.",
+    "publishedAt": "Fri, 24 Jul 2026 04:00:00 GMT",
+    "fetchedAt": "2026-07-27T09:43:39.488Z"
   }
 ]

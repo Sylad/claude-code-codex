@@ -1,5 +1,50 @@
 [
   {
+    "id": "25a79f33334f2b0e",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jul/25/boris-cherny/#atom-everything",
+    "title": "Quoting Boris Cherny",
+    "summary": "Opus 5 offre une meilleure résistance aux injections de prompts selon les évals de sécurité d'Anthropic.",
+    "publishedAt": "2026-07-25T00:42:59+00:00",
+    "fetchedAt": "2026-07-27T09:43:45.416Z"
+  },
+  {
+    "id": "9ad129712140dfd6",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jul/24/introducing-claude-opus-5/#atom-everything",
+    "title": "Introducing Claude Opus 5",
+    "summary": "Claude Opus 5 surpasse Opus 4.8 au même prix, excelle en raisonnement complexe et vulnérabilités de sécurité.",
+    "publishedAt": "2026-07-24T23:48:50+00:00",
+    "fetchedAt": "2026-07-27T09:43:45.416Z"
+  },
+  {
+    "id": "1611d485eafec99f",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jul/21/nativ/#atom-everything",
+    "title": "Nativ: Run AI models locally on your Mac",
+    "summary": "Nativ: application macOS pour exécuter des modèles IA localement via MLX, avec API localhost pour intégration.",
+    "publishedAt": "2026-07-21T14:22:27+00:00",
+    "fetchedAt": "2026-07-27T09:43:45.416Z"
+  },
+  {
+    "id": "07d858f5b61f2e83",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jul/21/cat-and-thariq/#atom-everything",
+    "title": "A Fireside Chat with Cat and Thariq from the Claude Code team",
+    "summary": "Claude Tag améliore les PRs de 65%, et les system prompts optimisés (80% plus courts) surpassent les exemples pour Opus et Fable.",
+    "publishedAt": "2026-07-21T12:54:02+00:00",
+    "fetchedAt": "2026-07-27T09:43:45.416Z"
+  },
+  {
+    "id": "b3d901fa5502f189",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Jul/20/cheap-reverse-engineering/#atom-everything",
+    "title": "Reverse-engineering is cheap now",
+    "summary": "Les agents de code réduisent drastiquement le coût du reverse-engineering et l'automatisation domestique, rendant viable ce qui était économiquement inaccessible avant.",
+    "publishedAt": "2026-07-20T19:24:05+00:00",
+    "fetchedAt": "2026-07-27T09:43:45.416Z"
+  },
+  {
     "id": "eb24893336d648f2",
     "source": "simon-willison",
     "url": "https://simonwillison.net/2026/Jul/19/claude-code-in-bun-in-rust/#atom-everything",
@@ -403,50 +448,5 @@
     "summary": "SQLite renforce sa politique contre le code généré par IA mais accepte les rapports de bugs IA avec cas de test reproductibles.",
     "publishedAt": "2026-05-27T23:44:37+00:00",
     "fetchedAt": "2026-06-01T11:27:25.487Z"
-  },
-  {
-    "id": "9531c79f6646d4b5",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/May/27/product-market-fit/#atom-everything",
-    "title": "I think Anthropic and OpenAI have found product-market fit",
-    "summary": "Anthropic atteint la rentabilité : Claude Code et les agents IA deviennent essentiels en entreprise malgré les coûts API croissants.",
-    "publishedAt": "2026-05-27T16:38:35+00:00",
-    "fetchedAt": "2026-06-01T11:27:25.487Z"
-  },
-  {
-    "id": "e7c40babf6b02277",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/May/24/datasette-agent/#atom-everything",
-    "title": "datasette-agent 0.1a4",
-    "summary": "datasette-agent 0.1a4 ajoute un interface de chat agent dans le menu Jump de Datasette via un hook JavaScript.",
-    "publishedAt": "2026-05-24T23:19:34+00:00",
-    "fetchedAt": "2026-05-25T09:59:35.523Z"
-  },
-  {
-    "id": "bab7b4bab5ccc8e9",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/May/24/armin-ronacher/#atom-everything",
-    "title": "Quoting Armin Ronacher",
-    "summary": "Armin Ronacher dénonce les rapports de bugs générés par IA : privilégier l'observation brute (commande, résultat attendu, résultat réel, logs).",
-    "publishedAt": "2026-05-24T18:46:53+00:00",
-    "fetchedAt": "2026-05-25T09:59:35.523Z"
-  },
-  {
-    "id": "7ea449e12be43061",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/May/21/datasette-agent-sprites/#atom-everything",
-    "title": "datasette-agent-sprites 0.1a0",
-    "summary": "Plugin Datasette Agent pour exécuter des commandes dans un sandbox Fly Sprites, utile pour les agents Claude.",
-    "publishedAt": "2026-05-21T18:21:07+00:00",
-    "fetchedAt": "2026-05-25T09:59:35.523Z"
-  },
-  {
-    "id": "efb2ba214b08463e",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/May/21/datasette-agent-2/#atom-everything",
-    "title": "datasette-agent 0.1a3",
-    "summary": "datasette-agent 0.1a3 améliore l'UX avec boutons SQL, meilleure gestion des réponses tronquées et affichage optimisé des résultats d'outils.",
-    "publishedAt": "2026-05-21T15:04:09+00:00",
-    "fetchedAt": "2026-05-25T09:59:35.523Z"
   }
 ]
