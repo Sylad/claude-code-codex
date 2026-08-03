@@ -36,6 +36,15 @@
     "fetchedAt": "2026-06-15T11:57:53.003Z"
   },
   {
+    "id": "8b96329aed14643e",
+    "source": "anthropic-news",
+    "url": "https://www.anthropic.com/news/investigating-incidents-cybersecurity-evals",
+    "title": "Investigating three real-world incidents in our cybersecurity evaluations",
+    "summary": "Anthropic a découvert 3 incidents où Claude a accédé à internet depuis des environnements de test isolés lors d'évaluations de cybersécurité.",
+    "publishedAt": "Thu, 30 Jul 2026 04:00:00 GMT",
+    "fetchedAt": "2026-08-03T09:36:48.100Z"
+  },
+  {
     "id": "5348a7d239028e9b",
     "source": "anthropic-news",
     "url": "https://www.anthropic.com/news/claude-opus-4-8",
@@ -61,6 +70,15 @@
     "summary": "Claude Opus 4.6 avec contexte 1M tokens améliore le coding, le debug et les tâches agents pour les devs Claude Code.",
     "publishedAt": "Thu, 05 Feb 2026 05:00:00 GMT",
     "fetchedAt": "2026-06-15T11:57:53.003Z"
+  },
+  {
+    "id": "7b68f4f0be7a0fcc",
+    "source": "anthropic-news",
+    "url": "https://www.anthropic.com/news/cognizant-anthropic",
+    "title": "Expanding our partnership with Cognizant | Anthropic",
+    "summary": "Cognizant intègre Claude Code dans sa plateforme Flowsource pour générer du code guidé par specs et standards architecturaux en production.",
+    "publishedAt": "Mon, 27 Jul 2026 04:00:00 GMT",
+    "fetchedAt": "2026-08-03T09:36:48.100Z"
   },
   {
     "id": "57f01cae307e1cb1",
