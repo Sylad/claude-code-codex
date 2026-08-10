@@ -1,5 +1,14 @@
 [
   {
+    "id": "a66075dc0af41a68",
+    "source": "anthropic-news",
+    "url": "https://www.anthropic.com/news/anthropic-economic-index-connector",
+    "title": "The Anthropic Economic Index connector",
+    "summary": "Connecteur Claude gratuit pour explorer l'Anthropic Economic Index et analyser comment l'IA est réellement utilisée dans l'économie.",
+    "publishedAt": "Wed, 22 Jul 2026 04:00:00 GMT",
+    "fetchedAt": "2026-08-10T07:24:57.176Z"
+  },
+  {
     "id": "091b61caa9d6ad3b",
     "source": "anthropic-news",
     "url": "https://www.anthropic.com/news/claude-is-a-space-to-think",
