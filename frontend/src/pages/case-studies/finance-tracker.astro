@@ -16,6 +16,38 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
   />
 
   <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12 space-y-12">
+    <CaseStudySection eyebrow="Aperçu visuel">
+      <p>
+        Captures prises en <strong>mode démo</strong> (persona "Alex Démo",
+        dataset synthétique — aucune donnée réelle ne sort jamais de la
+        machine, et surtout pas vers un repo public).
+      </p>
+      <figure class="my-6">
+        <img src="/case-studies/finance-tracker/01-dashboard.png" alt="Dashboard — patrimoine net, alertes, score de santé" class="rounded-lg border border-white/10" loading="lazy" />
+        <figcaption class="text-xs text-ink-muted mt-2 font-mono">
+          Dashboard — patrimoine net (solde + épargne − dette), alertes revolving proches du plafond, score de santé mensuel.
+        </figcaption>
+      </figure>
+      <figure class="my-6">
+        <img src="/case-studies/finance-tracker/02-health.png" alt="Santé financière — 4 indicateurs à seuils + conseils IA locale" class="rounded-lg border border-white/10" loading="lazy" />
+        <figcaption class="text-xs text-ink-muted mt-2 font-mono">
+          Santé financière — reste à vivre, charge de dette, dépendance aux tirages, trajectoire d'encours 6 mois. Verdicts calculés en code (seuils configurables) ; les conseils rédigés, eux, viennent d'un LLM 100% local (Ollama).
+        </figcaption>
+      </figure>
+      <figure class="my-6">
+        <img src="/case-studies/finance-tracker/03-expenses.png" alt="Dépenses — camembert drill-down, crédits isolés" class="rounded-lg border border-white/10" loading="lazy" />
+        <figcaption class="text-xs text-ink-muted mt-2 font-mono">
+          Dépenses — répartition des retraits avec crédits / abonnements connus / épargne / opérations neutres isolés d'office. Clic sur une part = liste des transactions. L'IA locale propose ensuite des coupes (abonnement / achat ponctuel / autre).
+        </figcaption>
+      </figure>
+      <figure class="my-6">
+        <img src="/case-studies/finance-tracker/04-loans.png" alt="Crédits — classiques, revolving, paiements en N fois" class="rounded-lg border border-white/10" loading="lazy" />
+        <figcaption class="text-xs text-ink-muted mt-2 font-mono">
+          Crédits — prêts classiques (barre temporelle), réserves revolving (jauge d'encours), paiements en N× (Klarna…). Import batch des relevés de crédit et plans d'amortissement, rattachés par n° de contrat.
+        </figcaption>
+      </figure>
+    </CaseStudySection>
+
     <CaseStudySection eyebrow="Pourquoi ce projet">
       <p>
         Suivre ses finances perso à la main, c'est lourd : ouvrir chaque relevé,
@@ -173,6 +205,58 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
           telle quelle sur warhammer40k. Pas de hash, pas de JWT : token clair
           comparé à une env var, sessionStorage côté frontend, prompt natif
           en cas de 401 et retry. Suffisant pour un usage perso/familial.</span>
+        </li>
+      </ul>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="2026-08 — santé financière & IA 100% locale">
+      <p>
+        Trois mois de vie réelle plus tard, l'app a changé de nature : d'un
+        <em>visualiseur</em> de relevés, elle est devenue un <em>outil de
+        décision</em> pour sortir d'une situation d'endettement revolving.
+        Principe directeur de cette phase : <strong>« les chiffres en code,
+        les mots au LLM »</strong> — aucun verdict n'est délégué à une IA,
+        et le LLM utilisé est un modèle local (Ollama + qwen3 sur RTX 5090),
+        donc les libellés bancaires ne quittent jamais la machine.
+      </p>
+      <ul class="space-y-2.5 leading-relaxed">
+        <li class="flex gap-3">
+          <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+          <span><strong>Diagnostic santé à 4 indicateurs</strong> — reste à
+          vivre, charge de dette, dépendance aux tirages revolving,
+          trajectoire d'encours 6 mois. Seuils configurables, verdicts
+          déterministes testés ; l'IA locale ne fait que rédiger les
+          conseils. Un test sentinelle verrouille le prompt : le nom de
+          l'employeur ne doit jamais y apparaître.</span>
+        </li>
+        <li class="flex gap-3">
+          <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+          <span><strong>Détection LLM des crédits et paiements en N fois</strong>
+          (Klarna, PayPal 4×…) en trois verrous : le LLM local <em>propose</em>,
+          un validateur déterministe <em>vérifie</em> (1 débit/mois max, jour
+          de prélèvement stable ±5j, fraîcheur, nombre d'échéances plausible
+          ∈ {`{2,3,4,5,6,10,12}`}), l'humain <em>accepte</em>. Le LLM avait
+          inventé un « 8× » — le validateur l'aurait affiché « estimé », le
+          vrai contrat Zalando a tranché : 3×.</span>
+        </li>
+        <li class="flex gap-3">
+          <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+          <span><strong>Import crédits unifié</strong> — un seul bouton
+          accepte relevés de crédit ET plans d'amortissement en vrac.
+          L'extraction identifie le <code>documentType</code> par PDF et
+          route ; un relevé bancaire déposé au mauvais endroit est refusé
+          avec un message qui pointe la bonne page (leçon apprise : avant ce
+          garde-fou, un relevé Sofinco a écrasé le relevé bancaire du même
+          mois — restauré grâce aux snapshots automatiques pré-écriture).</span>
+        </li>
+        <li class="flex gap-3">
+          <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+          <span><strong>Recalibrage épargne robuste au désordre</strong> —
+          le solde officiel (section « vos autres comptes » du relevé) prime,
+          mais un relevé plus ancien qu'un recalibrage déjà appliqué ne peut
+          plus « rembobiner » le solde. Et plus d'intérêts estimés par-dessus
+          un solde officiel qui les contient déjà : tout mécanisme de
+          recalage doit être <em>monotone dans l'ordre des périodes</em>.</span>
         </li>
       </ul>
     </CaseStudySection>
