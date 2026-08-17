@@ -1,5 +1,41 @@
 [
   {
+    "id": "b2b654098c8b61bd",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Aug/16/markdown-svg-upgrades/",
+    "title": "Markdown SVG upgrades",
+    "summary": "[off-topic]\n\nCe post traite d'un outil personnel de rendu Markdown+SVG, sans lien avec Claude, les agents IA ou le tooling LLM.",
+    "publishedAt": "2026-08-16T23:59:37+00:00",
+    "fetchedAt": "2026-08-17T06:46:13.647Z"
+  },
+  {
+    "id": "79efbb054d4af9fc",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Aug/16/qwen-38-27b/",
+    "title": "Qwen 3.8 27B is excellent, but it defaults to wildly overthinking things",
+    "summary": "Qwen 3.8 27B excelle mais overthinking par défaut : réduire reasoning_effort améliore vitesse et pertinence pour l'inférence locale.",
+    "publishedAt": "2026-08-16T22:00:39+00:00",
+    "fetchedAt": "2026-08-17T06:46:13.647Z"
+  },
+  {
+    "id": "65448e9eb8b57102",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Aug/14/dont-classify-hallucinate/",
+    "title": "Don't classify. Hallucinate!",
+    "summary": "Générer des tags avec l'IA sans liste prédéfinie, puis les mapper via embeddings pour classifier du contenu à grande échelle.",
+    "publishedAt": "2026-08-14T21:54:35+00:00",
+    "fetchedAt": "2026-08-17T06:46:13.647Z"
+  },
+  {
+    "id": "46642bc6105696ed",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Aug/12/florian-herrengt/",
+    "title": "Quoting Florian Herrengt",
+    "summary": "Attention : déléguer trop de code à l'IA sans comprendre l'architecture crée une dette cognitive dangereuse et des bugs irrésolus.",
+    "publishedAt": "2026-08-12T15:08:47+00:00",
+    "fetchedAt": "2026-08-17T06:46:13.647Z"
+  },
+  {
     "id": "5e6d7871f3c46c13",
     "source": "simon-willison",
     "url": "https://simonwillison.net/2026/Aug/9/github-models-is-now-retired/#atom-everything",
@@ -412,41 +448,5 @@
     "summary": "Qwen 3.6-27B s'avère efficace en local pour les tâches de coding, utile pour les devs cherchant une alternative offline à Claude Code.",
     "publishedAt": "2026-06-16T16:04:59+00:00",
     "fetchedAt": "2026-06-22T11:47:51.002Z"
-  },
-  {
-    "id": "5d3028816a29c80e",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Jun/16/fable-5-export-controls/#atom-everything",
-    "title": "The Fable 5 Export Controls Harm US Cyber Defense",
-    "summary": "Les contrôles d'export américains menacent de bloquer les capacités essentielles des modèles IA pour sécuriser le code, comme la correction de vulnérabilités.",
-    "publishedAt": "2026-06-16T05:20:29+00:00",
-    "fetchedAt": "2026-06-22T11:47:51.002Z"
-  },
-  {
-    "id": "e464b7a63a6a0397",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Jun/13/us-government-directive-to-suspend-access/#atom-everything",
-    "title": "Statement on the US government directive to suspend access to Fable 5 and Mythos 5",
-    "summary": "Les modèles Fable 5 et Mythos 5 d'Anthropic sont suspendus suite à un directive gouvernementale US, les autres modèles restent accessibles.",
-    "publishedAt": "2026-06-13T01:01:50+00:00",
-    "fetchedAt": "2026-06-15T11:58:04.196Z"
-  },
-  {
-    "id": "c9ab8f8aa14fe295",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Jun/11/fable-is-relentlessly-proactive/#atom-everything",
-    "title": "Claude Fable is relentlessly proactive",
-    "summary": "Claude Fable excelle à explorer les dépendances et fichiers locaux pour déboguer efficacement les problèmes de code.",
-    "publishedAt": "2026-06-11T23:35:17+00:00",
-    "fetchedAt": "2026-06-15T11:58:04.196Z"
-  },
-  {
-    "id": "2c271f0703109132",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Jun/11/anthropic-walks-back-policy/#atom-everything",
-    "title": "Anthropic Walks Back Policy That Could Have ‘Sabotaged’ AI Researchers Using Claude",
-    "summary": "Anthropic rend visibles les protections de Claude pour la recherche LLM au lieu de les appliquer en silence.",
-    "publishedAt": "2026-06-11T03:45:49+00:00",
-    "fetchedAt": "2026-06-15T11:58:04.196Z"
   }
 ]
