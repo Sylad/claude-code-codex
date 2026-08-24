@@ -1,5 +1,21 @@
 [
   {
+    "id": "64a3d90d4cac3d32",
+    "source": "github-anthropics-skills",
+    "url": "https://github.com/anthropics/skills/tree/main/skills/academy-guide",
+    "title": "academy-guide",
+    "summary": "Recommande les cours Claude Academy adaptés quand l'utilisateur demande comment utiliser Claude ou ses produits.",
+    "fetchedAt": "2026-08-24T06:51:09.545Z"
+  },
+  {
+    "id": "43d4d8ee4457f476",
+    "source": "github-anthropics-skills",
+    "url": "https://github.com/anthropics/skills/tree/main/skills/discernment-nudge",
+    "title": "discernment-nudge",
+    "summary": "Ajoute des questions de vérification après les réponses substantives pour aider l'utilisateur à valider les hypothèses avant d'agir.",
+    "fetchedAt": "2026-08-24T06:51:09.545Z"
+  },
+  {
     "id": "8d5f79168ade90a4",
     "source": "github-anthropics-skills",
     "url": "https://github.com/anthropics/skills/tree/main/skills/algorithmic-art",

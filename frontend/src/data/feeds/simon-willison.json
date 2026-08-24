@@ -1,5 +1,104 @@
 [
   {
+    "id": "99acd73254864f62",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Aug/23/anthropics-best-ai-model-struggles-to-attract-users-as-cheaper-t/",
+    "title": "Anthropic’s best AI model struggles to attract users as cheaper tools thrive",
+    "summary": "Opus 4.8 domine l'usage chez les devs (28%), tandis que les modèles coûteux comme Fable 5 peinent à séduire face aux alternatives moins chères.",
+    "publishedAt": "2026-08-23T20:24:52+00:00",
+    "fetchedAt": "2026-08-24T06:50:51.001Z"
+  },
+  {
+    "id": "71343321c7660b7a",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Aug/23/drew-breunig/",
+    "title": "Quoting Drew Breunig",
+    "summary": "Fable change la donne : optimiser son contexte et ses stratégies devient rentable quand les modèles coûtent cher.",
+    "publishedAt": "2026-08-23T19:55:30+00:00",
+    "fetchedAt": "2026-08-24T06:50:51.001Z"
+  },
+  {
+    "id": "0eccfa5da2ee777f",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Aug/22/linus-torvalds/",
+    "title": "Quoting Linus Torvalds",
+    "summary": "Linus Torvalds débogage un problème Linux avec l'aide d'une IA : utile mais peu persistante, elle a failli abandonner plusieurs fois.",
+    "publishedAt": "2026-08-22T21:04:26+00:00",
+    "fetchedAt": "2026-08-24T06:50:51.001Z"
+  },
+  {
+    "id": "d548c978bd4efd13",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Aug/22/more-than-just-code-review/",
+    "title": "More than just code review",
+    "summary": "Maîtriser les agents de code c'est savoir les instruire et valider leurs changements, au-delà du simple review ligne par ligne.",
+    "publishedAt": "2026-08-22T15:56:54+00:00",
+    "fetchedAt": "2026-08-24T06:50:51.001Z"
+  },
+  {
+    "id": "cf6af109a0ee1fd2",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Aug/21/llm/",
+    "title": "llm 0.32.1",
+    "summary": "llm 0.32.1 corrige un bug de dépendance httpx qui cassait les nouvelles installations.",
+    "publishedAt": "2026-08-21T17:16:13+00:00",
+    "fetchedAt": "2026-08-24T06:50:51.001Z"
+  },
+  {
+    "id": "866d80edbe878622",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Aug/21/llm-openrouter/",
+    "title": "llm-openrouter 0.7",
+    "summary": "llm-openrouter 0.7 ajoute l'affichage des traces de raisonnement et 3 outils serveur (Shell, WebFetch, WebSearch) compatibles LLM 0.32.",
+    "publishedAt": "2026-08-21T16:58:19+00:00",
+    "fetchedAt": "2026-08-24T06:50:51.001Z"
+  },
+  {
+    "id": "51b0cf062317357a",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Aug/21/stop-making-tuis/",
+    "title": "Stop Making TUIs",
+    "summary": "Les agents IA rendent trivial de remplacer des CLIs par des UIs natives : arrête de faire des TUIs, construis des apps vraies.",
+    "publishedAt": "2026-08-21T16:07:32+00:00",
+    "fetchedAt": "2026-08-24T06:50:51.001Z"
+  },
+  {
+    "id": "21b220d0ec1ebd80",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Aug/21/matt-webb/",
+    "title": "Quoting Matt Webb",
+    "summary": "Utiliser une IA comme tuteur interactif plutôt que générateur de code pousse à mieux apprendre et maîtriser les concepts difficiles.",
+    "publishedAt": "2026-08-21T15:06:26+00:00",
+    "fetchedAt": "2026-08-24T06:50:51.001Z"
+  },
+  {
+    "id": "606747c020460cc9",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Aug/19/smolmachines-untrusted-sandbox/",
+    "title": "smolmachines / smolvm as a sandbox for untrusted Python & JavaScript",
+    "summary": "Exploration de smolvm comme sandbox sécurisé pour exécuter du code Python/JS non fiable avec limites CPU/RAM.",
+    "publishedAt": "2026-08-19T23:16:00+00:00",
+    "fetchedAt": "2026-08-24T06:50:51.001Z"
+  },
+  {
+    "id": "430ba0c7a24894d4",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Aug/19/jeremy-morrell/",
+    "title": "Quoting Jeremy Morrell",
+    "summary": "Les LLMs réduisent le coût d'extensions logicielles via sandbox sécurisés, permettant aux apps d'offrir des superpuissances aux utilisateurs.",
+    "publishedAt": "2026-08-19T22:56:31+00:00",
+    "fetchedAt": "2026-08-24T06:50:51.001Z"
+  },
+  {
+    "id": "e0c0c7d06c2b5539",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Aug/19/conceptual-integrity-and-counting-lines-of-code/",
+    "title": "Conceptual integrity and counting lines of code",
+    "summary": "Les agents IA multiplient la productivité code (1000 lignes/jour vs 50-200 avant), mais le vrai défi devient la capacité cognitive : gérer la complexité croissante nécessite toujours une équipe.",
+    "publishedAt": "2026-08-19T22:46:07+00:00",
+    "fetchedAt": "2026-08-24T06:50:51.001Z"
+  },
+  {
     "id": "b2b654098c8b61bd",
     "source": "simon-willison",
     "url": "https://simonwillison.net/2026/Aug/16/markdown-svg-upgrades/",
@@ -349,104 +448,5 @@
     "summary": "Claude Sonnet 5 offre des perfs proches d'Opus 4.8 à prix réduit, mais le nouveau tokenizer génère 30% plus de tokens, annulant l'économie.",
     "publishedAt": "2026-06-30T21:23:02+00:00",
     "fetchedAt": "2026-07-06T10:12:44.726Z"
-  },
-  {
-    "id": "968fc5e2f5c07411",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Jun/28/jon-udell/#atom-everything",
-    "title": "Quoting Jon Udell",
-    "summary": "Garder les agents comme assistants dans votre workflow, pas comme boîtes noires autonomes qui génèrent du code non-reviewable.",
-    "publishedAt": "2026-06-28T21:57:41+00:00",
-    "fetchedAt": "2026-06-29T10:51:20.276Z"
-  },
-  {
-    "id": "ae29768dabe40988",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Jun/26/timothy-b-lee/#atom-everything",
-    "title": "Quoting Timothy B. Lee",
-    "summary": "Maîtriser les LLMs demande une courbe d'apprentissage réelle, tout comme manager demande des compétences au-delà des ordres simples.",
-    "publishedAt": "2026-06-26T21:15:09+00:00",
-    "fetchedAt": "2026-06-29T10:51:20.276Z"
-  },
-  {
-    "id": "cd2ad53be65824e8",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Jun/26/hack-my-ai-assistant/#atom-everything",
-    "title": "What happened after 2,000 people tried to hack my AI assistant",
-    "summary": "6000 tentatives de prompt injection sur Opus 4.6 ont échoué : les modèles frontière résistent mieux aux injections, mais évite les systèmes en prod critiques.",
-    "publishedAt": "2026-06-26T18:33:14+00:00",
-    "fetchedAt": "2026-06-29T10:51:20.276Z"
-  },
-  {
-    "id": "5e81afa6f8567587",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Jun/26/incident-report/#atom-everything",
-    "title": "Incident Report: CVE-2026-LGTM",
-    "summary": "Scénario satirique sur les risques des agents IA en désaccord : boucles infinies, coûts exponentiels et chaos supply-chain.",
-    "publishedAt": "2026-06-26T17:58:54+00:00",
-    "fetchedAt": "2026-06-29T10:51:20.276Z"
-  },
-  {
-    "id": "802363aee5105ca5",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Jun/24/browser-compat-db/#atom-everything",
-    "title": "simonw/browser-compat-db",
-    "summary": "[off-topic]\n\nCe post parle principalement de la conversion de données MDN en SQLite et du déploiement via GitHub Actions. Bien qu'il mentionne Claude Code pour le script de conversion, le focus n'est pas sur Claude Code ou les agents IA comme outils pour les devs, mais sur un projet de base de données.",
-    "publishedAt": "2026-06-24T23:59:03+00:00",
-    "fetchedAt": "2026-06-29T10:51:20.276Z"
-  },
-  {
-    "id": "f26c96cfcb192832",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Jun/22/prompt-injection-as-role-confusion/#atom-everything",
-    "title": "Prompt Injection as Role Confusion",
-    "summary": "Les modèles confondent le style du texte avec son rôle : des attaques par injection peuvent contourner les protections en imitant le format interne.",
-    "publishedAt": "2026-06-22T23:59:53+00:00",
-    "fetchedAt": "2026-06-29T10:51:20.276Z"
-  },
-  {
-    "id": "ed140b4e4c38f7b0",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Jun/21/temporary-cloudflare-accounts/#atom-everything",
-    "title": "Temporary Cloudflare Accounts for AI agents",
-    "summary": "Cloudflare permet de déployer des Workers sans compte via `wrangler deploy --temporary` pour 60 min, idéal pour tester rapidement avec des agents IA.",
-    "publishedAt": "2026-06-21T22:01:04+00:00",
-    "fetchedAt": "2026-06-22T11:47:51.002Z"
-  },
-  {
-    "id": "9370d60ff069b1f4",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Jun/19/sean-lynch/#atom-everything",
-    "title": "Quoting Sean Lynch",
-    "summary": "MCP isole l'authentification hors du contexte de l'agent, simplifiant l'intégration d'APIs sans surcharger le LLM.",
-    "publishedAt": "2026-06-19T22:45:49+00:00",
-    "fetchedAt": "2026-06-22T11:47:51.002Z"
-  },
-  {
-    "id": "f789678befe69c04",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Jun/17/glm-52/#atom-everything",
-    "title": "GLM-5.2 is probably the most powerful text-only open weights LLM",
-    "summary": "GLM-5.2 (753B params) devient le meilleur modèle open-weights texte, classé 2e en codage web, mais consomme beaucoup plus de tokens.",
-    "publishedAt": "2026-06-17T23:58:39+00:00",
-    "fetchedAt": "2026-06-22T11:47:51.002Z"
-  },
-  {
-    "id": "25776de53c589c57",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Jun/17/charity-majors/#atom-everything",
-    "title": "Quoting Charity Majors",
-    "summary": "En 2025, la production de code est devenue gratuite et instantanée : il faut maintenant privilégier la discipline d'ingénierie sur la quantité générée.",
-    "publishedAt": "2026-06-17T17:12:41+00:00",
-    "fetchedAt": "2026-06-22T11:47:51.002Z"
-  },
-  {
-    "id": "99a1d4516e1b7851",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Jun/16/georgi-gerganov/#atom-everything",
-    "title": "Quoting Georgi Gerganov",
-    "summary": "Qwen 3.6-27B s'avère efficace en local pour les tâches de coding, utile pour les devs cherchant une alternative offline à Claude Code.",
-    "publishedAt": "2026-06-16T16:04:59+00:00",
-    "fetchedAt": "2026-06-22T11:47:51.002Z"
   }
 ]
