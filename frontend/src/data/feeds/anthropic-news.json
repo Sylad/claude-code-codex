@@ -27,6 +27,15 @@
     "fetchedAt": "2026-07-06T10:12:39.698Z"
   },
   {
+    "id": "1e032b3767d6bbcd",
+    "source": "anthropic-news",
+    "url": "https://www.anthropic.com/news/wellbeing-research-grants",
+    "title": "Funding better evaluations of AI`s impact on wellbeing",
+    "summary": "Anthropic finance 5M$ de recherche indépendante pour évaluer l'impact du bien-être des utilisateurs d'IA, avec accès aux modèles et code open-source.",
+    "publishedAt": "Tue, 25 Aug 2026 04:00:00 GMT",
+    "fetchedAt": "2026-08-31T12:36:05.284Z"
+  },
+  {
     "id": "c4a45eed67ee9087",
     "source": "anthropic-news",
     "url": "https://www.anthropic.com/news/claude-sonnet-4-6",
@@ -61,6 +70,15 @@
     "summary": "Claude Opus 4.8 offre une meilleure fiabilité pour les agents, des workflows dynamiques dans Claude Code et un fast mode 3× moins cher.",
     "publishedAt": "Thu, 28 May 2026 04:00:00 GMT",
     "fetchedAt": "2026-06-15T11:57:53.003Z"
+  },
+  {
+    "id": "35305757066a6f71",
+    "source": "anthropic-news",
+    "url": "https://www.anthropic.com/news/model-hardware-standard-research-preview",
+    "title": "Previewing the Model Hardware Standard",
+    "summary": "Anthropic lance MHS, un standard ouvert pour connecter rapidement des appareils physiques à des agents IA via MCP, réduisant l'intégration de semaines à minutes.",
+    "publishedAt": "Thu, 27 Aug 2026 04:00:00 GMT",
+    "fetchedAt": "2026-08-31T12:36:05.284Z"
   },
   {
     "id": "b8af8104c423c106",
@@ -115,5 +133,14 @@
     "summary": "Claude ajoute un watermark invisible aux textes générés pour se conformer à la loi EU AI Act, sans impact sur la qualité ou les coûts.",
     "publishedAt": "Fri, 14 Aug 2026 04:00:00 GMT",
     "fetchedAt": "2026-08-17T06:46:09.371Z"
+  },
+  {
+    "id": "cdd8d819f4855db7",
+    "source": "anthropic-news",
+    "url": "https://www.anthropic.com/news/improving-fable-5-s-biology-safeguards",
+    "title": "Improving Fable 5 Safeguards",
+    "summary": "Claude Fable 5 réduit de 85% les refus sur requêtes biologiques, offrant plus de capacités aux devs intégrant l'IA dans des workflows santé.",
+    "publishedAt": "Fri, 07 Aug 2026 04:00:00 GMT",
+    "fetchedAt": "2026-08-31T12:36:05.284Z"
   }
 ]
