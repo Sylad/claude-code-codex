@@ -1,0 +1,390 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import CaseStudySection from "@/components/site/CaseStudySection.astro";
+import CodeBlock from "@/components/site/CodeBlock.astro";
+import MermaidDiagram from "@/components/site/MermaidDiagram.vue";
+---
+
+<BaseLayout
+  title="Cloudflare pour les nuls"
+  description="Tunnel, DNS, Zero Trust, Access : que fait-on vraiment dans le dashboard Cloudflare ? Tour pédagogique pour qui héberge chez soi, raconté à travers une vraie panne de 3 semaines (erreur 1033) et sa résolution."
+>
+  <PageHero
+    eyebrow="Tuto · pour qui héberge chez soi"
+    title="Cloudflare pour les nuls"
+    intro="Si tu as ouvert cette page, c'est probablement parce que tu as un serveur à la maison, des applis à montrer au monde, et qu'à chaque passage dans le dashboard Cloudflare tu cliques un peu au hasard en espérant que ça marche. Cette page explique ce que sont réellement un tunnel, un hostname publié, un enregistrement DNS et une policy Access — en s'appuyant sur une vraie panne de 3 semaines (la fameuse erreur 1033) et sa résolution sur le homelab qui héberge AetherWX. Lecture ~15 min. Complément naturel de la bible /argocd-k8s-pour-les-nuls côté cluster."
+  />
+
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12 space-y-12">
+
+    <CaseStudySection eyebrow="0. Le problème de départ">
+      <p>
+        Tu as une appli qui tourne chez toi — sur un NAS, un vieux PC,
+        un cluster K8s de salon. Elle marche très bien sur
+        <code class="text-xs font-mono">http://192.168.1.38</code>.
+        Maintenant tu veux que <code class="text-xs font-mono">monapp.mondomaine.dev</code>
+        marche depuis n'importe où. Instinctivement, tu penses :
+        « j'ouvre le port 443 sur ma box et je redirige vers le serveur ».
+      </p>
+      <p>
+        C'est la méthode historique, et elle a trois problèmes :
+      </p>
+      <ul class="list-disc list-inside text-zinc-300 space-y-2 ml-4">
+        <li>
+          <strong>Ton IP publique change.</strong> Les box résidentielles
+          ont une IP dynamique. Ton DNS pointe dans le vide au premier
+          renouvellement de bail.
+        </li>
+        <li>
+          <strong>Tu exposes ta maison.</strong> Un port ouvert, c'est
+          une porte que les scanners automatiques du monde entier
+          testent en continu. La moindre CVE sur ton reverse proxy et
+          c'est ton réseau domestique qui est en jeu.
+        </li>
+        <li>
+          <strong>Le TLS, c'est toi qui le gères.</strong> Certificats,
+          renouvellements, la totale.
+        </li>
+      </ul>
+      <p>
+        Le tunnel Cloudflare renverse le problème :
+        <strong>au lieu de laisser Internet entrer chez toi, c'est chez
+        toi qui sort vers Internet</strong>.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="1. Le tunnel : une connexion à l'envers">
+      <p>
+        Un petit programme, <code class="text-xs font-mono">cloudflared</code>,
+        tourne <em>dans</em> ton réseau (chez nous : un pod K8s de 64 Mo).
+        Au démarrage, il ouvre 4 connexions <strong>sortantes</strong>
+        vers les serveurs Cloudflare les plus proches (à Paris :
+        les datacenters <code class="text-xs font-mono">cdg</code>) et
+        les garde ouvertes en permanence.
+      </p>
+      <p>
+        Quand un visiteur demande <code class="text-xs font-mono">aetherwx.sladoire.dev</code>,
+        sa requête arrive chez Cloudflare — jamais chez toi directement.
+        Cloudflare la pousse dans le tuyau déjà ouvert, cloudflared la
+        reçoit et la transmet au service interne. La réponse fait le
+        chemin inverse.
+      </p>
+      <MermaidDiagram
+        client:visible
+        caption="Aucune flèche n'entre dans la maison : cloudflared a appelé Cloudflare en premier, et la connexion reste ouverte pour faire passer les requêtes à contresens."
+        definition={`flowchart LR
+  subgraph internet["Internet"]
+    visiteur["Visiteur\naetherwx.sladoire.dev"]
+    cf["Edge Cloudflare\n(TLS, DNS, Access)"]
+  end
+  subgraph maison["Chez toi (aucun port ouvert)"]
+    cfd["Pod cloudflared"]
+    svc["Service K8s\nmaritime-frontend:80"]
+  end
+  visiteur -->|"HTTPS"| cf
+  cfd -.->|"4 connexions sortantes\npermanentes (QUIC)"| cf
+  cf ==>|"requêtes poussées\ndans le tunnel"| cfd
+  cfd --> svc`}
+      />
+      <p>
+        Conséquences immédiates, toutes agréables :
+      </p>
+      <ul class="list-disc list-inside text-zinc-300 space-y-2 ml-4">
+        <li><strong>Zéro port ouvert</strong> sur la box. Un scanner ne voit rien.</li>
+        <li><strong>L'IP dynamique n'est plus un sujet</strong> : c'est cloudflared qui appelle, peu importe d'où.</li>
+        <li><strong>TLS géré par Cloudflare</strong> : ton service interne peut parler HTTP tout nu, le visiteur voit un cadenas.</li>
+      </ul>
+      <p class="rounded-lg border border-claude/30 bg-claude/[0.06] p-4 text-sm">
+        Le tunnel est identifié par un <strong>token</strong> (le long
+        <code class="text-xs font-mono">eyJhbGci...</code> que le
+        dashboard te fait copier à la création). Ce token est la seule
+        chose dont cloudflared a besoin pour se présenter : « je suis
+        le connecteur du tunnel dark-blue ». Chez nous il vit dans un
+        Secret K8s, jamais dans Git.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="2. Les 4 objets du dashboard">
+      <p>
+        Tout ce qu'on fait dans Cloudflare pour un homelab tient en
+        4 objets. Si tu sais lesquels tu touches, tu ne cliques plus
+        au hasard :
+      </p>
+      <ul class="list-disc list-inside text-zinc-300 space-y-3 ml-4">
+        <li>
+          <strong>Le tunnel</strong> (Zero Trust → Networks → Tunnels) —
+          le tuyau lui-même. Un par site physique suffit : le nôtre
+          s'appelle <code class="text-xs font-mono">dark-blue</code>,
+          comme le serveur. Son statut (HEALTHY / DOWN) reflète l'état
+          des connecteurs cloudflared.
+        </li>
+        <li>
+          <strong>Les applications publiées</strong> (« Published
+          applications », onglet du tunnel) — la table de routage :
+          <em>tel sous-domaine public → tel service interne</em>.
+          C'est ici qu'on décide ce qui est visible d'Internet.
+        </li>
+        <li>
+          <strong>Les enregistrements DNS</strong> (dashboard classique
+          → ta zone → DNS) — pour chaque application publiée, Cloudflare
+          crée automatiquement un CNAME
+          <code class="text-xs font-mono">monapp → &lt;id-du-tunnel&gt;.cfargotunnel.com</code>.
+          Tu n'y touches quasiment jamais… sauf pour faire le ménage
+          (on y revient, c'est du vécu).
+        </li>
+        <li>
+          <strong>Les applications Access</strong> (Zero Trust →
+          Access → Applications) — des portiers optionnels devant un
+          hostname : « avant de servir cette app, vérifie l'identité
+          du visiteur ». Chez nous : un code par email, réservé à une
+          seule adresse, devant l'interface d'administration ArgoCD.
+        </li>
+      </ul>
+      <CodeBlock
+        language="text"
+        filename="La table de routage réelle du tunnel dark-blue"
+        code={`Sous-domaine public          →  Service interne (DNS du cluster K8s)
+aetherwx.sladoire.dev        →  http://maritime-frontend.maritime.svc.cluster.local:80
+geoserver.sladoire.dev       →  http://geoserver.maritime.svc.cluster.local:8080
+argocd.sladoire.dev          →  http://argocd-server.argocd.svc.cluster.local:80   (+ Access)
+ol.sladoire.dev              →  http://ol-frontend.preprod.svc.cluster.local:80
+warhammer.sladoire.dev       →  http://warhammer-frontend.preprod.svc.cluster.local:80
+
+finance.sladoire.dev         →  (RIEN. Volontairement.)`}
+      />
+      <p>
+        La dernière ligne est la plus importante de cette page.
+        L'appli finance manipule de vraies données bancaires : elle
+        n'a <strong>ni route dans le tunnel, ni enregistrement DNS</strong>.
+        Résultat : <code class="text-xs font-mono">finance.sladoire.dev</code>
+        ne se <em>résout même pas</em>. Ce n'est pas « protégé par un
+        mot de passe », c'est <strong>inexistant vu d'Internet</strong> —
+        la meilleure sécurité est celle qui n'a rien à défendre.
+        L'appli reste accessible en LAN, et son PIN devient un simple
+        deuxième rideau.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="3. Le chemin complet d'une requête">
+      <MermaidDiagram
+        client:visible
+        caption="Ce qui se passe entre « je tape l'URL » et « la carte s'affiche ». Les étapes 2 et 3 sont chez Cloudflare, tout le reste chez toi."
+        definition={`sequenceDiagram
+  participant V as Visiteur
+  participant DNS as DNS Cloudflare
+  participant E as Edge Cloudflare
+  participant T as cloudflared (pod)
+  participant S as maritime-frontend
+
+  V->>DNS: aetherwx.sladoire.dev ?
+  DNS-->>V: CNAME → tunnel dark-blue (IP Cloudflare)
+  V->>E: HTTPS GET /
+  Note over E: TLS terminé ici.<br/>Access ? (pas sur ce hostname)
+  E->>T: pousse la requête dans le tunnel
+  T->>S: HTTP GET / (réseau interne du cluster)
+  S-->>T: la page
+  T-->>E: remonte le tunnel
+  E-->>V: HTTPS 200`}
+      />
+      <p>
+        Note bien où le TLS s'arrête : au bord de Cloudflare. Entre
+        cloudflared et ton service, on est dans le réseau privé du
+        cluster, en HTTP simple. C'est pour ça que la colonne
+        « Service » d'une application publiée commence par
+        <code class="text-xs font-mono">http://</code> sans que
+        personne ne hurle.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="4. Erreur 1033 : autopsie d'une panne de 3 semaines">
+      <p>
+        Maintenant qu'on a le modèle en tête, décodons la panne qui a
+        motivé cette page. Pendant 3 semaines,
+        <code class="text-xs font-mono">ol.sladoire.dev</code> affichait :
+      </p>
+      <CodeBlock
+        language="text"
+        filename="Ce que voyaient les visiteurs"
+        code={`Error 1033 — Cloudflare Tunnel error
+The host (ol.sladoire.dev) is configured as a Cloudflare Tunnel,
+and Cloudflare is currently unable to resolve it.`}
+      />
+      <p>
+        Traduction avec notre vocabulaire : <strong>le DNS est bon
+        (l'objet 3 pointe vers le tunnel), la route existe (objet 2),
+        mais aucun connecteur cloudflared n'est branché au tuyau
+        (objet 1 : tunnel DOWN)</strong>. Cloudflare reçoit la requête,
+        se tourne vers le tunnel… et il n'y a personne au bout.
+      </p>
+      <p>
+        Chez nous, le cloudflared tournait dans un cluster K8s sous
+        WSL qui gelait régulièrement — puis dont la machine a fini
+        débranchée. L'appli elle-même était en pleine forme sur une
+        autre machine : <strong>1033 ne dit rien de ton appli, il
+        parle uniquement du connecteur</strong>. C'est le piège
+        classique : on debug le service alors que c'est le tuyau.
+      </p>
+      <p>
+        Le tableau de diagnostic à garder sous le coude :
+      </p>
+      <CodeBlock
+        language="text"
+        filename="Symptôme → coupable → réflexe"
+        code={`Erreur 1033 / 530        → connecteur mort            → kubectl -n infra get pods
+                            (tunnel DOWN)                kubectl -n infra logs deploy/cloudflared
+Erreur 502                → tunnel OK, service interne → l'URL "Service" de la route est-elle
+                            injoignable                  bonne ? le pod visé tourne-t-il ?
+NXDOMAIN                  → pas d'enregistrement DNS   → la route/le CNAME existe-t-il ?
+Page de login exposée     → il manque le portier       → Zero Trust → Access → Applications
+  (200 au lieu de 302)      Access
+"DNS record already       → un CNAME fantôme d'un      → zone DNS : supprimer les records
+  exists" à la création     ancien tunnel traîne          pointant sur l'ancien tunnel`}
+      />
+      <p class="rounded-lg border border-claude/30 bg-claude/[0.06] p-4 text-sm">
+        <strong>Vécu, épisode 2</strong> : à la création du nouveau
+        tunnel, impossible de publier
+        <code class="text-xs font-mono">aetherwx</code> — « A DNS
+        record with this name already exists ». Les CNAME de
+        l'<em>ancien</em> tunnel mort étaient encore là. Un tunnel
+        supprimé ou remplacé ne nettoie pas ses enregistrements DNS :
+        c'est à toi de passer dans la zone et de supprimer les records
+        <code class="text-xs font-mono">*.cfargotunnel.com</code>
+        orphelins. En le faisant, on a même retrouvé un fantôme
+        d'avant un renommage de projet, mort depuis des mois.
+        Attention en revanche à ne pas emporter les CNAME légitimes —
+        chez nous, deux sites statiques sur Cloudflare Pages
+        (<code class="text-xs font-mono">*.pages.dev</code>) vivent
+        dans la même zone.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="5. Access : le portier devant l'admin">
+      <p>
+        Dernier objet, le plus « Zero Trust » de tous. Certaines URLs
+        méritent d'exister publiquement (pratique pour administrer
+        depuis n'importe où) sans être <em>ouvertes</em> à n'importe
+        qui. L'interface ArgoCD, par exemple : elle a son propre
+        login, mais on préfère que même sa page de login ne soit pas
+        servie au premier scanner venu.
+      </p>
+      <p>
+        Une <strong>application Access</strong> intercepte tout le
+        trafic d'un hostname <em>avant</em> qu'il n'entre dans le
+        tunnel. Le visiteur tombe sur une page Cloudflare qui exige
+        une preuve d'identité — chez nous, la plus simple : un code à
+        usage unique envoyé par email, avec une policy « Allow » qui
+        ne liste qu'une seule adresse. Pas de VPN, pas de client à
+        installer, et la charge de gérer l'authentification est chez
+        Cloudflare.
+      </p>
+      <CodeBlock
+        language="text"
+        filename="Vérifier qu'un portier est bien en place"
+        code={`$ curl -sI https://argocd.sladoire.dev/ | head -2
+HTTP/2 302
+location: https://sladoire.cloudflareaccess.com/cdn-cgi/access/login/...
+
+# 302 vers cloudflareaccess.com = le portier fait son travail.
+# Un 200 direct ici = la page d'admin est servie à tout Internet.`}
+      />
+      <p>
+        Anecdote honnête : en refaisant l'infra, on a découvert que ce
+        portier ne protégeait… que le mauvais service (un outil interne
+        décommissionné depuis). ArgoCD, lui, était exposé nu depuis le
+        début. On a recyclé l'application Access existante — renommée,
+        re-pointée — en 2 minutes. Morale : <strong>teste avec curl,
+        pas de mémoire</strong>. Un portier, ça se vérifie.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="6. Côté cluster : 40 lignes de YAML, et Git commande">
+      <p>
+        Tout ce qui précède se passe côté Cloudflare. Côté cluster, la
+        partie est minuscule — un Deployment d'un container, et un
+        Secret pour le token :
+      </p>
+      <CodeBlock
+        language="yaml"
+        filename="charts/cloudflared/ — l'essentiel du chart"
+        code={`# Le secret (créé à la main, JAMAIS commité — le repo est public) :
+#   kubectl -n infra create secret generic cloudflared-token \\
+#     --from-literal=token='eyJhbGci...'
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudflared
+  namespace: infra
+spec:
+  replicas: 1            # Cloudflare gère la HA côté edge
+  template:
+    spec:
+      containers:
+        - name: cloudflared
+          image: cloudflare/cloudflared:latest
+          args: ["tunnel", "run", "--token", "$(TUNNEL_TOKEN)"]
+          env:
+            - name: TUNNEL_TOKEN
+              valueFrom:
+                secretKeyRef: { name: cloudflared-token, key: token }
+          resources:
+            requests: { cpu: 50m,  memory: 64Mi }
+            limits:   { cpu: 200m, memory: 256Mi }`}
+      />
+      <p>
+        Le chart est déployé par ArgoCD comme tout le reste
+        (cf. la <a href="/argocd-k8s-pour-les-nuls" class="text-claude underline underline-offset-2">bible ArgoCD</a>).
+        Le jour où on a migré de l'ancien serveur au nouveau, la
+        procédure complète côté Cloudflare a tenu en : créer un tunnel
+        neuf, coller le token dans un Secret, nettoyer les CNAME
+        fantômes, re-saisir 5 routes, re-poser 1 portier Access.
+        Trente minutes, en comprenant chaque clic — c'est tout l'enjeu
+        de cette page.
+      </p>
+      <p class="rounded-lg border border-claude/30 bg-claude/[0.06] p-4 text-sm">
+        <strong>Piège d'interface (2026)</strong> : dans le nouveau
+        dashboard « Cloudflare One », les Public Hostnames s'appellent
+        désormais <strong>Published applications</strong>. L'onglet
+        voisin « Hostname routes » ressemble beaucoup mais fait tout
+        autre chose : du routage réseau <em>privé</em>, qui exige
+        d'installer le client Cloudflare One sur chaque appareil
+        visiteur. Si ta page parle de « Gateway » et de « on-ramp »,
+        tu es au mauvais endroit. Le plus court chemin vers n'importe
+        quel écran : la loupe 🔍 en haut de la barre latérale.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="7. Ce qu'on n'a pas couvert (et qui existe)">
+      <ul class="list-disc list-inside text-zinc-300 space-y-2 ml-4">
+        <li>
+          <strong>Cloudflare Pages</strong> — l'hébergement statique :
+          les deux CNAME <code class="text-xs font-mono">*.pages.dev</code>
+          épargnés pendant le ménage sont des sites Astro déployés à
+          chaque push Git, sans serveur du tout.
+        </li>
+        <li>
+          <strong>Les Cache Rules</strong> — le CDN devant les tuiles
+          cartographiques : une règle qui force la mise en cache des
+          <code class="text-xs font-mono">GetMap</code> GeoServer a
+          divisé la charge du serveur maison sans dépenser un euro.
+        </li>
+        <li>
+          <strong>WAF, rate limiting, analytics</strong> — tout le
+          trafic passant par Cloudflare, on peut filtrer et observer
+          au même endroit.
+        </li>
+      </ul>
+      <p>
+        Mais l'essentiel tient dans le modèle mental : <strong>un tuyau
+        sortant (tunnel), une table de routage (published applications),
+        des CNAME automatiques (DNS), des portiers optionnels
+        (Access)</strong>. Une fois ces quatre objets identifiés, le
+        dashboard cesse d'être un labyrinthe — et l'erreur 1033 cesse
+        d'être un mystère : c'est juste un tuyau dont personne ne tient
+        l'autre bout.
+      </p>
+    </CaseStudySection>
+
+  </section>
+</BaseLayout>
