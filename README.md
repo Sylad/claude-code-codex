@@ -23,6 +23,10 @@ officielle avec Anthropic.
 | `/theory` | Comment Claude Code fonctionne sous le capot — architecture agentique, context window, sessions, hooks, slash commands, MCP, skills, agents SDK |
 | `/ecosystem` | Catalogue triable des plugins, MCP servers, skills officiels Anthropic et SDKs |
 | `/case-studies` | 7 deep-dives d'apps perso construites en pair-programming + récits transverses (K8s migration overnight, AetherWX encyclopedia) + section **Tools tested** (RTK adopté, Ruflo rejeté+8 leçons, code-review-graph adopt-conditional) |
+| `/atelier-ia` | L'atelier IA perso — quels outils (Claude Code, Codex…), quels rôles, quelles frontières |
+| `/k8s-for-java-developers` | **Guide** — introduction Kubernetes pour dev Java, du jar au pod |
+| `/argocd-k8s-pour-les-nuls` | **Guide** — bible ArgoCD + K8s : pourquoi tant de YAML, GitOps, incidents vécus maritime-atlas |
+| `/cloudflare-pour-les-nuls` | **Guide** — tunnel, DNS, Zero Trust Access pour homelab, raconté via la panne 1033 vécue (3 semaines) |
 | `/learning` | **Preview RSS live** (Simon Willison, Anthropic, Human Coders FR filtré sur Claude/MCP) + catalogue curé de blogs et podcasts |
 | `/videos` | Chaînes YouTube EN/FR spécifiques Claude Code, filtrables par langue/officiel |
 | `/about` | Genèse du site, stack technique, crédits IA (Claude Code + openart.ai) |
