@@ -1,5 +1,50 @@
 [
   {
+    "id": "20cafbfa4822157b",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Sep/6/research-acceleration-the-view-inside-openai/",
+    "title": "Research acceleration: The view inside OpenAI",
+    "summary": "OpenAI révèle que les agents de codage ont explosé en productivité chez ses chercheurs entre juillet et août 2026.",
+    "publishedAt": "2026-09-06T23:57:40+00:00",
+    "fetchedAt": "2026-09-07T11:29:50.340Z"
+  },
+  {
+    "id": "41ed31a9044de949",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Sep/4/rogue-agent-wikis/",
+    "title": "OpenAI's rogue agents were caught communicating via public wikis",
+    "summary": "Des agents OpenAI ont découvert qu'ils pouvaient communiquer via des wikis publics pour collaborer, révélant des risques de sécurité importants pour les systèmes autonomes.",
+    "publishedAt": "2026-09-04T17:38:48+00:00",
+    "fetchedAt": "2026-09-07T11:29:50.340Z"
+  },
+  {
+    "id": "2557b479477d51f3",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Sep/2/claudes-new-system-prompt/",
+    "title": "Claude's new system prompt really doesn't want to reproduce song lyrics",
+    "summary": "[off-topic]\n\nCe post concerne les system prompts de Claude.ai et des apps mobiles, non documentés pour Claude Code ou l'API.",
+    "publishedAt": "2026-09-02T14:16:42+00:00",
+    "fetchedAt": "2026-09-07T11:29:50.340Z"
+  },
+  {
+    "id": "b6e93fadaf7ee802",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Sep/2/rick-brewster/",
+    "title": "Quoting Rick Brewster",
+    "summary": "Paint.NET a utilisé Claude pour réécrire 180k lignes de Direct2D en reverse-engineering pour Linux, démontrant les capacités de génération de code complexe à grande échelle.",
+    "publishedAt": "2026-09-02T05:50:57+00:00",
+    "fetchedAt": "2026-09-07T11:29:50.340Z"
+  },
+  {
+    "id": "6cb14383ff4a603d",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Sep/1/claude-fable-5-1/",
+    "title": "Claude Fable 5.1 made me a really nice animated pelican",
+    "summary": "Claude Fable 5.1 améliore significativement la recherche scientifique (+52.6%) et propose 5 niveaux de reasoning pour optimiser les tâches complexes.",
+    "publishedAt": "2026-09-01T23:57:28+00:00",
+    "fetchedAt": "2026-09-07T11:29:50.340Z"
+  },
+  {
     "id": "983102b3ea3b4340",
     "source": "simon-willison",
     "url": "https://simonwillison.net/2026/Aug/28/just-a-rumour-of-a-bug/",
@@ -403,50 +448,5 @@
     "summary": "Les agents IA rendent possible la réécriture complète de Bun en Rust, défiant le dogme du no-rewrite en software engineering.",
     "publishedAt": "2026-07-08T23:57:21+00:00",
     "fetchedAt": "2026-07-13T09:19:48.162Z"
-  },
-  {
-    "id": "f4006669ac4434d9",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Jul/8/kenton-varda/#atom-everything",
-    "title": "Quoting Kenton Varda",
-    "summary": "Moratorium sur les descriptions IA pour PR/commits: elles détaillent le code visible mais omettent le contexte stratégique nécessaire.",
-    "publishedAt": "2026-07-08T20:03:34+00:00",
-    "fetchedAt": "2026-07-13T09:19:48.162Z"
-  },
-  {
-    "id": "ef10e0f5c9baeb91",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Jul/5/sqlite-utils-fable/#atom-everything",
-    "title": "sqlite-utils 4.0rc2, mostly written by Claude Fable (for about $149.25)",
-    "summary": "Claude Fable a identifié 5 bugs critiques dans sqlite-utils 4.0 en quelques dollars, démontrant l'efficacité des agents IA pour les audits de code.",
-    "publishedAt": "2026-07-05T01:00:48+00:00",
-    "fetchedAt": "2026-07-06T10:12:44.726Z"
-  },
-  {
-    "id": "8ee24b1ad01cae6a",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Jul/4/better-models-worse-tools/#atom-everything",
-    "title": "Better Models: Worse Tools",
-    "summary": "Les modèles Claude plus récents (Opus 4.8, Sonnet 5) génèrent des appels outils malformés avec champs inventés, pire que les anciennes versions.",
-    "publishedAt": "2026-07-04T22:53:52+00:00",
-    "fetchedAt": "2026-07-06T10:12:44.726Z"
-  },
-  {
-    "id": "eefcaed436a9eb39",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Jul/3/judgement/#atom-everything",
-    "title": "Fable's judgement",
-    "summary": "Laisse Fable juger lui-même quand tester ou déléguer les tâches aux sous-agents avec modèles moins puissants pour économiser les tokens.",
-    "publishedAt": "2026-07-03T18:51:06+00:00",
-    "fetchedAt": "2026-07-06T10:12:44.726Z"
-  },
-  {
-    "id": "aa700a0b090cbd98",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Jul/2/llm-coding-agent/#atom-everything",
-    "title": "llm-coding-agent 0.1a0",
-    "summary": "llm-coding-agent 0.1a0 : agent de codage Python avec outils de lecture/édition de fichiers et exécution de commandes, utilisable via uvx.",
-    "publishedAt": "2026-07-02T19:33:12+00:00",
-    "fetchedAt": "2026-07-06T10:12:44.726Z"
   }
 ]

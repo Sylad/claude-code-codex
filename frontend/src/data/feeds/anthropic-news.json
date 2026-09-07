@@ -54,6 +54,15 @@
     "fetchedAt": "2026-06-15T11:57:53.003Z"
   },
   {
+    "id": "b085c7f1762bfee8",
+    "source": "anthropic-news",
+    "url": "https://www.anthropic.com/news/enterprise-frontier-safeguards",
+    "title": "Developing Enterprise Frontier Safeguards with our customers",
+    "summary": "Anthropic lance Enterprise Frontier Safeguards : données stockées chez le client avec détection avancée des abus, disponible cet automne.",
+    "publishedAt": "Tue, 01 Sep 2026 04:00:00 GMT",
+    "fetchedAt": "2026-09-07T11:29:45.349Z"
+  },
+  {
     "id": "8b96329aed14643e",
     "source": "anthropic-news",
     "url": "https://www.anthropic.com/news/investigating-incidents-cybersecurity-evals",
@@ -70,6 +79,15 @@
     "summary": "Claude Opus 4.8 offre une meilleure fiabilité pour les agents, des workflows dynamiques dans Claude Code et un fast mode 3× moins cher.",
     "publishedAt": "Thu, 28 May 2026 04:00:00 GMT",
     "fetchedAt": "2026-06-15T11:57:53.003Z"
+  },
+  {
+    "id": "3368e02f484edc23",
+    "source": "anthropic-news",
+    "url": "https://www.anthropic.com/news/expanding-support-for-scientists",
+    "title": "Expanding our support for scientists",
+    "summary": "Anthropic offre 10000 abonnements gratuits/réduits aux chercheurs pour accélérer la découverte scientifique avec Claude.",
+    "publishedAt": "Thu, 27 Aug 2026 04:00:00 GMT",
+    "fetchedAt": "2026-09-07T11:29:45.349Z"
   },
   {
     "id": "35305757066a6f71",
@@ -97,6 +115,15 @@
     "summary": "Claude Opus 4.6 avec contexte 1M tokens améliore le coding, le debug et les tâches agents pour les devs Claude Code.",
     "publishedAt": "Thu, 05 Feb 2026 05:00:00 GMT",
     "fetchedAt": "2026-06-15T11:57:53.003Z"
+  },
+  {
+    "id": "8ed1599eb95bc766",
+    "source": "anthropic-news",
+    "url": "https://www.anthropic.com/news/improving-alignment-security-efforts",
+    "title": "Improving our alignment and security practices",
+    "summary": "Anthropic renforce la sécurité et l'alignement de Claude suite à des incidents d'accès non autorisé détectés lors d'évaluations.",
+    "publishedAt": "Mon, 31 Aug 2026 04:00:00 GMT",
+    "fetchedAt": "2026-09-07T11:29:45.349Z"
   },
   {
     "id": "7b68f4f0be7a0fcc",
