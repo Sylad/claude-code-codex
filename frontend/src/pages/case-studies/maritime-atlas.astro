@@ -1046,9 +1046,9 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
           tuile vide plutôt que par une erreur.
         </li>
         <li>
-          <strong>Un sélecteur de fonds de carte</strong> : cinq fonds
-          (CARTO Dark par défaut, CARTO Light, Esri Satellite, Esri Dark
-          Gray, OpenTopoMap), persistés par utilisateur. Le point technique
+          <strong>Un sélecteur de fonds de carte</strong> : trois fonds
+          (Esri Dark Gray par défaut, Esri Satellite, OpenTopoMap), persistés
+          par utilisateur. Le point technique
           est le swap : on remplace <em>uniquement</em> la source et la layer
           du fond, jamais <code>map.setStyle()</code> — un setStyle global
           détruirait la custom layer WebGL des particules et l'ordre des
@@ -1072,12 +1072,28 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         </li>
       </ul>
       <p>
-        Détail qu'on garde volontairement : le fond CARTO affiche un filigrane
-        « API KEY REQUIRED » depuis que CARTO a durci ses conditions
-        d'utilisation. Il serait trivial à faire disparaître (clé gratuite,
-        ou fond auto-hébergé), mais il reste là comme exemple pédagogique —
-        les sources externes changent leurs règles sans prévenir, et une
-        carte qui en dépend le découvre en production.
+        Les deux fonds CARTO ont d'ailleurs été <strong>retirés</strong> le
+        09/09, et l'histoire vaut d'être racontée. Depuis que CARTO a durci
+        ses conditions, chaque tuile revient estampillée d'un filigrane
+        « API KEY REQUIRED » en diagonale — <em>tout en répondant HTTP 200
+        avec un PNG parfaitement valide</em>. Aucune supervision qui regarde
+        le code de retour, la taille ou le type MIME ne peut voir la
+        différence : c'est la même signature d'échec que la couche RainViewer
+        ci-dessus, et que les sept copies satellite qui téléchargeaient du
+        noir en rapportant <code>ok</code>. Le filigrane a d'abord été gardé
+        comme exemple pédagogique, jusqu'à ce qu'on réalise qu'il s'était
+        propagé dans les captures d'écran du README — la vitrine du projet.
+        Bascule sur Esri Dark Gray, déjà présent dans le sélecteur, sans clé
+        et visuellement équivalent ; les préférences enregistrées pointant
+        encore CARTO retombent silencieusement sur le nouveau défaut.
+      </p>
+      <p>
+        La leçon, elle, reste : <strong>les sources externes changent leurs
+        règles sans prévenir, et une carte qui en dépend le découvre en
+        production</strong>. Ce qui manquait n'était pas la vigilance mais un
+        contrôle du <em>contenu</em> — c'est exactement ce que fait le canary
+        décrit plus bas en comparant les pixels rendus, là où un simple
+        <code>curl -f</code> aurait dit que tout allait bien.
       </p>
     </CaseStudySection>
 
