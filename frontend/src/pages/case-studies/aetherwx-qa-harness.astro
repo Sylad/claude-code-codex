@@ -7,21 +7,23 @@ import CodeBlock from "@/components/site/CodeBlock.astro";
 
 <BaseLayout
   title="Un harnais QA déterministe qui a trouvé 9 bugs que l'œil ratait"
-  description="Sur AetherWX (carte météo/maritime GIS), des layers cassaient en silence après chaque modif. On a construit un harnais QA déterministe — manifest auto-dérivé, HTTP pixel-level, Playwright runtime-derived — et il a trouvé 9 bugs d'opacity d'un coup."
+  description="Sur AetherWX (carte météo/maritime GIS), des layers cassaient en silence après chaque modif. On a construit un harnais QA déterministe — manifest auto-dérivé, HTTP pixel-level, Playwright runtime-derived — et il a trouvé 9 bugs d'opacity d'un coup. Devenu depuis une matrice de 26 combinaisons layer×style rejouée toutes les 6 heures par un CronJob canary in-cluster."
 >
   <PageHero
     eyebrow="Case study · aetherwx · QA harness"
     title="Un harnais QA déterministe qui a trouvé 9 bugs que l'œil ratait"
-    intro="Sur AetherWX (atlas météo/maritime, ma vitrine GIS), les layers cassaient en silence après chaque modif. Tests existants : fragmentés, manuels, zéro couverture vector, listes en dur. On a construit un harnais Node qui dérive son manifest depuis la source de vérité frontend, vérifie les données HTTP pixel-level, et teste le câblage UI via Playwright en lisant l'état MapLibre en live. Lancé une fois : 9 bugs d'opacity détectés, corrigés, validés en prod. FAIL=0."
+    intro="Sur AetherWX (atlas météo/maritime, ma vitrine GIS), les layers cassaient en silence après chaque modif. Tests existants : fragmentés, manuels, zéro couverture vector, listes en dur. On a construit un harnais Node qui dérive son manifest depuis la source de vérité frontend, vérifie les données HTTP pixel-level, et teste le câblage UI via Playwright en lisant l'état MapLibre en live. Lancé une fois : 9 bugs d'opacity détectés, corrigés, validés en prod. Quatre mois plus tard il ne se lance plus à la main : une matrice de 26 combinaisons layer×style tourne toutes les 6 heures dans le cluster."
   />
 
   <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12 space-y-12">
     <CaseStudySection eyebrow="Le problème — layers silencieux">
       <p>
-        AetherWX affiche une quinzaine de layers simultanément : SST, vent
-        GFS, vagues WW3, foudre Blitzortung, satellites GOES/Meteosat, radar
-        pluie RainViewer, navires AIS, alertes maritimes… Le tout pilotable
-        par un slider temporel [-7j, +7j]. Visuellement, ça tient. Mais
+        AetherWX affiche une quarantaine de layers activables : SST, vent
+        GFS, vagues WW3, foudre Blitzortung, satellites NASA GIBS et
+        EUMETSAT, radars nationaux (Allemagne, Pays-Bas, États-Unis, Canada),
+        précipitations globales IMERG, navires AIS, alertes maritimes… Le
+        tout pilotable par un slider temporel [-7j, +7j]. Visuellement, ça
+        tient. Mais
         à chaque refactoring du composant principal
         <code>globe.component.ts</code> (8 000+ lignes), quelque chose cassait
         discrètement.
@@ -237,6 +239,122 @@ return { verdict: "PASS", changedLayer: changed[0].id };`}
       </p>
     </CaseStudySection>
 
+    <CaseStudySection eyebrow="La suite — une matrice qui ne peut pas dériver">
+      <p>
+        Le harnais ci-dessus se lançait à la main. Quatre mois plus tard, une
+        régression de trop a fait poser une règle explicite par Sylvain :
+        <strong>« une correction d'un layer ne doit plus jamais casser un
+        autre layer »</strong>. Le contexte : un correctif sur les styles
+        avait réparé les palettes de vent et de vagues, et cassé au passage
+        les isolignes — sans que personne ne le voie pendant deux jours,
+        parce qu'on ne regardait que le layer qu'on venait de corriger.
+      </p>
+      <p>
+        La réponse est une <strong>matrice de 26 combinaisons
+        layer×style</strong>, avec un principe repris du manifest
+        auto-dérivé : elle n'est écrite nulle part à la main.
+      </p>
+
+      <h3 class="font-bold text-lg mt-6">Générée en parsant le frontend</h3>
+      <p>
+        Un script Python lit
+        <code>frontend/src/app/components/map-view/map-layers-constants.ts</code>
+        — le fichier que la carte utilise réellement pour construire ses
+        requêtes — et en sort une ligne par combinaison, triée, dans un format
+        stable :
+      </p>
+
+      <CodeBlock
+        language="text"
+        filename="scripts/wms-smoke-matrix.py — extrait de sortie (26 lignes)"
+        code={`aetherwx-sat|sat-imerg-precip||gibs30|satna
+aetherwx|radar-geomet-ca||cascade|na
+aetherwx|radar-iem-us||cascade|na
+aetherwx|sst-daily|aetherwx:sst-contours-only|daily|europe
+aetherwx|sst-daily|sst-direct|daily|europe
+aetherwx|wind-speed|aetherwx:wind-speed-contours-only|iso|europe
+aetherwx|wind-speed||iso|europe
+
+# workspace | layer | STYLES exact (vide = style par defaut) | classe de temps | bbox`}
+      />
+
+      <p>
+        Les deux dernières colonnes portent l'essentiel du savoir métier. La
+        <strong>classe de temps</strong> dit quel <code>TIME</code> a un sens
+        pour cette source : le jour courant pour la SST quotidienne, J-2 pour
+        les produits satellite GIBS, l'heure pleine moins deux pour les radars
+        cascadés (le temps que l'upstream publie), l'heure moins neuf pour
+        IMERG dont l'ingestion accuse environ sept heures de retard. La
+        <strong>bbox</strong> dit où la donnée existe — demander un radar
+        NEXRAD sur l'Europe rend une tuile vide, ce qui est correct et ne doit
+        pas compter comme un échec.
+      </p>
+      <p>
+        Deux détails rendent le résultat non négociable. D'abord, une
+        <code>ServiceException</code> GeoServer sort en
+        <code>Content-Type: text/xml</code> avec un statut 200 : on la
+        classe FAIL, jamais « réponse reçue, donc ça marche ». Ensuite,
+        chaque requête porte un paramètre de cache-bust pour taper le rendu
+        et pas le cache de tuiles — sinon on teste la mémoire de GeoWebCache,
+        pas GeoServer.
+      </p>
+
+      <h3 class="font-bold text-lg mt-6">Le canary — toutes les 6 heures, dans le cluster</h3>
+      <p>
+        La matrice générée est aussi gelée dans le dépôt GitOps, à côté d'un
+        <strong>CronJob qui la rejoue toutes les 6 heures</strong> depuis
+        l'intérieur du cluster. Deux boucles de sécurité s'imbriquent :
+      </p>
+      <ul>
+        <li>
+          <strong>Le canary vérifie les layers.</strong> Un job en échec est
+          conservé, avec la combinaison fautive et l'exception GeoServer dans
+          ses logs — le diagnostic est un <code>kubectl logs</code>, pas une
+          reproduction manuelle.
+        </li>
+        <li>
+          <strong>Le harnais vérifie le canary.</strong> À chaque exécution
+          locale, la matrice est régénérée depuis le frontend puis
+          <em>diffée</em> contre la copie gelée du dépôt. Une divergence est
+          un échec. Autrement dit, la copie in-cluster ne peut pas pourrir en
+          silence quand on ajoute un layer — ce qui était exactement le
+          défaut des listes en dur au départ.
+        </li>
+      </ul>
+      <p>
+        Résultat : <strong>26/26 PASS, 0 BLANK, 0 FAIL</strong> pour la
+        première fois le 08/09/2026. Ce chiffre est devenu la porte d'entrée
+        du chantier suivant — la migration de GeoServer 2.28 vers 3.0.1 n'a
+        été déclarée terminée qu'après avoir re-produit la même matrice
+        pleine sur le nouveau moteur.
+      </p>
+
+      <h3 class="font-bold text-lg mt-6">Le test d'animation, et sa règle du bruit</h3>
+      <p>
+        En parallèle du canary, un test E2E dédié à l'animation temporelle
+        valide les invariants du contrat : l'animation itère strictement les
+        timestamps réels du layer maître (pas un pas arbitraire), la tuile
+        rendue change vraiment entre deux positions du curseur, le second
+        passage sort du cache, l'arrêt nettoie complètement, et le pas affiché
+        est le pas natif de la source. Six invariants au contrat, cinq
+        vérifiables dans un run nominal — le sixième, « échouer bruyamment »,
+        ne s'observe qu'en cassant volontairement une pré-condition.
+      </p>
+      <p>
+        Ce test a produit le faux positif le plus instructif de la série.
+        Après la migration GeoServer, l'invariant de cache est sorti en échec :
+        la même tuile demandée deux fois répondait <code>MISS</code>. Sauf que
+        la règle de cache Cloudflare posée devant les tuiles fige la
+        <em>première</em> réponse de l'origine — en-têtes GeoWebCache compris —
+        et la rejoue ensuite. On lisait un en-tête vieux de plusieurs minutes.
+        Vérification faite en court-circuitant le CDN : l'origine servait bien
+        du cache, sur chacun des trois pods, preuve que le stockage S3 partagé
+        fonctionnait. Règle ajoutée au harnais :
+        <strong>si <code>cf-cache-status</code> vaut HIT, aucun en-tête
+        applicatif de la réponse n'est concluant.</strong>
+      </p>
+    </CaseStudySection>
+
     <CaseStudySection eyebrow="La méta-leçon — le harnais s'est auto-corrigé">
       <p>
         La partie la plus intéressante n'est pas les 9 bugs. C'est ce qui
@@ -296,6 +414,12 @@ return { verdict: "PASS", changedLayer: changed[0].id };`}
           valide le code source.
         </li>
         <li>
+          <strong>Le test tourne sans qu'on le lance</strong> → un harnais
+          qu'il faut penser à exécuter finit par ne plus être exécuté. Le
+          CronJob canary toutes les 6 heures déplace la question de « est-ce
+          que quelqu'un a testé ? » à « est-ce qu'un job est en échec ? ».
+        </li>
+        <li>
           <strong>Philosophie IA au triage, pas au verdict</strong> → le
           harnais sort une liste JSON de FAIL avec contexte (layer, verdict,
           reason, screenshot). Claude peut analyser la liste et proposer
@@ -307,7 +431,9 @@ return { verdict: "PASS", changedLayer: changed[0].id };`}
         C'est exactement le genre de pipeline QA qu'on peut démontrer
         en entretien sur un vrai projet : une suite E2E avec une philosophie
         claire, un résultat mesurable (9 bugs trouvés, 0 faux négatif après
-        correction), et une architecture qui résiste à la dérive.
+        correction, puis 26/26 combinaisons vertes tenues à travers un
+        changement de version majeure de GeoServer), et une architecture qui
+        résiste à la dérive.
       </p>
     </CaseStudySection>
 

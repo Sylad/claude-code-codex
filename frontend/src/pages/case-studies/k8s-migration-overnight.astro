@@ -108,6 +108,26 @@ const lessons = [
 
   <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12 space-y-12">
 
+    <div class="rounded-lg border border-amber-500/25 bg-amber-500/[0.05] p-5">
+      <p class="font-mono text-xs uppercase tracking-wider text-amber-400/90 mb-2">
+        Récit daté · 13-14 mai 2026
+      </p>
+      <p class="text-sm text-ink-muted leading-relaxed">
+        Cette page raconte une nuit précise et ne décrit pas l'infrastructure
+        actuelle. Le cluster k3s sous WSL2 dont il est question ici a servi de
+        prod quelques mois, puis a été doublé par un mini-PC, avant que les
+        deux ne soient retirés : depuis le <strong>03/09/2026</strong>, tout
+        tourne sur un serveur bare-metal dédié (<strong>dark-blue</strong>,
+        Ubuntu 26.04, k3s v1.36.4, ArgoCD), pour une raison qui figure
+        d'ailleurs en creux dans les pièges ci-dessous — un cluster Kubernetes
+        complet épuise les watches inotify d'un WSL2 par défaut, et un cluster
+        gelé emporte avec lui le connecteur de tunnel qui expose le site. Les
+        pièges, eux, restent valables tels quels.
+        <a href="/case-studies/maritime-atlas" class="text-claude underline underline-offset-4">L'état
+        actuel est décrit dans la case study AetherWX</a>.
+      </p>
+    </div>
+
     <CaseStudySection eyebrow="Le déclencheur">
       <p>
         Le 13 mai 2026 vers 18h, ma boîte annonce qu'elle ferme. Dans

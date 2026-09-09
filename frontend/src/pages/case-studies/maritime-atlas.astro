@@ -7,21 +7,66 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
 
 <BaseLayout
   title="AetherWX (ex Maritime Atlas)"
-  description="Atlas live du trafic maritime + météo + foudre + alerts engine sur France métropole. 14 services Docker, multi-source ingestion (AIS, NOAA, Météo-France, RainViewer, Blitzortung). Construit en pair-programming avec Claude Code en 2 jours."
+  description="Atlas live du trafic maritime + météo + foudre + alerts engine. Ingestion multi-source (AIS, NOAA, Météo-France, NASA, EUMETSAT, radars nationaux, Blitzortung), cluster GeoServer 3.0.1 à 3 replicas sur k3s bare-metal. Démarré en 2 jours de pair-programming avec Claude Code, tenu en prod depuis."
 >
   <PageHero
     eyebrow="Case study · aetherwx (ex maritime-atlas)"
     title="AetherWX — l'orchestre multi-source"
-    intro="Atlas live qui agrège 5 sources de données externes (AIS, météo NOAA + Météo-France, radar pluie, foudre) sur une carte time-scrubable. 14 services Docker, cluster GeoServer 3 replicas, alerts engine RabbitMQ topic. Le projet hommage / refonte du produit Neo de Campbell Scientific (où je bosse) mais en domaine maritime. 0 ligne de code humaine, ~23 commits en 2 jours."
+    intro="Atlas live qui agrège une quinzaine de sources externes (AIS, météo NOAA + Météo-France, radars nationaux, satellites NASA / EUMETSAT, foudre) sur un globe MapLibre time-scrubable. Une vingtaine de pods k3s, cluster GeoServer 3.0.1 à 3 replicas, alerts engine RabbitMQ topic. Le projet hommage / refonte du produit Neo de Campbell Scientific (mon ancienne boîte) mais en domaine maritime. Scaffold initial : 0 ligne de code humaine, ~23 commits en 2 jours — ce qui suit couvre aussi les quatre mois de prod derrière."
   />
 
   <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12 space-y-12">
+    <CaseStudySection eyebrow="Où en est le projet — septembre 2026">
+      <p>
+        Cette page a été écrite au moment du scaffold (mai 2026) puis
+        complétée sprint après sprint. Trois choses ont changé assez pour
+        périmer ce qu'on lit plus bas ailleurs sur le site — le résumé,
+        avant le détail :
+      </p>
+      <ul>
+        <li>
+          <strong>L'hébergement</strong> : la prod ne tourne plus sur
+          « Mini-Blue » (un k3s dans WSL2, qui gelait tous les deux jours),
+          mais sur <strong>dark-blue</strong>, un serveur bare-metal monté
+          début septembre — Ubuntu 26.04, Ryzen 9 9900X, 64 Go DDR5, NVMe
+          3,6 To, RTX 4080 (dédiée au transcodage Plex, pas au GIS),
+          k3s v1.36.4 + ArgoCD en GitOps. Migration le 03/09/2026, après
+          trois semaines de site down.
+        </li>
+        <li>
+          <strong>GeoServer 3.0.1</strong> en prod depuis le 08/09 (GeoTools
+          35.1, GWC 2.0.1, Tomcat 11, Java 21, ImageN) — 3 replicas, catalog
+          et data dir centralisés en PostgreSQL, cache de tuiles partagé sur
+          object storage S3.
+        </li>
+        <li>
+          <strong>Un harnais de non-régression</strong> qui rejoue une matrice
+          de 26 combinaisons layer×style toutes les 6 heures dans le cluster,
+          et une matrice générée en parsant les sources du frontend — donc
+          incapable de dériver en silence.
+          <a href="/case-studies/aetherwx-qa-harness">Le détail est ici</a>.
+        </li>
+      </ul>
+      <p>
+        Le reste de la page raconte le fonctionnel et les pièges, dans
+        l'ordre où ils sont tombés.
+      </p>
+    </CaseStudySection>
+
     <CaseStudySection eyebrow="Aperçu visuel">
       <p>
-        Une carte unique, dix bascules. Le slider temporel en bas pilote
-        tout — vesselles passées/présentes, météo forecast +5j, radar pluie
-        replay -2h. Voici les principales layers en isolation, puis
-        l'animation des particules de vent (effet style windy.com).
+        Une carte unique, une quarantaine de bascules réparties en sept
+        sections (Maritime, Observation, Satellites, Radar, Forecast,
+        Hydrologie, Sources). Le slider temporel en bas pilote tout — navires passés/présents,
+        météo forecast, radars, satellites. Voici les principales layers en
+        isolation, puis l'animation des particules de vent (effet style
+        windy.com).
+      </p>
+      <p class="text-sm text-ink-muted">
+        Captures prises en mai 2026, du temps de la carte 2D OpenLayers. La
+        carte est depuis un <strong>globe MapLibre</strong> (projection
+        sphère, particules de vent en custom layer WebGL) : mêmes données,
+        même pilotage temporel, rendu différent.
       </p>
       <figure class="my-6">
         <img src="/case-studies/maritime-atlas/01-vessels.jpg" alt="Navires AIS live + trajets daily aggregés" class="rounded-lg border border-white/10" loading="lazy" />
@@ -69,14 +114,14 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
           class="rounded-lg border border-white/10 w-full"
         ></video>
         <figcaption class="text-xs text-ink-muted mt-2 font-mono">
-          Particules vent style windy.com — 1500 particules canvas 2D, advectées par interpolation IDW sur les 4 plus proches voisins de la grille GFS. ~60fps desktop, couleurs Beaufort-like (bleu calme → rouge tempête).
+          Particules vent style windy.com — à l'époque 1500 particules canvas 2D, advectées par interpolation IDW sur les 4 plus proches voisins de la grille GFS. Depuis le passage au globe, elles sont portées en WebGL (custom layer MapLibre, 3000 particules par défaut, port du webgl-wind de Mapbox sous licence ISC).
         </figcaption>
       </figure>
     </CaseStudySection>
 
     <CaseStudySection eyebrow="Pourquoi ce projet">
       <p>
-        Au boulot je développe Neo (Campbell Scientific) pour les stations
+        Je développais Neo (Campbell Scientific) pour les stations
         météo et aéroports — Angular + OpenLayers + cluster Docker Swarm de
         GeoServer + bus RabbitMQ pour synchroniser les replicas. J'adore le
         pattern services-qui-causent-entre-eux, et j'avais envie d'en refaire
@@ -87,25 +132,29 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         données sur des cartes.
       </p>
       <p>
-        Périmètre : <strong>bbox France métropole</strong>
+        Périmètre initial : <strong>bbox France métropole</strong>
         [<code>-6, 41, 10, 51.5</code>] — Manche + Atlantique + Méditerranée
-        + Corse. Le tout sur un slider temporel qui pilote 11 layers
-        (navires live + replay, météo raster, radar pluie, foudre) avec un
-        engine d'alertes RMQ qui croise vessel + vent + foudre en temps réel.
+        + Corse. Il a débordé depuis : l'emprise par défaut est l'Europe
+        élargie [<code>-15, 35, 30, 65</code>], et les layers cascade
+        (satellites NASA GIBS, radars nord-américains, précipitations IMERG)
+        sont globales. Le tout sur un slider temporel qui pilote la
+        quarantaine de layers avec un engine d'alertes RMQ qui croise
+        vessel + vent + foudre en temps réel.
       </p>
     </CaseStudySection>
 
     <CaseStudySection eyebrow="Architecture — vue d'ensemble">
       <MermaidDiagram
         client:visible
-        caption="14 services Docker. Le frontend Angular OL n'attaque qu'un seul backend (GeoServer LB) — toute la complexité d'ingestion est en aval."
+        caption="Une vingtaine de pods sur k3s. Le frontend Angular / MapLibre n'attaque qu'un seul backend de données (le Service GeoServer) — toute la complexité d'ingestion est en aval."
         definition={`flowchart TB
   subgraph SOURCES["Sources externes"]
     ais["aisstream.io WSS<br/>(AIS navires)"]
     noaa["NOAA NOMADS<br/>GFS · WW3 · OISST"]
-    mf["Météo-France PNT<br/>(bucket public AROME 2.5km)"]
+    mf["Météo-France PNT<br/>(AROME 2.5km · ARPEGE)"]
     rv["RainViewer API<br/>(radar pluie tiles)"]
     blitz["Blitzortung WSS<br/>(foudre community)"]
+    casc["WMS distants cascadés<br/>NASA GIBS · EUMETSAT<br/>DWD · KNMI · NEXRAD IEM · MSC GeoMet"]
   end
 
   subgraph INGESTERS["Ingesters"]
@@ -126,15 +175,16 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
   end
 
   subgraph STATE["Stockage"]
-    pg["PostgreSQL + PostGIS + TimescaleDB<br/>(hypertables vessel_positions, lightning_strikes, alerts)"]
-    cov["/coverage/ volume<br/>(GeoTIFF SST + GFS + AROME)"]
-    arr["/wind-arrows/ volume<br/>(GeoJSON arrows + manifest)"]
+    pg["PostgreSQL + PostGIS (CloudNativePG)<br/>vessel_positions · lightning_strikes · alerts<br/>rétention 7j par CronJob"]
+    cov["PVC /coverage<br/>(GeoTIFF SST + GFS + AROME + ARPEGE)"]
+    arr["PVC /wind-arrows<br/>(GeoJSON arrows + manifest)"]
+    s3["SeaweedFS S3<br/>(cache tuiles GWC partagé)"]
   end
 
   subgraph SERVE["Servir la carte"]
-    gs["GeoServer cluster<br/>(2 replicas + LB nginx + Hazelcast)"]
-    api["api NestJS (auth + palettes)"]
-    fe["frontend Angular 19 + OL 10"]
+    gs["GeoServer 3.0.1 · 3 replicas<br/>(Hazelcast + catalog JDBC Postgres)"]
+    api["api NestJS (auth + palettes + orchestrator)"]
+    fe["frontend Angular 19 + MapLibre"]
   end
 
   subgraph ENGINE["Moteur"]
@@ -153,6 +203,8 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
   ae --> pg
   cov --> gs
   pg --> gs
+  casc -->|cascade WMS| gs
+  gs <--> s3
   gs --> fe
   api --> fe
   arr -->|nginx alias| fe
@@ -160,25 +212,28 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
       />
       <p>
         L'arête importante : <strong>le frontend ne tape qu'un seul backend
-        public</strong> — l'alias DNS interne <code>geoserver:8080</code>
-        (qui est un Service K8s ClusterIP load-balancé sur les 2 replicas
-        GeoServer synchronisés par Hazelcast). Toute
-        l'ingestion (6 services), le bus RMQ, le moteur d'alertes, l'API
-        d'auth/palettes, sont privés au réseau Docker. Le RainViewer est la
-        seule source que le browser frappe directement (CORS open, tiles
-        XYZ time-aware).
+        de données</strong> — l'alias DNS interne <code>geoserver:8080</code>
+        (un Service K8s ClusterIP load-balancé sur les 3 replicas GeoServer
+        synchronisés par Hazelcast). Toute l'ingestion (une dizaine de
+        fetchers), le bus RMQ, le moteur d'alertes, l'API d'auth / palettes /
+        orchestrator sont privés au namespace <code>maritime</code>. Le
+        RainViewer est la seule source que le browser frappe directement
+        (CORS open, tiles XYZ time-aware) ; les autres providers externes
+        (NASA GIBS, EUMETSAT, DWD, KNMI, NEXRAD, MSC GeoMet) passent par
+        <strong>GeoServer en cascade WMS</strong>, ce qui les met derrière
+        le même cache de tuiles et le même paramètre <code>TIME</code>.
       </p>
     </CaseStudySection>
 
     <CaseStudySection eyebrow="Multi-source ingestion — le détail par source">
       <MermaidDiagram
         client:visible
-        caption="Cinq pipelines indépendants, qui finissent tous par alimenter le même slider temporel côté frontend."
+        caption="Cinq familles de pipelines indépendantes, qui finissent toutes par alimenter le même slider temporel côté frontend."
         definition={`flowchart LR
   subgraph A["AIS navires (live)"]
     a1["aisstream.io WSS"] --> a2["ais-ingester"]
     a2 -->|RMQ ais.raw| a3["ais-decoder"]
-    a3 -->|INSERT| a4["PostGIS vessel_positions<br/>(TimescaleDB hypertable, 30j)"]
+    a3 -->|INSERT| a4["PostGIS vessel_positions<br/>(rétention 7j par CronJob)"]
     a3 -->|UPSERT| a5["vessels (referentiel)"]
     a4 --> a6["GeoServer SQL view vessels_at_time(at, window)<br/>(replay temporel paramétré)"]
   end
@@ -198,47 +253,63 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
     c3 --> c4["GeoServer ImageMosaic time-enabled"]
   end
 
-  subgraph D["Radar pluie (RainViewer)"]
+  subgraph D["Radar pluie (6 entrées)"]
     d1["api.rainviewer.com<br/>weather-maps.json"] -->|"JSON manifest — past 2h + nowcast 30min"| d2["browser fetch direct"]
     d2 --> d3["XYZ TileLayer<br/>find nearest TS to cursor"]
+    d4["DWD DE · KNMI NL<br/>NEXRAD IEM US · MSC GeoMet CA<br/>NASA GIBS IMERG global"] -->|cascade WMS + TIME| d5["GeoServer<br/>(cache GWC S3)"]
   end
 
   subgraph E["Foudre (Blitzortung)"]
     e1["wss://ws1.blitzortung.org<br/>(LZW-compressed JSON)"] --> e2["lightning-fetcher<br/>(decode LZW + filter bbox)"]
-    e2 -->|INSERT| e3["lightning_strikes<br/>(hypertable, retention 7j)"]
+    e2 -->|INSERT| e3["lightning_strikes<br/>(rétention 7j)"]
     e3 --> e4["GeoServer v_lightning_recent<br/>(last 30 min)"]
   end`}
       />
       <p>
-        Les <strong>TTL différentiels</strong> sont standardisés :
+        La <strong>rétention</strong> a été standardisée en mai 2026, une fois
+        que les TTL bricolés par service ont commencé à diverger. Deux
+        régimes, un seul pour toutes les layers :
       </p>
       <ul>
         <li>
-          <strong>30j</strong> : <code>vessel_positions</code>,
-          <code>sst-daily</code> (cohérent navigation)
+          <strong>Observations</strong> (SST, satellites, foudre, METAR,
+          Hub'eau, séismes, FIRMS, bouées, navires, alertes) :
+          <strong>7 jours de passé, 0 futur</strong>.
         </li>
         <li>
-          <strong>14j</strong> : <code>alerts</code> (analyse rétroactive
-          incident)
-        </li>
-        <li>
-          <strong>7j</strong> : <code>lightning_strikes</code>, weather GeoTIFFs,
-          wind-arrows GeoJSON (forecasts deviennent obsolètes vite)
+          <strong>Prévisions</strong> (vent, vagues, flèches, particules) :
+          <strong>7 jours de passé + 7 jours de futur</strong>.
         </li>
       </ul>
       <p>
-        Chaque fetcher Python a une routine <code>cleanup_old_files()</code> en
-        début de cycle (sprint 10b), TimescaleDB gère les hypertables côté DB.
+        Le ménage est fait par un <strong>CronJob quotidien</strong>
+        (<code>maritime-retention-cleanup</code>) qui purge à la fois les
+        lignes en base et les fichiers du volume <code>/coverage</code> ;
+        chaque fetcher Python garde en plus sa routine
+        <code>cleanup_old_files()</code> en début de cycle.
+        <strong>Il n'y a pas de TimescaleDB</strong> sur ce cluster : les
+        premières versions du schéma en dépendaient, mais l'extension n'a
+        jamais réussi à cohabiter avec l'UID de CloudNativePG. Ce qui reste
+        est un jeu de <em>stubs</em> SQL no-op
+        (<code>create_hypertable</code>, <code>add_retention_policy</code>…)
+        qui laissent le code d'origine tourner sans erreur — Postgres +
+        PostGIS suffisent à la volumétrie réelle, et la rétention est passée
+        côté CronJob. Un exemple de dette assumée et documentée plutôt que
+        cachée.
       </p>
     </CaseStudySection>
 
     <CaseStudySection eyebrow="Particularités intéressantes">
       <ul>
         <li>
-          <strong>Time slider globale</strong> [-7j, +5j] pilote 9 layers
-          simultanément avec snap-to-latest (<code>TIME=1970/cursor</code>
-          range) pour qu'aucune layer raster n'affiche jamais "rien" si le
-          timestep exact n'existe pas.
+          <strong>Time slider globale</strong> [-7j, +7j] pilote toutes les
+          layers simultanément avec snap-to-latest
+          (<code>TIME=1970/cursor</code> range) pour qu'aucune layer raster
+          n'affiche jamais "rien" si le timestep exact n'existe pas. Règle
+          posée depuis : <strong>pas de fallback silencieux</strong> — si les
+          timestamps sont vides ou la fenêtre invalide, l'UI le dit au lieu
+          d'inventer un pas d'une heure (sept heures de debug stérile en
+          2026, la ligne fautive a été supprimée).
         </li>
         <li>
           <strong>Replay temporel des navires</strong> via SQL view paramétrée
@@ -251,16 +322,21 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
           chaque user peut créer jusqu'à 5 palettes SLD couleur custom →
           mirror automatique en styles GeoServer
           <code>user_&lt;id&gt;_&lt;slug&gt;</code> via REST POST/PUT, frontend
-          injecte <code>&amp;STYLES=maritime:user_42_marine</code> par user
-          par layer.
+          injecte <code>&amp;STYLES=aetherwx:user_42_marine</code> par user
+          par layer (le workspace GeoServer <code>maritime:*</code> a été
+          renommé <code>aetherwx:*</code> au rebrand — un rename atomique,
+          deux <code>sed</code> distincts, cf les pièges plus bas).
         </li>
         <li>
-          <strong>Cluster GeoServer 2 replicas</strong> avec catalog partagé
-          en Postgres via JDBCConfig (community extension), Hazelcast
-          <code>gs-hz-cluster</code> pour synchroniser l'état in-memory entre
-          replicas (GWC locks, tile seeds), LB nginx interne nommé
-          <code>geoserver</code> (alias DNS) — rollout du single → cluster
-          sans toucher aux 5+ services métier qui appellent
+          <strong>Cluster GeoServer 3 replicas</strong> avec catalog ET data
+          dir partagés en Postgres (JDBCConfig + JDBCStore), Hazelcast
+          <code>gs-hz-cluster</code> pour propager les événements de catalog
+          entre replicas (une modif de style sur le pod A est visible sur B
+          et C en moins d'une seconde), cache de tuiles GWC posé sur un
+          bucket S3 SeaweedFS partagé — une tuile rendue par un pod est
+          servie du cache par les deux autres. Le Service K8s
+          <code>geoserver:8080</code> load-balance : le rollout single →
+          cluster n'a touché aucun des services métier qui appellent
           <code>http://geoserver:8080/</code>.
         </li>
         <li>
@@ -273,17 +349,22 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
           (mmsi, kind) pour éviter le spam.
         </li>
         <li>
-          <strong>Vent particules canvas 2D</strong> style windy.com / Earth
-          Nullschool : 1500 particules advectées par interpolation IDW sur les
-          4 plus proches voisins du grid GFS, projection
-          <code>map.getPixelFromCoordinate</code>, fade alpha 0.97 pour les
-          trails. ~60fps desktop.
+          <strong>Vent particules</strong> style windy.com / Earth
+          Nullschool : d'abord 1500 particules en canvas 2D advectées par
+          interpolation IDW sur les 4 plus proches voisins du grid GFS,
+          puis — au passage sur le globe MapLibre — un
+          <strong>custom layer WebGL</strong> (port du webgl-wind de Mapbox,
+          licence ISC) où l'advection se fait dans un shader sur une texture
+          de positions. 3000 particules par défaut.
         </li>
         <li>
           <strong>Exposition publique HTTPS</strong> via Cloudflare Tunnel
-          sortant (le NAS appelle CF, pas l'inverse) — zéro port ouvert sur
-          la box, SSL auto, CDN devant les WMS tiles. Domaine
-          <code>sladoire.dev</code> chez Cloudflare Registrar (~12$/an).
+          sortant (le serveur appelle Cloudflare, pas l'inverse) — zéro port
+          ouvert sur la box, SSL auto, CDN devant les tuiles WMS (une Cache
+          Rule sur les GetMap fait passer les tuiles chaudes de DYNAMIC à
+          HIT et soulage la machine). Domaine <code>sladoire.dev</code> chez
+          Cloudflare Registrar (~12$/an), la carte est sur
+          <code>aetherwx.sladoire.dev</code>.
         </li>
       </ul>
     </CaseStudySection>
@@ -467,8 +548,8 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         </li>
         <li>
           <strong>Drizzle &gt; Prisma quand DB partagée</strong> : sprint 5
-          ajoutait 3 tables à une DB Postgres déjà peuplée d'hypertables
-          TimescaleDB d'autres services. Prisma aurait introspect tout et
+          ajoutait 3 tables à une DB Postgres déjà peuplée de tables
+          d'autres services. Prisma aurait introspect tout et
           risqué de drifter ; Drizzle SQL-first ne touche que ce qu'on déclare.
           Réutilisable si on ajoute du Nest à finance ou warhammer.
         </li>
@@ -482,7 +563,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         </li>
         <li>
           <strong>Cluster GeoServer non-breaking</strong> : marathon 2026-05-24
-          passe de 1 à 2 replicas GeoServer synchronisés par
+          passe de 1 à 2 replicas GeoServer (3 aujourd'hui) synchronisés par
           <strong>Hazelcast K8s</strong> (plugin community
           <code>gs-hz-cluster</code>) — RBAC ServiceAccount + Role pod-reader,
           gossip TCP 5701 sur Service headless. JDBCConfig partagé en Postgres
@@ -491,25 +572,31 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
           re-cache à froid lors d'un rolling restart. Le Service ClusterIP
           K8s <code>geoserver:8080</code> load-balance, donc les 6 sidecars
           fetchers + l'API + le frontend n'ont aucune modif à faire — l'alias
-          DNS K8s est l'arête stable. La 3ème replica est gardée en réserve
-          pour la migration Hetzner CAX41 (32 Gi RAM, 8g heap × 3).
+          DNS K8s est l'arête stable. Le passage à 3 replicas a attendu le
+          serveur bare-metal : sur la machine précédente (24 Go de RAM
+          partagés avec Windows), trois heaps GeoServer ne tenaient pas.
         </li>
         <li>
-          <strong>TTL différentiels alignés</strong> : audit a révélé que les
-          retention TimescaleDB étaient OK (30j vessels, 7j lightning) mais
-          que les fichiers disque GeoTIFF/GeoJSON s'accumulaient sans limite.
-          Sprint 10b a ajouté
-          <code>cleanup_old_files()</code> dans chaque fetcher Python (30j sst,
-          7j weather). Volumes stabilisés autour de 20 MB pour la météo.
+          <strong>Rétention alignée</strong> : un audit a révélé que les
+          purges en base étaient faites mais que les fichiers disque
+          GeoTIFF / GeoJSON s'accumulaient sans limite. Sprint 10b a ajouté
+          <code>cleanup_old_files()</code> dans chaque fetcher Python, puis la
+          politique a été unifiée (7j observations / 7j+7j prévisions) dans un
+          CronJob unique qui traite base et disque ensemble. L'invariant qui
+          en découle et qu'on vérifie depuis : <strong>ce que montre la
+          time-bar doit correspondre à de la donnée réelle, et aucune donnée
+          en base ne doit être invisible depuis la time-bar</strong>.
         </li>
         <li>
           <strong>Bonus pédagogique</strong> : Cloudflare Tunnel pour
-          exposition publique. Le NAS reste tranquille sur le LAN sans port
-          ouvert, mais
-          <code>https://maritime.sladoire.dev</code> est accessible mondialement
-          avec SSL + DDoS protection + CDN cache des tiles, 0€/mois (juste
-          ~12$/an le domaine). Pattern réutilisable pour les autres apps
-          NAS.
+          exposition publique. Le serveur reste sur le LAN sans port ouvert,
+          mais <code>https://aetherwx.sladoire.dev</code> est accessible
+          mondialement avec SSL + DDoS protection + CDN cache des tuiles,
+          0€/mois (juste ~12$/an le domaine). Pattern réutilisable pour les
+          autres apps de la maison — avec un revers découvert plus tard : le
+          connecteur du tunnel vit <em>dans</em> le cluster, donc quand le
+          cluster gèle, le site répond « Cloudflare error 1033 » et rien
+          d'autre.
         </li>
         <li>
           <strong>GeoServer community extensions : snapshot ≠ release</strong>.
@@ -613,7 +700,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
       </ul>
     </CaseStudySection>
 
-    <CaseStudySection eyebrow="GeoServer V3 — plugin WPS custom (2026-05-13)">
+    <CaseStudySection eyebrow="Plugin WPS custom — densification IDW (2026-05-13)">
       <p>
         Les rasters source météo / océano sont sur grille grossière : GFS 0.25°
         (~28km), OISST 0.25°, WW3 0.5°. Au rendu, on voit les pixels — pas joli,
@@ -678,7 +765,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
       <h3 class="font-bold text-lg mt-6">Le piège JDBCConfig — 1h perdue avant de comprendre</h3>
       <p>
         Le cluster GeoServer utilise JDBCConfig (catalog Postgres-backed) pour que
-        les 2 replicas partagent le même état. Quand on PUT un SLD via REST API
+        les replicas partagent le même état. Quand on PUT un SLD via REST API
         (<code>PUT /rest/workspaces/&lt;ws&gt;/styles/&lt;name&gt;?raw=true</code>), la DB
         est bien mise à jour, et un GET sur la même URL retourne la nouvelle version
         ✓. Mais le rendu continue d'utiliser <strong>l'ancienne version</strong>
@@ -700,10 +787,24 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         catalog ↔ disk n'est pas documenté côté GeoServer — leçon à graver dans
         la mémoire des projets cluster JDBCConfig.
       </p>
+      <p>
+        Suite de l'histoire, quatre mois plus tard : ce script est devenu un
+        job de bootstrap au démarrage, et il a fallu le réécrire deux fois.
+        Version 1, destructive : DELETE puis POST puis PUT à chaque
+        exécution, avec un timeout client de 30 s. Or
+        <strong>un timeout côté client n'annule pas la requête côté
+        serveur</strong> — sous contention du catalog partagé, le DELETE
+        passait, le client abandonnait, le PUT n'arrivait jamais, et le style
+        se retrouvait décrit mais vide. Version 2 : plus aucun DELETE, une
+        synchronisation par comparaison (on lit, on saute si identique, on
+        écrit sinon), une relecture bit à bit après écriture, et un code de
+        sortie non nul dès qu'un style échoue — y compris ceux qui ne sont
+        style par défaut de personne, dont l'échec était jusque-là avalé.
+      </p>
 
       <h3 class="font-bold text-lg mt-6">Burst protection — control-flow extension</h3>
       <p>
-        Le frontend OpenLayers tile par tuiles 256×256 — un pan de carte peut
+        Le frontend tuile en 256×256 — un pan de carte peut
         burst 30+ requêtes WMS GetMap en parallèle. Avec une rendering transformation
         coûteuse (IDW densify × Contour), le pool de threads Tomcat saturait → LB
         nginx en <code>upstream timed out</code> → cascade de 502 → GeoServer
@@ -717,6 +818,193 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
       <p>
         Burst test validé : 30 requêtes WMS concurrentes → 30/30 réponses 200,
         P95 = 6s (sous le timeout 30s), zéro 502, zéro effondrement.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Septembre 2026 — le serveur bare-metal">
+      <p>
+        Pendant l'été, la prod tournait sur « Mini-Blue » : un mini-PC
+        Windows, cluster k3s dans WSL2. Ça a tenu quelques mois, puis les
+        gels se sont rapprochés — toutes les 48 heures environ, le cluster
+        se figeait entièrement. Comme le connecteur Cloudflare Tunnel vit
+        <em>dans</em> le cluster, le symptôme côté visiteur était toujours le
+        même : <strong>Cloudflare error 1033</strong>, tunnel introuvable.
+        Le site est resté down trois semaines.
+      </p>
+      <p>
+        La cause racine n'était pas la RAM, comme on l'a d'abord cru
+        (l'hypothèse facile quand un WSL sature) mais
+        <strong>l'épuisement des watches inotify</strong> :
+        <code>fs.inotify.max_user_instances</code> vaut 128 par défaut, et
+        entre containerd, kubelet, les operators et les sidecars, un cluster
+        k3s complet passe cette barre sans effort. Le symptôme visible était
+        une erreur 1033 ; le vrai message était dix couches plus bas. Fix
+        <code>sysctl.d</code> → 1024, mais la leçon a surtout servi à trancher
+        une question de fond : une prod ne devrait pas vivre dans un
+        sous-système Linux d'un poste de travail.
+      </p>
+      <p>
+        D'où <strong>dark-blue</strong>, assemblé début septembre et migré le
+        03/09/2026 : Ubuntu 26.04 bare-metal, Ryzen 9 9900X, 64 Go DDR5,
+        NVMe 3,6 To, RTX 4080 (réservée au transcodage Plex — le GIS ne
+        l'utilise pas), k3s v1.36.4, ArgoCD, Longhorn, CloudNativePG,
+        cert-manager, ingress-nginx. Un seul cluster, plus de dual-cluster à
+        garder synchrone.
+      </p>
+      <MermaidDiagram
+        client:visible
+        caption="La topologie depuis septembre 2026 : un seul cluster de prod bare-metal, le poste de dev ne fait plus tourner de prod. Le NAS est redevenu ce qu'il aurait dû rester — du stockage et des sauvegardes."
+        definition={`flowchart LR
+  subgraph DEV["Big-Blue — poste de dev"]
+    src["sources git<br/>maritime-atlas + developpeur-gitops"]
+  end
+
+  subgraph GH["GitHub"]
+    ci["GitHub Actions<br/>build + push"]
+    ghcr["GHCR<br/>ghcr.io/sylad/aetherwx-*"]
+    gops["developpeur-gitops<br/>(charts Helm + values)"]
+  end
+
+  subgraph DARK["dark-blue — serveur bare-metal (prod)"]
+    argo["ArgoCD"]
+    k3s["k3s v1.36.4<br/>~20 pods maritime"]
+    gs["GeoServer 3.0.1 × 3"]
+    pg["CloudNativePG<br/>pg-data + pg-catalog"]
+    sw["SeaweedFS S3"]
+    cfd["cloudflared"]
+  end
+
+  subgraph CF["Cloudflare"]
+    tun["Tunnel + CDN"]
+  end
+
+  src -->|git push| ci --> ghcr
+  src -->|bump tag| gops -->|sync| argo --> k3s
+  ghcr -->|pull| k3s
+  k3s --- gs & pg & sw & cfd
+  cfd <-->|QUIC sortant| tun --> visiteur["aetherwx.sladoire.dev"]`}
+      />
+      <p>
+        Ce que la panne a appris, au-delà du sysctl : <strong>un fix appliqué
+        à chaud sans passer par le dépôt GitOps est une bombe à
+        retardement</strong>. Plusieurs correctifs de fetchers avaient été
+        posés directement sur le volume de prod sans bump du tag dans le
+        gitops ; au redéploiement à neuf, ils ont tous disparu d'un coup et
+        sept layers modèle sont revenues à zéro. Depuis, un correctif runtime
+        n'est considéré fait que quand le tag est épinglé dans le dépôt.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="GeoServer 3.0.1 — migrer sans migrer le catalog">
+      <p>
+        Le 08/09/2026, la prod est passée sur <strong>GeoServer 3.0.1</strong>
+        (GeoTools 35.1, GWC 2.0.1, Tomcat 11, Java 21, ImageN à la place de
+        JAI). La stratégie tient en une phrase :
+        <strong>ne pas migrer le catalog</strong>.
+      </p>
+      <p>
+        Une migration de data dir 2.x → 3.x est irréversible et se debug mal.
+        À la place : un schéma PostgreSQL neuf (<code>geoserver3</code>) et un
+        volume neuf, rebootstrappés par les mêmes jobs idempotents qui
+        recréent déjà workspaces, stores, layers et styles au démarrage. Le
+        catalog 2.28 et son volume ne sont jamais touchés, donc le rollback
+        est un <code>git revert</code> du commit de values (tag + schéma +
+        volume) — pas une restauration de sauvegarde. Le tout derrière un
+        drapeau Helm, répété d'abord dans un namespace jetable avec une copie
+        des rasters, puis flippé en prod.
+      </p>
+      <ul>
+        <li>
+          <strong>Zéro ligne de Java changée</strong> dans les trois plugins
+          maison (IDW, cascade time-forward, init GWC) — vérifié dans les
+          sources de GeoTools 35.1 plutôt que supposé. La méthode marqueur
+          <code>invertGridGeometry</code> ajoutée un an plus tôt était déjà la
+          bonne pour le chaînage raster ; <code>invertQuery</code> ne concerne
+          que les process vecteur.
+        </li>
+        <li>
+          <strong>Boot ~2 min par pod</strong> contre 10 à 20 min en 2.28. Le
+          startup probe hérité (20 min de grâce) a été ramené à 5, et une
+          readiness probe a été ajoutée — les trois replicas n'en avaient
+          aucune, ce qui veut dire qu'un pod en cours de boot recevait du
+          trafic.
+        </li>
+        <li>
+          <strong>Rendu identique au pixel près</strong> entre 2.28 et 3.0.1
+          sur les rasters IDW et les isolignes : la comparaison a été faite
+          image par image, pas à l'œil.
+        </li>
+      </ul>
+      <p>
+        Les deux pièges les plus coûteux étaient invisibles depuis
+        l'application. Le premier : le catalog « 2.28 » ne vivait pas dans le
+        schéma <code>geoserver</code> qu'on croyait, mais dans
+        <code>public</code> — le script d'init tournait en superutilisateur,
+        le schéma appartenait donc à <code>postgres</code>, l'utilisateur
+        applicatif n'avait pas le droit <code>USAGE</code> dessus, et
+        PostgreSQL <em>saute silencieusement</em> un schéma inaccessible du
+        <code>search_path</code>. Deux ans de catalog rangés ailleurs que là
+        où la config le disait, sans un seul message d'erreur. Le second : un
+        interblocage de déploiement — trois exécutions en échec du CronJob de
+        surveillance (une panne de radar antérieure) suffisaient à faire
+        marquer la synchronisation comme non réussie par ArgoCD, donc à ne
+        jamais déclencher les hooks qui remplissent le catalog. Trois pods
+        parfaitement <em>Ready</em>, servant un catalog vide.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Ce qui a été ajouté en septembre">
+      <ul>
+        <li>
+          <strong>Trois sources radar / précipitations</strong> (07/09) :
+          radar <strong>NEXRAD</strong> pour les États-Unis (via l'Iowa State
+          Mesonet), radar <strong>MSC GeoMet</strong> pour le Canada, et
+          précipitations globales <strong>NASA GIBS IMERG</strong>. Le groupe
+          Radar passe de 3 à 6 entrées (RainViewer global, DWD, KNMI, NEXRAD,
+          GeoMet, IMERG). Chacune a sa propre cadence et sa propre fenêtre
+          d'archive — 5 min et plusieurs jours pour NEXRAD, 6 min mais
+          seulement ~3 h glissantes pour GeoMet, 30 min avec ~7 h de latence
+          d'ingestion pour IMERG. Ces trois valeurs ne sont pas de la
+          décoration : elles décident du <code>TIME</code> que le frontend a
+          le droit de demander, et une fenêtre mal bornée se traduit par une
+          tuile vide plutôt que par une erreur.
+        </li>
+        <li>
+          <strong>Un sélecteur de fonds de carte</strong> : cinq fonds
+          (CARTO Dark par défaut, CARTO Light, Esri Satellite, Esri Dark
+          Gray, OpenTopoMap), persistés par utilisateur. Le point technique
+          est le swap : on remplace <em>uniquement</em> la source et la layer
+          du fond, jamais <code>map.setStyle()</code> — un setStyle global
+          détruirait la custom layer WebGL des particules et l'ordre des
+          vingt layers WMS empilées au-dessus.
+        </li>
+      </ul>
+      <p>
+        Détail qu'on garde volontairement : le fond CARTO affiche un filigrane
+        « API KEY REQUIRED » depuis que CARTO a durci ses conditions
+        d'utilisation. Il serait trivial à faire disparaître (clé gratuite,
+        ou fond auto-hébergé), mais il reste là comme exemple pédagogique —
+        les sources externes changent leurs règles sans prévenir, et une
+        carte qui en dépend le découvre en production.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Le garde-fou — une matrice qui ne peut pas dériver">
+      <p>
+        La règle est née d'une régression de trop, formulée telle quelle :
+        <em>« une correction d'un layer ne doit plus jamais casser un autre
+        layer »</em>. Ce qui en est sorti : une matrice des
+        <strong>26 combinaisons layer×style</strong> réellement demandées par
+        la carte, <strong>générée en parsant les sources du frontend</strong>
+        à chaque exécution — donc impossible à laisser pourrir — rejouée par
+        un <strong>CronJob canary toutes les 6 heures</strong> dans le
+        cluster, plus un test E2E d'animation qui vérifie les invariants du
+        contrat temps.
+      </p>
+      <p>
+        <a href="/case-studies/aetherwx-qa-harness">Le détail du harnais est
+        raconté ici</a> — c'est la partie du projet la plus transposable
+        ailleurs.
       </p>
     </CaseStudySection>
   </section>

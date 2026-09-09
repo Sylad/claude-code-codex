@@ -91,8 +91,8 @@ const apps = [
   {
     name: "aetherwx",
     tagline: "AetherWX — atlas live multi-source : AIS + météo + foudre + alerts (anciennement Maritime Atlas)",
-    stack: "Angular 19 · NestJS 11 · GeoServer cluster · TimescaleDB · RabbitMQ",
-    role: "5 sources externes, slider temps, particules canvas, cluster GeoServer JDBCConfig",
+    stack: "Angular 19 · MapLibre · NestJS 11 · GeoServer 3.0.1 cluster · PostGIS · RabbitMQ",
+    role: "~15 sources externes, slider temps, particules WebGL, cluster GeoServer 3 replicas sur k3s bare-metal",
     href: "/case-studies/maritime-atlas",
     repo: "https://github.com/Sylad/maritime-atlas",
     accent: "from-teal-500/20 to-transparent",
@@ -193,7 +193,8 @@ const apps = [
               local + GitOps complet via ArgoCD, en une nuit (13→14 mai
               2026). 7 pièges techniques documentés (ingress hostNetwork,
               CNPG webhook, JDBCConfig hardcode, plugins custom Java…),
-              5 leçons, 1 repo public.
+              5 leçons, 1 repo public. <strong>Récit daté</strong> : la prod
+              a depuis quitté WSL2 pour un serveur bare-metal.
             </p>
             <p class="font-mono text-xs text-ink/60 pt-3 border-t border-white/5 mb-3">
               k3s · Helm · ArgoCD · CloudNativePG · RabbitMQ Operator · KEDA · cert-manager · GeoServer cluster
@@ -220,14 +221,15 @@ const apps = [
             </h3>
             <p class="text-sm text-ink-muted mb-4 leading-relaxed">
               Récit-tour pour développeurs Java qui débarquent sur K8s :
-              archi dual-cluster Big-Blue + Mini-Blue, 17 services
-              expliqués, <strong>6 tokens inventoriés</strong> (PAT
-              GHCR, webhook ArgoCD, tunnel Cloudflare, Google OAuth,
+              l'archi complète d'AetherWX sur k3s bare-metal, une vingtaine
+              de services expliqués, <strong>6 tokens inventoriés</strong>
+              (PAT GHCR, webhook ArgoCD, tunnel Cloudflare, Google OAuth,
               Resend, Anthropic), 5 leçons qui ont coûté 6h. 4 diagrammes
-              Mermaid, table de traduction Spring Boot ↔ K8s.
+              Mermaid, table de traduction Spring Boot ↔ K8s. Mise à jour
+              septembre 2026.
             </p>
             <p class="font-mono text-xs text-ink/60 pt-3 border-t border-white/5 mb-3">
-              k3s dual-cluster · GHCR · GH Actions · ArgoCD webhook · Longhorn RWX · Cloudflare Tunnel HA
+              k3s bare-metal · GHCR · GH Actions · ArgoCD · Longhorn · CloudNativePG · Cloudflare Tunnel
             </p>
             <div class="flex flex-wrap items-center gap-2">
               <a href="/case-studies/aetherwx-encyclopedia" class="font-mono text-[10px] uppercase tracking-wider text-claude/80 hover:text-claude transition-colors">
@@ -284,10 +286,13 @@ const apps = [
               frontend, détection IDAT PNG, Playwright runtime-derived layer
               id via delta snapshot, hook read-only <code>?qa=1</code>. Lancé
               une fois : <strong>9 bugs d'opacity trouvés d'un coup</strong>,
-              corrigés, FAIL=0 en prod.
+              corrigés, FAIL=0 en prod. Devenu depuis une matrice de
+              <strong>26 combinaisons layer×style</strong> générée depuis les
+              sources du frontend et rejouée toutes les 6h par un CronJob
+              canary in-cluster.
             </p>
             <p class="font-mono text-xs text-ink/60 pt-3 border-t border-white/5 mb-3">
-              Node.js · Playwright · MapLibre · Angular 19 · GeoServer WMS · TypeScript
+              Node.js · Playwright · MapLibre · Angular 19 · GeoServer WMS · CronJob canary · TypeScript
             </p>
             <div class="flex flex-wrap items-center gap-2">
               <a href="/case-studies/aetherwx-qa-harness" class="font-mono text-[10px] uppercase tracking-wider text-claude/80 hover:text-claude transition-colors">

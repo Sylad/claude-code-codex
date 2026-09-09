@@ -11,23 +11,20 @@ const globalArchi = `flowchart TB
 
     subgraph CF["☁️ Cloudflare"]
       DNS[DNS *.sladoire.dev]
-      TUN{{Tunnel HA<br/>1 token · 2 connectors}}
+      TUN{{Tunnel dark-blue<br/>1 token · 4 connexions QUIC}}
+      CDN[Cache Rule<br/>tuiles WMS]
     end
 
-    subgraph BB["🟦 Big-Blue · tower gaming RGB (24h ON quand sylvain code)"]
-      BB_K3S[k3s cluster · WSL2 Ubuntu]
-      BB_PODS[17 pods Running]
-      BB_CFD[cloudflared connector]
-      BB_K3S --> BB_PODS
-      BB_K3S --> BB_CFD
+    subgraph DARK["🟪 dark-blue · serveur bare-metal (prod, depuis 09/2026)"]
+      DK_K3S[k3s v1.36.4 · Ubuntu 26.04]
+      DK_PODS[~20 pods maritime<br/>+ 3 apps NestJS]
+      DK_CFD[cloudflared connector]
+      DK_K3S --> DK_PODS
+      DK_K3S --> DK_CFD
     end
 
-    subgraph MB["🟩 Mini-Blue · GEEKOM IT13 (always-on)"]
-      MB_K3S[k3s cluster · Ubuntu native]
-      MB_PODS[17 pods Running]
-      MB_CFD[cloudflared connector]
-      MB_K3S --> MB_PODS
-      MB_K3S --> MB_CFD
+    subgraph BB["🟦 Big-Blue · poste de dev (plus de prod)"]
+      BB_SRC[sources git · builds<br/>k3s local pour tests ad-hoc]
     end
 
     subgraph GH["🐙 GitHub"]
@@ -39,22 +36,22 @@ const globalArchi = `flowchart TB
       ACTIONS -->|docker push| GHCR
     end
 
-    subgraph ARGO["🚀 ArgoCD (sur chaque cluster)"]
+    subgraph ARGO["🚀 ArgoCD (sur dark-blue)"]
       ARGOCD[argocd-server]
-      REPO2 -->|webhook 2s| ARGOCD
-      ARGOCD -->|sync| BB_K3S
-      ARGOCD -->|sync| MB_K3S
-      GHCR -.->|pull privé via regcred| BB_K3S
-      GHCR -.->|pull privé via regcred| MB_K3S
+      REPO2 -->|polling 30s| ARGOCD
+      ARGOCD -->|sync| DK_K3S
+      GHCR -.->|pull privé via regcred| DK_K3S
     end
 
+    BB_SRC -->|git push| REPO1
+    BB_SRC -->|bump tag| REPO2
     U -->|HTTPS| DNS
     DNS -->|CNAME| TUN
-    TUN <-->|QUIC 8 connexions| BB_CFD
-    TUN <-->|QUIC 8 connexions| MB_CFD
+    TUN --- CDN
+    TUN <-->|QUIC sortant| DK_CFD
 
+    style DARK fill:#2a1f4d,stroke:#a855f7,color:#fff
     style BB fill:#1e3a5f,stroke:#3b82f6,color:#fff
-    style MB fill:#1f4d3a,stroke:#10b981,color:#fff
     style CF fill:#5a3a1f,stroke:#f59e0b,color:#fff
     style GH fill:#3a1f3a,stroke:#a855f7,color:#fff
     style ARGO fill:#1f3a3a,stroke:#06b6d4,color:#fff`;
@@ -93,6 +90,8 @@ const ingestionFlow = `flowchart LR
       METAR[NOAA METAR obs]
       HUBEAU[Hubeau débits FR]
       FIRMS[NASA FIRMS feux]
+      RADAR[Radars cascadés WMS<br/>DWD · KNMI · NEXRAD IEM · MSC GeoMet]
+      GIBS[NASA GIBS · EUMETSAT<br/>satellites + IMERG]
     end
 
     subgraph FETCH["Fetchers k3s (cron + daemons)"]
@@ -114,17 +113,21 @@ const ingestionFlow = `flowchart LR
       ORC -->|skipIfMissing| FILTER[Data quality filter]
     end
 
-    subgraph DB["TimescaleDB (CNPG)"]
-      PG[(maritime PG<br/>hypertables)]
+    subgraph DB["PostgreSQL + PostGIS (CNPG)"]
+      PG[(maritime PG<br/>rétention 7j par CronJob)]
       AIS_DEC --> PG
       LIGHT_F --> PG
       BUOY_F --> PG
       FILTER --> PG
     end
 
-    subgraph GS["GeoServer cluster · 3 replicas"]
-      JDBC[JDBCConfig catalog<br/>shared PG]
-      WF_GFS --> GTIFF[/GeoTIFF mosaics<br/>Longhorn RWX/]
+    subgraph GS["GeoServer 3.0.1 · 3 replicas"]
+      JDBC[JDBCConfig + JDBCStore<br/>catalog et data dir en PG]
+      S3[(SeaweedFS S3<br/>cache tuiles GWC partagé)]
+      RADAR -->|cascade WMS| GS_R
+      GIBS -->|cascade WMS| GS_R
+      GS_R <--> S3
+      WF_GFS --> GTIFF[/GeoTIFF mosaics<br/>PVC node-local/]
       WF_AROME --> GTIFF
       WF_ARPEGE --> GTIFF
       SST_F --> GTIFF
@@ -133,7 +136,7 @@ const ingestionFlow = `flowchart LR
     end
 
     subgraph UI["Frontend Angular"]
-      PG -->|WFS/GeoJSON| MAP[Map OL multi-projection]
+      PG -->|WFS/GeoJSON| MAP[Globe MapLibre<br/>+ particules WebGL]
       GS_R -->|WMS GetMap| MAP
       MAP --> USER[👤 user]
     end
@@ -174,24 +177,68 @@ const tokenFlow = `flowchart LR
 
 <BaseLayout
   title="L'encyclopédie AetherWX — comment Claude a kubernetisé tout ça"
-  description="Encyclopédie pour développeurs Java qui débarquent sur K8s : architecture dual-cluster AetherWX, 17 services, 6 tokens expliqués, GitOps complet, 5 leçons. Construit en pair-programming avec Claude Code en 14h."
+  description="Encyclopédie pour développeurs Java qui débarquent sur K8s : architecture AetherWX, une vingtaine de services, 6 tokens expliqués, GitOps complet, 5 leçons. Écrite après un marathon de 14h en mai 2026, tenue à jour depuis (prod bare-metal dark-blue, GeoServer 3.0.1)."
 >
   <PageHero
     eyebrow="Case study · encyclopédie aetherwx"
     title="L'encyclopédie AetherWX"
-    intro="« 12 ans que je fais du GeoServer et de l'OpenLayers, je ne comprends rien aux technos que tu utilises. » — Sylvain, 2026-05-14, 22h, juste avant que la tour Big-Blue arrête de clignoter. Cette page raconte ce qui a été déployé pendant 14h de marathon : 17 services par cluster, 2 clusters HA, GitOps complet, et pourquoi des dizaines de tokens ont été générés — un par un."
+    intro="« 12 ans que je fais du GeoServer et de l'OpenLayers, je ne comprends rien aux technos que tu utilises. » — Sylvain, 2026-05-14, 22h, juste avant que la tour Big-Blue arrête de clignoter. Cette page part de ce qui a été déployé pendant 14h de marathon — une vingtaine de services, GitOps complet, et pourquoi des dizaines de tokens ont été générés — et décrit l'infrastructure telle qu'elle tourne aujourd'hui, quatre mois et deux déménagements plus tard."
   />
 
   <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12 space-y-12">
 
+    <CaseStudySection eyebrow="00 · Ce qui a changé depuis l'écriture">
+      <p>
+        Cette page a été écrite le 2026-05-14, au sortir du marathon qui a
+        mis AetherWX sur Kubernetes. L'architecture décrite plus bas
+        (Kubernetes, GitOps, tunnel, tokens) est toujours la bonne, mais
+        <strong>trois faits ont changé</strong> et la version que vous lisez
+        en tient compte :
+      </p>
+      <ul class="list-disc list-inside space-y-2 text-ink-muted">
+        <li>
+          <strong class="text-ink">Fini le dual-cluster.</strong> La prod
+          tournait sur deux clusters k3s en miroir (Big-Blue, la tour de dev
+          sous WSL2 ; Mini-Blue, un mini-PC always-on). Depuis le 03/09/2026
+          elle tourne sur <strong>dark-blue</strong>, un serveur bare-metal
+          dédié — un seul cluster, plus de dérive entre les deux.
+        </li>
+        <li>
+          <strong class="text-ink">GeoServer est en 3.0.1</strong> (cutover
+          du 08/09/2026), en cluster à 3 replicas, catalog et data dir en
+          PostgreSQL, cache de tuiles sur object storage S3.
+        </li>
+        <li>
+          <strong class="text-ink">TimescaleDB n'a jamais été installée.</strong>
+          Le schéma d'origine en dépendait ; l'extension n'a jamais réussi à
+          cohabiter avec l'UID de CloudNativePG. Ce qui tourne, ce sont des
+          <em>stubs</em> SQL no-op qui laissent le code d'origine s'exécuter,
+          et la rétention (7 jours) est faite par un CronJob. Ce point était
+          déjà faux dans la première version de cette page — corrigé ici.
+        </li>
+      </ul>
+      <p>
+        Les sections « pièges » gardent leur date d'origine : ce sont des
+        récits, pas des états.
+      </p>
+    </CaseStudySection>
+
     <CaseStudySection eyebrow="01 · Le truc qui tourne ça">
       <p>
-        Une <strong>tour gaming RGB watercooled</strong> (et non pas un
-        laptop comme je l'ai écrit par erreur) — c'est <strong>Big-Blue</strong>.
-        Au-dessus, depuis 14h, un cluster k3s tourne dans WSL2 Ubuntu et
-        sert publiquement l'atlas maritime AetherWX. À côté, sur un
-        bureau au calme, le <strong>Mini-Blue</strong> — un GEEKOM IT13
-        mini-PC always-on qui réplique la même stack en miroir.
+        Au départ, une <strong>tour gaming RGB watercooled</strong> (et non
+        pas un laptop comme je l'ai écrit par erreur) — c'est
+        <strong>Big-Blue</strong>. Pendant 14h, un cluster k3s a tourné dans
+        son WSL2 Ubuntu et servi publiquement l'atlas AetherWX ; un mini-PC
+        always-on, <strong>Mini-Blue</strong>, a ensuite répliqué la même
+        stack en miroir.
+      </p>
+      <p>
+        Aujourd'hui la prod a quitté les deux. Elle vit sur
+        <strong>dark-blue</strong>, un serveur bare-metal assemblé pour ça :
+        Ubuntu 26.04, Ryzen 9 9900X, 64 Go DDR5, NVMe 3,6 To, RTX 4080
+        (réservée au transcodage Plex, le GIS ne s'en sert pas). Big-Blue
+        est redevenu ce qu'il aurait dû rester — un poste de développement
+        qui pousse du code et des images.
       </p>
 
       <figure class="my-6">
@@ -205,17 +252,18 @@ const tokenFlow = `flowchart LR
           Big-Blue — RTX SUPRIM + AIO Liquid (CPU @31°C en idle), 6 fans
           RGB, WSL2 Ubuntu + Docker Desktop + k3s. Watercooled parce qu'à
           chaque cycle GFS (4×/jour) le pod weather-fetcher mouline 65
-          GeoTIFFs en quelques secondes.
+          GeoTIFFs en quelques secondes. Photo de mai 2026, quand la prod
+          tournait encore dessus.
         </figcaption>
       </figure>
 
       <p>
-        <strong>Spec</strong> : i9-14900KF, 32 GiB RAM, RTX SUPRIM, 2 To
-        NVMe. <strong>Spec Mini-Blue</strong> : Intel i7-1360P, 32 GiB,
-        1 To NVMe, ~12 W idle. Les deux exposent leurs services via un
-        <strong>Cloudflare Tunnel</strong> (1 token, 2 connectors, 8
-        connexions QUIC HA) → le visiteur ne voit qu'un nom de domaine,
-        jamais une IP maison.
+        <strong>Spec Big-Blue</strong> : i9-14900KF, 32 GiB RAM, RTX SUPRIM,
+        2 To NVMe. <strong>Spec dark-blue</strong> : Ryzen 9 9900X, 64 Go
+        DDR5, NVMe 3,6 To, RTX 4080. L'exposition passe par un
+        <strong>Cloudflare Tunnel</strong> (1 token, 4 connexions QUIC
+        sortantes) → le visiteur ne voit qu'un nom de domaine, jamais une IP
+        maison.
       </p>
     </CaseStudySection>
 
@@ -228,7 +276,7 @@ const tokenFlow = `flowchart LR
       <MermaidDiagram
         client:visible
         definition={globalArchi}
-        caption="Architecture globale AetherWX — 2 clusters k3s HA, GitOps via ArgoCD + GHCR, expo publique via Cloudflare Tunnel. Le visiteur tape une URL, Cloudflare DNS résout vers le tunnel, et le tunnel route vers l'un des deux connecteurs (Big-Blue ou Mini-Blue). Si l'un tombe, l'autre encaisse seul."
+      caption="Architecture globale AetherWX depuis septembre 2026 — un cluster k3s bare-metal, GitOps via ArgoCD + GHCR, expo publique via Cloudflare Tunnel. Le visiteur tape une URL, Cloudflare DNS résout vers le tunnel, et le tunnel sort du cluster (aucun port ouvert). Le poste de dev ne sert plus rien publiquement."
       />
 
       <p>
@@ -245,13 +293,19 @@ const tokenFlow = `flowchart LR
         <li>
           <strong class="text-ink">Aucune action manuelle pour déployer</strong>
           — tu push du code → GH Actions build + push GHCR → tu bump le
-          tag GitOps → ArgoCD sync les 2 clusters en ~2 sec. C'est la
-          chaîne complète.
+          tag GitOps → ArgoCD sync le cluster. C'est la chaîne complète.
         </li>
         <li>
-          <strong class="text-ink">Tout doublé</strong> — Big-Blue ET
-          Mini-Blue tournent les mêmes 17 pods. Si Big-Blue plante ou que
-          Sylvain ferme l'ordi pour partir, Mini-Blue prend tout le trafic.
+          <strong class="text-ink">Un seul endroit qui fait autorité</strong>
+          — la prod est sur dark-blue, et nulle part ailleurs. La version
+          « deux clusters en miroir » a tenu quelques mois avant de montrer
+          son coût réel : deux états à garder synchrones, deux fois les
+          incidents, et une prod qui dépendait d'un poste de travail. Le
+          jour où le cluster sous WSL2 s'est mis à geler toutes les 48h, la
+          redondance n'a rien sauvé — les deux moitiés partageaient le même
+          point de défaillance, le connecteur de tunnel vivant
+          <em>dans</em> le cluster. Symptôme côté visiteur :
+          <code>Cloudflare error 1033</code>, trois semaines durant.
         </li>
       </ul>
     </CaseStudySection>
@@ -296,9 +350,10 @@ const tokenFlow = `flowchart LR
       </p>
     </CaseStudySection>
 
-    <CaseStudySection eyebrow="04 · Les 17 services qui tournent">
+    <CaseStudySection eyebrow="04 · Les services qui tournent">
       <p>
-        Chaque cluster fait tourner 17 pods. Voici le découpage par rôle :
+        Le namespace maritime fait tourner une vingtaine de pods. Voici le
+        découpage par rôle :
       </p>
 
       <div class="overflow-x-auto my-6">
@@ -326,21 +381,23 @@ const tokenFlow = `flowchart LR
             <tr><td class="py-2 pr-3 font-mono">maritime-api</td><td class="py-2 pr-3">NestJS · endpoints REST + orchestrator USGS/METAR/Hubeau/FIRMS</td><td class="py-2">1</td></tr>
             <tr><td class="py-2 pr-3 font-mono">alerts-engine</td><td class="py-2 pr-3">Croise positions + vent + foudre → alertes RMQ</td><td class="py-2">1</td></tr>
             <tr class="bg-claude/[0.04]"><td colspan="3" class="py-2 px-3 font-mono text-[11px] uppercase text-claude/70">Stockage + rendering</td></tr>
-            <tr><td class="py-2 pr-3 font-mono">postgres (CNPG)</td><td class="py-2 pr-3">TimescaleDB hypertables · 5 GiB</td><td class="py-2">1 primary</td></tr>
-            <tr><td class="py-2 pr-3 font-mono">geoserver</td><td class="py-2 pr-3">WMS multi-projection · plugin IDW custom Java</td><td class="py-2">3 (HA)</td></tr>
-            <tr><td class="py-2 pr-3 font-mono">rabbitmq</td><td class="py-2 pr-3">Bus alerts engine</td><td class="py-2">1</td></tr>
+            <tr><td class="py-2 pr-3 font-mono">postgres (CNPG)</td><td class="py-2 pr-3">PostgreSQL + PostGIS · 2 clusters (pg-data, pg-catalog)</td><td class="py-2">1 primary chacun</td></tr>
+            <tr><td class="py-2 pr-3 font-mono">geoserver</td><td class="py-2 pr-3">GeoServer 3.0.1 · WMS + cascade · 3 plugins Java maison · cluster Hazelcast</td><td class="py-2">3 (HA)</td></tr>
+            <tr><td class="py-2 pr-3 font-mono">rabbitmq</td><td class="py-2 pr-3">Bus alerts engine · RabbitMQ 4.3.0</td><td class="py-2">1</td></tr>
+            <tr><td class="py-2 pr-3 font-mono">seaweedfs</td><td class="py-2 pr-3">Object storage S3 · cache de tuiles GWC partagé</td><td class="py-2">1</td></tr>
             <tr class="bg-claude/[0.04]"><td colspan="3" class="py-2 px-3 font-mono text-[11px] uppercase text-claude/70">Frontend + expo</td></tr>
-            <tr><td class="py-2 pr-3 font-mono">maritime-frontend</td><td class="py-2 pr-3">Angular 19 · OpenLayers 10 multi-projection</td><td class="py-2">2</td></tr>
-            <tr><td class="py-2 pr-3 font-mono">cloudflared</td><td class="py-2 pr-3">Tunnel Cloudflare (4 connexions QUIC)</td><td class="py-2">1 par cluster</td></tr>
+            <tr><td class="py-2 pr-3 font-mono">maritime-frontend</td><td class="py-2 pr-3">Angular 19 · globe MapLibre + particules WebGL</td><td class="py-2">2</td></tr>
+            <tr><td class="py-2 pr-3 font-mono">cloudflared</td><td class="py-2 pr-3">Tunnel Cloudflare (4 connexions QUIC)</td><td class="py-2">1</td></tr>
           </tbody>
         </table>
       </div>
 
       <p>
-        <strong>17 pods × 2 clusters = 34 instances qui tournent en
-        permanence</strong>, pour un coût électrique total estimé de
-        ~15 W (Mini-Blue idle) + ~80 W (Big-Blue actif quand sylvain
-        code), soit ~€4/mois si on facture l'électricité.
+        S'y ajoutent les CronJobs qui ne tournent pas en permanence : le
+        ménage de rétention (quotidien), le bootstrap des styles GeoServer
+        (quotidien, parce qu'un bootstrap qui échoue une fois ne se rejoue
+        jamais tout seul), et le canary WMS toutes les 6 heures qui rejoue la
+        matrice complète des layers.
       </p>
     </CaseStudySection>
 
@@ -402,9 +459,10 @@ const tokenFlow = `flowchart LR
             <strong class="text-ink">Type :</strong> JWT long-lived émis
             par Cloudflare.
             <br/><strong class="text-ink">Pourquoi :</strong> un seul
-            token permet d'attacher N connecteurs cloudflared (sur Big-Blue
-            ET Mini-Blue). Cloudflare load-balance entre eux. Si l'un
-            tombe, l'autre encaisse.
+            token permet d'attacher N connecteurs cloudflared. Cloudflare
+            load-balance entre eux — utile quand plusieurs machines
+            servaient le même site ; aujourd'hui il n'y a qu'un connecteur,
+            sur dark-blue.
             <br/><strong class="text-ink">Où vit-il :</strong> Secret
             K8s <code>cloudflared-token</code>, monté en env var
             <code>TUNNEL_TOKEN</code> dans le Deployment cloudflared.
@@ -495,7 +553,7 @@ const tokenFlow = `flowchart LR
       <ul class="list-disc list-inside space-y-2 text-ink-muted">
         <li>
           <strong class="text-ink">maritime-atlas</strong> · le code source
-          des 17 services. Quand tu push, GH Actions lit les fichiers
+          de tous les services. Quand tu push, GH Actions lit les fichiers
           modifiés (path filter), build seulement les images concernées,
           et push sur GHCR avec un tag <code>sha-XXXXXXX</code> (les 7
           premiers chars du commit).
@@ -503,8 +561,9 @@ const tokenFlow = `flowchart LR
         <li>
           <strong class="text-ink">developpeur-gitops</strong> · les charts
           Helm + les <code>values.yaml</code>. Quand tu bumpes un tag dans
-          ce repo et que tu push, ArgoCD reçoit le webhook GitHub en ~2
-          sec et sync les 2 clusters en parallèle.
+          ce repo et que tu push, ArgoCD le voit et synchronise le cluster
+          (webhook GitHub en ~2 sec sur le dépôt de code ; polling 30 s sur
+          le dépôt gitops depuis la remise à plat de septembre).
         </li>
       </ul>
 
@@ -518,15 +577,19 @@ const tokenFlow = `flowchart LR
 
     <CaseStudySection eyebrow="07 · Le flux d'ingestion data">
       <p>
-        AetherWX agrège 11 sources externes (AIS, foudre, météo, vagues,
-        SST, séismes, débits fleuves, etc.). Chacune a son propre rythme
-        et son propre service dédié :
+        AetherWX agrège une quinzaine de sources externes (AIS, foudre,
+        météo, vagues, SST, séismes, débits de fleuves, satellites, radars
+        nationaux, feux…). Chacune a son propre rythme, et deux stratégies
+        d'intégration : soit on ingère (fetcher dédié → Postgres ou GeoTIFF),
+        soit on cascade (le provider expose déjà du WMS, GeoServer le
+        relaie et le met derrière notre cache et notre paramètre
+        <code>TIME</code>) :
       </p>
 
       <MermaidDiagram
         client:visible
         definition={ingestionFlow}
-        caption="Flux d'ingestion data. Les fetchers cron déposent dans Postgres (hypertables Timescale) et/ou sur Longhorn RWX (rasters GeoTIFF). GeoServer lit les rasters depuis le volume partagé et expose en WMS multi-projection. Le frontend OpenLayers consomme."
+        caption="Flux d'ingestion data. Les fetchers cron déposent dans Postgres et/ou sur un volume partagé (rasters GeoTIFF). Les providers qui exposent déjà du WMS (satellites, radars nationaux) sont cascadés par GeoServer plutôt que ré-ingérés. Le frontend MapLibre consomme le tout."
       />
 
       <p>
@@ -650,39 +713,41 @@ const tokenFlow = `flowchart LR
 
       <div class="my-6 grid grid-cols-2 gap-4 font-mono text-sm">
         <div class="rounded-lg border border-white/10 bg-paper-elevated p-4">
-          <p class="text-claude text-xs uppercase tracking-wider mb-2">Big-Blue (intermittent)</p>
-          <p class="text-ink"><strong>~80 W</strong> · ON quand sylvain code (8-12h/j)</p>
-          <p class="text-ink-muted text-xs mt-1">≈ 8 kWh/mois → ~€2</p>
+          <p class="text-claude text-xs uppercase tracking-wider mb-2">dark-blue (always-on)</p>
+          <p class="text-ink"><strong>~60-90 W</strong> · 24h/24, prod + Plex</p>
+          <p class="text-ink-muted text-xs mt-1">≈ 50 kWh/mois → ~€10</p>
         </div>
         <div class="rounded-lg border border-white/10 bg-paper-elevated p-4">
-          <p class="text-claude text-xs uppercase tracking-wider mb-2">Mini-Blue (always-on)</p>
-          <p class="text-ink"><strong>~12 W</strong> · 24h/24</p>
-          <p class="text-ink-muted text-xs mt-1">≈ 9 kWh/mois → ~€2</p>
+          <p class="text-claude text-xs uppercase tracking-wider mb-2">Big-Blue (dev, intermittent)</p>
+          <p class="text-ink"><strong>~80 W</strong> · ON quand sylvain code</p>
+          <p class="text-ink-muted text-xs mt-1">ne sert plus rien publiquement</p>
         </div>
       </div>
 
       <p>
-        <strong>Total : ~€4/mois.</strong> Compare avec un cluster Kapsule
-        Scaleway équivalent (3 nodes, GeoServer cluster, Postgres
-        managé) : ~€80-120/mois. Le ROI de la stratégie home-prod est
-        de l'ordre de <strong>20× moins cher</strong>, en échange
-        d'une dépendance à mon LAN + box. Cloudflare tunnel gère la
-        partie réseau, donc même si l'IP publique change, le service
-        reste up.
+        <strong>Coût récurrent : l'électricité, un domaine (~12$/an), et
+        rien d'autre.</strong> Compare avec un cluster managé équivalent
+        (3 nodes, cluster GeoServer, Postgres managé) : ~€80-120/mois. Le
+        coût du bare-metal maison est en revanche un investissement initial
+        et du temps d'exploitation — quand le serveur ne redémarre pas seul
+        après une coupure de courant, personne ne vient le rallumer.
       </p>
 
       <p class="text-sm text-ink-muted italic">
-        Plan B (si la box meurt) : redéploiement sur Scaleway Kapsule
-        en ~2 heures via le même repo GitOps. Les Helm charts sont
-        portables — il faut juste swapper la StorageClass Longhorn →
-        scw-bssd. Doc dans le repo developpeur-gitops.
+        Plan B (si la machine meurt) : redéploiement chez un fournisseur
+        managé via le même repo GitOps. Les Helm charts sont portables — il
+        faut swapper la StorageClass et recréer les Secrets. C'est
+        précisément ce qui a été exercé pour de vrai en septembre 2026, en
+        migrant d'un cluster à l'autre : un fresh-start complet, données de
+        rétention 7 jours re-remplies par les fetchers, et un catalog
+        GeoServer reconstruit par des jobs idempotents plutôt que restauré.
       </p>
     </CaseStudySection>
 
     <CaseStudySection eyebrow="10 · Quoi maintenant ?">
       <p>
         Le marathon 2026-05-14 a livré le strict nécessaire. Le backlog
-        post-ship :
+        d'alors, et ce qu'il est devenu quatre mois plus tard :
       </p>
 
       <ul class="list-disc list-inside space-y-2 text-ink-muted">
@@ -694,23 +759,36 @@ const tokenFlow = `flowchart LR
         </li>
         <li>
           <strong class="text-ink">SealedSecrets</strong> — chiffrer
-          les Secrets dans le repo gitops (regcred, maritime-google-oauth,
-          maritime-shared-env). Aujourd'hui ils sont stockés en clair
-          dans GitHub (repo privé), demain ils seront publics par
-          défaut. <code>kubeseal</code> CLI déjà installé.
+          les Secrets dans le repo gitops.
+          <strong>Abandonné</strong> : au moment de le mettre en place, le
+          dépôt upstream avait disparu et aucun SealedSecret réel n'existait
+          dans le gitops. Les Secrets sont créés hors dépôt, à la main, et
+          l'état de la machine est sauvegardé chiffré tous les jours (dump
+          Postgres + données des apps, chiffrement <em>age</em>, rotation
+          14 jours, restauration testée octet à octet — pas seulement
+          scriptée).
         </li>
         <li>
           <strong class="text-ink">Rebrand <code>maritime-atlas</code>
-          → <code>aetherwx</code></strong> — couche 3 (rename repo,
-          mise à jour des imports, redirect 301 sur les anciennes
-          URLs).
+          → <code>aetherwx</code></strong> — <strong>fait</strong>. Y
+          compris le renommage du workspace GeoServer
+          <code>maritime:*</code> → <code>aetherwx:*</code>, qui touche à la
+          fois les noms de layers et les chemins d'URL — deux substitutions
+          distinctes, à faire de façon atomique sous peine de servir des
+          tuiles introuvables pendant la bascule.
         </li>
         <li>
           <strong class="text-ink">App Android AetherWX (Expo)</strong>
-          — MVP weekend, écrans Map + Alerts, push notifications via
-          Cloudflare Worker → APNs/FCM.
+          — toujours au backlog.
         </li>
       </ul>
+      <p>
+        Ce qui n'était <em>pas</em> au backlog et a occupé la suite : sortir
+        la prod de WSL2 (serveur bare-metal, septembre), passer GeoServer en
+        3.0.1, et surtout construire le harnais qui empêche une correction de
+        layer d'en casser une autre —
+        <a href="/case-studies/aetherwx-qa-harness">raconté ici</a>.
+      </p>
     </CaseStudySection>
 
     <CaseStudySection eyebrow="11 · Pour aller plus loin">
@@ -746,7 +824,8 @@ const tokenFlow = `flowchart LR
 
       <p class="mt-8 text-sm text-ink-muted italic">
         Encyclopédie écrite en pair-programming avec Claude Opus 4.7 le
-        2026-05-14, en fin de journée d'un marathon de 14 heures. Si
+        2026-05-14, en fin de journée d'un marathon de 14 heures, et mise à
+        jour en septembre 2026 (prod bare-metal, GeoServer 3.0.1). Si
         quelque chose ne te paraît pas clair, ouvre une issue sur le
         repo claude-code-codex — c'est probablement que j'ai sauté une
         étape.
