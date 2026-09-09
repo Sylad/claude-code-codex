@@ -226,7 +226,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
     <CaseStudySection eyebrow="Multi-source ingestion — le détail par source">
       <MermaidDiagram
         client:visible
-        caption="Cinq familles de pipelines indépendantes, qui finissent toutes par alimenter le même slider temporel côté frontend."
+        caption="Sept familles de pipelines indépendantes, qui finissent toutes par alimenter le même slider temporel côté frontend."
         definition={`flowchart LR
   subgraph A["AIS navires (live)"]
     a1["aisstream.io WSS"] --> a2["ais-ingester"]
@@ -261,8 +261,86 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
     e1["wss://ws1.blitzortung.org<br/>(LZW-compressed JSON)"] --> e2["lightning-fetcher<br/>(decode LZW + filter bbox)"]
     e2 -->|INSERT| e3["lightning_strikes<br/>(rétention 7j)"]
     e3 --> e4["GeoServer v_lightning_recent<br/>(last 30 min)"]
+  end
+
+  subgraph F["Cascade WMS — 15 couches, aucun stockage"]
+    f1["job wms-cascade-bootstrap<br/>(PostSync ArgoCD, create-if-missing)"] -->|"REST: wmsstore + wmslayer"| f2["catalogue GeoServer"]
+    f3["GetMap navigateur (TIME=t)"] --> f4["GWC — blobstore S3 SeaweedFS"]
+    f4 -->|MISS| f5["moteur WMS<br/>+ plugin maritime-cascade-time-forward"]
+    f5 -->|"GET amont, TIME ré-injecté"| f6["EUMETSAT · DWD · KNMI<br/>NEXRAD/IEM · MSC GeoMet · NASA GIBS"]
+    f6 --> f5 --> f4
+    f2 -.-> f5
+  end
+
+  subgraph G["Observations par API — orchestrateur NestJS"]
+    g1["table data_sources<br/>url · schedule_expr · enabled"] --> g2["OrchestratorRunner<br/>(cron in-process)"]
+    g2 --> g3["METAR */30 · Hub'eau */15<br/>séismes */5 · FIRMS 1h"]
+    g3 -->|"parse → sink pg_insert"| g4["PostGIS<br/>metar_observations · hubeau_*<br/>earthquakes · firms_observations"]
+    g2 -->|chaque cycle| g5["data_jobs<br/>status · volumes · durée · erreur"]
+    g4 --> g6["endpoints REST /api/*/recent?at="]
   end`}
       />
+      <p>
+        Les cinq premières familles se ressemblent : on télécharge, on convertit,
+        on stocke, GeoServer sert. Les deux dernières répondent à des questions
+        différentes, et méritent d'être lues séparément.
+      </p>
+      <p>
+        <strong>La cascade WMS est le modèle inverse.</strong> Quinze couches —
+        les radars DWD, KNMI, NEXRAD, MSC GeoMet, les satellites EUMETSAT et les
+        produits NASA GIBS — ne sont jamais téléchargées. GeoServer est déclaré
+        client du WMS distant (<code>wmsstore</code>) et republie ses couches sous
+        notre espace de noms (<code>wmslayer</code>) ; le navigateur ne parle
+        toujours qu'à nous, et GWC met en cache les tuiles rendues sur le
+        blobstore S3. Le provisionnement est un job <code>PostSync</code> ArgoCD
+        qui, depuis septembre 2026, crée seulement ce qui manque : la version
+        précédente supprimait store et layers avant de les recréer, et un
+        <code>POST</code> de layer qui échouait ensuite laissait la couche morte
+        derrière un job vert.
+      </p>
+      <p>
+        Le vrai coût de ce modèle est le temps. <strong>GeoTools ne transmet pas
+        le paramètre <code>TIME</code> à l'amont</strong> sur une couche cascadée :
+        quel que soit l'instant demandé, on recevait la même image, et l'animation
+        des radars était figée. D'où le plugin Java maison décrit plus bas. Et il
+        reste une dépendance qu'aucun code ne supprime : une couche relayée ne vaut
+        que ce que le fournisseur publie à cet instant. Quand EUMETSAT s'est figé
+        vingt heures le 8 septembre 2026, la plateforme n'avait rien de cassé —
+        c'est le canary qui a dû apprendre à dire <em>WARN</em> plutôt que
+        <em>FAIL</em>, parce qu'un garde-fou qui crie au loup pour le voisin ne
+        vaut plus rien.
+      </p>
+      <p>
+        <strong>Les observations ponctuelles, elles, ne sont pas des services.</strong>
+        METAR, débits et piézométrie Hub'eau, séismes USGS, feux FIRMS sont des
+        <em>lignes</em> de la table <code>data_sources</code>, exécutées par un
+        orchestrateur qui vit dans l'API NestJS. Ajouter une source, c'est insérer
+        une ligne (URL, parser, sink, expression cron) ; la couper, c'est basculer
+        un booléen. Chaque cycle écrit systématiquement une ligne dans
+        <code>data_jobs</code>, y compris en échec — c'est là qu'on voit qu'Hub'eau
+        renvoie 2000 mesures par quart d'heure dont un bon millier sont rejetées à
+        l'insertion.
+      </p>
+      <p>
+        La subtilité qui fait perdre du temps : <strong>tout ce qui est dans cette
+        table n'est pas orchestré, et tout ce qui est orchestré n'y est pas
+        forcément</strong>. Les ingesters historiques (AIS, foudre, SST, modèles
+        météo, bouées) y figurent avec un planning nul et un <code>enabled</code>
+        à faux — purement descriptif, pour que le dashboard admin liste tout au
+        même endroit ; ils embarquent leur propre planificateur. À l'inverse,
+        GloFAS est déclenché par un CronJob Kubernetes, les FIR et les aéroports
+        par un cron hebdomadaire interne à l'API, et les SIGMET/TAF par un simple
+        relais nginx sans stockage. Ne pas trouver une source dans
+        <code>data_sources</code> ne dit rien sur son état.
+      </p>
+      <p>
+        GloFAS mérite sa parenthèse côté raster : les données CEMS ont migré du
+        CDS vers l'<strong>EWDS</strong> en 2024, la licence du jeu de données doit
+        être acceptée manuellement sur sa page avant que l'API ne réponde, et le
+        produit n'existe qu'en GRIB2 — dont le gabarit de définition employé n'est
+        pas décodé par le lecteur GRIB de GeoServer. On convertit donc en amont,
+        une image par échéance de J+1 à J+7, servies en mosaïque temporelle.
+      </p>
       <p>
         La <strong>rétention</strong> a été standardisée en mai 2026, une fois
         que les TTL bricolés par service ont commencé à diverger. Deux
