@@ -951,7 +951,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
       </p>
     </CaseStudySection>
 
-    <CaseStudySection eyebrow="Ce qui a été ajouté en septembre">
+    <CaseStudySection eyebrow="Ce qui a bougé en septembre">
       <ul>
         <li>
           <strong>Trois sources radar / précipitations</strong> (07/09) :
@@ -975,6 +975,22 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
           du fond, jamais <code>map.setStyle()</code> — un setStyle global
           détruirait la custom layer WebGL des particules et l'ordre des
           vingt layers WMS empilées au-dessus.
+        </li>
+        <li>
+          <strong>Une couche retirée</strong> (09/09) : « Satellite IR
+          (RainViewer) ». Le manifeste de RainViewer ne renvoyait plus aucune
+          image infrarouge — <code>satellite.infrared</code> vide sur trois
+          relevés espacés, et les tuiles correspondantes en 404 — alors que
+          leur radar, lui, continuait de publier des images vieilles de quatre
+          à dix minutes. La couche affichait donc du vide depuis un moment
+          sans que rien ne le signale. Règle appliquée telle quelle : une
+          couche qui n'a plus de données récentes se retire, elle ne se laisse
+          pas en place « au cas où ». Le groupe Satellites passe de 11 à 10
+          entrées ; la couche « Précipitations RainViewer » du groupe Radar
+          reste, elle est alimentée. Le vrai enseignement n'est pas la
+          suppression mais le délai de détection : rien dans la carte ne
+          distingue « la source ne publie plus » de « il n'y a rien à
+          afficher à cet instant ».
         </li>
       </ul>
       <p>
