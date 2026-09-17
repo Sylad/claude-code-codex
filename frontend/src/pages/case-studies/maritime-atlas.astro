@@ -142,84 +142,39 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
     </CaseStudySection>
 
     <CaseStudySection eyebrow="Architecture — vue d'ensemble">
-      <MermaidDiagram
-        client:visible
-        caption="Une vingtaine de pods sur k3s. Le frontend Angular / MapLibre n'attaque qu'un seul backend de données (le Service GeoServer) — toute la complexité d'ingestion est en aval."
-        definition={`flowchart TB
-  subgraph SOURCES["Sources externes"]
-    ais["aisstream.io WSS<br/>(AIS navires)"]
-    noaa["NOAA NOMADS<br/>GFS · WW3 · OISST"]
-    mf["Météo-France PNT<br/>(AROME 2.5km · ARPEGE)"]
-    rv["RainViewer API<br/>(radar pluie tiles)"]
-    blitz["Blitzortung WSS<br/>(foudre community)"]
-    casc["WMS distants cascadés<br/>NASA GIBS · EUMETSAT<br/>DWD · KNMI · NEXRAD IEM · MSC GeoMet"]
-  end
-
-  subgraph INGESTERS["Ingesters"]
-    aing["ais-ingester"]
-    adec["ais-decoder"]
-    sst["sst-fetcher (Py)"]
-    wf["weather-fetcher (Py)"]
-    wfa["weather-fetcher-arome (Py)"]
-    lf["lightning-fetcher"]
-  end
-
-  subgraph BUS["RabbitMQ topic exchanges"]
-    raw["ais.raw"]
-    pos["ais.positions"]
-    rr["raster.ready (fanout)"]
-    ls["lightning.strike"]
-    al["alerts.maritime"]
-  end
-
-  subgraph STATE["Stockage"]
-    pg["PostgreSQL + PostGIS (CloudNativePG)<br/>vessel_positions · lightning_strikes · alerts<br/>rétention 7j par CronJob"]
-    cov["PVC /coverage<br/>(GeoTIFF SST + GFS + AROME + ARPEGE)"]
-    arr["PVC /wind-arrows<br/>(GeoJSON arrows + manifest)"]
-    s3["SeaweedFS S3<br/>(cache tuiles GWC partagé)"]
-  end
-
-  subgraph SERVE["Servir la carte"]
-    gs["GeoServer 3.0.1 · 3 replicas<br/>(Hazelcast + catalog JDBC Postgres)"]
-    api["api NestJS (auth + palettes + orchestrator)"]
-    fe["frontend Angular 19 + MapLibre"]
-  end
-
-  subgraph ENGINE["Moteur"]
-    ae["alerts-engine<br/>(règles wind+lightning)"]
-  end
-
-  ais --> aing --> raw --> adec --> pg
-  adec --> pos
-  noaa --> sst & wf
-  mf --> wfa
-  sst & wf & wfa --> cov
-  wf & wfa --> arr
-  blitz --> lf --> pg
-  lf --> ls
-  pos & ls --> ae --> al
-  ae --> pg
-  cov --> gs
-  pg --> gs
-  casc -->|cascade WMS| gs
-  gs <--> s3
-  gs --> fe
-  api --> fe
-  arr -->|nginx alias| fe
-  rv -->|direct browser| fe`}
-      />
+      <figure class="my-6">
+        <a href="/case-studies/maritime-atlas/architecture-plateforme.html" target="_blank" rel="noopener">
+          <img src="/case-studies/maritime-atlas/architecture-plateforme.png" alt="AetherWX — plateforme : sources ouvertes, Argo Workflows et Deployments d'ingestion, PVC /coverage, pg-data PostgreSQL 18 TimescaleDB, RabbitMQ, GeoServer 3.0.1 ×3, pg-catalog, maritime-api NestJS, SeaweedFS S3, frontend Angular 19, utilisateur via Cloudflare Tunnel" class="rounded-lg border border-white/10" loading="lazy" />
+        </a>
+        <figcaption class="text-xs text-ink-muted mt-2 font-mono">
+          État de la prod dark-blue au 2026-09-17. Diagramme <a href="https://github.com/tt-a1i/archify" class="underline">Archify</a> — cliquer pour la version interactive (vues guidées Ingestion / Stockage / Publication, trace amont-aval, export). Le frontend n'attaque que GeoServer (WMS-T) et l'API ; toute l'ingestion est en amont.
+        </figcaption>
+      </figure>
+      <figure class="my-6">
+        <a href="/case-studies/maritime-atlas/architecture-livraison.html" target="_blank" rel="noopener">
+          <img src="/case-studies/maritime-atlas/architecture-livraison.png" alt="AetherWX — livraison GitOps : Big-Blue → maritime-atlas → GitHub Actions sur runners auto-hébergés → GHCR privé → bump du tag dans aetherwx-gitops → ArgoCD → k3s dark-blue" class="rounded-lg border border-white/10" loading="lazy" />
+        </a>
+        <figcaption class="text-xs text-ink-muted mt-2 font-mono">
+          La chaîne de livraison : un seul levier déploie, le tag <code>sha-…</code> dans le values.yaml du chart. ArgoCD lit le dépôt GitOps en SSH lecture seule ; aucun port ouvert, tout passe par le tunnel Cloudflare.
+        </figcaption>
+      </figure>
       <p>
         L'arête importante : <strong>le frontend ne tape qu'un seul backend
         de données</strong> — l'alias DNS interne <code>geoserver:8080</code>
         (un Service K8s ClusterIP load-balancé sur les 3 replicas GeoServer
-        synchronisés par Hazelcast). Toute l'ingestion (une dizaine de
-        fetchers), le bus RMQ, le moteur d'alertes, l'API d'auth / palettes /
-        orchestrator sont privés au namespace <code>maritime</code>. Le
-        RainViewer est la seule source que le browser frappe directement
-        (CORS open, tiles XYZ time-aware) ; les autres providers externes
-        (NASA GIBS, EUMETSAT, DWD, KNMI, NEXRAD, MSC GeoMet) passent par
-        <strong>GeoServer en cascade WMS</strong>, ce qui les met derrière
-        le même cache de tuiles et le même paramètre <code>TIME</code>.
+        synchronisés par Hazelcast) — plus l'API NestJS pour l'auth, les
+        profils et les dossiers. Toute l'ingestion est privée au namespace
+        <code>maritime</code> : <strong>Argo Workflows</strong> orchestre par
+        défaut (<code>fetch → convert → store</code>, une étape visible par
+        conteneur), les flux continus (AIS, foudre) gardent leur Deployment,
+        et les sources HTTP historiques sont déclenchées par nom via
+        <code>maritime-api</code>. Deux bases CloudNativePG distinctes :
+        <code>pg-data</code> (PostgreSQL 18, TimescaleDB, PostGIS) pour les
+        observations et prévisions, <code>pg-catalog</code> (PostgreSQL 16)
+        pour le catalogue GeoServer en JDBCConfig. Les providers WMS externes
+        (NASA GIBS, EUMETSAT, DWD, KNMI, MSC GeoMet) passent par
+        <strong>GeoServer en cascade</strong>, ce qui les met derrière le même
+        cache de tuiles S3 et le même paramètre <code>TIME</code>.
       </p>
     </CaseStudySection>
 
