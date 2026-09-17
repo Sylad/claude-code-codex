@@ -307,4 +307,18 @@ export const testedTools: TestedTool[] = [
     status: "browsed",
     caseStudyHref: "/case-studies/drona23-token-efficient",
   },
+  {
+    id: "archify",
+    name: "Archify",
+    author: "tt-a1i",
+    category: "skill",
+    description:
+      "Skill d'agent (Claude Code, Codex, Cursor, OpenCode) qui transforme un JSON IR typé — écrit par l'agent — en diagramme HTML autonome : architecture, workflow, séquence, data-flow, lifecycle. Node.js zéro dépendance, validation déterministe (9 checks : croisements, corridors, lisibilité des labels), vues guidées, thèmes dark/light, mode Delta before/after pour les revues de PR. Testé 2026-09-17 sur le pipeline GitOps d'AetherWX : `git clone` en sandbox, `doctor` OK sans `npm install`, diagramme de 10 nœuds validé showcase du premier coup, ~/.claude intact. ADOPT. Caveats : pas d'auto-layout (les `pos` sont placés par l'agent, la validation attrape les collisions), HTML de ~800 Ko par diagramme (police embarquée) et export SVG/PNG uniquement depuis le viewer, pas en CLI ; SKILL.md de 16 Ko dans le contexte ; version `-dev` à itération quotidienne ; vérification de mise à jour réseau à couper avec `ARCHIFY_UPDATE_CHECK_DISABLED=1`.",
+    tags: ["claude-code", "skill", "diagrams", "architecture", "documentation", "tested"],
+    url: "https://github.com/tt-a1i/archify",
+    stars: 65708,
+    lastPush: "2026-09-17",
+    license: "MIT",
+    status: "tested",
+  },
 ];
