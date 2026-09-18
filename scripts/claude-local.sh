@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # claude-local — le harness Claude Code piloté par un modèle Ollama local (RTX 5090),
-# hors quota Anthropic. Validé le 2026-09-18 : qwen3:32b, --bare, 16 s / 3 tours.
+# hors quota Anthropic. Validé le 2026-09-18 : qwen3-coder:30b (défaut, 12 s à chaud,
+# 2 s en cache, 100 % GPU) et qwen3:32b (~16 s), --bare, 3 tours.
 #
 # Usage :
 #   claude-local "prompt" [options claude...]      # headless (-p), sortie texte
@@ -14,7 +15,7 @@
 # CLAUDE_LOCAL_CTX doit égaler OLLAMA_CONTEXT_LENGTH du serveur (32768 par défaut).
 set -euo pipefail
 
-MODEL="${CLAUDE_LOCAL_MODEL:-qwen3:32b}"
+MODEL="${CLAUDE_LOCAL_MODEL:-qwen3-coder:30b}"
 OLLAMA_URL="${OLLAMA_URL:-http://127.0.0.1:11434}"
 CTX="${CLAUDE_LOCAL_CTX:-32768}"
 

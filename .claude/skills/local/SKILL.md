@@ -48,8 +48,9 @@ Jamais : bump gitops, SQL de boot, migration, tout ce qui suit un `livrer.sh`.
    cd <projet> && timeout 300 claude-local "<prompt>" --tools "Read,Glob,Grep" 2>/dev/null
    ```
    Un seul appel à la fois (la VRAM ne tient qu'un modèle 30B + son cache).
-   Modèle : `CLAUDE_LOCAL_MODEL=qwen3-coder:30b` pour le code, `qwen3:32b` pour
-   le texte/l'analyse, `llama3.1:8b` pour du très simple et rapide.
+   Modèle par défaut : `qwen3-coder:30b` (12 s à chaud, 2 s en cache, 100 % GPU,
+   mesuré 18/09). `CLAUDE_LOCAL_MODEL=qwen3:32b` si on veut du raisonnement
+   plus verbeux (~16 s), `llama3.1:8b` pour du très simple.
 5. **Vérifier avant de s'en servir** — [[feedback_reverifier_apres_un_agent]]
    s'applique intégralement : contrôler au moins un point factuel du retour
    contre la source (un chemin, une fonction, un chiffre). Si le retour est
