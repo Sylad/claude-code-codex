@@ -51,7 +51,7 @@ export const testedTools: TestedTool[] = [
     author: "musistudio",
     category: "tool",
     description:
-      "Route les requêtes Claude Code vers d'autres modèles (DeepSeek, Gemini, Ollama local) en gardant le harness intact — utile pour cap API spend ou comparer modèles. Revue radar 2026-09-18 : 37.3k⭐, push quotidien, MIT — le seul des 7 « sur le radar » dont la pertinence a monté. Promu à tester avec un cas d'usage précis : garder le harness Claude Code (skills, hooks, agents) sur un modèle Ollama local (RTX 4080) pour les tâches de masse hors quota hebdo. Réserve : proxy `ANTHROPIC_BASE_URL`, à tester en variable d'env de session, jamais en global.",
+      "Route les requêtes Claude Code vers d'autres modèles (DeepSeek, Gemini, Ollama local) en gardant le harness intact — utile pour cap API spend ou comparer modèles. Revue radar 2026-09-18 : 37.3k⭐, push quotidien, MIT — le seul des 7 « sur le radar » dont la pertinence a monté. Promu à tester avec un cas d'usage précis : garder le harness Claude Code (skills, hooks, agents) sur un modèle Ollama local (RTX 5090, 32 Go VRAM → modèles 30B-class viables) pour les tâches de masse hors quota hebdo. Réserve : proxy `ANTHROPIC_BASE_URL`, à tester en variable d'env de session, jamais en global.",
     tags: ["claude-code", "routing", "model-proxy", "ollama"],
     url: "https://github.com/musistudio/claude-code-router",
     stars: 37299,
