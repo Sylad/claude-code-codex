@@ -51,13 +51,13 @@ export const testedTools: TestedTool[] = [
     author: "musistudio",
     category: "tool",
     description:
-      "Route les requêtes Claude Code vers d'autres modèles (DeepSeek, Gemini, Ollama local) en gardant le harness intact — utile pour cap API spend ou comparer modèles. Revue radar 2026-09-18 : 37.3k⭐, push quotidien, MIT — le seul des 7 « sur le radar » dont la pertinence a monté. Promu à tester avec un cas d'usage précis : garder le harness Claude Code (skills, hooks, agents) sur un modèle Ollama local (RTX 5090, 32 Go VRAM → modèles 30B-class viables) pour les tâches de masse hors quota hebdo. Réserve : proxy `ANTHROPIC_BASE_URL`, à tester en variable d'env de session, jamais en global.",
-    tags: ["claude-code", "routing", "model-proxy", "ollama"],
+      "Évalué 2026-09-18 sans installation : verdict SKILLIFY. En mai c'était un routeur léger ; la v3.1.1 est devenue un control plane multi-agents (Claude Code, Codex, Kimi…) : service persistant (ports 3456/3458), config SQLite éditable uniquement via UI web, `app-data/` qui journalise les corps de requêtes, wrappers de lancement générés, scope « System default » qui réécrit un fichier de settings sans commande de retour, bandeau sponsor Kimi + affiliation, option d'import du login OAuth Claude Code (à ne jamais utiliser avec un abonnement Max). Le besoin visé — faire tourner le harness Claude Code sur un modèle Ollama local (RTX 5090) hors quota — est couvert NATIVEMENT : Ollama expose l'API Anthropic Messages, donc `ANTHROPIC_BASE_URL=http://127.0.0.1:11434 ANTHROPIC_API_KEY=ollama claude --bare --strict-mcp-config --model qwen3:32b`. Validé : lecture de 2 fichiers + analyse de bug en 16 s, 0 token Anthropic. Piège clé : sans `--bare`, le prompt système complet (plugins, MCP, skills) dépasse 32k tokens et Ollama tronque silencieusement. Résultat livré : `scripts/claude-local.sh`. CCR ne vaudrait le coup que pour du multi-fournisseur avec bascule automatique.",
+    tags: ["claude-code", "routing", "model-proxy", "ollama", "local-llm", "skillify"],
     url: "https://github.com/musistudio/claude-code-router",
     stars: 37299,
     lastPush: "2026-09-18",
     license: "MIT",
-    status: "to-test",
+    status: "tested",
   },
   {
     id: "vibe-kanban",
