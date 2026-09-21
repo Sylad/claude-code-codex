@@ -54,6 +54,15 @@
     "fetchedAt": "2026-06-15T11:57:53.003Z"
   },
   {
+    "id": "cde859f5c947a2b8",
+    "source": "anthropic-news",
+    "url": "https://www.anthropic.com/news/tino-cuellar",
+    "title": "Tino Cuellar joins Anthropic as Chief Global Affairs Officer",
+    "summary": "Mariano-Florentino (Tino) Cuéllar will join Anthropic as its first Chief Global Affairs Officer, leading the company`s work on policy, strat",
+    "publishedAt": "Tue, 04 Aug 2026 04:00:00 GMT",
+    "fetchedAt": "2026-09-21T11:54:42.155Z"
+  },
+  {
     "id": "b085c7f1762bfee8",
     "source": "anthropic-news",
     "url": "https://www.anthropic.com/news/enterprise-frontier-safeguards",
@@ -97,6 +106,15 @@
     "summary": "Anthropic lance MHS, un standard ouvert pour connecter rapidement des appareils physiques à des agents IA via MCP, réduisant l'intégration de semaines à minutes.",
     "publishedAt": "Thu, 27 Aug 2026 04:00:00 GMT",
     "fetchedAt": "2026-08-31T12:36:05.284Z"
+  },
+  {
+    "id": "a3c8e138d995ff55",
+    "source": "anthropic-news",
+    "url": "https://www.anthropic.com/news/life-sciences-verification-program",
+    "title": "Introducing the Life Sciences Verification Program",
+    "summary": "Today, we are introducing the Life Sciences Verification Program (LSVP), which gives life science professionals access to our Mythos, Opus,",
+    "publishedAt": "Thu, 17 Sep 2026 04:00:00 GMT",
+    "fetchedAt": "2026-09-21T11:54:42.155Z"
   },
   {
     "id": "b8af8104c423c106",
@@ -151,6 +169,15 @@
     "summary": "Claude Opus 5 est le nouvel état de l'art pour le coding, 2x moins cher que Fable 5 avec performances supérieures sur Frontier-Bench et CursorBench.",
     "publishedAt": "Fri, 24 Jul 2026 04:00:00 GMT",
     "fetchedAt": "2026-07-27T09:43:39.488Z"
+  },
+  {
+    "id": "5ec4e61a2a5169eb",
+    "source": "anthropic-news",
+    "url": "https://www.anthropic.com/news/accenture-embedded-evaluation",
+    "title": "Partnering with Accenture on embedded evaluation",
+    "summary": "We're partnering with Accenture on independent evaluation of frontier AI. This is an important step toward the commitment, made in our CEO`s",
+    "publishedAt": "Fri, 18 Sep 2026 04:00:00 GMT",
+    "fetchedAt": "2026-09-21T11:54:42.155Z"
   },
   {
     "id": "e68246067eeddf6e",

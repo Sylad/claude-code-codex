@@ -1,5 +1,140 @@
 [
   {
+    "id": "c8aee9fb8db23a5b",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Sep/20/voxium/",
+    "title": "Quoting voxium",
+    "summary": "<blockquote cite=\"https://twitter.com/v0xium/status/2101526107128529120\"><p>It has been half a month since I started a new role at a big com",
+    "publishedAt": "2026-09-20T21:06:43+00:00",
+    "fetchedAt": "2026-09-21T11:54:42.889Z"
+  },
+  {
+    "id": "f9d4182cc1e12525",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Sep/20/llm-keys-ui/",
+    "title": "llm-keys-ui 0.1",
+    "summary": "<p><strong>Release:</strong> <a href=\"https://github.com/simonw/llm-keys-ui/releases/tag/0.1\">llm-keys-ui 0.1</a></p> <p>This plugin solves",
+    "publishedAt": "2026-09-20T19:22:19+00:00",
+    "fetchedAt": "2026-09-21T11:54:42.889Z"
+  },
+  {
+    "id": "33879f77e1536c69",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Sep/20/datasette-explain/",
+    "title": "datasette-explain 0.2.2",
+    "summary": "<p><strong>Release:</strong> <a href=\"https://github.com/simonw/datasette-explain/releases/tag/0.2.2\">datasette-explain 0.2.2</a></p> <block",
+    "publishedAt": "2026-09-20T00:22:04+00:00",
+    "fetchedAt": "2026-09-21T11:54:42.889Z"
+  },
+  {
+    "id": "fb0112d2438294ff",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Sep/19/datasette-auth-github/",
+    "title": "datasette-auth-github 1.0",
+    "summary": "<p><strong>Release:</strong> <a href=\"https://github.com/simonw/datasette-auth-github/releases/tag/1.0\">datasette-auth-github 1.0</a></p> <p",
+    "publishedAt": "2026-09-19T19:52:02+00:00",
+    "fetchedAt": "2026-09-21T11:54:42.889Z"
+  },
+  {
+    "id": "41d15f7729de397a",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Sep/19/sighting-401567341/",
+    "title": "California Sea Lion, Brandt's Cormorant",
+    "summary": "<p><img src=\"https://static.inaturalist.org/photos/737061413/large.jpg\" alt=\"California Sea Lion\"></p><p><img src=\"https://static.inaturalis",
+    "publishedAt": "2026-09-19T17:10:08+00:00",
+    "fetchedAt": "2026-09-21T11:54:42.889Z"
+  },
+  {
+    "id": "1b7a07575c93824e",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Sep/18/gemini-hacked-three-companies/",
+    "title": "Gemini Hacked Three Companies in First Known Breakout by Google’s AI",
+    "summary": "<p><strong><a href=\"https://www.wsj.com/tech/ai/gemini-hacked-three-companies-in-first-known-breakout-by-googles-ai-5c0baba2\">Gemini Hacked",
+    "publishedAt": "2026-09-18T23:57:57+00:00",
+    "fetchedAt": "2026-09-21T11:54:42.889Z"
+  },
+  {
+    "id": "6d026a20051380d1",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Sep/18/probably-gonna-eat-you/",
+    "title": "Note on 18th September 2026",
+    "summary": "<p>Being a computer scientist who refuses to find anything about LLMs interesting right now is a bit like being a geneticist who refuses to",
+    "publishedAt": "2026-09-18T19:21:32+00:00",
+    "fetchedAt": "2026-09-21T11:54:42.889Z"
+  },
+  {
+    "id": "b4eea27689aebcc6",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Sep/18/thariq-shihipar/",
+    "title": "Quoting Thariq Shihipar",
+    "summary": "<blockquote cite=\"https://twitter.com/trq212/status/2101009392611278961\"><p>We're adding support for AGENTS.md to Claude Code. </p> <p>Start",
+    "publishedAt": "2026-09-18T19:09:27+00:00",
+    "fetchedAt": "2026-09-21T11:54:42.889Z"
+  },
+  {
+    "id": "55668e9d93e2c01a",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Sep/18/the-creative-spirit-of-who-framed-roger-rabbit/",
+    "title": "The Creative Spirit of Who Framed Roger Rabbit",
+    "summary": "<p><strong><a href=\"https://blog.cypressf.com/post/828067789747208192/the-creative-spirit-of-who-framed-roger-rabbit\">The Creative Spirit of",
+    "publishedAt": "2026-09-18T14:36:41+00:00",
+    "fetchedAt": "2026-09-21T11:54:42.889Z"
+  },
+  {
+    "id": "c40a1cd0e489d726",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Sep/17/targeted-attacks-on-rustaceans/",
+    "title": "Be alert: targeted attacks on prominent Rustaceans",
+    "summary": "<p><strong><a href=\"https://blog.rust-lang.org/2026/09/17/targeted-attacks/\">Be alert: targeted attacks on prominent Rustaceans</a></strong>",
+    "publishedAt": "2026-09-17T23:59:19+00:00",
+    "fetchedAt": "2026-09-21T11:54:42.889Z"
+  },
+  {
+    "id": "0c114974aa55eb9d",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Sep/17/how-to-write-with-an-llm/",
+    "title": "How To Write With An LLM",
+    "summary": "<p><strong><a href=\"https://sockpuppet.org/blog/2026/09/17/how-to-write-with-an-llm/\">How To Write With An LLM</a></strong></p> Thomas Ptace",
+    "publishedAt": "2026-09-17T23:37:27+00:00",
+    "fetchedAt": "2026-09-21T11:54:42.889Z"
+  },
+  {
+    "id": "6533bdcc0f6c39c5",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Sep/17/compaction-summaries/",
+    "title": "Self-generated prompt injections in compaction summaries",
+    "summary": "<p><strong><a href=\"https://alignment.openai.com/misalignment-reports/self-generated-prompt-injections-in-compaction-summaries/\">Self-genera",
+    "publishedAt": "2026-09-17T20:57:55+00:00",
+    "fetchedAt": "2026-09-21T11:54:42.889Z"
+  },
+  {
+    "id": "3fb5c069cb2ad112",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Sep/16/datasette/",
+    "title": "datasette 1.0a40",
+    "summary": "<p><strong>Release:</strong> <a href=\"https://github.com/simonw/datasette/releases/tag/1.0a40\">datasette 1.0a40</a></p> <p>Same security fix",
+    "publishedAt": "2026-09-16T23:51:43+00:00",
+    "fetchedAt": "2026-09-21T11:54:42.889Z"
+  },
+  {
+    "id": "4e32c351abd8d17d",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Sep/16/datasette-2/",
+    "title": "datasette 0.65.5",
+    "summary": "<p><strong>Release:</strong> <a href=\"https://github.com/simonw/datasette/releases/tag/0.65.5\">datasette 0.65.5</a></p> <p>Security fix for",
+    "publishedAt": "2026-09-16T23:51:08+00:00",
+    "fetchedAt": "2026-09-21T11:54:42.889Z"
+  },
+  {
+    "id": "bc4ce9d50d9b33de",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Sep/16/one-claude/",
+    "title": "Claude Cowork and chat are now one Claude",
+    "summary": "<p><strong><a href=\"https://claude.com/blog/cowork-is-now-claude\">Claude Cowork and chat are now one Claude</a></strong></p> In hopefully go",
+    "publishedAt": "2026-09-16T18:09:49+00:00",
+    "fetchedAt": "2026-09-21T11:54:42.889Z"
+  },
+  {
     "id": "56ed9309de330598",
     "source": "simon-willison",
     "url": "https://simonwillison.net/2026/Sep/12/astra-running-routes/",
@@ -313,140 +448,5 @@
     "summary": "MCP 2.0 stateless simplifie drastiquement l'implémentation de clients/serveurs et offre une meilleure sécurité que les shells pour les agents IA.",
     "publishedAt": "2026-07-31T23:13:22+00:00",
     "fetchedAt": "2026-08-03T09:36:55.621Z"
-  },
-  {
-    "id": "07b8466a242f0fb1",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Jul/31/llm-mcp-client/#atom-everything",
-    "title": "llm-mcp-client 0.1a0",
-    "summary": "Première version alpha de llm-mcp-client, un client pour intégrer le Model Context Protocol avec les outils LLM.",
-    "publishedAt": "2026-07-31T23:03:47+00:00",
-    "fetchedAt": "2026-08-03T09:36:55.621Z"
-  },
-  {
-    "id": "59c692b9d0ccdcdf",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Jul/31/smevals/#atom-everything",
-    "title": "smevals - a small eval suite for evaluating models, prompts, and harnesses",
-    "summary": "smevals facilite l'évaluation comparative de modèles et prompts via CLI avec interface web, idéal pour benchmarker vos configs d'agents",
-    "publishedAt": "2026-07-31T21:15:23+00:00",
-    "fetchedAt": "2026-08-03T09:36:55.621Z"
-  },
-  {
-    "id": "a2271f06d37ea936",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Jul/31/datasette-agent/#atom-everything",
-    "title": "datasette-agent 0.4a0",
-    "summary": "datasette-agent 0.4a0 ajoute `context.browser_task()` pour exécuter du JS côté client depuis les outils d'agents IA.",
-    "publishedAt": "2026-07-31T14:14:23+00:00",
-    "fetchedAt": "2026-08-03T09:36:55.621Z"
-  },
-  {
-    "id": "7bc027728ff8ee44",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Jul/30/luna-price-drop/#atom-everything",
-    "title": "Advancing the price-performance frontier with GPT‑5.6",
-    "summary": "[off-topic]\n\n(Ce post concerne les tarifs et optimisations d'OpenAI/GPT-5.6, pas Claude, Claude Code, ou l'écosystème Anthropic)",
-    "publishedAt": "2026-07-30T23:58:42+00:00",
-    "fetchedAt": "2026-08-03T09:36:55.621Z"
-  },
-  {
-    "id": "7c4f61301b375309",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Jul/30/three-real-world-incidents/#atom-everything",
-    "title": "Investigating three real-world incidents in our cybersecurity evaluations",
-    "summary": "Anthropic a découvert 3 incidents où Claude a compromis des systèmes réels lors d'evals de cybersécurité suite à une confusion sur l'accès internet.",
-    "publishedAt": "2026-07-30T23:41:29+00:00",
-    "fetchedAt": "2026-08-03T09:36:55.621Z"
-  },
-  {
-    "id": "25a79f33334f2b0e",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Jul/25/boris-cherny/#atom-everything",
-    "title": "Quoting Boris Cherny",
-    "summary": "Opus 5 offre une meilleure résistance aux injections de prompts selon les évals de sécurité d'Anthropic.",
-    "publishedAt": "2026-07-25T00:42:59+00:00",
-    "fetchedAt": "2026-07-27T09:43:45.416Z"
-  },
-  {
-    "id": "9ad129712140dfd6",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Jul/24/introducing-claude-opus-5/#atom-everything",
-    "title": "Introducing Claude Opus 5",
-    "summary": "Claude Opus 5 surpasse Opus 4.8 au même prix, excelle en raisonnement complexe et vulnérabilités de sécurité.",
-    "publishedAt": "2026-07-24T23:48:50+00:00",
-    "fetchedAt": "2026-07-27T09:43:45.416Z"
-  },
-  {
-    "id": "1611d485eafec99f",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Jul/21/nativ/#atom-everything",
-    "title": "Nativ: Run AI models locally on your Mac",
-    "summary": "Nativ: application macOS pour exécuter des modèles IA localement via MLX, avec API localhost pour intégration.",
-    "publishedAt": "2026-07-21T14:22:27+00:00",
-    "fetchedAt": "2026-07-27T09:43:45.416Z"
-  },
-  {
-    "id": "07d858f5b61f2e83",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Jul/21/cat-and-thariq/#atom-everything",
-    "title": "A Fireside Chat with Cat and Thariq from the Claude Code team",
-    "summary": "Claude Tag améliore les PRs de 65%, et les system prompts optimisés (80% plus courts) surpassent les exemples pour Opus et Fable.",
-    "publishedAt": "2026-07-21T12:54:02+00:00",
-    "fetchedAt": "2026-07-27T09:43:45.416Z"
-  },
-  {
-    "id": "b3d901fa5502f189",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Jul/20/cheap-reverse-engineering/#atom-everything",
-    "title": "Reverse-engineering is cheap now",
-    "summary": "Les agents de code réduisent drastiquement le coût du reverse-engineering et l'automatisation domestique, rendant viable ce qui était économiquement inaccessible avant.",
-    "publishedAt": "2026-07-20T19:24:05+00:00",
-    "fetchedAt": "2026-07-27T09:43:45.416Z"
-  },
-  {
-    "id": "eb24893336d648f2",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Jul/19/claude-code-in-bun-in-rust/#atom-everything",
-    "title": "Claude Code uses Bun written in Rust now",
-    "summary": "Claude Code v2.1.181+ embarque Bun réécrit en Rust pour +10% de démarrage plus rapide sur Linux.",
-    "publishedAt": "2026-07-19T03:54:09+00:00",
-    "fetchedAt": "2026-07-20T08:52:03.357Z"
-  },
-  {
-    "id": "efd351343b074a48",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Jul/18/claude-make-fable-5-permanent/#atom-everything",
-    "title": "Claude make Fable 5 permanent",
-    "summary": "Fable 5 devient permanent dans les plans Max/Team Premium à partir du 20 juillet, accessible à 50% des limites.",
-    "publishedAt": "2026-07-18T06:00:13+00:00",
-    "fetchedAt": "2026-07-20T08:52:03.357Z"
-  },
-  {
-    "id": "1371fbba18fd875e",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Jul/17/llm-cliche-highlighter/#atom-everything",
-    "title": "LLM cliché highlighter",
-    "summary": "Outil web pour détecter les clichés de textes générés par IA (formules toutes faites, patterns répétitifs).",
-    "publishedAt": "2026-07-17T12:11:11+00:00",
-    "fetchedAt": "2026-07-20T08:52:03.357Z"
-  },
-  {
-    "id": "d8ca3e3a6045eb55",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Jul/16/bad-codex-bug/#atom-everything",
-    "title": "Quoting Thibault Sottiaux",
-    "summary": "GPT-5.6 supprime les fichiers en mode full access sans sandboxing : toujours activer l'auto-review et les protections.",
-    "publishedAt": "2026-07-16T17:45:59+00:00",
-    "fetchedAt": "2026-07-20T08:52:03.357Z"
-  },
-  {
-    "id": "46c8dc21ff9066cd",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Jul/16/linus-torvalds/#atom-everything",
-    "title": "Quoting Linus Torvalds",
-    "summary": "Linus Torvalds affirme que l'IA est un outil utile et indispensable pour Linux, rejetant les critiques anti-IA du projet open-source.",
-    "publishedAt": "2026-07-16T13:26:10+00:00",
-    "fetchedAt": "2026-07-20T08:52:03.357Z"
   }
 ]
