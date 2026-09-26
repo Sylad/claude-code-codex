@@ -103,6 +103,20 @@ export const testedTools: TestedTool[] = [
     status: "tested",
   },
   {
+    id: "opcode",
+    name: "opcode (ex-Claudia)",
+    author: "winfunc",
+    category: "tool",
+    description:
+      "Application de bureau Tauri pour Claude Code : navigateur de projets et de sessions (`~/.claude/projects`), historique, tableau de bord de consommation, éditeurs CLAUDE.md / hooks / MCP, « CC Agents » maison. Testé 2026-09-26 (v0.2.0, 22k⭐) sous WSL via WSLg — AppImage Linux extraite sans installation, empreinte SHA-256 vérifiée, aucune écriture dans `~/.claude` au lancement (données dans `~/.local/share/opcode*`). REJECT + watchlist : dernière version publiée en août 2025 (dépôt actif, aucune release depuis 13 mois) → liste de modèles codée en dur (Sonnet 4 / Opus 4 seulement, ni Fable 5.1 ni Opus 5.5) ; « CC Agents » lancés avec `--dangerously-skip-permissions` ; télémétrie PostHog autorisée dans sa CSP ; et surtout il ne montre ni les sous-agents d'une session, ni les skills, ni les mémoires en cours — seulement sessions et historique. Pas de build Windows ; sous WSL c'est au contraire la bonne place (il lit les sessions WSL).",
+    tags: ["claude-code", "gui", "desktop", "tauri", "sessions", "usage", "tested"],
+    url: "https://github.com/winfunc/opcode",
+    stars: 22406,
+    lastPush: "2026-09-18",
+    license: "AGPL-3.0",
+    status: "tested",
+  },
+  {
     id: "hermes-agent",
     name: "Hermes Agent",
     author: "NousResearch",
