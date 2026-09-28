@@ -5,7 +5,7 @@ version: 1
 project: "claude-code-codex"
 prefix: L
 since: 2026-09-28 # raf check ignore les commits antérieurs à l'adoption
-ignore: ['^chore\(batch\):']   # rafraîchissement hebdomadaire des flux par la CI
+ignore: [ '^chore\(batch\):' ] # rafraîchissement hebdomadaire des flux par la CI
 uxSince: 2026-09-28
 lots:
   - id: L1
@@ -69,4 +69,10 @@ lots:
     title: "Revue UX — Gabarit commun : navigation, en-tête, pied, rendu téléphone"
     status: todo
     estimate: 0.25
+    created: 2026-09-28
+  - id: L13
+    title: "Page Nouveautés : vérifier l'existant et le brancher sur cadence news (signature commune des apps)"
+    status: todo
+    estimate: 0.5
+    visible: true
     created: 2026-09-28
