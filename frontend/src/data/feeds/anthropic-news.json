@@ -1,5 +1,14 @@
 [
   {
+    "id": "ef1b3a4772eab837",
+    "source": "anthropic-news",
+    "url": "https://www.anthropic.com/news/claude-discovers-novel-enzyme-system",
+    "title": "Claude discovers a novel enzyme system with CRISPR-like repeats",
+    "summary": "We`re introducing a new life sciences research group and laboratory at Anthropic. Our focus is on fundamental biology research using Claude:",
+    "publishedAt": "Wed, 23 Sep 2026 04:00:00 GMT",
+    "fetchedAt": "2026-09-28T12:49:15.161Z"
+  },
+  {
     "id": "a66075dc0af41a68",
     "source": "anthropic-news",
     "url": "https://www.anthropic.com/news/anthropic-economic-index-connector",
