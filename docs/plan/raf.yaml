@@ -5,6 +5,7 @@ version: 1
 project: "claude-code-codex"
 prefix: L
 since: 2026-09-28 # raf check ignore les commits antérieurs à l'adoption
+ignore: ['^chore\(batch\):']   # rafraîchissement hebdomadaire des flux par la CI
 uxSince: 2026-09-28
 lots:
   - id: L1
