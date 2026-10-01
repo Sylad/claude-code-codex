@@ -1,6 +1,5 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import RtkStats from "@/components/site/RtkStats.astro";
 import { APP_COUNT } from "@/data/apps";
 
 type SommaireLink = { href: string; label: string };
@@ -56,7 +55,7 @@ const columns: { eyebrow: string; title: string; rows: SommaireRow[] }[] = [
 
 <BaseLayout
   title="claude-code-codex"
-  description="Un codex non-officiel sur Claude Code : comment ça marche, l'écosystème, six apps construites avec, et les meilleures sources pour suivre l'évolution."
+  description={`Un codex non-officiel sur Claude Code : comment ça marche, l'écosystème, ${APP_COUNT} apps construites avec, et les meilleures sources pour suivre l'évolution.`}
 >
   <section class="relative codex-noise overflow-hidden">
     <!-- Hero zone : counter-mask the BaseLayout overlay so the cyberpunk
@@ -175,8 +174,6 @@ const columns: { eyebrow: string; title: string; rows: SommaireRow[] }[] = [
       ))}
     </div>
   </nav>
-
-  <RtkStats />
 
   <section class="mx-auto max-w-4xl px-5 sm:px-8 py-12">
     <div

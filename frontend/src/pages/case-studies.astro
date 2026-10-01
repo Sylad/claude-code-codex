@@ -1,7 +1,8 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
-import { apps } from "@/data/apps";
+import { apps, APP_COUNT } from "@/data/apps";
+import RtkStats from "@/components/site/RtkStats.astro";
 import { testedTools } from "@/data/tools-tested";
 import {
   STATUS_LABELS,
@@ -29,12 +30,12 @@ function formatStars(n?: number): string {
 
 <BaseLayout
   title="Case studies"
-  description="Sept apps codées en pair-programming avec Claude Code. Stack, archi, learnings."
+  description={`${APP_COUNT} apps codées en pair-programming avec Claude Code. Stack, archi, learnings.`}
 >
   <PageHero
     eyebrow="03 · Case studies"
-    title="Sept apps construites avec Claude Code"
-    intro="Six projets perso + ce site lui-même. Tous codés en pair-programming avec Claude Code — 0 ligne de code écrite par l'humain. Clique sur une card pour le deep dive : architecture, stack, process IA, lessons learned."
+    title={`${APP_COUNT} apps construites avec Claude Code`}
+    intro={`${APP_COUNT - 1} projets perso + ce site lui-même. Tous codés en pair-programming avec Claude Code — 0 ligne de code écrite par l'humain. Clique sur une card pour le deep dive : architecture, stack, process IA, lessons learned.`}
   />
 
   <section class="mx-auto max-w-6xl px-5 sm:px-8 py-16">
@@ -354,4 +355,6 @@ function formatStars(n?: number): string {
     </div>
 
   </section>
+
+  <RtkStats />
 </BaseLayout>

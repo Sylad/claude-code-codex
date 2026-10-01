@@ -3,6 +3,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
 import CodeBlock from "@/components/site/CodeBlock.astro";
 import CaseStudySection from "@/components/site/CaseStudySection.astro";
+import { APP_COUNT } from "@/data/apps";
 ---
 
 <BaseLayout
@@ -496,7 +497,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
             → Case studies
           </a>
           <p class="text-sm text-ink-muted mt-1">
-            6 sites perso construits en pair-programming, 0 ligne de
+            {APP_COUNT} applications perso construites en pair-programming, 0 ligne de
             code écrite par l'humain. Plus une section
             <strong>Tools tested</strong> où on documente nos
             expériences (RTK adopté, Ruflo testé puis rejeté avec

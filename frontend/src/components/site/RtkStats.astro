@@ -1,5 +1,6 @@
 ---
 import rtkStats from "@/data/rtk-stats.json";
+import { APP_COUNT } from "@/data/apps";
 
 const { summary, lastUpdated } = rtkStats as {
   summary: {
@@ -32,14 +33,18 @@ function formatDuration(ms: number): string {
   return `${seconds}s`;
 }
 
+// Date du relevé au format court jj/mm/aaaa (le bloc n'est pas mis à jour
+// en continu : c'est un relevé daté, pas un compteur « live »).
 function formatDate(iso: string): string {
-  const d = new Date(iso);
-  return d.toLocaleDateString("fr-FR", {
+  return new Date(iso).toLocaleDateString("fr-FR", {
     day: "2-digit",
-    month: "long",
+    month: "2-digit",
     year: "numeric",
+    timeZone: "Europe/Paris",
   });
 }
+
+const releve = formatDate(lastUpdated);
 
 const stats = [
   {
@@ -71,26 +76,27 @@ const stats = [
   <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-8">
     <div>
       <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
-        Preuve de collab · live
+        Preuve de collab · relevé daté
       </p>
       <h2 class="mt-2 text-2xl sm:text-3xl font-semibold text-ink">
         Combien de tokens RTK a économisés
       </h2>
       <p class="mt-2 text-ink-muted leading-relaxed max-w-xl text-sm sm:text-base">
-        Ces 6 sites ont été codés en pair-programming avec Claude Code. Pour ne
-        pas exploser la facture API, toutes les commandes shell passent par
+        Ces {APP_COUNT} applications ont été codées en pair-programming avec
+        Claude Code. Pour ne pas exploser la facture API, les commandes shell
+        passaient alors par
         <a
           href="https://github.com/rtk-ai/rtk"
           target="_blank"
           rel="noopener"
           class="text-claude hover:text-claude-soft underline underline-offset-4"
           >RTK</a
-        > qui filtre les sorties avant qu'elles n'atteignent Claude. Stats
-        actuelles :
+        >, qui filtre les sorties avant qu'elles n'atteignent Claude. Chiffres
+        du relevé du {releve} :
       </p>
     </div>
     <p class="font-mono text-[10px] uppercase tracking-wider text-ink/50 shrink-0">
-      Maj. {formatDate(lastUpdated)}
+      Relevé du {releve}
     </p>
   </div>
 
