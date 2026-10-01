@@ -127,7 +127,7 @@ function toggleDropdown(label: string) {
     <nav class="mx-auto max-w-6xl px-5 sm:px-8 h-16 flex items-center justify-between">
       <a
         href="/"
-        class="flex items-center gap-2.5 group"
+        class="flex shrink-0 items-center gap-2.5 whitespace-nowrap group"
         aria-label="Claude Code Codex — accueil"
       >
         <span
@@ -140,7 +140,7 @@ function toggleDropdown(label: string) {
         </span>
       </a>
 
-      <ul class="hidden xl:flex items-center gap-1">
+      <ul class="hidden xl:flex items-center gap-0.5 ml-6">
         <template v-for="link in links" :key="link.label">
           <!-- Lien simple -->
           <li v-if="'href' in link">
@@ -148,7 +148,7 @@ function toggleDropdown(label: string) {
               :href="link.href"
               :aria-current="isActive(link.href, props.pathname) ? 'page' : undefined"
               :class="[
-                'relative px-3 py-2 text-sm rounded-md transition-colors motion-safe:active:scale-95',
+                'relative whitespace-nowrap px-2.5 py-2 text-sm rounded-md transition-colors motion-safe:active:scale-95',
                 isActive(link.href, props.pathname)
                   ? 'text-claude bg-claude/10'
                   : 'text-ink-muted hover:text-ink hover:bg-white/5',
@@ -171,7 +171,7 @@ function toggleDropdown(label: string) {
             <button
               type="button"
               :class="[
-                'flex items-center gap-1 px-3 py-2 text-sm rounded-md transition-colors motion-safe:active:scale-95',
+                'flex items-center gap-1 whitespace-nowrap px-2.5 py-2 text-sm rounded-md transition-colors motion-safe:active:scale-95',
                 isGroupActive(link.children, props.pathname)
                   ? 'text-claude bg-claude/10'
                   : 'text-ink-muted hover:text-ink hover:bg-white/5',

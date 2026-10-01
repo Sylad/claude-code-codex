@@ -450,3 +450,48 @@ test('séparateur « Déjà vu lors de votre visite du … » avant la première
   assert.equal(await page.locator('.news-new').count(), 1);
   await context.close();
 });
+
+// Revue UX L13 : de 1280 à 1440 px, la barre allait à la ligne (« Atelier IA », « Case
+// studies », « À propos », le logo) : 1101 px requis pour 1088 disponibles. Polices web
+// chargées, lignes comptées sur chaque NŒUD TEXTE (la hauteur du lien ne le voit pas).
+test('barre du bureau (1280/1366/1440 px) : chaque libellé et le logo sur une ligne, rien ne déborde, ≥ 24 px entre logo et 1er lien', { timeout: 60_000 }, async (t) => {
+  const env = await setupBrowser(t);
+  if (!env) return;
+  const context = await env.browser.newContext({ viewport: { width: 1280, height: 800 } });
+  const page = await context.newPage();
+  for (const width of [1280, 1366, 1440]) {
+    await page.setViewportSize({ width, height: 800 });
+    await page.goto(`${env.base}/about/`, { waitUntil: 'load' });
+    await page.evaluate(() => document.fonts.ready);
+    const r = await page.evaluate(() => {
+      const nav = document.querySelector('header nav');
+      const logo = nav.querySelector(':scope > a');
+      const ul = nav.querySelector('ul');
+      const multi = [];
+      for (const root of [logo, ...ul.querySelectorAll(':scope > li > a, :scope > li > button')]) {
+        const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+        for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+          if (!n.textContent.trim()) continue;
+          const range = document.createRange();
+          range.selectNodeContents(n);
+          const tops = new Set([...range.getClientRects()].map((x) => Math.round(x.top)));
+          if (tops.size > 1) multi.push(n.textContent.trim());
+        }
+      }
+      const cs = getComputedStyle(nav);
+      const contentRight = nav.getBoundingClientRect().right - parseFloat(cs.paddingRight);
+      return {
+        multi,
+        gap: ul.getBoundingClientRect().left - logo.getBoundingClientRect().right,
+        overflow: ul.scrollWidth - ul.clientWidth,
+        right: ul.getBoundingClientRect().right,
+        contentRight,
+      };
+    });
+    t.diagnostic(`${width}px : écart logo→liens ${r.gap.toFixed(1)} px, bord droit ${r.right.toFixed(0)}/${r.contentRight.toFixed(0)}`);
+    assert.deepEqual(r.multi, [], `${width}px : sur deux lignes`);
+    assert.ok(r.gap >= 24, `${width}px : ${r.gap.toFixed(1)} px entre le logo et le premier lien`);
+    assert.ok(r.overflow <= 0 && r.right <= r.contentRight + 0.5, `${width}px : la barre déborde`);
+  }
+  await context.close();
+});
