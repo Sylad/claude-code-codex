@@ -62,6 +62,7 @@ const pngSize = (rel: string) => {
     {entries.length === 0 ? (
       <p class="text-ink-muted italic">Aucune nouveauté publiée pour l'instant.</p>
     ) : (
+      <p class="news-since mb-6 font-mono text-sm text-claude-soft empty:hidden" role="status"></p>
       <ol class="news-list flex flex-col gap-8">
         {entries.map((e) => (
           <li>
@@ -73,6 +74,7 @@ const pngSize = (rel: string) => {
             >
               <p class="font-mono text-xs uppercase tracking-wider text-claude">
                 <time datetime={e.date}>{formatDate(e.date)}</time>
+                <span class="news-new-slot"></span>
               </p>
               <h2
                 id={`${e.slug}-titre`}
@@ -208,6 +210,32 @@ const pngSize = (rel: string) => {
     box-shadow: 0 0 0 1px var(--color-claude);
   }
 
+  /* Marque « Nouveau » et séparateur « Déjà vu … », posés par le script selon la
+     dernière visite (localStorage). */
+  .news-list :global(.news-new) {
+    margin-left: 0.6rem;
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    background: var(--color-claude);
+    color: var(--color-paper);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+  .news-list :global(.news-seen-sep) {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-ink-muted);
+  }
+  .news-list :global(.news-seen-sep)::before,
+  .news-list :global(.news-seen-sep)::after {
+    content: "";
+    flex: 1;
+    border-top: 1px solid oklch(1 0 0 / 0.15);
+  }
+
   /* Taille réservée AVANT chargement (pas de saut de mise en page) : le lien prend
      min(largeur dispo, largeur naturelle, largeur qui donne 32rem de haut), l'image
      le remplit à ses proportions (aspect-ratio en ligne). */
@@ -308,6 +336,7 @@ const pngSize = (rel: string) => {
 
 <script>
   import { entryForFragment, permalink } from "@/lib/news-anchor";
+  import { NEWS_SEEN_EVENT, browserStorage, isUnseen, markAllSeen, readSeen } from "@/lib/news-badge";
 
   // Visionneuse des captures. Écoute en phase de capture sur document : passe avant le
   // routeur des transitions Astro et survit aux changements de page (script exécuté
@@ -391,5 +420,47 @@ const pngSize = (rel: string) => {
     if (slug) document.getElementById(slug)!.focus({ preventScroll: true });
   }
   document.addEventListener("astro:page-load", revealTarget);
+
+  // Dernière visite (repris d'AetherWX) : « N nouveautés depuis votre dernière visite »,
+  // marque « Nouveau » sur ces entrées, séparateur « Déjà vu lors de votre visite du … »
+  // avant la première déjà vue ; puis tout est marqué vu et la pastille de la barre s'éteint.
+  function markVisit() {
+    const list = document.querySelector(".news-list");
+    if (!list) return;
+    const articles = [...list.querySelectorAll<HTMLElement>("article.news-entry")];
+    const entries = articles.map((a) => ({ slug: a.id, date: a.querySelector("time")!.dateTime }));
+    const storage = browserStorage();
+    const seen = readSeen(storage);
+    const fresh = entries.map((e) => isUnseen(e, seen));
+    const count = fresh.filter(Boolean).length;
+
+    list.querySelectorAll(".news-seen-sep").forEach((n) => n.remove());
+    articles.forEach((a, i) => {
+      const slot = a.querySelector(".news-new-slot")!;
+      slot.innerHTML = fresh[i] ? '<span class="news-new">Nouveau</span>' : "";
+    });
+    const since = document.querySelector(".news-since");
+    if (since) {
+      since.textContent = !count
+        ? ""
+        : count === 1
+          ? "1 nouveauté depuis votre dernière visite"
+          : `${count} nouveautés depuis votre dernière visite`;
+    }
+    const last = fresh.lastIndexOf(true);
+    if (seen && last >= 0 && last + 1 < articles.length) {
+      const sep = document.createElement("li");
+      sep.className = "news-seen-sep";
+      // Repère visuel ; la ligne « N nouveautés depuis… » le dit aux lecteurs d'écran.
+      sep.setAttribute("aria-hidden", "true");
+      sep.textContent = seen.at
+        ? `Déjà vu lors de votre visite du ${new Date(seen.at).toLocaleString("fr-FR", { dateStyle: "long", timeStyle: "short" })}`
+        : "Déjà vu lors d'une visite précédente";
+      articles[last + 1].closest("li")!.before(sep);
+    }
+    markAllSeen(storage, entries);
+    window.dispatchEvent(new Event(NEWS_SEEN_EVENT));
+  }
+  document.addEventListener("astro:page-load", markVisit);
   window.addEventListener("hashchange", revealTarget);
 </script>

@@ -1,8 +1,29 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed } from "vue";
 import { Menu, X, BookOpenText, ChevronDown } from "lucide-vue-next";
+import {
+  NEWS_SEEN_EVENT,
+  badgeLabel,
+  browserStorage,
+  countUnseen,
+  readSeen,
+  unseenLabel,
+} from "@/lib/news-badge";
 
-const props = defineProps<{ pathname: string }>();
+const props = defineProps<{
+  pathname: string;
+  news?: { slug: string; date: string }[];
+}>();
+
+// Pastille « nouveau » du lien Nouveautés (L13) : entrées non vues depuis la dernière
+// visite de /nouveautes (localStorage), relue après cette visite et entre onglets.
+const unseen = ref(0);
+const badge = computed(() => badgeLabel(unseen.value));
+const unseenText = computed(() => unseenLabel(unseen.value));
+function refreshBadge() {
+  unseen.value = countUnseen(props.news ?? [], readSeen(browserStorage()));
+}
+const NEWS_HREF = "/nouveautes";
 
 type NavLink =
   | { href: string; label: string }
@@ -61,6 +82,9 @@ function onClickOutside(e: MouseEvent) {
 }
 
 onMounted(() => {
+  refreshBadge();
+  window.addEventListener(NEWS_SEEN_EVENT, refreshBadge);
+  window.addEventListener("storage", refreshBadge);
   onScroll();
   window.addEventListener("scroll", onScroll, { passive: true });
   document.addEventListener("click", onClickOutside);
@@ -68,6 +92,8 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
+  window.removeEventListener(NEWS_SEEN_EVENT, refreshBadge);
+  window.removeEventListener("storage", refreshBadge);
   window.removeEventListener("scroll", onScroll);
   document.removeEventListener("click", onClickOutside);
   document.removeEventListener("keydown", onKeydown);
@@ -122,13 +148,22 @@ function toggleDropdown(label: string) {
               :href="link.href"
               :aria-current="isActive(link.href, props.pathname) ? 'page' : undefined"
               :class="[
-                'px-3 py-2 text-sm rounded-md transition-colors motion-safe:active:scale-95',
+                'relative px-3 py-2 text-sm rounded-md transition-colors motion-safe:active:scale-95',
                 isActive(link.href, props.pathname)
                   ? 'text-claude bg-claude/10'
                   : 'text-ink-muted hover:text-ink hover:bg-white/5',
               ]"
             >
               {{ link.label }}
+              <template v-if="link.href === NEWS_HREF && badge">
+                <!-- Pastille posée sur le coin du lien : n'élargit pas la barre. -->
+                <span
+                  class="news-badge absolute -top-1.5 -right-1.5 grid place-items-center min-w-[1.125rem] h-[1.125rem] px-1 rounded-full bg-claude text-paper text-[0.6875rem] font-semibold leading-none"
+                  aria-hidden="true"
+                  >{{ badge }}</span
+                >
+                <span class="sr-only"> ({{ unseenText }})</span>
+              </template>
             </a>
           </li>
           <!-- Dropdown groupé -->
@@ -189,16 +224,28 @@ function toggleDropdown(label: string) {
       </ul>
 
       <button
-        class="xl:hidden grid place-items-center w-11 h-11 rounded-md text-ink hover:bg-white/5 transition-colors"
+        class="xl:hidden relative grid place-items-center w-11 h-11 rounded-md text-ink hover:bg-white/5 transition-colors"
         ref="menuToggle"
         type="button"
         :aria-expanded="open"
         aria-controls="mobile-menu"
-        :aria-label="open ? 'Fermer le menu' : 'Ouvrir le menu'"
+        :aria-label="
+          open
+            ? 'Fermer le menu'
+            : unseenText
+              ? `Ouvrir le menu (${unseenText})`
+              : 'Ouvrir le menu'
+        "
         @click="open = !open"
       >
         <X v-if="open" :size="20" />
         <Menu v-else :size="20" />
+        <span
+          v-if="badge && !open"
+          class="news-badge absolute top-0.5 right-0.5 grid place-items-center min-w-[1.125rem] h-[1.125rem] px-1 rounded-full bg-claude text-paper text-[0.6875rem] font-semibold leading-none"
+          aria-hidden="true"
+          >{{ badge }}</span
+        >
       </button>
     </nav>
 
@@ -222,7 +269,7 @@ function toggleDropdown(label: string) {
                 :href="link.href"
                 :aria-current="isActive(link.href, props.pathname) ? 'page' : undefined"
                 :class="[
-                  'block px-3 py-3 rounded-md text-base transition-colors',
+                  'flex items-center gap-2 px-3 py-3 rounded-md text-base transition-colors',
                   isActive(link.href, props.pathname)
                     ? 'text-claude bg-claude/10'
                     : 'text-ink-muted hover:text-ink hover:bg-white/5',
@@ -230,6 +277,14 @@ function toggleDropdown(label: string) {
                 @click="open = false"
               >
                 {{ link.label }}
+                <template v-if="link.href === NEWS_HREF && badge">
+                  <span
+                    class="news-badge grid place-items-center min-w-5 h-5 px-1.5 rounded-full bg-claude text-paper text-xs font-semibold leading-none"
+                    aria-hidden="true"
+                    >{{ badge }}</span
+                  >
+                  <span class="sr-only"> ({{ unseenText }})</span>
+                </template>
               </a>
             </li>
             <!-- Mobile : flatten les children sous un label de groupe -->

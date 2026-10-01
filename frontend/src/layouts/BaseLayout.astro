@@ -4,6 +4,7 @@ import { ClientRouter } from "astro:transitions";
 import Navbar from "@/components/site/Navbar.vue";
 import Footer from "@/components/site/Footer.astro";
 import { BUILD_VERSION } from "@/lib/build-version";
+import newsData from "../../public/nouveautes-data/nouveautes.json";
 
 interface Props {
   title: string;
@@ -19,6 +20,8 @@ const pathname = Astro.url.pathname;
 const canonical = new URL(pathname, Astro.url);
 const ogImage = new URL("/og.svg", Astro.url).toString();
 const heroPoster = "/hero-cyberpunk.jpg";
+// Index léger (slug + date) pour la pastille « nouveau » du lien Nouveautés (L13).
+const newsIndex = newsData.entries.map(({ slug, date }) => ({ slug, date }));
 ---
 
 <!doctype html>
@@ -78,7 +81,7 @@ const heroPoster = "/hero-cyberpunk.jpg";
       >
       </div>
     </div>
-    <Navbar client:load pathname={pathname} transition:persist="navbar" />
+    <Navbar client:load pathname={pathname} news={newsIndex} transition:persist="navbar" />
     <main id="main" tabindex="-1" class="flex-1 pt-16 focus:outline-none">
       <slot />
     </main>
