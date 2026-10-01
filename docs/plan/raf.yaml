@@ -17,7 +17,7 @@ lots:
     finished: 2026-09-28
   - id: L2
     title: Revue UX — Accueil
-    status: doing
+    status: done
     estimate: 0.25
     created: 2026-09-28
     started: 2026-10-01
@@ -37,6 +37,8 @@ lots:
     notes:
       - { date: 2026-10-01, text: "Revue UX 01-10 (prod) : OK AVEC RÉSERVES — 0 bloquant, 4 majeurs (pas d'auteur ni de contact pour un recruteur, guides K8s absents du Sommaire, contraste des cartes sur l'image de fond, bloc RTK « LIVE » daté du 08/05 et « 6 apps » au lieu de 8), 5 mineurs ; maquette tmp/ux-codex-l2/maquette-1440.png" }
       - { date: 2026-10-01, text: "Sylvain 01-10 : maquette validée ; contact public = GitHub uniquement (https://github.com/Sylad), pas d'e-mail ni de LinkedIn ; bloc RTK déplacé sur Case studies, daté du 08/05/2026" }
+    ux: { date: 2026-10-01, verdict: "conforme — revue initiale (OK avec réserves : 4 majeurs, 5 mineurs) puis contrôle (conforme avec réserves) puis t9–t12 : auteur + GitHub (seul contact, décision Sylvain) visibles dès le premier écran et sur /about, Sommaire avec les 3 guides, 0 texte sous 4,5:1 sur l'accueil à 1440/390, bloc RTK daté sur /case-studies, nombre d'apps cohérent (APP_COUNT, récits datés), Échap/aria/lien d'évitement/focus après navigation, cibles 44 px" }
+    finished: 2026-10-01
   - id: L3
     title: Revue UX — Start
     status: todo
@@ -67,6 +69,8 @@ lots:
     status: todo
     estimate: 0.25
     created: 2026-09-28
+    notes:
+      - { date: 2026-10-01, text: "contrôle UX L2 01-10 : 63 textes sous 4,5:1 dans le catalogue d'outils testés (dates 10 px ~3,2:1, licences 2,6–3,4:1, étoiles, « Suggestion ? » 3,0:1) — présents avant L2 ; débordements à 320 px sur /theory (355 px) et /learning (343 px)" }
   - id: L9
     title: "Revue UX — Guides longs : Kubernetes pour développeurs Java, ArgoCD/K8s pour les nuls, Cloudflare pour les nuls"
     status: todo
@@ -82,6 +86,8 @@ lots:
     status: todo
     estimate: 0.25
     created: 2026-09-28
+    notes:
+      - { date: 2026-10-01, text: "contrôle UX L2 01-10 : sur /about, intro de l'en-tête 3,86:1 (1440) et « Site fan-made — sans affiliation » 3,54:1 / 2,85:1 (390) ; « Dev Java depuis 2005 » répété dans la carte auteur et plus bas" }
   - id: L12
     title: "Revue UX — Gabarit commun : navigation, en-tête, pied, rendu téléphone"
     status: todo
