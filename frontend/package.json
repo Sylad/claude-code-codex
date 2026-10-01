@@ -9,7 +9,9 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "news": "rm -rf public/nouveautes-data && cadence news build -o public/nouveautes-data && rm -f public/nouveautes-data/index.html",
+    "astro": "astro",
+    "test": "node --test tests/*.test.mjs"
   },
   "dependencies": {
     "@astrojs/vue": "^6.0.1",
@@ -26,6 +28,7 @@
     "vue": "^3.5.34"
   },
   "devDependencies": {
-    "@types/node": "^25.6.2"
+    "@types/node": "^25.6.2",
+    "playwright-core": "^1.63.0"
   }
 }

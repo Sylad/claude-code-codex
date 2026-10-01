@@ -1,0 +1,19 @@
+{
+  "project": "claude-code-codex",
+  "generated": "2026-10-01 22:24",
+  "entries": [
+    {
+      "slug": "2026-10-01-un-accueil-qui-dit-qui-a-fait-le-site-et-ou-aller",
+      "title": "Un accueil qui dit qui a fait le site et où aller",
+      "date": "2026-10-01",
+      "lots": [
+        "L2"
+      ],
+      "captures": [
+        "captures/L2-accueil-bureau.png",
+        "captures/L2-accueil-telephone.png"
+      ],
+      "html": "<p>La page d'accueil dit maintenant qui a fait le site : <strong>Sylvain Ladoire, développeur Java/web senior</strong>, et les <strong>8 applications</strong> construites avec Claude Code puis déployées sur Kubernetes + GitOps.</p>\n<p>Trois boutons pour démarrer : <strong>Démarrer</strong> pour les débutants, <strong>Voir les projets</strong> pour aller droit aux études de cas, et <strong>GitHub</strong> pour le profil de l'auteur, qui sert aussi à le contacter. La page <strong>À propos</strong> gagne la même présentation de l'auteur, avec ce lien GitHub.</p>\n<p>Le sommaire tient en deux colonnes, <strong>Apprendre</strong> et <strong>Ce que j'ai construit</strong>. La seconde donne accès directement aux trois guides Kubernetes, ArgoCD et Cloudflare, qu'on ne trouvait jusqu'ici que dans le menu Guides. Au téléphone, les deux colonnes s'empilent.</p>\n<p>Les textes se lisent mieux sur l'image de fond : cartes, barre de navigation et pied de page ont un fond plein. Au clavier, la touche Échap ferme le menu Guides et le menu du téléphone, et un lien « Aller au contenu » apparaît à la première tabulation. Après un changement de page, la tabulation reprend au début du contenu.</p>\n<p>Les chiffres d'économie de tokens de RTK quittent l'accueil pour la page <strong>Case studies</strong>. Ils sont présentés comme un relevé du 08/05/2026, au format français (23,0 %, 3,3 M), et non plus comme un compteur en direct.</p>"
+    }
+  ]
+}
