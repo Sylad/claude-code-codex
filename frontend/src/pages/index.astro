@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import RtkStats from "@/components/site/RtkStats.astro";
+import { APP_COUNT } from "@/data/apps";
 
 const sections = [
   {
@@ -72,45 +73,65 @@ const sections = [
       class="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-paper"
     >
     </div>
-    <div class="relative mx-auto max-w-6xl px-5 sm:px-8 py-24 sm:py-36">
+    <div class="relative mx-auto max-w-6xl px-5 sm:px-8 py-20 sm:py-28">
       <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
-        Codex Claude Code · v0.1
+        Codex Claude Code · guides · projets
       </p>
       <h1
-        class="mt-4 text-4xl sm:text-6xl md:text-7xl font-semibold tracking-tight text-ink leading-[1.05]"
+        class="mt-4 text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight text-ink leading-[1.05]"
       >
-        Un codex pour comprendre,<br />
-        utiliser et builder<br />
-        avec
+        Un codex pour comprendre, utiliser<br class="hidden md:inline" />
+        et builder avec
         <span class="text-claude">Claude Code</span>.
       </h1>
-      <p class="mt-6 max-w-2xl text-base sm:text-lg text-ink-muted leading-relaxed">
-        Tu débarques sur Claude Code et tu trouves le jargon des dailys un peu
-        chinois ? <strong class="text-ink">Commence par le tuto</strong>, on
-        explique tout doucement. Quand t'es à l'aise, tu reviens pour la
-        théorie, l'écosystème, les case studies, etc.
+
+      <div class="mt-6 flex items-center gap-3.5">
+        <span
+          class="grid place-items-center shrink-0 w-11 h-11 rounded-full border border-claude/50 bg-paper/80 font-mono text-sm text-claude"
+          aria-hidden="true"
+        >
+          SL
+        </span>
+        <p class="text-base sm:text-lg text-ink leading-snug">
+          Par <strong class="font-semibold">Sylvain Ladoire</strong> —
+          développeur Java/web senior
+          <span class="block text-sm text-ink-muted">
+            {APP_COUNT} applications construites avec Claude Code, déployées
+            sur Kubernetes + GitOps
+          </span>
+        </p>
+      </div>
+
+      <p class="mt-5 max-w-2xl text-base sm:text-lg text-ink-muted leading-relaxed">
+        Débutant sur Claude Code&nbsp;? <strong class="text-ink">Commence par le tuto</strong>.
+        Recruteur ou développeur pressé&nbsp;? Va droit aux projets et aux
+        guides Kubernetes.
       </p>
 
-      <div class="mt-9 flex flex-wrap gap-3">
+      <!-- Rangée de boutons : flex-wrap, chaque bouton autonome (min 44 px) —
+           un bouton de plus s'ajoute ici sans reprise de mise en page. -->
+      <div class="mt-8 flex flex-wrap gap-3">
         <a
           href="/start"
-          class="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-claude text-paper font-medium hover:bg-claude-soft transition-colors motion-safe:active:scale-95"
+          class="inline-flex items-center gap-2 min-h-11 px-5 py-2.5 rounded-md bg-claude text-paper font-medium hover:bg-claude-soft transition-colors motion-safe:active:scale-95"
         >
-          Démarrer (pour les vrais débutants) →
+          Démarrer (débutants) →
         </a>
         <a
-          href="/theory"
-          class="inline-flex items-center gap-2 px-5 py-2.5 rounded-md border border-white/15 text-ink hover:bg-white/5 transition-colors motion-safe:active:scale-95"
+          href="/case-studies"
+          class="inline-flex items-center gap-2 min-h-11 px-5 py-2.5 rounded-md border border-white/15 bg-paper/80 text-ink hover:bg-paper-elevated transition-colors motion-safe:active:scale-95"
         >
-          J'ai déjà la base, théorie →
+          Voir les projets →
         </a>
         <a
-          href="https://claude.com/claude-code"
+          href="https://github.com/Sylad"
           target="_blank"
           rel="noopener"
-          class="inline-flex items-center gap-2 px-5 py-2.5 rounded-md border border-claude/30 text-claude hover:bg-claude/5 transition-colors motion-safe:active:scale-95"
+          title="Profil GitHub de Sylvain Ladoire — pour me contacter"
+          aria-label="GitHub ↗ — profil de Sylvain Ladoire, pour me contacter (nouvel onglet)"
+          class="inline-flex items-center gap-2 min-h-11 px-5 py-2.5 rounded-md border border-claude/40 bg-paper/80 text-claude hover:bg-paper-elevated transition-colors motion-safe:active:scale-95"
         >
-          ↗ Claude Code (officiel)
+          GitHub ↗
         </a>
       </div>
     </div>
