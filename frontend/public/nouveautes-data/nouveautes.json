@@ -1,7 +1,19 @@
 {
   "project": "claude-code-codex",
-  "generated": "2026-10-01 22:24",
+  "generated": "2026-10-01 22:38",
   "entries": [
+    {
+      "slug": "2026-10-01-une-page-nouveautes-pour-suivre-ce-qui-change-sur-le-site",
+      "title": "Une page Nouveautés pour suivre ce qui change sur le site",
+      "date": "2026-10-01",
+      "lots": [
+        "L13"
+      ],
+      "captures": [
+        "captures/L13-page-nouveautes-telephone.png"
+      ],
+      "html": "<p>Une page <strong>Nouveautés</strong> raconte ce qui change sur le site, la nouveauté la plus récente en haut, avec des captures d'écran. On la trouve dans la barre de navigation, dans le menu du téléphone et dans le pied de page.</p>\n<p>Une capture s'agrandit au clic ou avec la touche Entrée. Au téléphone, elle garde une taille lisible et se fait défiler avec le doigt ; le bouton <strong>Fermer</strong> reste toujours visible.</p>\n<p>Le titre de chaque nouveauté est un lien : cliquer dessus copie l'adresse qui mène directement à cette nouveauté, pour la partager.</p>\n<p>Après une première visite, une pastille sur le lien <strong>Nouveautés</strong> compte ce qui est paru depuis. Sur la page, une ligne indique combien de nouveautés sont apparues, les nouvelles portent la marque <strong>Nouveau</strong>, et un trait « Déjà vu lors de votre visite du … » les sépare de celles que vous aviez déjà lues.</p>\n<p>Sur un écran de moins de 1280 px de large, la navigation passe dans le menu, qui ne déborde plus de l'écran.</p>"
+    },
     {
       "slug": "2026-10-01-un-accueil-qui-dit-qui-a-fait-le-site-et-ou-aller",
       "title": "Un accueil qui dit qui a fait le site et où aller",
