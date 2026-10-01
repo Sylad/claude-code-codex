@@ -101,6 +101,7 @@ const pngSize = (rel: string) => {
                         class="news-capture"
                         data-astro-reload
                         data-width={width}
+                        data-height={height}
                         aria-label={`${alt} (agrandir)`}
                         style={`width: min(100%, ${width}px, calc(32rem * ${width} / ${height}))`}
                       >
@@ -331,6 +332,14 @@ const pngSize = (rel: string) => {
       max-width: calc(100vw - 3rem - 2px);
       max-height: calc(100dvh - 6.5rem);
     }
+    /* Capture qui, entière à l'écran, perdrait plus de 20 % de sa largeur (capture haute
+       de téléphone : 241 px sur 390 à 1440×900) : largeur naturelle, la zone défile
+       verticalement ; « Fermer » reste hors zone (revue UX L13). */
+    .news-viewer[data-mode="natural"] .news-viewer-zone img {
+      width: min(var(--cap-w), calc(100vw - 3rem - 2px));
+      max-width: none;
+      max-height: none;
+    }
   }
 </style>
 
@@ -351,6 +360,12 @@ const pngSize = (rel: string) => {
     img.src = link.getAttribute("href")!;
     img.alt = source.alt;
     img.style.setProperty("--cap-w", `${link.dataset.width}px`);
+    // Échelle si la capture tenait entière à l'écran (bureau) : sous 0,8, largeur naturelle.
+    const w = Number(link.dataset.width);
+    const h = Number(link.dataset.height);
+    const scale = Math.min(1, (innerWidth - 50) / w, (innerHeight - 104) / h);
+    if (innerWidth >= 640 && scale < 0.8) dialog.dataset.mode = "natural";
+    else delete dialog.dataset.mode;
     dialog.setAttribute("aria-label", source.alt);
     opener = link;
     document.body.style.overflow = "hidden";

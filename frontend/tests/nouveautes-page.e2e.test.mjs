@@ -495,3 +495,55 @@ test('barre du bureau (1280/1366/1440 px) : chaque libellé et le logo sur une l
   }
   await context.close();
 });
+
+// Revue UX L13 : au bureau, une capture haute de téléphone (390×1290) tenait à l'écran
+// en 241 px de large (62 %), illisible. Sous ~80 % de sa largeur naturelle, elle
+// s'affiche à sa largeur naturelle et la zone défile verticalement ; « Fermer » hors zone.
+test('visionneuse au bureau (1440×900) : capture haute à sa largeur naturelle, défilement vertical', { timeout: 60_000 }, async (t) => {
+  const env = await setupBrowser(t);
+  if (!env) return;
+  const size = (c) => { const b = readFileSync(new URL(`../public/nouveautes-data/${c}`, import.meta.url)); return [b.readUInt32BE(16), b.readUInt32BE(20)]; };
+  const all = DATA.entries.flatMap((e) => e.captures);
+  // Échelle « tout à l'écran » : (1440 - 48) × (900 - 104) px disponibles.
+  const fit = (c) => { const [w, h] = size(c); return Math.min(1, 1390 / w, 796 / h); };
+  const tall = all.find((c) => fit(c) < 0.8);
+  const small = all.find((c) => fit(c) >= 0.8);
+  assert.ok(tall, 'aucune capture haute à tester');
+  const context = await env.browser.newContext({ viewport: { width: 1440, height: 900 } });
+  const page = await context.newPage();
+  await page.goto(`${env.base}/nouveautes/`, { waitUntil: 'load' });
+  const measure = async (c) => {
+    const link = page.locator(`.news-capture[href="/nouveautes-data/${c}"]`);
+    await link.scrollIntoViewIfNeeded();
+    await link.click();
+    await page.waitForFunction(() => document.querySelector('dialog.news-viewer img').complete);
+    const r = await page.evaluate(() => {
+      const d = document.querySelector('dialog.news-viewer');
+      const zone = d.querySelector('.news-viewer-zone');
+      const close = d.querySelector('[data-close]');
+      const z = zone.getBoundingClientRect();
+      const b = close.getBoundingClientRect();
+      return {
+        imgW: d.querySelector('img').getBoundingClientRect().width,
+        scrolls: zone.scrollHeight > zone.clientHeight + 1,
+        zoneBottom: z.bottom,
+        closeInZone: zone.contains(close),
+        closeVisible: b.top >= 0 && b.bottom <= innerHeight,
+      };
+    });
+    await page.keyboard.press('Escape');
+    await page.waitForFunction(() => !document.querySelector('dialog.news-viewer').open);
+    return r;
+  };
+  const r = await measure(tall);
+  t.diagnostic(`${tall} : ${r.imgW.toFixed(0)} px de large`);
+  assert.ok(Math.abs(r.imgW - size(tall)[0]) <= 1, `${tall} : ${r.imgW} px au lieu de ${size(tall)[0]}`);
+  assert.ok(r.scrolls, 'la zone ne défile pas verticalement');
+  assert.ok(r.zoneBottom <= 900, 'la zone sort de l’écran');
+  assert.ok(!r.closeInZone && r.closeVisible, '« Fermer » doit rester visible, hors zone');
+  if (small) {
+    const s = await measure(small);
+    assert.ok(!s.scrolls, `${small} : tient à l'écran, ne doit pas défiler`);
+  }
+  await context.close();
+});
