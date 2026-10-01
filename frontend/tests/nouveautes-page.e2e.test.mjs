@@ -320,3 +320,46 @@ test('320 px, captures pas encore chargées : la place est réservée aux bonnes
   }
   await context.close();
 });
+
+// ── Lien permanent par entrée (repris d'AetherWX) ───────────────────────────
+test('chaque titre est un lien vers sa propre ancre (#slug)', () => {
+  const page = html();
+  for (const e of DATA.entries) {
+    assert.match(page, new RegExp(`<h2[^>]*id="${e.slug}-titre"[^>]*>\\s*<a [^>]*href="#${e.slug}"`), e.slug);
+  }
+});
+
+test('ouvrir /nouveautes/#<slug> au téléphone amène l’entrée sous la barre fixe et la signale', { timeout: 60_000 }, async (t) => {
+  const env = await setupBrowser(t);
+  if (!env) return;
+  const slug = DATA.entries.at(-1).slug;
+  const context = await env.browser.newContext({ viewport: { width: 390, height: 844 } });
+  const page = await context.newPage();
+  await page.goto(`${env.base}/nouveautes/#${slug}`, { waitUntil: 'load' });
+  await page.waitForTimeout(300);
+  const r = await page.evaluate((s) => {
+    const el = document.getElementById(s);
+    const header = document.querySelector('header').getBoundingClientRect();
+    return { top: el.getBoundingClientRect().top, headerBottom: header.bottom, target: el.classList.contains('is-target'), focused: document.activeElement === el };
+  }, slug);
+  assert.ok(r.top >= r.headerBottom && r.top <= r.headerBottom + 60, `entrée à ${r.top}px (barre jusqu'à ${r.headerBottom}px)`);
+  assert.ok(r.target, 'entrée visée non signalée');
+  assert.ok(r.focused, 'focus pas sur l’entrée visée');
+  await context.close();
+});
+
+test('cliquer le titre met l’ancre dans l’URL, copie le lien et l’annonce', { timeout: 60_000 }, async (t) => {
+  const env = await setupBrowser(t);
+  if (!env) return;
+  const e = DATA.entries[0];
+  const context = await env.browser.newContext({ viewport: { width: 1440, height: 900 } });
+  await context.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: env.base });
+  const page = await context.newPage();
+  await page.goto(`${env.base}/nouveautes/`, { waitUntil: 'load' });
+  await page.locator(`[id="${e.slug}-titre"] a`).click();
+  await page.waitForFunction((s) => location.hash === `#${s}`, e.slug);
+  const status = page.locator(`[id="${e.slug}"] [role="status"]`);
+  await status.filter({ hasText: 'Lien copié' }).waitFor({ timeout: 3000 });
+  assert.equal(await page.evaluate(() => navigator.clipboard.readText()), `${env.base}/nouveautes/#${e.slug}`);
+  await context.close();
+});
