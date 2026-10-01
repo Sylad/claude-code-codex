@@ -57,6 +57,12 @@ const heroPoster = "/hero-cyberpunk.jpg";
     <ClientRouter />
   </head>
   <body class="text-ink min-h-dvh flex flex-col">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:rounded-md focus:bg-claude focus:px-4 focus:py-3 focus:font-medium focus:text-paper"
+    >
+      Aller au contenu
+    </a>
     <div
       class="fixed inset-0 -z-10 overflow-hidden pointer-events-none"
       aria-hidden="true"
@@ -73,7 +79,7 @@ const heroPoster = "/hero-cyberpunk.jpg";
       </div>
     </div>
     <Navbar client:load pathname={pathname} transition:persist="navbar" />
-    <main class="flex-1 pt-16">
+    <main id="main" tabindex="-1" class="flex-1 pt-16 focus:outline-none">
       <slot />
     </main>
     <Footer transition:persist />

@@ -35,6 +35,24 @@ function onScroll() {
   scrolled.value = window.scrollY > 8;
 }
 
+const menuToggle = ref<HTMLButtonElement | null>(null);
+
+// Échap ferme le menu Guides ou le menu mobile et rend le focus au bouton
+// qui l'a ouvert (WCAG 2.1.1 / 2.4.3).
+function onKeydown(e: KeyboardEvent) {
+  if (e.key !== "Escape") return;
+  if (openDropdown.value) {
+    const label = openDropdown.value;
+    openDropdown.value = null;
+    document
+      .querySelector<HTMLButtonElement>(`[data-dropdown-toggle="${label}"]`)
+      ?.focus();
+  } else if (open.value) {
+    open.value = false;
+    menuToggle.value?.focus();
+  }
+}
+
 function onClickOutside(e: MouseEvent) {
   if (!openDropdown.value) return;
   const target = e.target as HTMLElement;
@@ -45,11 +63,13 @@ onMounted(() => {
   onScroll();
   window.addEventListener("scroll", onScroll, { passive: true });
   document.addEventListener("click", onClickOutside);
+  document.addEventListener("keydown", onKeydown);
 });
 
 onUnmounted(() => {
   window.removeEventListener("scroll", onScroll);
   document.removeEventListener("click", onClickOutside);
+  document.removeEventListener("keydown", onKeydown);
 });
 
 function isActive(href: string, pathname: string) {
@@ -119,7 +139,9 @@ function toggleDropdown(label: string) {
                   ? 'text-claude bg-claude/10'
                   : 'text-ink-muted hover:text-ink hover:bg-white/5',
               ]"
+              :data-dropdown-toggle="link.label"
               :aria-expanded="openDropdown === link.label"
+              :aria-controls="`dropdown-${link.label}`"
               @click="toggleDropdown(link.label)"
             >
               {{ link.label }}
@@ -141,6 +163,7 @@ function toggleDropdown(label: string) {
             >
               <div
                 v-if="openDropdown === link.label"
+                :id="`dropdown-${link.label}`"
                 class="absolute left-0 mt-2 min-w-56 rounded-md border border-white/10 bg-paper/95 backdrop-blur-md shadow-xl py-1"
               >
                 <a
@@ -165,8 +188,11 @@ function toggleDropdown(label: string) {
 
       <button
         class="md:hidden grid place-items-center w-10 h-10 rounded-md text-ink hover:bg-white/5 transition-colors"
+        ref="menuToggle"
+        type="button"
         :aria-expanded="open"
-        aria-label="Ouvrir le menu"
+        aria-controls="mobile-menu"
+        :aria-label="open ? 'Fermer le menu' : 'Ouvrir le menu'"
         @click="open = !open"
       >
         <X v-if="open" :size="20" />
@@ -184,6 +210,7 @@ function toggleDropdown(label: string) {
     >
       <div
         v-if="open"
+        id="mobile-menu"
         class="md:hidden border-t border-white/5 bg-paper/95 backdrop-blur-md"
       >
         <ul class="px-5 py-4 flex flex-col gap-1">
