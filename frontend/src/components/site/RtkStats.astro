@@ -1,6 +1,5 @@
 ---
 import rtkStats from "@/data/rtk-stats.json";
-import { APP_COUNT } from "@/data/apps";
 
 const { summary, lastUpdated } = rtkStats as {
   summary: {
@@ -88,7 +87,7 @@ const stats = [
         Combien de tokens RTK a économisés
       </h2>
       <p class="mt-2 text-ink-muted leading-relaxed max-w-xl text-sm sm:text-base">
-        Ces {APP_COUNT} applications ont été codées en pair-programming avec
+        Les applications de l'époque ont été codées en pair-programming avec
         Claude Code. Pour ne pas exploser la facture API, les commandes shell
         passaient alors par
         <a
