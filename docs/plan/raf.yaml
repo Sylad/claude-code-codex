@@ -28,7 +28,7 @@ lots:
       - { id: t4, title: "Bloc RTK : retirer LIVE (relevé du 08/05/2026) ou le sortir de l'accueil ; aligner le nombre d'apps (6 → 8) — M4, Nielsen 1 et 4", status: done }
       - { id: t5, title: "Textes 10 px ink/40-50 → ink-muted 12 px — m1, WCAG 1.4.3 (2,30–4,42:1)", status: done }
       - { id: t6, title: "Navbar : Échap ferme Guides et le menu mobile, aria-label Ouvrir/Fermer, lien d'évitement — m2, WCAG 2.1.1/4.1.2/2.4.1", status: done }
-      - { id: t7, title: "Stats : formats fr (23,0 %, 3,3 M, 434 k) — m3", status: todo }
+      - { id: t7, title: "Stats : formats fr (23,0 %, 3,3 M, 434 k) — m3", status: done }
       - { id: t8, title: "Pied de page et menu mobile : cibles de 44 px, fond de menu opaque — m4/m5", status: todo }
     notes:
       - { date: 2026-10-01, text: "Revue UX 01-10 (prod) : OK AVEC RÉSERVES — 0 bloquant, 4 majeurs (pas d'auteur ni de contact pour un recruteur, guides K8s absents du Sommaire, contraste des cartes sur l'image de fond, bloc RTK « LIVE » daté du 08/05 et « 6 apps » au lieu de 8), 5 mineurs ; maquette tmp/ux-codex-l2/maquette-1440.png" }

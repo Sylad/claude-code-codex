@@ -15,10 +15,16 @@ const { summary, lastUpdated } = rtkStats as {
   lastUpdated: string;
 };
 
+// Formats français (espace insécable avant l'unité, virgule décimale) :
+// 3,3 M · 434 k · 23,0 %.
+const NBSP = "\u00a0";
+const dec1 = (n: number) =>
+  n.toLocaleString("fr-FR", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+
 function formatTokens(n: number): string {
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000) return `${(n / 1_000).toFixed(0)}K`;
-  return String(n);
+  if (n >= 1_000_000) return `${dec1(n / 1_000_000)}${NBSP}M`;
+  if (n >= 1_000) return `${Math.round(n / 1_000).toLocaleString("fr-FR")}${NBSP}k`;
+  return n.toLocaleString("fr-FR");
 }
 
 function formatDuration(ms: number): string {
@@ -27,10 +33,10 @@ function formatDuration(ms: number): string {
   const seconds = totalSeconds % 60;
   if (minutes >= 60) {
     const hours = Math.floor(minutes / 60);
-    return `${hours}h${(minutes % 60).toString().padStart(2, "0")}`;
+    return `${hours}${NBSP}h${NBSP}${(minutes % 60).toString().padStart(2, "0")}`;
   }
-  if (minutes > 0) return `${minutes}m${seconds.toString().padStart(2, "0")}s`;
-  return `${seconds}s`;
+  if (minutes > 0) return `${minutes}${NBSP}min${NBSP}${seconds.toString().padStart(2, "0")}${NBSP}s`;
+  return `${seconds}${NBSP}s`;
 }
 
 // Date du relevé au format court jj/mm/aaaa (le bloc n'est pas mis à jour
@@ -60,13 +66,13 @@ const stats = [
   },
   {
     label: "Économie moyenne",
-    value: `${summary.avg_savings_pct.toFixed(1)}%`,
+    value: `${dec1(summary.avg_savings_pct)}${NBSP}%`,
     sub: "sur les commandes proxiées",
   },
   {
     label: "Temps total proxy",
     value: formatDuration(summary.total_time_ms),
-    sub: `~ ${summary.avg_time_ms}ms par commande`,
+    sub: `≈${NBSP}${summary.avg_time_ms.toLocaleString("fr-FR")}${NBSP}ms par commande`,
   },
 ];
 ---
