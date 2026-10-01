@@ -24,7 +24,7 @@ lots:
     tasks:
       - { id: t1, title: "Hero : ligne auteur (nom + rôle) + boutons Voir les projets / contact — M1, Nielsen 2 ; canal de contact à choisir par Sylvain", status: done }
       - { id: t2, title: "Sommaire : ajouter les 3 guides K8s/ArgoCD/Cloudflare — M2, Nielsen 6", status: done }
-      - { id: t3, title: "Cartes Sommaire et stats RTK opaques + fond de navbar en haut de page — M3, WCAG 1.4.3 (mesuré 3,05:1 et 2,30:1)", status: todo }
+      - { id: t3, title: "Cartes Sommaire et stats RTK opaques + fond de navbar en haut de page — M3, WCAG 1.4.3 (mesuré 3,05:1 et 2,30:1)", status: done }
       - { id: t4, title: "Bloc RTK : retirer LIVE (relevé du 08/05/2026) ou le sortir de l'accueil ; aligner le nombre d'apps (6 → 8) — M4, Nielsen 1 et 4", status: todo }
       - { id: t5, title: "Textes 10 px ink/40-50 → ink-muted 12 px — m1, WCAG 1.4.3 (2,30–4,42:1)", status: todo }
       - { id: t6, title: "Navbar : Échap ferme Guides et le menu mobile, aria-label Ouvrir/Fermer, lien d'évitement — m2, WCAG 2.1.1/4.1.2/2.4.1", status: todo }

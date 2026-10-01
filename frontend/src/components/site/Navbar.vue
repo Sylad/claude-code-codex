@@ -69,10 +69,12 @@ function toggleDropdown(label: string) {
 <template>
   <header
     :class="[
-      'fixed top-0 inset-x-0 z-50 transition-colors duration-300',
+      'fixed top-0 inset-x-0 z-50 transition-colors duration-300 backdrop-blur-md border-b',
+      // Fond toujours présent (WCAG 1.4.3) : en haut de page, la barre
+      // transparente laissait les liens à 4,2:1 sur l'image de fond.
       scrolled || open
-        ? 'bg-paper/90 backdrop-blur-md border-b border-white/5'
-        : 'bg-transparent',
+        ? 'bg-paper/95 border-white/5'
+        : 'bg-paper/85 border-transparent',
     ]"
   >
     <nav class="mx-auto max-w-6xl px-5 sm:px-8 h-16 flex items-center justify-between">
