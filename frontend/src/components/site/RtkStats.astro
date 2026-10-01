@@ -95,7 +95,7 @@ const stats = [
         du relevé du {releve} :
       </p>
     </div>
-    <p class="font-mono text-[10px] uppercase tracking-wider text-ink/50 shrink-0">
+    <p class="font-mono text-xs uppercase tracking-wider text-ink-muted shrink-0">
       Relevé du {releve}
     </p>
   </div>
@@ -110,7 +110,7 @@ const stats = [
         }`}
       >
         <p
-          class={`font-mono text-[10px] uppercase tracking-wider mb-2 ${
+          class={`font-mono text-xs uppercase tracking-wider mb-2 ${
             s.accent ? "text-claude" : "text-ink-muted"
           }`}
         >
@@ -124,7 +124,7 @@ const stats = [
     ))}
   </div>
 
-  <p class="font-mono text-[10px] text-ink/40 mt-6 text-right">
+  <p class="font-mono text-xs text-ink-muted mt-6 sm:text-right">
     Source : <code>rtk gain --format json</code> · mise à jour manuelle via le
     skill <code>/update-rtk-stats</code>.
   </p>
