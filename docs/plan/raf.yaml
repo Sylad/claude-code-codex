@@ -30,6 +30,7 @@ lots:
       - { id: t6, title: "Navbar : Échap ferme Guides et le menu mobile, aria-label Ouvrir/Fermer, lien d'évitement — m2, WCAG 2.1.1/4.1.2/2.4.1", status: done }
       - { id: t7, title: "Stats : formats fr (23,0 %, 3,3 M, 434 k) — m3", status: done }
       - { id: t8, title: "Pied de page et menu mobile : cibles de 44 px, fond de menu opaque — m4/m5", status: done }
+      - { id: t9, title: "Nombre d'apps : À propos et fiche claude-code-codex datés (récit du lancement, mai 2026) ou APP_COUNT — revue de contrôle", status: done }
     notes:
       - { date: 2026-10-01, text: "Revue UX 01-10 (prod) : OK AVEC RÉSERVES — 0 bloquant, 4 majeurs (pas d'auteur ni de contact pour un recruteur, guides K8s absents du Sommaire, contraste des cartes sur l'image de fond, bloc RTK « LIVE » daté du 08/05 et « 6 apps » au lieu de 8), 5 mineurs ; maquette tmp/ux-codex-l2/maquette-1440.png" }
       - { date: 2026-10-01, text: "Sylvain 01-10 : maquette validée ; contact public = GitHub uniquement (https://github.com/Sylad), pas d'e-mail ni de LinkedIn ; bloc RTK déplacé sur Case studies, daté du 08/05/2026" }
