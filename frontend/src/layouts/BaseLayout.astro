@@ -83,5 +83,15 @@ const heroPoster = "/hero-cyberpunk.jpg";
       <slot />
     </main>
     <Footer transition:persist />
+    <script>
+      // Après une navigation interne (transitions Astro), le focus restait
+      // sur le lien cliqué dans la barre persistée ou retombait sur <body> :
+      // on le place sur le contenu, comme un chargement complet suivi du
+      // lien d'évitement (WCAG 2.4.3).
+      document.addEventListener("astro:after-swap", () => {
+        if (location.hash) return;
+        document.getElementById("main")?.focus({ preventScroll: true });
+      });
+    </script>
   </body>
 </html>
