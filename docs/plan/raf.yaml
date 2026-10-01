@@ -95,12 +95,15 @@ lots:
     created: 2026-09-28
   - id: L13
     title: "Page Nouveautés : vérifier l'existant et le brancher sur cadence news (signature commune des apps)"
-    status: todo
+    status: done
     estimate: 0.5
     visible: true
     created: 2026-09-28
     notes:
       - { date: 2026-09-28, text: "Sylvain 28-09 : ordre DÉCROISSANT, la nouveauté la plus récente en haut (départage à date égale corrigé dans cadence news)" }
+    started: 2026-10-01
+    ux: { date: 2026-10-01, verdict: "OK avec réserves levées — barre sur une ligne 1280–1440 (61 px logo/lien), visionneuse à largeur naturelle (téléphone et capture haute au bureau), ancre et pastille conformes ; seuil burger 1280 px validé ; sur-titre → L16, regroupement de la barre → L17" }
+    finished: 2026-10-01
   - id: L14
     title: "Livraison cadence : cadence.yaml (deploy = push → Cloudflare Pages, verify = la page sert la NOUVELLE version, pas seulement 200)"
     status: done
@@ -111,3 +114,24 @@ lots:
       - { date: 2026-10-01, text: "Sylvain 01-10 : validé (signature commune, livraisons des revues UX par cadence deliver)" }
     started: 2026-10-01
     finished: 2026-10-01
+  - id: L15
+    title: "Page « Plan de travail » : ce qui est prévu, en cours et récemment livré, généré au build depuis docs/plan/raf.yaml (titres et états seulement, jamais les notes) — inspirée de la page « À venir » d'AetherWX"
+    status: todo
+    estimate: 0.5
+    visible: true
+    created: 2026-10-01
+  - id: L16
+    title: "PageHero : chapeau (text-ink-muted) à 3,93:1 sur l'image de fond à 390 px — à mesurer et corriger sur toutes les pages qui l'utilisent (/about…)"
+    status: todo
+    estimate: 0.25
+    quickwin: true
+    visible: true
+    created: 2026-10-01
+    notes:
+      - { date: 2026-10-01, text: "Revue UX L13 : inclure le sur-titre « NOUVEAUTÉS » de /nouveautes (orange 12 px, 3,7–3,8:1 au pire pixel sur l'image du bandeau)" }
+  - id: L17
+    title: "Barre de bureau dès 1024 px : regrouper Learning + Vidéos sous « Ressources ▾ », « À propos » en pied de page et menu téléphone seulement, « Nouveautés » toujours visible (maquette de la revue UX L13, validée par Sylvain le 01-10)"
+    status: todo
+    estimate: 0.5
+    visible: true
+    created: 2026-10-01
