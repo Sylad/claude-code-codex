@@ -2,7 +2,7 @@
 const year = new Date().getFullYear();
 ---
 
-<footer class="mt-24 border-t border-white/5">
+<footer class="mt-24 border-t border-white/5 bg-paper">
   <div class="mx-auto max-w-6xl px-5 sm:px-8 py-10 grid gap-6 md:grid-cols-3 text-sm text-ink-muted">
     <div>
       <p class="font-mono text-ink">claude-code-codex</p>
@@ -12,18 +12,18 @@ const year = new Date().getFullYear();
       </p>
     </div>
 
-    <div class="flex flex-col gap-1">
+    <div class="flex flex-col items-start">
       <p class="text-xs uppercase tracking-wider text-ink/60 mb-1">Ressources</p>
-      <a class="hover:text-ink transition-colors" href="/theory">Théorie</a>
-      <a class="hover:text-ink transition-colors" href="/ecosystem">Écosystème</a>
-      <a class="hover:text-ink transition-colors" href="/learning">Learning</a>
-      <a class="hover:text-ink transition-colors" href="/videos">Vidéos</a>
+      <a class="inline-flex items-center min-h-11 hover:text-ink transition-colors" href="/theory">Théorie</a>
+      <a class="inline-flex items-center min-h-11 hover:text-ink transition-colors" href="/ecosystem">Écosystème</a>
+      <a class="inline-flex items-center min-h-11 hover:text-ink transition-colors" href="/learning">Learning</a>
+      <a class="inline-flex items-center min-h-11 hover:text-ink transition-colors" href="/videos">Vidéos</a>
     </div>
 
-    <div class="flex flex-col gap-1 md:items-end">
+    <div class="flex flex-col items-start md:items-end">
       <p class="text-xs uppercase tracking-wider text-ink/60 mb-1">Liens</p>
       <a
-        class="hover:text-ink transition-colors"
+        class="inline-flex items-center min-h-11 hover:text-ink transition-colors"
         href="https://claude.com/claude-code"
         target="_blank"
         rel="noopener"
@@ -31,20 +31,20 @@ const year = new Date().getFullYear();
         Claude Code (Anthropic)
       </a>
       <a
-        class="hover:text-ink transition-colors"
+        class="inline-flex items-center min-h-11 hover:text-ink transition-colors"
         href="https://github.com/Sylad/claude-code-codex"
         target="_blank"
         rel="noopener"
       >
         Repo GitHub
       </a>
-      <a class="hover:text-ink transition-colors" href="/about">À propos</a>
+      <a class="inline-flex items-center min-h-11 hover:text-ink transition-colors" href="/about">À propos</a>
     </div>
   </div>
 
   <div class="border-t border-white/5">
     <div
-      class="mx-auto max-w-6xl px-5 sm:px-8 py-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs text-ink-muted"
+      class="mx-auto max-w-6xl px-5 sm:px-8 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-x-2 text-xs text-ink-muted"
     >
       <p>
         © {year} — codex fan-site, sans affiliation officielle avec
@@ -53,7 +53,7 @@ const year = new Date().getFullYear();
       <p class="font-mono">
         vibe coded with
         <a
-          class="text-claude hover:text-claude-soft transition-colors"
+          class="inline-flex items-center min-h-11 text-claude hover:text-claude-soft transition-colors"
           href="https://claude.com/claude-code"
           target="_blank"
           rel="noopener"

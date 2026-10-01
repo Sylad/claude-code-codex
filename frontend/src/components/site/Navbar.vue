@@ -187,7 +187,7 @@ function toggleDropdown(label: string) {
       </ul>
 
       <button
-        class="md:hidden grid place-items-center w-10 h-10 rounded-md text-ink hover:bg-white/5 transition-colors"
+        class="md:hidden grid place-items-center w-11 h-11 rounded-md text-ink hover:bg-white/5 transition-colors"
         ref="menuToggle"
         type="button"
         :aria-expanded="open"
@@ -211,7 +211,7 @@ function toggleDropdown(label: string) {
       <div
         v-if="open"
         id="mobile-menu"
-        class="md:hidden border-t border-white/5 bg-paper/95 backdrop-blur-md"
+        class="md:hidden border-t border-white/5 bg-paper max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain"
       >
         <ul class="px-5 py-4 flex flex-col gap-1">
           <template v-for="link in links" :key="link.label">
@@ -231,7 +231,7 @@ function toggleDropdown(label: string) {
             </li>
             <!-- Mobile : flatten les children sous un label de groupe -->
             <li v-else>
-              <div class="px-3 pt-3 pb-1 text-xs uppercase tracking-wider text-ink-muted/70">
+              <div class="px-3 pt-3 pb-1 text-xs uppercase tracking-wider text-ink-muted">
                 {{ link.label }}
               </div>
               <a
