@@ -1,0 +1,330 @@
+---
+/*
+  Nouveautés — journal des évolutions visibles du site (signature commune des apps, L13).
+
+  Source : docs/nouveautes/*.md, compilé par `cadence news build` (`npm run news`)
+  dans public/nouveautes-data/ (nouveautes.json + captures), versionné : Cloudflare
+  Pages construit sans cadence. La page est rendue AU BUILD depuis ce JSON, déjà
+  trié du plus récent au plus ancien (date, puis heure de création).
+*/
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import news from "../../public/nouveautes-data/nouveautes.json";
+
+interface NewsEntry {
+  slug: string;
+  title: string;
+  date: string;
+  lots: string[];
+  captures: string[];
+  html: string;
+}
+
+const BASE = "/nouveautes-data";
+const entries = (news as { entries: NewsEntry[] }).entries;
+
+const formatDate = (day: string) =>
+  new Date(`${day}T12:00:00Z`).toLocaleDateString("fr-FR", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+
+// Dimensions lues dans l'en-tête PNG (IHDR) : réservent la place des captures,
+// pas de saut de mise en page au chargement.
+const pngSize = (rel: string) => {
+  const buf = readFileSync(join(process.cwd(), "public", "nouveautes-data", rel));
+  return { width: buf.readUInt32BE(16), height: buf.readUInt32BE(20) };
+};
+---
+
+<BaseLayout
+  title="Nouveautés"
+  description="Ce qui a changé sur claude-code-codex, la nouveauté la plus récente en premier."
+>
+  <section class="news-hero relative codex-grid border-b border-white/5">
+    <div class="mx-auto max-w-6xl px-5 sm:px-8 py-20 sm:py-28">
+      <p class="news-eyebrow font-mono text-xs uppercase tracking-[0.2em] text-claude">
+        Nouveautés
+      </p>
+      <h1 class="mt-3 text-4xl sm:text-5xl font-semibold tracking-tight text-ink">
+        Ce qui a changé
+      </h1>
+      <p class="news-lede mt-5 max-w-2xl text-base sm:text-lg text-ink leading-relaxed [text-shadow:0_1px_3px_rgb(0_0_0_/0.85)]">
+        Le journal des évolutions du site, la plus récente en premier.
+      </p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-16">
+    {entries.length === 0 ? (
+      <p class="text-ink-muted italic">Aucune nouveauté publiée pour l'instant.</p>
+    ) : (
+      <ol class="news-list flex flex-col gap-8">
+        {entries.map((e) => (
+          <li>
+            <article
+              class="news-entry rounded-xl border border-white/10 bg-paper-elevated p-6 sm:p-8"
+              id={e.slug}
+              tabindex="-1"
+              aria-labelledby={`${e.slug}-titre`}
+            >
+              <p class="font-mono text-xs uppercase tracking-wider text-claude">
+                <time datetime={e.date}>{formatDate(e.date)}</time>
+              </p>
+              <h2
+                id={`${e.slug}-titre`}
+                class="mt-3 text-xl sm:text-2xl font-semibold text-ink [overflow-wrap:anywhere]"
+              >{e.title}</h2>
+              {/* HTML produit par cadence depuis le Markdown du dépôt. */}
+              <div class="news-body mt-4" set:html={e.html} />
+              {e.captures.length > 0 && (
+                <div class="news-captures mt-6 flex flex-wrap items-start gap-4">
+                  {e.captures.map((c, i) => {
+                    const { width, height } = pngSize(c);
+                    const alt =
+                      e.captures.length > 1
+                        ? `Capture d'écran ${i + 1} sur ${e.captures.length} : ${e.title}`
+                        : `Capture d'écran : ${e.title}`;
+                    return (
+                      <a
+                        href={`${BASE}/${c}`}
+                        class="news-capture"
+                        data-astro-reload
+                        data-width={width}
+                        aria-label={`${alt} (agrandir)`}
+                        style={`width: min(100%, ${width}px, calc(32rem * ${width} / ${height}))`}
+                      >
+                        <img
+                          src={`${BASE}/${c}`}
+                          alt={alt}
+                          width={width}
+                          height={height}
+                          style={`aspect-ratio: ${width} / ${height}`}
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      </a>
+                    );
+                  })}
+                </div>
+              )}
+            </article>
+          </li>
+        ))}
+      </ol>
+    )}
+  </section>
+
+  <!-- Visionneuse des captures : « Fermer » hors de la zone qui défile, toujours visible. -->
+  <dialog class="news-viewer" aria-label="Capture agrandie">
+    <div class="news-viewer-inner">
+      <button type="button" class="news-viewer-close" data-close>
+        <span aria-hidden="true">✕</span> Fermer
+      </button>
+      <div
+        class="news-viewer-zone"
+        role="region"
+        tabindex="0"
+        aria-label="Capture agrandie, faire défiler pour voir la suite"
+      >
+        <img alt="" />
+      </div>
+    </div>
+  </dialog>
+</BaseLayout>
+
+<style>
+  .news-body :global(p) {
+    color: var(--color-ink);
+    line-height: 1.75;
+    margin: 0 0 0.9rem;
+  }
+  .news-body :global(p:last-child) {
+    margin-bottom: 0;
+  }
+  .news-body :global(ul) {
+    margin: 0 0 0.9rem;
+    padding-left: 1.3rem;
+    list-style: disc;
+  }
+  .news-body :global(li) {
+    color: var(--color-ink);
+    line-height: 1.75;
+    margin-bottom: 0.4rem;
+  }
+  .news-body :global(li::marker) {
+    color: var(--color-claude);
+  }
+  .news-body :global(strong) {
+    color: var(--color-ink);
+    font-weight: 600;
+  }
+  .news-body :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    padding: 0 0.3em;
+    border-radius: 3px;
+    background: oklch(1 0 0 / 0.06);
+  }
+  .news-body :global(a) {
+    color: var(--color-claude);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  /* Taille réservée AVANT chargement (pas de saut de mise en page) : le lien prend
+     min(largeur dispo, largeur naturelle, largeur qui donne 32rem de haut), l'image
+     le remplit à ses proportions (aspect-ratio en ligne). */
+  .news-capture {
+    display: block;
+    flex: 0 1 auto;
+    min-width: 0;
+    max-width: 100%;
+    border-radius: 6px;
+    line-height: 0;
+  }
+  .news-capture:focus-visible {
+    outline: 2px solid var(--color-claude);
+    outline-offset: 3px;
+  }
+  .news-capture img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid oklch(1 0 0 / 0.12);
+    border-radius: 6px;
+    cursor: zoom-in;
+  }
+
+  .news-viewer {
+    width: 100vw;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0.75rem;
+    border: 0;
+    background: transparent;
+    overflow: hidden;
+  }
+  .news-viewer::backdrop {
+    background: oklch(0.145 0 0 / 0.92);
+  }
+  .news-viewer-inner {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  .news-viewer-close {
+    align-self: flex-end;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 2.75rem;
+    padding: 0 0.9rem;
+    border-radius: 6px;
+    border: 1px solid oklch(1 0 0 / 0.18);
+    background: var(--color-paper-elevated);
+    color: var(--color-ink);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .news-viewer-close:hover {
+    background: var(--color-paper);
+  }
+  .news-viewer-close:focus-visible,
+  .news-viewer-zone:focus-visible {
+    outline: 2px solid var(--color-claude);
+    outline-offset: 2px;
+  }
+  .news-viewer-zone {
+    min-height: 0;
+    max-width: 100%;
+    overflow: auto;
+    overscroll-behavior: contain;
+    border-radius: 6px;
+    border: 1px solid oklch(1 0 0 / 0.18);
+  }
+  /* Téléphone : capture à sa largeur naturelle, au plus deux largeurs d'écran, dans une
+     zone qui défile (leçon d'ol-companion L13 : réduite à l'écran, elle est illisible). */
+  .news-viewer-zone img {
+    display: block;
+    height: auto;
+    max-width: none;
+    width: min(var(--cap-w, 100%), 200vw);
+  }
+  @media (min-width: 640px) {
+    .news-viewer {
+      padding: 1.5rem;
+    }
+    .news-viewer-zone img {
+      width: auto;
+      max-width: calc(100vw - 3rem - 2px);
+      max-height: calc(100dvh - 6.5rem);
+    }
+  }
+</style>
+
+<script>
+  // Visionneuse des captures. Écoute en phase de capture sur document : passe avant le
+  // routeur des transitions Astro et survit aux changements de page (script exécuté
+  // une seule fois). Entrée sur le lien déclenche un clic : même chemin qu'à la souris.
+  let opener: HTMLElement | null = null;
+
+  function openViewer(link: HTMLAnchorElement) {
+    const dialog = document.querySelector<HTMLDialogElement>("dialog.news-viewer");
+    const source = link.querySelector("img");
+    if (!dialog || !source) return;
+    const img = dialog.querySelector("img")!;
+    img.src = link.getAttribute("href")!;
+    img.alt = source.alt;
+    img.style.setProperty("--cap-w", `${link.dataset.width}px`);
+    dialog.setAttribute("aria-label", source.alt);
+    opener = link;
+    document.body.style.overflow = "hidden";
+    dialog.showModal();
+    dialog.querySelector<HTMLButtonElement>("[data-close]")?.focus();
+  }
+
+  document.addEventListener(
+    "click",
+    (e) => {
+      const target = e.target as Element | null;
+      if (!target?.closest) return;
+      const dialog = target.closest<HTMLDialogElement>("dialog.news-viewer");
+      if (dialog) {
+        // Bouton « Fermer », ou clic sur le voile (le dialogue lui-même, hors capture).
+        if (target.closest("[data-close]") || target === dialog || target.classList.contains("news-viewer-inner")) {
+          dialog.close();
+        }
+        return;
+      }
+      const link = target.closest<HTMLAnchorElement>("a.news-capture");
+      if (!link || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      e.preventDefault();
+      e.stopPropagation();
+      openViewer(link);
+    },
+    true,
+  );
+
+  // Échap (natif) ou « Fermer » : la page redéfile et le focus revient à la capture.
+  document.addEventListener(
+    "close",
+    (e) => {
+      if (!(e.target as Element).matches?.("dialog.news-viewer")) return;
+      document.body.style.overflow = "";
+      if (opener?.isConnected) opener.focus();
+      opener = null;
+    },
+    true,
+  );
+</script>

@@ -24,6 +24,7 @@ const links: NavLink[] = [
   },
   { href: "/learning", label: "Learning" },
   { href: "/videos", label: "Vidéos" },
+  { href: "/nouveautes", label: "Nouveautés" },
   { href: "/about", label: "À propos" },
 ];
 
@@ -113,12 +114,13 @@ function toggleDropdown(label: string) {
         </span>
       </a>
 
-      <ul class="hidden md:flex items-center gap-1">
+      <ul class="hidden xl:flex items-center gap-1">
         <template v-for="link in links" :key="link.label">
           <!-- Lien simple -->
           <li v-if="'href' in link">
             <a
               :href="link.href"
+              :aria-current="isActive(link.href, props.pathname) ? 'page' : undefined"
               :class="[
                 'px-3 py-2 text-sm rounded-md transition-colors motion-safe:active:scale-95',
                 isActive(link.href, props.pathname)
@@ -187,7 +189,7 @@ function toggleDropdown(label: string) {
       </ul>
 
       <button
-        class="md:hidden grid place-items-center w-11 h-11 rounded-md text-ink hover:bg-white/5 transition-colors"
+        class="xl:hidden grid place-items-center w-11 h-11 rounded-md text-ink hover:bg-white/5 transition-colors"
         ref="menuToggle"
         type="button"
         :aria-expanded="open"
@@ -211,13 +213,14 @@ function toggleDropdown(label: string) {
       <div
         v-if="open"
         id="mobile-menu"
-        class="md:hidden border-t border-white/5 bg-paper max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain"
+        class="xl:hidden border-t border-white/5 bg-paper max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain"
       >
         <ul class="px-5 py-4 flex flex-col gap-1">
           <template v-for="link in links" :key="link.label">
             <li v-if="'href' in link">
               <a
                 :href="link.href"
+                :aria-current="isActive(link.href, props.pathname) ? 'page' : undefined"
                 :class="[
                   'block px-3 py-3 rounded-md text-base transition-colors',
                   isActive(link.href, props.pathname)
