@@ -13,7 +13,7 @@ import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node
 import { join } from 'node:path';
 import { homedir } from 'node:os';
 import { DIST, setupBrowser, worstPixelContrast } from './lib/e2e-dist.mjs';
-import { MIN_NEEDLE, listFiles, normalize, privateTexts, scanForLeaks } from './lib/plan-leaks.mjs';
+import { MIN_NEEDLE, listFiles, normalize, privateTexts, scanForLeaks, splitNeedles } from './lib/plan-leaks.mjs';
 import { newsTitlesByLot, parsePublicPlan, publicTitleOf } from '../src/lib/plan-public.ts';
 
 const { parse } = createRequire(new URL('../package.json', import.meta.url))('yaml');
@@ -52,11 +52,11 @@ test('trois sections titrées, une phrase d’explication chacune ; lots en cour
   assert.deepEqual(ids.filter((id) => !published.some((l) => l.id === id)), [], 'lot masqué publié');
 });
 
-test('AUCUN texte privé du plan dans le site construit (forme échappée comprise)', () => {
-  const needles = privateTexts(RAF, NEWS);
+test('AUCUN texte privé du plan dans le site construit (forme échappée comprise)', (t) => {
+  const { needles, skipped, shortTitles } = splitNeedles(privateTexts(RAF, NEWS));
   assert.ok(needles.some(([k]) => k.endsWith('note')), 'aucune note dans raf.yaml : le test ne prouverait rien');
-  const short = needles.filter(([, s]) => s.length < MIN_NEEDLE);
-  assert.deepEqual(short, [], 'texte privé trop court pour être cherché sans faux positif : relever le plancher en conscience');
+  if (skipped.length) t.diagnostic(`${skipped.length} note(s), verdict(s) ou raison(s) de moins de ${MIN_NEEDLE} caractères non cherchés : ${skipped.map(([k]) => k).join(', ')}`);
+  assert.deepEqual(shortTitles, [], `titre privé de moins de ${MIN_NEEDLE} caractères : impossible à chercher sans faux positif, relever le plancher en conscience`);
   const files = listFiles(DIST);
   assert.ok(files.length > 30, `dist presque vide (${files.length} fichiers)`);
   assert.deepEqual(scanForLeaks(DIST, needles), []);
@@ -66,7 +66,7 @@ test('le détecteur de fuites échoue bien sur une fuite plantée (HTML, JSON, J
   const dir = join(homedir(), 'projects', 'developpeur', 'tmp', `codex-plan-leak-${process.pid}`);
   mkdirSync(dir, { recursive: true });
   try {
-    const needles = privateTexts(RAF, NEWS);
+    const { needles } = splitNeedles(privateTexts(RAF, NEWS));
     const note = RAF.lots.flatMap((l) => (l.notes ?? []).map((n) => n.text)).find((t) => /[éèà'’«]/.test(t));
     const task = RAF.lots.flatMap((l) => l.tasks ?? []).find((t) => t.title?.length > 20)?.title;
     const raw = RAF.lots.find((l) => publicTitle(l) === null && l.title.length > 20).title;
@@ -83,6 +83,16 @@ test('le détecteur de fuites échoue bien sur une fuite plantée (HTML, JSON, J
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
+});
+
+test('note courte (« ok ») : ignorée et comptée, ne fait pas échouer la suite ; titre court : signalé', () => {
+  const plan = { lots: [
+    { id: 'L1', title: 'Un titre brut assez long', notes: [{ date: '2026-10-02', text: 'ok' }], ux: { verdict: 'conforme' }, tasks: [{ id: 't1', title: 'Court' }] },
+  ] };
+  const { needles, skipped, shortTitles } = splitNeedles(privateTexts(plan, []));
+  assert.deepEqual(skipped.map(([k]) => k), ['L1 note', 'L1 verdict UX']);
+  assert.deepEqual(shortTitles.map(([k]) => k), ['L1/t1 titre']);
+  assert.deepEqual(needles.map(([k]) => k), ['L1 titre brut']);
 });
 
 test('dates en français par le formateur commun (« 1er octobre 2026 »), jamais coupées', () => {

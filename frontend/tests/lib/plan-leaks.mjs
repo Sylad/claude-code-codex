@@ -27,6 +27,26 @@ export function normalize(s) {
 /** Plancher : en dessous, un texte n'est qu'un mot ou deux qui peuvent figurer ailleurs. */
 export const MIN_NEEDLE = 12;
 
+/** Textes libres (notes, verdicts, raisons) : un « ok » ne se cherche pas, il se compte. */
+const FREE_TEXT = /(note|verdict UX|raison)$/;
+
+/**
+ * Sépare les textes cherchables des textes trop courts : une note, un verdict ou une
+ * raison sous le plancher est ignoré (compté) ; un TITRE sous le plancher est signalé
+ * (`shortTitles`), car un titre si court mérite qu'on y regarde.
+ */
+export function splitNeedles(texts) {
+  const needles = [];
+  const skipped = [];
+  const shortTitles = [];
+  for (const [k, s] of texts) {
+    if (s.length >= MIN_NEEDLE) needles.push([k, s]);
+    else if (FREE_TEXT.test(k)) skipped.push([k, s]);
+    else shortTitles.push([k, s]);
+  }
+  return { needles, skipped, shortTitles };
+}
+
 /**
  * Textes privés du plan : titres bruts (sauf s'ils sont aussi le titre publié), notes,
  * verdicts UX, raisons, titres de sous-tâches, et `public:` des lots NON publiés.
