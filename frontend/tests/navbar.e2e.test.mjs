@@ -2,8 +2,10 @@
 // Barre du bureau dès 64em (seuil Tailwind `lg` = 64rem : en requête média, rem = em =
 // taille de police par défaut du navigateur ; le site ne fixe pas `html { font-size }`).
 // Leçon de warhammer40k L30 : mesurée aux largeurs courantes ET à chaque seuil ±1 px dans
-// quatre configurations — polices web chargées, polices web bloquées (repli), police par
-// défaut 18 px et 20 px (CDP Page.setFontSizes).
+// six configurations — polices web chargées, polices web bloquées (repli), police par
+// défaut 18 px et 20 px (CDP Page.setFontSizes), polices bloquées + 18 px et + 20 px.
+// Hors ligne (ou CCC_FONTS_OFFLINE=1 pour le simuler), les configurations « polices web »
+// sont mesurées avec les polices de repli, et la sortie du test le dit.
 //
 // Lit le site CONSTRUIT : lancer `npx astro build` avant. Tests en « skip » sans
 // playwright-core ni Chromium. CCC_NAV_TABLE=<fichier> écrit le tableau des mesures.
@@ -22,7 +24,24 @@ const CONFIGS = [
   { name: 'polices web bloquées', fontSize: 16, webFonts: false },
   { name: 'police par défaut 18 px', fontSize: 18, webFonts: true },
   { name: 'police par défaut 20 px', fontSize: 20, webFonts: true },
+  { name: 'polices bloquées + police 18 px', fontSize: 18, webFonts: false },
+  { name: 'polices bloquées + police 20 px', fontSize: 20, webFonts: false },
 ];
+
+/** Hôtes des polices web joignables ? Hors ligne, les configurations « polices web » se
+ *  replient sur les polices de repli (et le disent) au lieu de faire échouer la suite. */
+async function fontHostsReachable(browser) {
+  if (process.env.CCC_FONTS_OFFLINE) return false;
+  const context = await browser.newContext();
+  try {
+    const r = await context.request.get('https://fonts.googleapis.com/css2?family=Inter:wght@400&display=swap', { timeout: 5000 });
+    return r.ok();
+  } catch {
+    return false;
+  } finally {
+    await context.close();
+  }
+}
 const COMMON = [1024, 1280, 1366, 1440, 1920];
 const widths = (fs) => [...new Set([...COMMON, BAR_EM * fs - 1, BAR_EM * fs, BAR_EM * fs + 1])].sort((a, b) => a - b);
 
@@ -33,7 +52,7 @@ async function openPage(env, { width, height = 800, fontSize = 16, webFonts = tr
     const cdp = await context.newCDPSession(page);
     await cdp.send('Page.setFontSizes', { fontSizes: { standard: fontSize, fixed: Math.round(fontSize * 13 / 16) } });
   }
-  if (!webFonts) await page.route(/fonts\.(googleapis|gstatic)\.com/, (r) => r.abort());
+  if (!webFonts || process.env.CCC_FONTS_OFFLINE) await page.route(/fonts\.(googleapis|gstatic)\.com/, (r) => r.abort());
   if (badge) await page.addInitScript(([k, v]) => localStorage.setItem(k, JSON.stringify(v)), [SEEN_KEY, OLD_VISIT]);
   await page.goto(`${env.base}${path}`, { waitUntil: 'load' });
   if (badge) await page.waitForSelector('header .news-badge', { state: 'attached' });
@@ -80,11 +99,13 @@ const measureBar = (page) => page.evaluate(() => {
   };
 });
 
-test('barre : mode attendu à chaque largeur et seuil ±1 px, quatre configurations ; aucun débordement, ≥ 16 px après le logo, dernier contrôle entier à l’écran', { timeout: 600_000 }, async (t) => {
+test('barre : mode attendu à chaque largeur et seuil ±1 px, six configurations ; aucun débordement, ≥ 16 px après le logo, dernier contrôle entier à l’écran', { timeout: 600_000 }, async (t) => {
   const env = await setupBrowser(t);
   if (!env) return;
   const rows = [];
   const failures = [];
+  const online = await fontHostsReachable(env.browser);
+  if (!online) t.diagnostic('hôtes des polices web injoignables : les configurations « polices web » sont mesurées avec les polices de repli (même attente que « polices web bloquées »)');
   for (const cfg of CONFIGS) {
     for (const width of widths(cfg.fontSize)) {
       const { context, page } = await openPage(env, { width, fontSize: cfg.fontSize, webFonts: cfg.webFonts });
@@ -92,9 +113,10 @@ test('barre : mode attendu à chaque largeur et seuil ±1 px, quatre configurati
       const m = await measureBar(page);
       await context.close();
       const expected = width / cfg.fontSize >= BAR_EM ? 'barre' : 'menu';
-      rows.push({ cfg: cfg.name, width, ...m, fonts });
+      rows.push({ cfg: cfg.webFonts && !online ? `${cfg.name} (hors ligne : repli)` : cfg.name, width, ...m, fonts });
       const bad = [];
-      if (fonts !== cfg.webFonts) bad.push(`Inter ${fonts ? 'chargée' : 'absente'}`);
+      const expectFonts = cfg.webFonts && online;
+      if (fonts !== expectFonts) bad.push(`Inter ${fonts ? 'chargée' : 'absente'}`);
       if (m.mode !== expected) bad.push(`mode ${m.mode} au lieu de ${expected}`);
       if (m.page > 0) bad.push(`page déborde de ${m.page}px`);
       if (m.navOverflow > 0) bad.push(`barre déborde de ${m.navOverflow}px`);
