@@ -117,11 +117,13 @@ lots:
   - id: L15
     title: "Page « Plan de travail » : ce qui est prévu, en cours et récemment livré, généré au build depuis docs/plan/raf.yaml (titres et états seulement, jamais les notes) — inspirée de la page « À venir » d'AetherWX"
     public: "Une page Plan de travail : ce qui est en cours, prévu et livré"
-    status: doing
+    status: done
     estimate: 0.5
     visible: true
     created: 2026-10-01
     started: 2026-10-02
+    ux: { date: 2026-10-02, verdict: "Revue ux-reviewer 02-10 (1920 à 320 px, Chromium) : conforme — page lisible par un non-développeur, aucun identifiant de lot, aucun débordement à 320 px, contrastes ≥ 8:1, dates « 1er ». Lien dans le pied de chaque page, le menu du téléphone et l'encart Suivre le site de l'accueil. Non vérifié : lecteur d'écran réel." }
+    finished: 2026-10-02
   - id: L16
     title: "PageHero : chapeau (text-ink-muted) à 3,93:1 sur l'image de fond à 390 px — à mesurer et corriger sur toutes les pages qui l'utilisent (/about…)"
     public: "Des en-têtes de page plus lisibles sur l'image de fond"
@@ -135,8 +137,15 @@ lots:
   - id: L17
     title: "Barre de bureau dès 1024 px : regrouper Learning + Vidéos sous « Ressources ▾ », « À propos » en pied de page et menu téléphone seulement, « Nouveautés » toujours visible (maquette de la revue UX L13, validée par Sylvain le 01-10)"
     public: "Une barre de navigation plus courte, avec un menu Ressources"
-    status: doing
+    status: done
     estimate: 0.5
     visible: true
     created: 2026-10-01
     started: 2026-10-02
+    ux: { date: 2026-10-02, verdict: "Revue ux-reviewer 02-10 : conforme avec réserves, levées — barre sans débordement sur 44 mesures (1023–1920 px, polices chargées / bloquées / 18 et 20 px, marge min 34,8 px), Ressources ▾ conforme clavier / pointeur / toucher, page courante signalée au pied de page, colonne Apprendre, cibles de 44 px au pointeur grossier, pastille dès la 1re visite, Copier le lien sans décalage. Reste : tu / vous à harmoniser (lot à part). Non vérifié : lecteur d'écran réel, tablette réelle." }
+    finished: 2026-10-02
+  - id: L18
+    title: Choisir tu ou vous pour tout le site, puis harmoniser accueil, Démarrer, À propos et Nouveautés (revue UX de la barre) — décision de Sylvain d'abord
+    status: todo
+    estimate: 0.5
+    created: 2026-10-02
