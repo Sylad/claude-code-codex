@@ -151,7 +151,7 @@ lots:
     created: 2026-10-02
   - id: L19
     title: "Cadence en bonne place sur le codex : page dédiée à la méthode et à l'outil (plan raf relié aux commits, Nouveautés, rituels de session, livraison vérifiée, mode lead et sous-agents), exemples tirés des projets réels, entrée dans la navigation et sur l'accueil (consigne Sylvain 02-10)"
-    public: "Cadence, la méthode de travail du codex, expliquée et illustrée"
+    public: "Notre méthode de travail, expliquée et illustrée par des projets réels"
     status: todo
     estimate: 1.5
     visible: true
