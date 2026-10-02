@@ -124,6 +124,7 @@ lots:
     started: 2026-10-02
   - id: L16
     title: "PageHero : chapeau (text-ink-muted) à 3,93:1 sur l'image de fond à 390 px — à mesurer et corriger sur toutes les pages qui l'utilisent (/about…)"
+    public: "Des en-têtes de page plus lisibles sur l'image de fond"
     status: todo
     estimate: 0.25
     quickwin: true
