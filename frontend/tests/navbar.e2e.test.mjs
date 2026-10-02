@@ -307,6 +307,13 @@ test('pied de page après une navigation interne (routeur Astro) : le lien coura
   await context.close();
 });
 
+test('pied de page : la colonne de Théorie, Écosystème, Learning et Vidéos s’intitule « Apprendre » (pas « Ressources », réservé au menu de la barre)', () => {
+  const html = readFileSync(join(DIST, 'index.html'), 'utf8');
+  const footer = html.slice(html.indexOf('<footer'));
+  assert.match(footer, />\s*Apprendre\s*</);
+  assert.doesNotMatch(footer, />\s*Ressources\s*</);
+});
+
 test('pied de page (320 px tactile, 1440 px) : cibles ≥ 44 px, rien hors de l’écran', { timeout: 60_000 }, async (t) => {
   const env = await setupBrowser(t);
   if (!env) return;
