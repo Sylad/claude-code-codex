@@ -9,6 +9,11 @@ const siteLinks = [
   { href: "/plan-de-travail", label: "Plan de travail" },
   { href: "/about", label: "À propos" },
 ];
+// Page courante marquée (aria-current + style actif) : rien dans la barre du bureau ne
+// l'est sur /plan-de-travail/ ni /about/. Le pied n'est donc plus persisté entre les pages
+// (transition:persist) : il est rendu à chaque page avec la bonne adresse.
+const pathname = Astro.url.pathname;
+const isCurrent = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 ---
 
 <footer class="mt-24 border-t border-white/5 bg-paper">
@@ -16,7 +21,14 @@ const siteLinks = [
     <ul class="mx-auto max-w-6xl px-5 sm:px-8 py-2 flex flex-wrap items-center gap-x-8 gap-y-0 text-sm">
       {siteLinks.map((l) => (
         <li>
-          <a class="inline-flex items-center min-h-11 text-ink hover:text-claude underline-offset-4 hover:underline transition-colors" href={l.href}>
+          <a
+            class:list={[
+              "inline-flex items-center min-h-11 underline-offset-4 hover:underline transition-colors",
+              isCurrent(l.href) ? "text-claude underline decoration-2" : "text-ink hover:text-claude",
+            ]}
+            href={l.href}
+            aria-current={isCurrent(l.href) ? "page" : undefined}
+          >
             {l.label}
           </a>
         </li>

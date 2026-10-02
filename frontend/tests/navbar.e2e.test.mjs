@@ -280,6 +280,33 @@ test('pied de page de toutes les pages : rangée Nouveautés, Plan de travail, �
   for (const h of ['/nouveautes', '/plan-de-travail']) assert.match(main, new RegExp(`href="${h}"`), `accueil → ${h}`);
 });
 
+test('pied de page : la page courante est marquée (aria-current + style actif) sur Nouveautés, Plan de travail, À propos ; aucune ailleurs', () => {
+  const row = (p) => {
+    const html = readFileSync(join(DIST, p), 'utf8');
+    const footer = html.slice(html.indexOf('<footer'));
+    return footer.slice(footer.indexOf('aria-label="Le site"'), footer.indexOf('</nav>'));
+  };
+  for (const [p, href] of [['nouveautes/index.html', '/nouveautes'], ['plan-de-travail/index.html', '/plan-de-travail'], ['about/index.html', '/about']]) {
+    const current = [...row(p).matchAll(/<a [^>]*aria-current="page"[^>]*>/g)].map((m) => m[0]);
+    assert.equal(current.length, 1, `${p} : ${current.length} lien(s) courant(s)`);
+    assert.match(current[0], new RegExp(`href="${href}"`), p);
+    assert.match(current[0], /text-claude/, `${p} : style actif absent`);
+  }
+  for (const p of ['index.html', 'videos/index.html']) assert.doesNotMatch(row(p), /aria-current/, p);
+});
+
+test('pied de page après une navigation interne (routeur Astro) : le lien courant suit la page', { timeout: 60_000 }, async (t) => {
+  const env = await setupBrowser(t);
+  if (!env) return;
+  const { context, page } = await openPage(env, { width: 1440, height: 900, path: '/about/', badge: false });
+  const current = () => page.$$eval('footer nav[aria-label="Le site"] a[aria-current="page"]', (as) => as.map((a) => a.getAttribute('href')));
+  assert.deepEqual(await current(), ['/about']);
+  await Promise.all([page.waitForURL((u) => u.pathname.startsWith('/plan-de-travail')), page.locator('footer a[href="/plan-de-travail"]').click()]);
+  await page.waitForFunction(() => document.querySelector('footer a[aria-current="page"]')?.getAttribute('href') === '/plan-de-travail', null, { timeout: 5000 });
+  assert.deepEqual(await current(), ['/plan-de-travail']);
+  await context.close();
+});
+
 test('pied de page (320 px tactile, 1440 px) : cibles ≥ 44 px, rien hors de l’écran', { timeout: 60_000 }, async (t) => {
   const env = await setupBrowser(t);
   if (!env) return;
