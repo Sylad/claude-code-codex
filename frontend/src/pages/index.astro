@@ -152,7 +152,7 @@ const columns: { eyebrow: string; title: string; rows: SommaireRow[] }[] = [
           </h2>
           <ul>
             {col.rows.map((row) => (
-              <li class="flex items-center justify-between gap-4 border-t border-white/5">
+              <li class="flex flex-wrap items-center justify-between gap-x-4 border-t border-white/5">
                 <span class="flex flex-wrap items-center gap-x-2">
                   {row.links.map((l, i) => (
                     <>
@@ -166,12 +166,25 @@ const columns: { eyebrow: string; title: string; rows: SommaireRow[] }[] = [
                     </>
                   ))}
                 </span>
-                <span class="text-sm text-ink-muted text-right shrink-0">{row.hint}</span>
+                {/* Pas de shrink-0 : avec un texte agrandi (WCAG 1.4.4 / 1.4.12) à 320 px,
+                    l'indication passe sous le lien au lieu de sortir de l'écran. */}
+                <span class="ml-auto text-sm text-ink-muted text-right">{row.hint}</span>
               </li>
             ))}
           </ul>
         </div>
       ))}
+    </div>
+    <!-- L17 — suivre le site depuis l'accueil, à toutes les largeurs : « Plan de travail »
+         n'est pas dans la barre du bureau. Écart du flex, pas de séparateur. -->
+    <div class="home-follow mt-4 rounded-xl border border-white/10 bg-paper-elevated px-5 py-3 sm:px-6 flex flex-wrap items-center gap-x-8 gap-y-1">
+      <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">Suivre le site</p>
+      <a href="/nouveautes" class="inline-flex flex-wrap items-baseline gap-x-2 min-h-11 py-2.5 text-ink hover:text-claude underline-offset-4 hover:underline transition-colors">
+        Nouveautés <span class="text-sm text-ink-muted">ce qui a changé</span>
+      </a>
+      <a href="/plan-de-travail" class="inline-flex flex-wrap items-baseline gap-x-2 min-h-11 py-2.5 text-ink hover:text-claude underline-offset-4 hover:underline transition-colors">
+        Plan de travail <span class="text-sm text-ink-muted">ce qui se prépare</span>
+      </a>
     </div>
   </nav>
 

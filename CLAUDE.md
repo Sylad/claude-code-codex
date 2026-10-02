@@ -31,3 +31,13 @@ identifiant de lot, sécurité) ou un plan illisible fait **échouer le build**.
 visible, lui donner un `public:` en français pour le visiteur. `tests/plan-page.e2e.test.mjs` cherche
 tout texte privé du plan dans tout `dist/`. Dates : un seul formateur, `src/lib/format-date.mjs`
 (« 1er octobre 2026 », « 20 h 42 »).
+
+**Navigation** (L17, `frontend/src/components/site/Navbar.vue`) : barre du bureau dès 64em (`lg:`,
+1024 px à la police par défaut — les requêtes média en rem suivent la taille de police du
+navigateur, ne jamais passer en px ni fixer `html { font-size }` en px). Learning + Vidéos sous
+« Ressources ▾ », Guides sous « Guides ▾ » : boutons à divulgation (`aria-expanded`/`aria-controls`,
+jamais `role=menu` ni ouverture au survol, un seul panneau ouvert). « Nouveautés » toujours dans la
+barre avec sa pastille ; « Plan de travail » et « À propos » n'y tiennent pas avec une vraie marge :
+menu du téléphone et rangée du pied de page (`Footer.astro`, toutes les pages) + encart « Suivre
+le site » de l'accueil. Toute entrée ajoutée à la barre se mesure avec `tests/navbar.e2e.test.mjs`
+(seuil ±1 px, polices web bloquées, police par défaut 18 et 20 px : ≥ 16 px après le logo).

@@ -1,8 +1,28 @@
 ---
 const year = new Date().getFullYear();
+// L17 — Nouveautés, Plan de travail et À propos à une action de toute page, à toutes les
+// largeurs (« Plan de travail » et « À propos » ne sont pas dans la barre du bureau).
+// Espacés par l'écart du flex, sans séparateur : rien d'orphelin quand la rangée passe
+// à la ligne à 320 px. Cibles de 44 px.
+const siteLinks = [
+  { href: "/nouveautes", label: "Nouveautés" },
+  { href: "/plan-de-travail", label: "Plan de travail" },
+  { href: "/about", label: "À propos" },
+];
 ---
 
 <footer class="mt-24 border-t border-white/5 bg-paper">
+  <nav aria-label="Le site" class="site-links border-b border-white/5">
+    <ul class="mx-auto max-w-6xl px-5 sm:px-8 py-2 flex flex-wrap items-center gap-x-8 gap-y-0 text-sm">
+      {siteLinks.map((l) => (
+        <li>
+          <a class="inline-flex items-center min-h-11 text-ink hover:text-claude underline-offset-4 hover:underline transition-colors" href={l.href}>
+            {l.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
   <div class="mx-auto max-w-6xl px-5 sm:px-8 py-10 grid gap-6 md:grid-cols-3 text-sm text-ink-muted">
     <div>
       <p class="font-mono text-ink">claude-code-codex</p>
@@ -38,8 +58,6 @@ const year = new Date().getFullYear();
       >
         Repo GitHub
       </a>
-      <a class="inline-flex items-center min-h-11 hover:text-ink transition-colors" href="/nouveautes">Nouveautés</a>
-      <a class="inline-flex items-center min-h-11 hover:text-ink transition-colors" href="/about">À propos</a>
     </div>
   </div>
 
