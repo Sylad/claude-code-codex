@@ -186,7 +186,8 @@ const panelId = (label: string) => `panneau-${label.toLowerCase()}`;
               :href="link.href"
               :aria-current="isActive(link.href, props.pathname) ? 'page' : undefined"
               :class="[
-                'relative whitespace-nowrap px-2 xl:px-2.5 py-2 text-sm rounded-md transition-colors motion-safe:active:scale-95',
+                // Pointeur grossier (tablette en paysage, barre affichée) : cible de 44 px.
+                'relative inline-flex items-center pointer-coarse:min-h-11 whitespace-nowrap px-2 xl:px-2.5 py-2 text-sm rounded-md transition-colors motion-safe:active:scale-95',
                 isActive(link.href, props.pathname)
                   ? 'text-claude bg-claude/10'
                   : 'text-ink-muted hover:text-ink hover:bg-white/5',
@@ -217,7 +218,7 @@ const panelId = (label: string) => `panneau-${label.toLowerCase()}`;
             <button
               type="button"
               :class="[
-                'flex items-center gap-1 whitespace-nowrap px-2 xl:px-2.5 py-2 text-sm rounded-md transition-colors motion-safe:active:scale-95',
+                'flex items-center gap-1 pointer-coarse:min-h-11 whitespace-nowrap px-2 xl:px-2.5 py-2 text-sm rounded-md transition-colors motion-safe:active:scale-95',
                 isGroupActive(link.children, props.pathname)
                   ? 'text-claude bg-claude/10'
                   : 'text-ink-muted hover:text-ink hover:bg-white/5',

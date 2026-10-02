@@ -139,6 +139,32 @@ test('barre : mode attendu à chaque largeur et seuil ±1 px, six configurations
   assert.deepEqual(failures, []);
 });
 
+test('tablette tactile en paysage (pointeur grossier, barre du bureau) : liens et boutons de la barre ≥ 44 px de haut, sans débordement, ≥ 16 px après le logo (polices bloquées)', { timeout: 120_000 }, async (t) => {
+  const env = await setupBrowser(t);
+  if (!env) return;
+  for (const [width, height] of [[1024, 768], [1180, 820], [1366, 1024]]) {
+    const context = await env.browser.newContext({ viewport: { width, height }, hasTouch: true, isMobile: true });
+    const page = await context.newPage();
+    await page.route(/fonts\.(googleapis|gstatic)\.com/, (r) => r.abort());
+    await page.addInitScript(([k, v]) => localStorage.setItem(k, JSON.stringify(v)), [SEEN_KEY, OLD_VISIT]);
+    await page.goto(`${env.base}/about/`, { waitUntil: 'load' });
+    await page.waitForSelector('header .news-badge', { state: 'attached' });
+    assert.ok(await page.evaluate(() => matchMedia('(pointer: coarse)').matches), 'pointeur grossier non émulé');
+    const m = await measureBar(page);
+    const heights = await page.$$eval('header nav > ul > li > a, header nav > ul > li > button', (els) => els.map((e) => [e.textContent.trim().split(/\s+/)[0], Math.round(e.getBoundingClientRect().height * 10) / 10]));
+    await page.click('button[data-dropdown-toggle="Ressources"]');
+    const panel = await page.$$eval('#panneau-ressources a', (as) => as.map((a) => a.getBoundingClientRect().height));
+    await context.close();
+    t.diagnostic(`${width}×${height} tactile : écart ${m.slack} px, hauteurs ${heights.map(([l, h]) => `${l} ${h}`).join(', ')}`);
+    assert.equal(m.mode, 'barre', `${width}px`);
+    assert.ok(m.page <= 0 && m.navOverflow <= 0, `${width}px : débordement ${m.page}/${m.navOverflow}`);
+    assert.ok(m.slack >= 16, `${width}px : ${m.slack} px après le logo`);
+    assert.deepEqual(m.multi, [], `${width}px : sur deux lignes`);
+    for (const [l, h] of heights) assert.ok(h >= 44, `${width}px : « ${l} » ${h} px de haut`);
+    for (const h of panel) assert.ok(h >= 44, `${width}px : lien du panneau ${h} px`);
+  }
+});
+
 test('320 et 390 px, avec et sans pastille : barre sans débordement, bouton du menu entier, 44 px, nom accessible', { timeout: 60_000 }, async (t) => {
   const env = await setupBrowser(t);
   if (!env) return;
