@@ -41,8 +41,8 @@ test('une entrée par nouveauté, dans l’ordre du JSON (la plus récente en ha
   }
 });
 
-test('date affichée en français (« 1 octobre 2026 »)', () => {
-  assert.match(html(), /<time datetime="2026-10-01"[^>]*>1 octobre 2026<\/time>/);
+test('date par le formateur commun (« 1er octobre 2026 », espaces insécables, jamais coupée)', () => {
+  assert.match(html(), /<time datetime="2026-10-01" class="whitespace-nowrap"[^>]*>1er\u00a0octobre\u00a02026<\/time>/);
 });
 
 test('pas de doublon non habillé : dist/nouveautes-data/index.html absent', () => {
@@ -321,12 +321,82 @@ test('320 px, captures pas encore chargées : la place est réservée aux bonnes
   await context.close();
 });
 
-// ── Lien permanent par entrée (repris d'AetherWX) ───────────────────────────
-test('chaque titre est un lien vers sa propre ancre (#slug)', () => {
+// ── Lien permanent par entrée : bouton « Copier le lien » (repris d'evatosorus L27) ──
+test('chaque entrée a un bouton « Copier le lien » près de la date ; le titre est du texte, pas un lien', () => {
   const page = html();
   for (const e of DATA.entries) {
-    assert.match(page, new RegExp(`<h2[^>]*id="${e.slug}-titre"[^>]*>\\s*<a [^>]*href="#${e.slug}"`), e.slug);
+    const start = page.indexOf(`id="${e.slug}"`);
+    const block = page.slice(start, page.indexOf('</article>', start));
+    assert.match(block, new RegExp(`<button type="button" class="news-copy" data-slug="${e.slug}"`), e.slug);
+    assert.ok(block.indexOf('<time') < block.indexOf('news-copy') && block.indexOf('news-copy') < block.indexOf('<h2'), `${e.slug} : bouton hors de la ligne de date`);
+    assert.doesNotMatch(block.slice(block.indexOf('<h2'), block.indexOf('</h2>')), /<a /, `${e.slug} : titre cliquable`);
   }
+});
+
+const copyGeometry = (page, slug) => page.evaluate((s) => {
+  const b = document.querySelector(`button.news-copy[data-slug="${s}"]`).getBoundingClientRect();
+  return { w: b.width, h: b.height, x: b.x, scrollY, href: location.href };
+}, slug);
+
+test('« Copier le lien » : copie l’adresse de l’entrée, retour dans le libellé sans décalage, ni défilement ni changement d’adresse', { timeout: 60_000 }, async (t) => {
+  const env = await setupBrowser(t);
+  if (!env) return;
+  const e = DATA.entries.at(-1);
+  const context = await env.browser.newContext({ viewport: { width: 1440, height: 900 } });
+  await context.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: env.base });
+  const page = await context.newPage();
+  await page.goto(`${env.base}/nouveautes/`, { waitUntil: 'load' });
+  const btn = page.locator(`button.news-copy[data-slug="${e.slug}"]`);
+  await btn.scrollIntoViewIfNeeded();
+  const before = await copyGeometry(page, e.slug);
+  assert.ok(before.h >= 24 && before.w >= 24, `cible ${before.w}×${before.h} < 24 px`);
+  await btn.click();
+  await btn.locator('.news-copy-label[data-for="ok"]:not(.is-hidden)').waitFor();
+  const after = await copyGeometry(page, e.slug);
+  assert.equal(await page.evaluate(() => navigator.clipboard.readText()), `${env.base}/nouveautes/#${e.slug}`);
+  assert.equal(after.w, before.w, 'le bouton change de largeur');
+  assert.equal(after.x, before.x, 'le bouton bouge');
+  assert.equal(after.scrollY, before.scrollY, 'la page a défilé');
+  assert.equal(after.href, before.href, 'l’adresse a changé');
+  assert.equal(await page.locator('#news-copy-status').textContent(), 'Lien copié dans le presse-papiers');
+  assert.ok(await page.locator(`[id="${e.slug}"] .news-link-fallback`).isHidden());
+  await context.close();
+});
+
+test('« Copier le lien » refusé par le navigateur : « Copie impossible » et l’adresse affichée sous le titre, adresse de la page inchangée', { timeout: 60_000 }, async (t) => {
+  const env = await setupBrowser(t);
+  if (!env) return;
+  const e = DATA.entries[0];
+  const context = await env.browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+  await context.addInitScript(() => {
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText: () => Promise.reject(new Error('refusé')) } });
+  });
+  const page = await context.newPage();
+  await page.goto(`${env.base}/nouveautes/`, { waitUntil: 'load' });
+  const before = await copyGeometry(page, e.slug);
+  assert.ok(before.h >= 44 && before.w >= 44, `cible tactile ${before.w}×${before.h} < 44 px`);
+  await page.locator(`button.news-copy[data-slug="${e.slug}"]`).tap();
+  const fallback = page.locator(`[id="${e.slug}"] .news-link-fallback`);
+  await fallback.waitFor();
+  assert.equal(await fallback.locator('.news-link-url').textContent(), `${env.base}/nouveautes/#${e.slug}`);
+  assert.ok(await page.locator(`button.news-copy[data-slug="${e.slug}"] .news-copy-label[data-for="ko"]:not(.is-hidden)`).count() === 1);
+  const after = await copyGeometry(page, e.slug);
+  assert.equal(after.w, before.w, 'le bouton change de largeur');
+  assert.equal(after.href, before.href, 'l’adresse a changé');
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
+  assert.ok(overflow <= 0, `débordement de ${overflow} px avec l’adresse affichée`);
+  await context.close();
+});
+
+test('320 px : la date ne se coupe pas en son milieu', { timeout: 60_000 }, async (t) => {
+  const env = await setupBrowser(t);
+  if (!env) return;
+  const context = await env.browser.newContext({ viewport: { width: 320, height: 700 } });
+  const page = await context.newPage();
+  await page.goto(`${env.base}/nouveautes/`, { waitUntil: 'load' });
+  const lines = await page.evaluate(() => [...document.querySelectorAll('.news-entry time')].map((t) => new Set([...t.getClientRects()].map((r) => Math.round(r.top))).size));
+  assert.ok(lines.every((n) => n === 1), `date sur plusieurs lignes : ${lines}`);
+  await context.close();
 });
 
 test('ouvrir /nouveautes/#<slug> au téléphone amène l’entrée sous la barre fixe et la signale', { timeout: 60_000 }, async (t) => {
@@ -348,19 +418,32 @@ test('ouvrir /nouveautes/#<slug> au téléphone amène l’entrée sous la barre
   await context.close();
 });
 
-test('cliquer le titre met l’ancre dans l’URL, copie le lien et l’annonce', { timeout: 60_000 }, async (t) => {
+test('lien vers /nouveautes/#<slug> suivi par le routeur (depuis une autre page, puis sur la même page) : entrée signalée et focalisée', { timeout: 60_000 }, async (t) => {
+  if (DATA.entries.length < 2) { t.skip('il faut au moins deux nouveautés'); return; }
   const env = await setupBrowser(t);
   if (!env) return;
-  const e = DATA.entries[0];
+  const [first, last] = [DATA.entries[0].slug, DATA.entries.at(-1).slug];
   const context = await env.browser.newContext({ viewport: { width: 1440, height: 900 } });
-  await context.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: env.base });
   const page = await context.newPage();
-  await page.goto(`${env.base}/nouveautes/`, { waitUntil: 'load' });
-  await page.locator(`[id="${e.slug}-titre"] a`).click();
-  await page.waitForFunction((s) => location.hash === `#${s}`, e.slug);
-  const status = page.locator(`[id="${e.slug}"] [role="status"]`);
-  await status.filter({ hasText: 'Lien copié' }).waitFor({ timeout: 3000 });
-  assert.equal(await page.evaluate(() => navigator.clipboard.readText()), `${env.base}/nouveautes/#${e.slug}`);
+  const plant = (slug) => page.evaluate((s) => {
+    const a = document.createElement('a');
+    a.href = `/nouveautes/#${s}`;
+    a.id = 'lien-plante';
+    a.textContent = 'aller';
+    Object.assign(a.style, { position: 'fixed', top: '80px', left: '10px', zIndex: 99 });
+    document.querySelector('main').append(a);
+  }, slug);
+  const state = (slug) => page.evaluate((s) => ({ target: document.getElementById(s)?.classList.contains('is-target'), focused: document.activeElement?.id === s }), slug);
+  await page.goto(`${env.base}/about/`, { waitUntil: 'load' });
+  await plant(last);
+  await page.click('#lien-plante');
+  await page.waitForFunction((s) => document.activeElement?.id === s && document.getElementById(s).classList.contains('is-target'), last, { timeout: 5000 });
+  assert.deepEqual(await state(last), { target: true, focused: true }, 'depuis /about');
+  await plant(first);
+  await page.click('#lien-plante');
+  await page.waitForFunction((s) => document.activeElement?.id === s && document.getElementById(s).classList.contains('is-target'), first, { timeout: 5000 });
+  assert.deepEqual(await state(first), { target: true, focused: true }, 'même page');
+  assert.equal((await state(last)).target, false, 'l’ancienne cible reste signalée');
   await context.close();
 });
 
@@ -444,7 +527,7 @@ test('séparateur « Déjà vu lors de votre visite du … » avant la première
   const sep = page.locator('.news-seen-sep');
   await sep.waitFor();
   assert.equal(await sep.count(), 1);
-  assert.equal((await sep.textContent()).trim(), 'Déjà vu lors de votre visite du 1 octobre 2026 à 10:30');
+  assert.equal((await sep.textContent()).trim().replaceAll('\u00a0', ' '), 'Déjà vu lors de votre visite du 1er octobre 2026 à 10 h 30');
   const next = await sep.evaluate((li) => li.nextElementSibling.querySelector('article').id);
   assert.equal(next, DATA.entries[1].slug);
   assert.equal(await page.locator('.news-new').count(), 1);
@@ -545,5 +628,55 @@ test('visionneuse au bureau (1440×900) : capture haute à sa largeur naturelle,
     const s = await measure(small);
     assert.ok(!s.scrolls, `${small} : tient à l'écran, ne doit pas défiler`);
   }
+  await context.close();
+});
+
+// Revue d'evatosorus L27 : la mémoire de base est posée à la première page vue du site
+// (n'importe laquelle) ; une entrée publiée ensuite lève la pastille sans visite de
+// /nouveautes, et le séparateur dit « première visite », pas « vu ».
+test('mémoire de base : première page vue sans pastille ; une entrée parue ensuite lève la pastille ; séparateur « Déjà en ligne lors de votre première visite »', { timeout: 60_000 }, async (t) => {
+  if (DATA.entries.length < 2) { t.skip('il faut au moins deux nouveautés'); return; }
+  const env = await setupBrowser(t);
+  if (!env) return;
+  const context = await env.browser.newContext({ viewport: { width: 1440, height: 900 }, timezoneId: 'Europe/Paris' });
+  const page = await context.newPage();
+  await page.goto(`${env.base}/case-studies/`, { waitUntil: 'load' });
+  await page.waitForFunction((k) => !!localStorage.getItem(k), SEEN_KEY);
+  const base = await page.evaluate((k) => JSON.parse(localStorage.getItem(k)), SEEN_KEY);
+  assert.equal(base.baseline, true);
+  assert.deepEqual(base.slugs, DATA.entries.map((e) => e.slug).sort());
+  assert.equal(await page.locator('header .news-badge').count(), 0, 'pastille dès la première visite');
+  // Simule une entrée publiée après la première visite : la plus récente n'était pas en ligne.
+  await page.evaluate(([k, s]) => {
+    const v = JSON.parse(localStorage.getItem(k));
+    v.slugs = v.slugs.filter((x) => x !== s);
+    v.at = '2026-10-01T08:30:00.000Z';
+    localStorage.setItem(k, JSON.stringify(v));
+  }, [SEEN_KEY, DATA.entries[0].slug]);
+  await page.reload({ waitUntil: 'load' });
+  await page.locator('header ul a[href="/nouveautes"] .news-badge').waitFor();
+  assert.equal((await page.locator('header ul a[href="/nouveautes"] .news-badge').textContent()).trim(), '1');
+  await page.goto(`${env.base}/nouveautes/`, { waitUntil: 'load' });
+  const sep = page.locator('.news-seen-sep');
+  await sep.waitFor();
+  assert.equal((await sep.textContent()).trim().replaceAll(' ', ' '), 'Déjà en ligne lors de votre première visite, le 1er octobre 2026 à 10 h 30');
+  assert.equal((await page.locator('.news-since').textContent()).trim(), '1 nouveauté depuis votre première visite du site');
+  const stored = await page.evaluate((k) => JSON.parse(localStorage.getItem(k)), SEEN_KEY);
+  assert.equal(stored.baseline, undefined, 'la visite de /nouveautes remplace la mémoire de base');
+  await context.close();
+});
+
+test('mémoire d’un visiteur de L13 (format initial) : relue sans perte, jamais écrasée par la mémoire de base', { timeout: 60_000 }, async (t) => {
+  const env = await setupBrowser(t);
+  if (!env) return;
+  const context = await env.browser.newContext({ viewport: { width: 1440, height: 900 } });
+  const page = await context.newPage();
+  const latest = DATA.entries.map((e) => e.date).sort().at(-1);
+  const old = { date: latest, slugs: DATA.entries.filter((e) => e.date === latest).map((e) => e.slug), at: '2026-10-01T21:00:00.000Z' };
+  await page.addInitScript(([k, v]) => { if (!sessionStorage.getItem('planted')) { localStorage.setItem(k, JSON.stringify(v)); sessionStorage.setItem('planted', '1'); } }, [SEEN_KEY, old]);
+  await page.goto(`${env.base}/about/`, { waitUntil: 'load' });
+  await page.waitForTimeout(300);
+  assert.deepEqual(await page.evaluate((k) => JSON.parse(localStorage.getItem(k)), SEEN_KEY), old, 'mémoire de L13 réécrite');
+  assert.equal(await page.locator('header .news-badge').count(), 0);
   await context.close();
 });

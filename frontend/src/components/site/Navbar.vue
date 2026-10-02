@@ -6,6 +6,7 @@ import {
   badgeLabel,
   browserStorage,
   countUnseen,
+  ensureBaseline,
   readSeen,
   unseenLabel,
 } from "@/lib/news-badge";
@@ -15,8 +16,10 @@ const props = defineProps<{
   news?: { slug: string; date: string }[];
 }>();
 
-// Pastille « nouveau » du lien Nouveautés (L13) : entrées non vues depuis la dernière
-// visite de /nouveautes (localStorage), relue après cette visite et entre onglets.
+// Pastille « nouveau » du lien Nouveautés (L13, L17) : entrées non vues (localStorage),
+// relue après la visite de /nouveautes et entre onglets. La toute première page vue du
+// site pose la mémoire de base (aucune pastille), pour que les entrées publiées ensuite
+// lèvent la pastille même sans visite de /nouveautes.
 const unseen = ref(0);
 const badge = computed(() => badgeLabel(unseen.value));
 const unseenText = computed(() => unseenLabel(unseen.value));
@@ -82,6 +85,7 @@ function onClickOutside(e: MouseEvent) {
 }
 
 onMounted(() => {
+  ensureBaseline(browserStorage(), props.news ?? []);
   refreshBadge();
   window.addEventListener(NEWS_SEEN_EVENT, refreshBadge);
   window.addEventListener("storage", refreshBadge);

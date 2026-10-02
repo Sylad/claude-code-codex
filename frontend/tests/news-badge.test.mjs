@@ -1,10 +1,14 @@
-// L13 — pastille « nouveau » du lien Nouveautés (repris d'AetherWX, news-badge) :
-// combien d'entrées le visiteur n'a pas vues depuis sa dernière visite de /nouveautes.
+// L13, L17 — pastille « nouveau » du lien Nouveautés (repris d'AetherWX, news-badge ;
+// mémoire complète, mémoire de base et séparateur repris d'evatosorus L27) :
+// combien d'entrées le visiteur n'a pas vues depuis sa dernière visite.
 // Mémoire localStorage simulée ; dates comparées en millisecondes, jamais en chaînes.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { NEWS_SEEN_KEY, badgeLabel, countUnseen, isUnseen, markAllSeen, readSeen, unseenLabel } from '../src/lib/news-badge.ts';
+import {
+  NEWS_SEEN_KEY, badgeLabel, countUnseen, ensureBaseline, isUnseen, markAllSeen, readSeen, seenSeparatorIndex, seenSeparatorLabel,
+  sinceLabel, unseenLabel,
+} from '../src/lib/news-badge.ts';
 
 class MemoryStorage {
   map = new Map();
@@ -29,7 +33,8 @@ test('premier visiteur (aucune visite mémorisée) : rien n’est marqué nouvea
 test('visiter marque tout vu ; la pastille tombe à zéro', () => {
   const st = new MemoryStorage();
   const seen = markAllSeen(st, entries, new Date('2026-09-25T11:57:30Z'));
-  assert.deepEqual(seen, { date: '2026-09-10', slugs: ['b', 'c'], at: '2026-09-25T11:57:30.000Z' });
+  // Tous les slugs vus sont mémorisés (all: true), pas seulement ceux de la date la plus récente.
+  assert.deepEqual(seen, { date: '2026-09-10', slugs: ['a', 'b', 'c'], at: '2026-09-25T11:57:30.000Z', all: true });
   assert.deepEqual(readSeen(st), seen);
   assert.equal(countUnseen(entries, readSeen(st)), 0);
 });
@@ -42,7 +47,7 @@ test('une entrée du même jour non vue compte comme nouvelle ; une plus récent
   assert.deepEqual(later.map((e) => isUnseen(e, readSeen(st))), [true, true, false, false, false]);
   markAllSeen(st, later);
   assert.equal(readSeen(st).date, '2026-09-11');
-  assert.deepEqual(readSeen(st).slugs, ['e']);
+  assert.deepEqual(readSeen(st).slugs, ['a', 'b', 'c', 'd', 'e']);
   assert.equal(countUnseen(later, readSeen(st)), 0);
 });
 
@@ -60,6 +65,8 @@ test('mémoire corrompue ou stockage en panne : pas d’exception', () => {
   st.setItem(NEWS_SEEN_KEY, JSON.stringify({ date: 'hier', slugs: [] }));
   assert.equal(readSeen(st), null);
   st.setItem(NEWS_SEEN_KEY, JSON.stringify({ date: '2026-09-10', slugs: ['b', 3], at: 42 }));
+  assert.deepEqual(readSeen(st), { date: '2026-09-10', slugs: ['b'] });
+  st.setItem(NEWS_SEEN_KEY, JSON.stringify({ date: '2026-09-10', slugs: ['b'], all: 'oui', baseline: 1 }));
   assert.deepEqual(readSeen(st), { date: '2026-09-10', slugs: ['b'] });
   const broken = { getItem: () => { throw new Error('quota'); }, setItem: () => { throw new Error('quota'); }, removeItem: () => {} };
   assert.equal(readSeen(broken), null);
@@ -81,4 +88,82 @@ test('libellés : pastille vide à zéro, « 9+ » au-delà de neuf ; texte pour
   assert.equal(unseenLabel(0), '');
   assert.equal(unseenLabel(1), '1 nouveauté non vue');
   assert.equal(unseenLabel(4), '4 nouveautés non vues');
+});
+
+test('clé de stockage inchangée depuis L13 : ccc.news.seen-v1 (les mémoires des visiteurs restent valables)', () => {
+  assert.equal(NEWS_SEEN_KEY, 'ccc.news.seen-v1');
+});
+
+// ── Revue d'evatosorus L27 : entrée antidatée, mémoire de base, séparateur ───
+test('entrée antidatée (plus ancienne que la dernière vue) mais jamais vue : nouvelle', () => {
+  const st = new MemoryStorage();
+  markAllSeen(st, entries);
+  const backdated = [...entries, { slug: 'vieux', date: '2026-08-01' }];
+  assert.equal(countUnseen(backdated, readSeen(st)), 1);
+});
+
+test('mémoire au format de L13 (sans all) : règle de date conservée, rien d’ancien ne redevient nouveau', () => {
+  const st = new MemoryStorage();
+  st.setItem(NEWS_SEEN_KEY, JSON.stringify({ date: '2026-09-10', slugs: ['b', 'c'], at: '2026-09-11T08:00:00.000Z' }));
+  assert.equal(countUnseen(entries, readSeen(st)), 0);
+  assert.equal(countUnseen([{ slug: 'd', date: '2026-09-10' }, ...entries], readSeen(st)), 1);
+  // La mémoire de base ne l'écrase pas.
+  assert.equal(ensureBaseline(st, [{ slug: 'd', date: '2026-09-10' }, ...entries]), false);
+  assert.equal(readSeen(st).baseline, undefined);
+});
+
+test('jamais moins d’information : la visite garde les slugs déjà vus et ne recule pas la date', () => {
+  const st = new MemoryStorage();
+  st.setItem(NEWS_SEEN_KEY, JSON.stringify({ date: '2026-09-12', slugs: ['retire', 'z'], all: true }));
+  const seen = markAllSeen(st, entries, new Date('2026-10-02T08:00:00Z'));
+  assert.deepEqual(seen.slugs, ['a', 'b', 'c', 'retire', 'z']);
+  assert.equal(seen.date, '2026-09-12');
+  assert.equal(seen.baseline, undefined);
+});
+
+test('mémoire de base : première page vue (n’importe laquelle) → tout le publié compte comme vu ; les entrées suivantes lèvent la pastille', () => {
+  const st = new MemoryStorage();
+  assert.equal(ensureBaseline(st, entries, new Date('2026-10-02T08:00:00Z')), true);
+  assert.equal(countUnseen(entries, readSeen(st)), 0);
+  assert.deepEqual(readSeen(st), { date: '2026-09-10', slugs: ['a', 'b', 'c'], at: '2026-10-02T08:00:00.000Z', all: true, baseline: true });
+  const later = [{ slug: 'neuf', date: '2026-10-02' }, ...entries];
+  assert.equal(countUnseen(later, readSeen(st)), 1);
+  assert.equal(ensureBaseline(st, later), false, 'mémoire existante jamais écrasée');
+  assert.equal(countUnseen(later, readSeen(st)), 1);
+  // La visite de /nouveautes remplace la mémoire de base par une vraie visite.
+  assert.equal(markAllSeen(st, later).baseline, undefined);
+});
+
+test('mémoire de base sans aucune nouveauté publiée : la première publiée ensuite est nouvelle', () => {
+  const st = new MemoryStorage();
+  assert.equal(ensureBaseline(st, []), true);
+  assert.equal(countUnseen([{ slug: 'premiere', date: '2026-10-02' }], readSeen(st)), 1);
+});
+
+test('mémoire de base : stockage absent ou en panne → pas d’exception, rien d’écrit', () => {
+  assert.equal(ensureBaseline(null, entries), false);
+  const broken = { getItem: () => null, setItem: () => { throw new Error('quota'); }, removeItem: () => {} };
+  assert.equal(ensureBaseline(broken, entries), false);
+});
+
+test('séparateur « Déjà vu » : avant la première entrée vue seulement si les nouvelles sont toutes au-dessus', () => {
+  assert.equal(seenSeparatorIndex([true, true, false, false]), 2);
+  assert.equal(seenSeparatorIndex([true, false, true, false]), -1, 'nouvelles non contiguës : pas de séparateur trompeur');
+  assert.equal(seenSeparatorIndex([false, false]), -1);
+  assert.equal(seenSeparatorIndex([true, true]), -1);
+  assert.equal(seenSeparatorIndex([]), -1);
+});
+
+test('séparateur : « Déjà vu lors de votre visite du 1er octobre 2026 à 10 h 30 » ; mémoire de base : « Déjà en ligne lors de votre première visite, le … »', () => {
+  const nb = (s) => s.replaceAll(' ', ' ');
+  assert.equal(nb(seenSeparatorLabel({ at: '2026-10-01T08:30:00.000Z' }, 'Europe/Paris')), 'Déjà vu lors de votre visite du 1er octobre 2026 à 10 h 30');
+  assert.equal(nb(seenSeparatorLabel({ at: '2026-10-01T08:30:00.000Z', baseline: true }, 'Europe/Paris')), 'Déjà en ligne lors de votre première visite, le 1er octobre 2026 à 10 h 30');
+  assert.equal(seenSeparatorLabel(null), 'Déjà vu lors d’une visite précédente');
+  assert.equal(seenSeparatorLabel({ baseline: true }), 'Déjà en ligne lors de votre première visite');
+});
+
+test('ligne d’annonce : accordée, « première visite du site » pour une mémoire de base', () => {
+  assert.equal(sinceLabel(0, null), '');
+  assert.equal(sinceLabel(1, {}), '1 nouveauté depuis votre dernière visite');
+  assert.equal(sinceLabel(3, { baseline: true }), '3 nouveautés depuis votre première visite du site');
 });
