@@ -163,3 +163,5 @@ lots:
     estimate: 1.5
     visible: true
     created: 2026-10-02
+    notes:
+      - { date: 2026-10-02, text: "Consigne Sylvain 02-10 : y inclure la gestion des tokens — une session par chantier, /clear en fin de lot, coût du contexte relu à chaque tour, délégation aux sous-agents pour garder la session principale légère, mémoires courtes et triées, index de mémoire sous sa limite. Leçons générales uniquement : rien de personnel, de contractuel ni de propre à un employeur." }
