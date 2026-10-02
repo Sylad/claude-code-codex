@@ -172,3 +172,19 @@ test('avancement : accord sur le nombre d’étapes faites (0 et 1 au singulier)
   assert.equal(nb(stepsLabel({ done: 13, total: 13 })), '13 étapes faites sur 13');
   assert.doesNotMatch(stepsLabel({ done: 2, total: 3 }), / /, 'espace sécable : le nombre peut se retrouver seul en fin de ligne');
 });
+
+test(`plus de ${RECENT_DONE} lots livrés ET des titres partagés : fusion avant la coupe, ${RECENT_DONE} lignes, la plus récente porte la fusion`, () => {
+  const lots = Array.from({ length: RECENT_DONE + 3 }, (_, i) => ({
+    id: `L${i + 1}`, title: 'b', public: `Livraison ${i + 1}`, visible: true, status: 'done', finished: `2026-09-${String(i + 1).padStart(2, '0')}`,
+  }));
+  // L2 et le plus récent partagent un titre ; L3 et L4 aussi (livré un 1er du mois).
+  lots[1].public = lots.at(-1).public;
+  lots[3].public = lots[2].public;
+  lots[3].finished = '2026-10-01';
+  const p = publicPlan({ lots });
+  assert.equal(p.done.length, RECENT_DONE);
+  assert.equal(p.counts.done, RECENT_DONE + 1, 'deux fusions sur 11 lots → 9 lignes');
+  assert.deepEqual(p.done[0], { id: 'L4', title: 'Livraison 3', status: 'done', finished: '2026-10-01', also: ['L3'] });
+  assert.deepEqual(p.done[1], { id: `L${RECENT_DONE + 3}`, title: lots.at(-1).public, status: 'done', finished: lots.at(-1).finished, also: ['L2'] });
+  assert.equal(new Set(p.done.map((l) => l.title)).size, RECENT_DONE);
+});

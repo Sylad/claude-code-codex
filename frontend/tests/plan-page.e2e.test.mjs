@@ -14,10 +14,11 @@ import { join } from 'node:path';
 import { homedir } from 'node:os';
 import { DIST, setupBrowser, worstPixelContrast } from './lib/e2e-dist.mjs';
 import { MIN_NEEDLE, listFiles, normalize, privateTexts, scanForLeaks } from './lib/plan-leaks.mjs';
-import { newsTitlesByLot, publicTitleOf } from '../src/lib/plan-public.ts';
+import { newsTitlesByLot, parsePublicPlan, publicTitleOf } from '../src/lib/plan-public.ts';
 
 const { parse } = createRequire(new URL('../package.json', import.meta.url))('yaml');
-const RAF = parse(readFileSync(new URL('../../docs/plan/raf.yaml', import.meta.url), 'utf8'));
+const RAF_TEXT = readFileSync(new URL('../../docs/plan/raf.yaml', import.meta.url), 'utf8');
+const RAF = parse(RAF_TEXT);
 const NEWS = JSON.parse(readFileSync(new URL('../public/nouveautes-data/nouveautes.json', import.meta.url), 'utf8')).entries;
 const PAGE = join(DIST, 'plan-de-travail', 'index.html');
 const html = () => readFileSync(PAGE, 'utf8');
@@ -26,7 +27,10 @@ const html = () => readFileSync(PAGE, 'utf8');
 const newsTitles = newsTitlesByLot(NEWS);
 const publicTitle = (l) => publicTitleOf(l, newsTitles);
 const published = RAF.lots.filter((l) => publicTitle(l) !== null);
-const shown = (status) => published.filter((l) => l.status === status);
+// Ce que la page AFFICHE : sortie de publicPlan() (8 derniers livrés, lots au même titre
+// fondus), pas la liste brute des lots publiables.
+const PLAN = parsePublicPlan(RAF_TEXT, NEWS);
+const shownIds = (status) => PLAN[status].map((l) => l.id);
 
 test('dist/plan-de-travail/index.html est construit, titré « Plan de travail »', () => {
   assert.ok(existsSync(PAGE), 'page absente : lancer `npx astro build`');
@@ -40,14 +44,10 @@ test('trois sections titrées, une phrase d’explication chacune ; lots en cour
   const intros = [...page.matchAll(/<p class="plan-intro[^"]*"[^>]*>([\s\S]*?)<\/p>/g)].map((m) => m[1].replace(/<[^>]+>/g, '').trim());
   assert.equal(intros.length, 3);
   for (const i of intros) assert.equal((i.match(/[.!?](\s|$)/g) ?? []).length, 1, `« ${i} » : une phrase attendue`);
-  for (const status of ['doing', 'todo']) {
+  for (const status of ['doing', 'todo', 'done']) {
     const ids = [...page.matchAll(new RegExp(`<li[^>]*data-status="${status}"[^>]*data-id="([^"]+)"`, 'g'))].map((m) => m[1]);
-    const firsts = shown(status).filter((l, i, all) => all.findIndex((x) => publicTitle(x) === publicTitle(l)) === i);
-    assert.deepEqual(ids, firsts.map((l) => l.id), status);
+    assert.deepEqual(ids, shownIds(status), status);
   }
-  const done = [...page.matchAll(/<li[^>]*data-status="done"[^>]*data-id="([^"]+)"/g)].map((m) => m[1]);
-  assert.ok(done.length <= 8, `${done.length} lots livrés affichés`);
-  assert.ok(done.every((id) => shown('done').some((l) => l.id === id)));
   const ids = [...page.matchAll(/data-id="([^"]+)"/g)].map((m) => m[1]);
   assert.deepEqual(ids.filter((id) => !published.some((l) => l.id === id)), [], 'lot masqué publié');
 });
@@ -88,7 +88,7 @@ test('le détecteur de fuites échoue bien sur une fuite plantée (HTML, JSON, J
 test('dates en français par le formateur commun (« 1er octobre 2026 »), jamais coupées', () => {
   const page = normalize(html());
   assert.ok(!/>1 (janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)/.test(page), '« 1 octobre » au lieu de « 1er »');
-  if (shown('done').some((l) => String(l.finished).endsWith('-01'))) assert.match(page, />1er /);
+  if (PLAN.done.some((l) => String(l.finished).endsWith('-01'))) assert.match(page, />1er /);
   assert.match(html(), /<time datetime="\d{4}-\d{2}-\d{2}" class="whitespace-nowrap"/);
 });
 
@@ -99,10 +99,9 @@ test('sous chaque lot, l’état du groupe n’est pas répété ; aucun identif
   const main = page.slice(page.indexOf('<main'), page.indexOf('</main>'));
   const text = normalize(main.replace(/<script[\s\S]*?<\/script>/g, '').replace(/<[^>]+>/g, ' '));
   assert.doesNotMatch(text, /\bL\d+\b/, 'identifiant de lot visible');
-  for (const l of published) {
-    const own = new RegExp(`<li[^>]*data-id="${l.id}" id="lot-${l.id}"`).test(page);
-    const merged = new RegExp(`<li[^>]*data-also="[^"]*\\b${l.id}\\b`).test(page);
-    assert.ok(own || merged, `${l.id} : ni ligne ni fusion`);
+  for (const l of [...PLAN.doing, ...PLAN.todo, ...PLAN.done]) {
+    assert.match(page, new RegExp(`<li[^>]*data-id="${l.id}" id="lot-${l.id}"`), `${l.id} : ligne absente`);
+    if (l.also) assert.match(page, new RegExp(`<li[^>]*data-id="${l.id}"[^>]*data-also="${l.also.join(' ')}"`), `${l.id} : fusion non signalée`);
   }
 });
 
@@ -110,7 +109,7 @@ test('bandeau sans décompte nul ; section vide annoncée honnêtement', () => {
   const page = normalize(html());
   assert.doesNotMatch(page, /<span>0 /, 'décompte nul affiché');
   const has = page.includes('Les prochains travaux seront annoncés ici.');
-  assert.equal(has, shown('todo').length === 0);
+  assert.equal(has, PLAN.todo.length === 0);
 });
 
 test('un titre public n’apparaît qu’une fois par section', () => {
