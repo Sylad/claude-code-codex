@@ -165,3 +165,10 @@ lots:
     created: 2026-10-02
     notes:
       - { date: 2026-10-02, text: "Consigne Sylvain 02-10 : y inclure la gestion des tokens — une session par chantier, /clear en fin de lot, coût du contexte relu à chaque tour, délégation aux sous-agents pour garder la session principale légère, mémoires courtes et triées, index de mémoire sous sa limite. Leçons générales uniquement : rien de personnel, de contractuel ni de propre à un employeur." }
+  - id: L21
+    title: "Veille et mise à jour régulière du contenu (consigne Sylvain 02-10) : rechercher les nouveautés de l'écosystème (versions, fonctionnalités, outils, articles de référence), les vérifier sur leurs sources en ligne et les dater, mettre à jour les pages concernées (Écosystème, Théorie, Learning, Vidéos, outils testés), signaler ce qui est périmé ; fixer un rythme de revue et afficher la date de dernière mise à jour de chaque page"
+    public: "Un contenu tenu à jour : actualités de l'écosystème, pages révisées"
+    status: todo
+    estimate: 1
+    visible: true
+    created: 2026-10-02
