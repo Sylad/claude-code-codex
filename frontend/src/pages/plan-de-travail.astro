@@ -18,11 +18,13 @@ import { formatDay } from "@/lib/format-date.mjs";
 import { parsePublicPlan, planSummary, stepsLabel, RECENT_DONE, type PublicLot } from "@/lib/plan-public";
 import news from "../../public/nouveautes-data/nouveautes.json";
 
-// Build lancé depuis frontend/ (npm run build, Cloudflare Pages : « cd frontend && npm
-// install && npm run build ») ; repli si lancé depuis la racine du dépôt.
-const candidates = [join(process.cwd(), "..", "docs", "plan", "raf.yaml"), join(process.cwd(), "docs", "plan", "raf.yaml")];
-const rafPath = candidates.find((p) => existsSync(p));
-if (!rafPath) throw new Error(`plan introuvable : docs/plan/raf.yaml (cherché dans ${candidates.join(", ")})`);
+// Le build se lance depuis frontend/ (npm run build ; Cloudflare Pages : « cd frontend &&
+// npm install && npm run build ») : le plan est à ../docs/plan/raf.yaml. Un seul chemin ;
+// absent, le build échoue.
+const rafPath = join(process.cwd(), "..", "docs", "plan", "raf.yaml");
+if (!existsSync(rafPath)) {
+  throw new Error(`plan introuvable : ${rafPath} — le build doit se lancer depuis frontend/ (cd frontend && npm run build)`);
+}
 const plan = parsePublicPlan(readFileSync(rafPath, "utf8"), news.entries);
 
 const summary = planSummary(plan.counts);
