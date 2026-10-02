@@ -30,6 +30,8 @@ officielle avec Anthropic.
 | `/learning` | **Preview RSS live** (Simon Willison, Anthropic, Human Coders FR filtré sur Claude/MCP) + catalogue curé de blogs et podcasts |
 | `/videos` | Chaînes YouTube EN/FR spécifiques Claude Code, filtrables par langue/officiel |
 | `/about` | Genèse du site, stack technique, crédits IA (Claude Code + openart.ai) |
+| `/nouveautes` | Journal des évolutions visibles du site, la plus récente en premier (pastille sur le lien quand il y a du neuf) |
+| `/plan-de-travail` | Ce qui est en cours, prévu et récemment livré — titres publics du plan `docs/plan/raf.yaml`, générés au build |
 
 ## Stack
 
