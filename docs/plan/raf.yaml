@@ -7,6 +7,7 @@ prefix: L
 since: 2026-09-28 # raf check ignore les commits antérieurs à l'adoption
 ignore: [ '^chore\(batch\):' ] # rafraîchissement hebdomadaire des flux par la CI
 uxSince: 2026-09-28
+reviewSince: 2026-10-03
 lots:
   - id: L1
     title: "Adoption de cadence : plan, rituels de session, revue UX"
