@@ -33,9 +33,12 @@ test('PageHero : sur-titre, titre et chapeau ≥ 4,5:1 au pire pixel (6 largeurs
       for (const scroll of [0, 60, 100]) {
         await page.evaluate((y) => window.scrollTo(0, y), scroll);
         for (const sel of ['main section.codex-grid p:first-of-type', 'main section.codex-grid h1', 'main section.codex-grid h1 ~ p']) {
-          if (!(await page.locator(sel).count())) continue;
+          // Un sélecteur qui ne trouve rien est un échec, pas un « rien à mesurer » silencieux.
+          assert.ok(await page.locator(sel).count(), `${route} ${sel} @${width}px : sélecteur sans résultat`);
           const { worst, glyphs } = await worstPixelContrast(page, sel);
           t.diagnostic(`${route} ${sel.split(' ').pop()} @${width}px y${scroll} : ${worst.toFixed(2)}:1 (${glyphs} px)`);
+          // Défilé, le texte peut passer sous la barre fixe ; en haut de page, il doit être mesuré.
+          if (scroll === 0) assert.ok(glyphs > 20, `${route} ${sel} @${width}px : glyphes non détectés`);
           if (glyphs > 20 && worst < 4.5) failures.push(`${route} ${sel} @${width}px y${scroll} : ${worst.toFixed(2)}:1`);
         }
       }
