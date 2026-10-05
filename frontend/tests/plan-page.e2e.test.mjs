@@ -169,20 +169,24 @@ test('reflow 320/390/1440 px : aucun défilement horizontal, contraste des carte
   }
 });
 
-test('en-tête de la page ≥ 4,5:1 au pire pixel de l’image de fond (1440, 390 et 320 px)', { timeout: 90_000 }, async (t) => {
+test('en-tête de la page ≥ 4,5:1 au pire pixel de l’image de fond (6 largeurs, 3 défilements)', { timeout: 180_000 }, async (t) => {
   const env = await setupBrowser(t);
   if (!env) return;
   const failures = [];
-  for (const width of [1440, 390, 320]) {
+  for (const width of [320, 390, 768, 1024, 1440, 1920]) {
     const context = await env.browser.newContext({ viewport: { width, height: width > 1000 ? 900 : 844 }, deviceScaleFactor: 2 });
     const page = await context.newPage();
     await page.goto(`${env.base}/plan-de-travail/`, { waitUntil: 'load' });
     await page.evaluate(() => document.fonts.ready);
-    for (const sel of ['.plan-hero .plan-eyebrow', '.plan-hero h1', '.plan-hero .plan-lede']) {
-      const { worst, glyphs } = await worstPixelContrast(page, sel);
-      t.diagnostic(`${sel} @${width}px : ${worst.toFixed(2)}:1 (${glyphs} px)`);
-      assert.ok(glyphs > 20, `${sel} @${width}px : glyphes non détectés`);
-      if (worst < 4.5) failures.push(`${sel} @${width}px : ${worst.toFixed(2)}:1`);
+    for (const scroll of [0, 60, 100]) {
+      await page.evaluate((y) => window.scrollTo(0, y), scroll);
+      for (const sel of ['.plan-hero .plan-eyebrow', '.plan-hero h1', '.plan-hero .plan-lede']) {
+        const { worst, glyphs } = await worstPixelContrast(page, sel);
+        t.diagnostic(`${sel} @${width}px y${scroll} : ${worst.toFixed(2)}:1 (${glyphs} px)`);
+        // Défilé, le texte peut passer sous la barre fixe ; en haut de page, il doit être mesuré.
+        if (scroll === 0) assert.ok(glyphs > 20, `${sel} @${width}px : glyphes non détectés`);
+        if (glyphs > 20 && worst < 4.5) failures.push(`${sel} @${width}px y${scroll} : ${worst.toFixed(2)}:1`);
+      }
     }
     await context.close();
   }
