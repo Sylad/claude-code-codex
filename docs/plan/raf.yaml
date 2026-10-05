@@ -206,3 +206,19 @@ lots:
     estimate: 1
     quickwin: true
     created: 2026-10-05
+  - id: L27
+    title: "Étude de cas maritime-atlas à 390 px : les blocs de code font défiler la page latéralement (scrollWidth 600 pour clientWidth 390) — QA prod 05-10, à joindre à la revue L8"
+    status: todo
+    estimate: 1
+    quickwin: true
+    created: 2026-10-05
+  - id: L28
+    title: "Route inexistante : servir un vrai 404 (aujourd'hui 200 + page d'accueil, 26 665 octets ; /404.html en 200) — QA prod 05-10"
+    status: todo
+    estimate: 1
+    created: 2026-10-05
+  - id: L29
+    title: "Console : « Hydration completed but contains mismatches » sur /atelier-ia/, /case-studies/maritime-atlas/, /cloudflare-pour-les-nuls/, /case-studies/claude-code-codex/ — QA prod 05-10"
+    status: todo
+    estimate: 1
+    created: 2026-10-05
