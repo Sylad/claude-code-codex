@@ -136,11 +136,11 @@ lots:
     notes:
       - { date: 2026-10-01, text: "Revue UX L13 : inclure le sur-titre « NOUVEAUTÉS » de /nouveautes (orange 12 px, 3,7–3,8:1 au pire pixel sur l'image du bandeau)" }
     started: 2026-10-04
-    review: { date: 2026-10-05, verdict: "conforme : 0 bloquant, 0 majeur, 2 mineurs (duplication de l'en-tête et de la boucle de test, antérieures au lot) — orchestré (vague 2026-10-05-0913, 0 passe(s) de correction + passe des mineurs)", commit: 994feb3b1f9721a0d552c9def0589fbd17b2b5ae }
+    review: { date: 2026-10-05, verdict: "conforme — 0 bloquant, 0 majeur ; entrée Nouveautés corrigée (accueil retiré, L16/t1) ; 1 mineur de formulation (« toutes les largeurs » contre 6 mesurées) reporté en L26 ; 102 tests (101 OK, 1 sauté), 41 e2e de contraste verts, astro build 36 pages", commit: 6450770ef4735242369ca607aee0729ef94a78cd }
     ux: { date: 2026-10-05, verdict: "conforme : 0 bloquant, 0 majeur, 2 mineurs (duplication en-tête + boucle de test, antérieures au lot) — contraste ≥ 4,5:1 mesuré par e2e à 6 largeurs × 3 défilements ; pas de capture d'écran relue" }
     finished: 2026-10-05
     tasks:
-      - { id: t1, title: "Nouveauté L16 : retirer « accueil » de l'entrée (l'accueil n'utilise pas PageHero et n'est pas mesuré), puis régénérer le JSON des nouveautés et le committer", status: todo }
+      - { id: t1, title: "Nouveauté L16 : retirer « accueil » de l'entrée (l'accueil n'utilise pas PageHero et n'est pas mesuré), puis régénérer le JSON des nouveautés et le committer", status: done }
   - id: L17
     title: "Barre de bureau dès 1024 px : regrouper Learning + Vidéos sous « Ressources ▾ », « À propos » en pied de page et menu téléphone seulement, « Nouveautés » toujours visible (maquette de la revue UX L13, validée par Sylvain le 01-10)"
     public: "Une barre de navigation plus courte, avec un menu Ressources"
@@ -199,4 +199,10 @@ lots:
     status: todo
     estimate: 1
     visible: true
+    created: 2026-10-05
+  - id: L26
+    title: "Nouveauté L16 : écrire « mesuré à six largeurs, de 320 à 1920 px, et en faisant défiler » au lieu de « à toutes les largeurs » (les tests mesurent 6 largeurs × 3 défilements), puis npm run news et committer le JSON — mineur de la revue L16"
+    status: todo
+    estimate: 1
+    quickwin: true
     created: 2026-10-05
