@@ -1,7 +1,22 @@
 {
   "project": "claude-code-codex",
-  "generated": "2026-10-02 10:31",
+  "generated": "2026-10-05 10:09",
   "entries": [
+    {
+      "slug": "2026-10-05-pagehero-chapeau-text-ink-muted-a-3-93-1-sur-l-image-de-fond",
+      "title": "Des en-têtes de page lisibles sur l'image de fond",
+      "date": "2026-10-05",
+      "lots": [
+        "L16"
+      ],
+      "captures": [
+        "captures/l16.png"
+      ],
+      "alts": [
+        "En-tête de la page À propos au téléphone : sur-titre, titre et chapeau lisibles sur l'image de fond"
+      ],
+      "html": "<p>Les en-têtes de page, avec leur sur-titre et leur chapeau, se lisent maintenant bien sur l'image de fond. Le contraste atteint au moins 4,5:1 (niveau AA des règles d'accessibilité WCAG), mesuré à toutes les largeurs d'écran de 320 à 1920 px, y compris en faisant défiler la page. Cela vaut pour toutes les pages : accueil et À propos, Nouveautés et Plan de travail.</p>"
+    },
     {
       "slug": "2026-10-02-une-barre-de-navigation-plus-courte-et-des-nouveautes-plus-p",
       "title": "Une barre de navigation plus courte, et des Nouveautés plus pratiques",
