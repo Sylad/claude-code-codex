@@ -136,6 +136,7 @@ lots:
     notes:
       - { date: 2026-10-01, text: "Revue UX L13 : inclure le sur-titre « NOUVEAUTÉS » de /nouveautes (orange 12 px, 3,7–3,8:1 au pire pixel sur l'image du bandeau)" }
     started: 2026-10-04
+    review: { date: 2026-10-05, verdict: "conforme : 0 bloquant, 0 majeur, 2 mineurs (duplication de l'en-tête et de la boucle de test, antérieures au lot) — orchestré (vague 2026-10-05-0913, 0 passe(s) de correction + passe des mineurs)", commit: 994feb3b1f9721a0d552c9def0589fbd17b2b5ae }
   - id: L17
     title: "Barre de bureau dès 1024 px : regrouper Learning + Vidéos sous « Ressources ▾ », « À propos » en pied de page et menu téléphone seulement, « Nouveautés » toujours visible (maquette de la revue UX L13, validée par Sylvain le 01-10)"
     public: "Une barre de navigation plus courte, avec un menu Ressources"
