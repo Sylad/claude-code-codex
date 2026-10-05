@@ -139,6 +139,8 @@ lots:
     review: { date: 2026-10-05, verdict: "conforme : 0 bloquant, 0 majeur, 2 mineurs (duplication de l'en-tête et de la boucle de test, antérieures au lot) — orchestré (vague 2026-10-05-0913, 0 passe(s) de correction + passe des mineurs)", commit: 994feb3b1f9721a0d552c9def0589fbd17b2b5ae }
     ux: { date: 2026-10-05, verdict: "conforme : 0 bloquant, 0 majeur, 2 mineurs (duplication en-tête + boucle de test, antérieures au lot) — contraste ≥ 4,5:1 mesuré par e2e à 6 largeurs × 3 défilements ; pas de capture d'écran relue" }
     finished: 2026-10-05
+    tasks:
+      - { id: t1, title: "Nouveauté L16 : retirer « accueil » de l'entrée (l'accueil n'utilise pas PageHero et n'est pas mesuré), puis régénérer le JSON des nouveautés et le committer", status: todo }
   - id: L17
     title: "Barre de bureau dès 1024 px : regrouper Learning + Vidéos sous « Ressources ▾ », « À propos » en pied de page et menu téléphone seulement, « Nouveautés » toujours visible (maquette de la revue UX L13, validée par Sylvain le 01-10)"
     public: "Une barre de navigation plus courte, avec un menu Ressources"
@@ -191,4 +193,10 @@ lots:
     title: "Tests e2e : factoriser la mesure de contraste de l'en-tête (6 largeurs × 3 défilements, sélecteur obligatoire, glyphes en haut de page) dans tests/lib/e2e-dist.mjs pour page-hero, nouveautes-page, plan-page"
     status: todo
     estimate: 1
+    created: 2026-10-05
+  - id: L25
+    title: "Accueil : sur-titre orange 12 px posé sur la vidéo de fond (index.astro:80) — le mesurer au pire pixel (6 largeurs × 3 défilements) et le passer sur la pastille sombre comme PageHero s'il est sous 4,5:1 — relevé en revue L16"
+    status: todo
+    estimate: 1
+    visible: true
     created: 2026-10-05
