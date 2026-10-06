@@ -207,6 +207,7 @@ lots:
     quickwin: true
     created: 2026-10-05
     started: 2026-10-06
+    review: { date: 2026-10-06, verdict: "conforme — 0 bloquant, 0 majeur, 0 mineur ; entrée L16 « mesuré à six largeurs, de 320 à 1920 px, et en faisant défiler » conforme aux 6 largeurs × 3 défilements de page-hero.e2e, JSON à jour, 103 tests (102 OK, 1 sauté) sous Node 22, astro build 36 pages — orchestré (vague 2026-10-06-2138, 0 passe(s) de correction)", commit: 9b6098692c23dbeff3bea20806e88cbd3f96ff09 }
   - id: L27
     title: "Étude de cas maritime-atlas à 390 px : les blocs de code font défiler la page latéralement (scrollWidth 600 pour clientWidth 390) — QA prod 05-10, à joindre à la revue L8"
     status: todo
