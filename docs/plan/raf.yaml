@@ -217,6 +217,7 @@ lots:
     visible: true
     created: 2026-10-05
     started: 2026-10-06
+    review: { date: 2026-10-06, verdict: "conforme — orchestré (vague 2026-10-06-2138, 1 passe(s) de correction)", commit: 518bf03e1861f003bbead7f3ee122a453a0ba2c4 }
   - id: L28
     title: "Route inexistante : servir un vrai 404 (aujourd'hui 200 + page d'accueil, 26 665 octets ; /404.html en 200) — QA prod 05-10"
     status: todo
