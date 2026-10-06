@@ -72,6 +72,7 @@ lots:
     created: 2026-09-28
     notes:
       - { date: 2026-10-01, text: "contrôle UX L2 01-10 : 63 textes sous 4,5:1 dans le catalogue d'outils testés (dates 10 px ~3,2:1, licences 2,6–3,4:1, étoiles, « Suggestion ? » 3,0:1) — présents avant L2 ; débordements à 320 px sur /theory (355 px) et /learning (343 px)" }
+      - { date: 2026-10-06, text: "L27 (lot visible) rattaché à cette revue : défilement latéral des études de cas corrigé à 320 et 390 px (code en ligne, titres, tableau hermes-agent) — à revoir à 1440 et 390 px avec le gabarit" }
   - id: L9
     title: "Revue UX — Guides longs : Kubernetes pour développeurs Java, ArgoCD/K8s pour les nuls, Cloudflare pour les nuls"
     status: todo
@@ -213,6 +214,7 @@ lots:
     status: doing
     estimate: 1
     quickwin: true
+    visible: true
     created: 2026-10-05
     started: 2026-10-06
   - id: L28
