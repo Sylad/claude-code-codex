@@ -202,10 +202,11 @@ lots:
     created: 2026-10-05
   - id: L26
     title: "Nouveauté L16 : écrire « mesuré à six largeurs, de 320 à 1920 px, et en faisant défiler » au lieu de « à toutes les largeurs » (les tests mesurent 6 largeurs × 3 défilements), puis npm run news et committer le JSON — mineur de la revue L16"
-    status: todo
+    status: doing
     estimate: 1
     quickwin: true
     created: 2026-10-05
+    started: 2026-10-06
   - id: L27
     title: "Étude de cas maritime-atlas à 390 px : les blocs de code font défiler la page latéralement (scrollWidth 600 pour clientWidth 390) — QA prod 05-10, à joindre à la revue L8"
     status: todo
