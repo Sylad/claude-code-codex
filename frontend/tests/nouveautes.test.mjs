@@ -105,7 +105,7 @@ test('guillemets français tenus par une espace fine insécable (U+202F)', () =>
 
 // L26 — la Nouveauté L16 ne promet que ce que page-hero.e2e mesure : 6 largeurs × 3 défilements.
 test("la Nouveauté L16 annonce six largeurs mesurées, pas « toutes les largeurs »", () => {
-  const entry = readJson().find((e) => JSON.stringify(e).includes('"L16"'));
+  const entry = readJson().entries.find((e) => e.lots.includes('L16'));
   assert.ok(entry, 'entrée L16 absente du JSON');
   const text = JSON.stringify(entry);
   assert.ok(!text.includes('à toutes les largeurs'), 'formulation trop large');
