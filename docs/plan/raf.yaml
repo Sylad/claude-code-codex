@@ -225,6 +225,7 @@ lots:
     created: 2026-10-05
   - id: L29
     title: "Console : « Hydration completed but contains mismatches » sur /atelier-ia/, /case-studies/maritime-atlas/, /cloudflare-pour-les-nuls/, /case-studies/claude-code-codex/ — QA prod 05-10"
-    status: todo
+    status: doing
     estimate: 1
     created: 2026-10-05
+    started: 2026-10-06
