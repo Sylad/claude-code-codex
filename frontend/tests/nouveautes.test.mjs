@@ -102,3 +102,12 @@ test('guillemets français tenus par une espace fine insécable (U+202F)', () =>
     assert.equal(bad, null, `${f} : ${bad?.length} guillemet(s) sans U+202F`);
   }
 });
+
+// L26 — la Nouveauté L16 ne promet que ce que page-hero.e2e mesure : 6 largeurs × 3 défilements.
+test("la Nouveauté L16 annonce six largeurs mesurées, pas « toutes les largeurs »", () => {
+  const entry = readJson().find((e) => JSON.stringify(e).includes('"L16"'));
+  assert.ok(entry, 'entrée L16 absente du JSON');
+  const text = JSON.stringify(entry);
+  assert.ok(!text.includes('à toutes les largeurs'), 'formulation trop large');
+  assert.ok(text.includes('mesuré à six largeurs, de 320 à 1920 px, et en faisant défiler'));
+});
