@@ -1,7 +1,22 @@
 {
   "project": "claude-code-codex",
-  "generated": "2026-10-06 19:31",
+  "generated": "2026-10-06 22:50",
   "entries": [
+    {
+      "slug": "2026-10-06-etudes-de-cas-plus-de-defilement-lateral-au-telephone",
+      "title": "Études de cas, plus de défilement latéral au téléphone",
+      "date": "2026-10-06",
+      "lots": [
+        "L27"
+      ],
+      "captures": [
+        "captures/l27.png"
+      ],
+      "alts": [
+        "Étude de cas maritime-atlas au téléphone : les coordonnées entre crochets restent dans la colonne, sans élargir la page"
+      ],
+      "html": "<p>Sur téléphone, l'étude de cas maritime-atlas se laissait faire glisser de côté : des noms de fichiers et des commandes plus larges que l'écran élargissaient toute la page. Ces passages se coupent maintenant à la ligne, les tableaux et les blocs de commandes défilent seuls dans leur cadre, et il en va de même pour les autres études de cas. Un test vérifie désormais, à 320 et à 390 px, qu'aucune étude de cas ne déborde.</p>"
+    },
     {
       "slug": "2026-10-05-pagehero-chapeau-text-ink-muted-a-3-93-1-sur-l-image-de-fond",
       "title": "Des en-têtes de page lisibles sur l'image de fond",
