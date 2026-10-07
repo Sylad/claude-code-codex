@@ -103,10 +103,12 @@ const pngSize = (rel: string) => {
                 <div class="news-captures mt-6 flex flex-wrap items-start gap-4">
                   {e.captures.map((c, i) => {
                     const { width, height } = pngSize(c);
+                    // Le texte alternatif écrit avec l'entrée décrit ce que l'on voit ; à défaut, le titre.
                     const alt =
-                      e.captures.length > 1
+                      e.alts?.[i]?.trim() ||
+                      (e.captures.length > 1
                         ? `Capture d'écran ${i + 1} sur ${e.captures.length} : ${e.title}`
-                        : `Capture d'écran : ${e.title}`;
+                        : `Capture d'écran : ${e.title}`);
                     return (
                       <a
                         href={`${BASE}/${c}`}

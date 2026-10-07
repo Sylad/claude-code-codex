@@ -31,7 +31,7 @@ test('une entrée par nouveauté, dans l’ordre du JSON (la plus récente en ha
     const start = page.indexOf(`id="${e.slug}"`);
     const block = page.slice(start, page.indexOf('</article>', start));
     assert.ok(block.includes(`<time datetime="${e.date}"`), `${e.slug} : date absente`);
-    assert.ok(block.includes(e.title), `${e.slug} : titre absent`);
+    assert.ok(block.includes(e.title) || block.includes(e.title.replace(/'/g, '&#39;')), `${e.slug} : titre absent`);
     assert.ok(block.includes(e.html.slice(0, 60)), `${e.slug} : texte absent`);
     for (const c of e.captures) {
       assert.ok(block.includes(`src="/nouveautes-data/${c}"`), `${e.slug} : capture ${c} absente`);
@@ -683,4 +683,24 @@ test('mémoire d’un visiteur de L13 (format initial) : relue sans perte, jamai
   assert.deepEqual(await page.evaluate((k) => JSON.parse(localStorage.getItem(k)), SEEN_KEY), old, 'mémoire de L13 réécrite');
   assert.equal(await page.locator('header .news-badge').count(), 0);
   await context.close();
+});
+
+// ── L31 : le alt écrit de l'entrée, pas un alt générique tiré du titre ─────
+test('L31 : chaque capture porte le alt écrit de l’entrée (image et aria-label du lien)', () => {
+  const page = html();
+  let vérifiées = 0;
+  for (const e of DATA.entries) {
+    const start = page.indexOf(`id="${e.slug}"`);
+    const block = page.slice(start, page.indexOf('</article>', start));
+    e.captures.forEach((c, i) => {
+      const alt = e.alts?.[i];
+      if (!alt) return;
+      const esc = alt.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+      const ok = (s) => block.includes(s) || block.includes(s.replace(/&#39;/g, "'"));
+      assert.ok(ok(`alt="${esc}"`), `${e.slug} : alt de la capture ${i + 1} non repris`);
+      assert.ok(ok(`aria-label="${esc} (agrandir)"`), `${e.slug} : aria-label de la capture ${i + 1} non repris`);
+      vérifiées++;
+    });
+  }
+  assert.ok(vérifiées > 0, 'aucune capture avec alt écrit à vérifier');
 });
