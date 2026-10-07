@@ -12,7 +12,14 @@ const fullscreenContainer = ref<HTMLDivElement | null>(null);
 const error = ref<string>("");
 const isReady = ref(false);
 const isFullscreen = ref(false);
+// Le fullscreen est téléporté dans <body> : rendu seulement une fois monté, le serveur
+// ne peut pas produire ce que Teleport + Transition attendent à l'hydratation.
+const mounted = ref(false);
 let svgString = "";
+
+const escapeHtml = (v: string) =>
+  v.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const noscriptHtml = `<pre class="px-4 py-4 overflow-x-auto text-xs leading-snug font-mono text-ink/80 whitespace-pre">${escapeHtml(props.definition)}</pre>`;
 
 function injectInto(el: HTMLDivElement | null) {
   if (!el || !svgString) return;
@@ -31,6 +38,7 @@ function injectInto(el: HTMLDivElement | null) {
 }
 
 onMounted(async () => {
+  mounted.value = true;
   try {
     const { default: mermaid } = await import("mermaid");
     mermaid.initialize({
@@ -150,10 +158,9 @@ onBeforeUnmount(() => {
       ></div>
     </div>
 
-    <noscript>
-      <pre
-        class="px-4 py-4 overflow-x-auto text-xs leading-snug font-mono text-ink/80 whitespace-pre">{{ definition }}</pre>
-    </noscript>
+    <!-- v-html : le navigateur lit le contenu de <noscript> comme du texte quand JS est actif,
+         Vue y attendait un <pre> (mismatch d'hydratation) ; en innerHTML, il ne compare pas l'enfant. -->
+    <noscript v-html="noscriptHtml"></noscript>
 
     <div
       v-if="!isReady && !error"
@@ -177,7 +184,7 @@ onBeforeUnmount(() => {
     </figcaption>
   </figure>
 
-  <Teleport to="body">
+  <Teleport v-if="mounted" to="body">
     <Transition
       enter-active-class="transition duration-200 ease-out"
       enter-from-class="opacity-0"
