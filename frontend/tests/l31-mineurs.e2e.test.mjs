@@ -30,12 +30,21 @@ test('blocs défilants (pre, overflow-x-auto) : tabindex=0, role=region, aria-la
     const html = readFileSync(f, 'utf8').replace(/<noscript>[\s\S]*?<\/noscript>/g, '');
     for (const m of html.matchAll(/<(pre|div|figure)\b[^>]*\boverflow-x-auto\b[^>]*>/g)) {
       const tag = m[0];
+      if (/data-mermaid-inline/.test(tag)) continue; // dans un role=button : voir le test suivant
       if (!/tabindex="0"/.test(tag) || !/role="region"/.test(tag) || !/aria-label="[^"]+"/.test(tag)) {
         fautifs.push(`${f.replace(DIST, '')} ${tag.slice(0, 90)}`);
       }
     }
   }
   assert.deepEqual(fautifs, []);
+});
+
+// le conteneur du diagramme est DANS un role=button : pas d'interactif imbriqué (nested-interactive)
+test('diagramme Mermaid : le conteneur inline n’est pas un second arrêt de tabulation', () => {
+  const src = readFileSync(new URL('../src/components/site/MermaidDiagram.vue', import.meta.url), 'utf8');
+  const m = src.match(/<div\s+ref="inlineContainer"[^>]*>/);
+  assert.ok(m, 'conteneur inline introuvable');
+  assert.ok(!/tabindex|role=|aria-label/.test(m[0]), m[0]);
 });
 
 // (3) cadre ou ombre de bord sur les tableaux qui défilent

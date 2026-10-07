@@ -154,9 +154,7 @@ onBeforeUnmount(() => {
     >
       <div
         ref="inlineContainer"
-        tabindex="0"
-        role="region"
-        aria-label="Diagramme"
+        data-mermaid-inline
         class="px-4 py-6 overflow-x-auto min-h-[200px]"
       ></div>
     </div>
