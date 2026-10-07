@@ -1,7 +1,22 @@
 {
   "project": "claude-code-codex",
-  "generated": "2026-10-07 16:33",
+  "generated": "2026-10-07 17:36",
   "entries": [
+    {
+      "slug": "2026-10-07-options-de-ligne-de-commande-lisibles-dans-les-etudes-de-cas",
+      "title": "Les options de ligne de commande restent d'un seul tenant dans l'index des études de cas",
+      "date": "2026-10-07",
+      "lots": [
+        "L32"
+      ],
+      "captures": [
+        "captures/L32-index-etudes-de-cas-telephone.png"
+      ],
+      "alts": [
+        "Index des études de cas au téléphone : les options --dry-run et --check s'affichent sur une seule ligne dans les cartes"
+      ],
+      "html": "<p>Dans les cartes de l'index des études de cas, les options de ligne de commande comme <code>--dry-run</code> ou <code>--check</code> ne sont plus coupées en deux au trait d'union sur un écran étroit : elles restent sur une seule ligne et se lisent d'un coup.</p>\n<p>Sur les pages avec un diagramme d'architecture, la touche Tab ne s'arrête plus qu'une seule fois par diagramme (sur le diagramme, qu'on ouvre en grand avec Entrée ou Espace) au lieu de deux.</p>"
+    },
     {
       "slug": "2026-10-07-tableaux-et-blocs-de-code-plus-faciles-a-parcourir",
       "title": "Tableaux et blocs de code plus faciles à parcourir",
