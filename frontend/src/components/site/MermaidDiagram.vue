@@ -145,12 +145,8 @@ onBeforeUnmount(() => {
         'relative transition-opacity',
         isReady ? 'cursor-zoom-in' : 'opacity-50',
       ]"
-      :role="isReady ? 'button' : undefined"
-      :tabindex="isReady ? 0 : -1"
       :title="isReady ? 'Cliquer pour agrandir' : undefined"
       @click="isReady && open()"
-      @keydown.enter.prevent="isReady && open()"
-      @keydown.space.prevent="isReady && open()"
     >
       <div
         ref="inlineContainer"

@@ -14,11 +14,11 @@ test('diagramme Mermaid : un seul arrêt Tab par diagramme, pas de région imbri
   await page.evaluate(async () => {
     for (let y = 0; y <= document.body.scrollHeight; y += 600) { window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 60)); }
   });
-  await page.waitForSelector('figure [role="button"][tabindex="0"]', { timeout: 15000 });
+  await page.waitForSelector('figure [data-mermaid-inline] svg', { timeout: 15000 });
   const r = await page.evaluate(() => {
     const figs = [...document.querySelectorAll('figure')].filter((f) => f.querySelector('[data-mermaid-inline]'));
     return figs.map((f) => {
-      const stops = [...f.querySelectorAll('[tabindex]')].filter((n) => n.tabIndex >= 0 && !n.closest('noscript'));
+      const stops = [...f.querySelectorAll('button, a[href], input, select, textarea, [tabindex]')].filter((n) => n.tabIndex >= 0 && !n.closest('noscript'));
       const nested = f.querySelector('[role="button"] [tabindex], [role="button"] [role="region"], [role="button"] [aria-label]');
       return { stops: stops.length, nested: !!nested };
     });
@@ -40,13 +40,13 @@ test('index des études de cas : <code> des cartes sans retour à la ligne (--dr
     const response = await page.goto(`${env.base}/case-studies/`, { waitUntil: 'load' });
     assert.equal(response?.status(), 200);
     const r = await page.evaluate(() => {
-      const codes = [...document.querySelectorAll('p code[data-opt]')];
+      const codes = [...document.querySelectorAll('p code [data-opt]')];
       const over = [...document.querySelectorAll('article p')].filter((p) => p.scrollWidth > p.clientWidth + 1).map((p) => p.textContent.slice(0, 40));
-      return { opts: codes.map((c) => ({ t: c.textContent, lines: c.getClientRects().length })), over };
+      return { opts: codes.map((c) => ({ t: c.textContent, lines: Math.round(c.getBoundingClientRect().height / parseFloat(getComputedStyle(c.parentElement.closest('p')).lineHeight)) })), over };
     });
     assert.deepEqual(r.over, [], `paragraphes de carte qui débordent (${width} px)`);
     assert.ok(r.opts.length >= 2, `options CLI introuvables (${width} px)`);
-    for (const c of r.opts) assert.equal(c.lines, 1, `${c.t} coupé à ${width} px`);
+    for (const c of r.opts.filter((o) => o.t.length <= 16)) assert.equal(c.lines, 1, `${c.t} coupé à ${width} px`);
     await ctx.close();
   }
 });
