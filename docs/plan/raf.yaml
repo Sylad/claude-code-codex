@@ -232,6 +232,8 @@ lots:
     estimate: 1
     created: 2026-10-05
     started: 2026-10-06
+    notes:
+      - { date: 2026-10-07, text: "Reprise 07-10 (décision Sylvain). Fini = cause de chaque mismatch identifiée (composant, valeur qui diffère serveur/client : date, locale, aléatoire, window…) et corrigée à la source, pas masquée (pas de suppressHydrationWarning ni client:only sauf justification écrite) ; preuve sur le BUILD de prod (astro build && astro preview) : 0 message « Hydration completed but contains mismatches » dans la console des 4 pages ; test e2e qui échoue si le message réapparaît sur ces 4 pages." }
   - id: L30
     title: orchestrate.ux déclaré (port 4311) pour la revue UX automatique des vagues — suite de cadence L95
     status: done
