@@ -250,3 +250,4 @@ lots:
     visible: true
     created: 2026-10-07
     started: 2026-10-07
+    review: { date: 2026-10-07, verdict: "conforme — orchestré (vague 2026-10-07-1550, 1 passe(s) de correction)", commit: ac89d46df86a22ab2ea608ce7b7286025e447d96 }
