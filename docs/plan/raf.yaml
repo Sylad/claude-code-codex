@@ -256,6 +256,7 @@ lots:
     finished: 2026-10-07
   - id: L32
     title: "Mineurs revues L29/L31 : (1) MermaidDiagram : retirer tabindex/role=region/aria-label du conteneur imbriqué dans le role=button (WCAG 4.1.2 nested-interactive, double arrêt Tab, introduit par L31) + test d'un seul arrêt Tab par diagramme ; si une région reste, la nommer par caption ; (2) cartes de l'index des études de cas : options CLI non coupées au trait d'union dans les <code> (--dry-run, --check) ; (3) hydration.e2e : exiger statut 200 et un îlot hydraté, sinon le test passe à vide"
+    public: Options de ligne de commande d'un seul tenant dans l'index des études de cas
     status: done
     estimate: 0.5
     visible: true
