@@ -4,6 +4,7 @@ import PageHero from "@/components/site/PageHero.astro";
 import { apps, APP_COUNT } from "@/data/apps";
 import RtkStats from "@/components/site/RtkStats.astro";
 import { testedTools } from "@/data/tools-tested";
+import { inlineCodeHtml } from "@/lib/inline-code.mjs";
 import {
   STATUS_LABELS,
   STATUS_ACCENTS,
@@ -299,9 +300,10 @@ function formatStars(n?: number): string {
                         </div>
                       </div>
 
-                      <p class="text-sm text-ink-muted leading-relaxed flex-1">
-                        {tool.description}
-                      </p>
+                      <p
+                        class="text-sm text-ink-muted leading-relaxed flex-1 [&_code]:font-mono [&_code]:text-claude-soft [&_code]:text-[0.9em] [&_code]:px-1 [&_code]:rounded [&_code]:bg-white/5"
+                        set:html={inlineCodeHtml(tool.description)}
+                      />
 
                       <div class="flex flex-wrap items-center gap-2 pt-1">
                         {tool.caseStudyHref ? (
