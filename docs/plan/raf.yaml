@@ -261,3 +261,4 @@ lots:
     visible: true
     created: 2026-10-07
     started: 2026-10-07
+    review: { date: 2026-10-07, verdict: "conforme après 3 corrections mineures — orchestré (vague 2026-10-07-1735, 2 passe(s) de correction + passe des mineurs)", commit: ae71eb40c5836cdd35fb9636e30ef1a91a9d125c }
