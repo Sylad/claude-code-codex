@@ -15,14 +15,20 @@ for (const path of PAGES) {
     const messages = [];
     page.on('console', (m) => messages.push(`${m.type()}: ${m.text()}`));
     page.on('pageerror', (e) => messages.push(`pageerror: ${e.message}`));
-    await page.goto(`${env.base}${path}`, { waitUntil: 'load' });
+    const response = await page.goto(`${env.base}${path}`, { waitUntil: 'load' });
+    // Sans cela, une page renommée ou un dist/ absent (404) passerait à vide.
+    assert.equal(response?.status(), 200, `${path} : réponse HTTP inattendue`);
     // client:visible → faire défiler toute la page pour monter chaque îlot.
     await page.evaluate(async () => {
       for (let y = 0; y <= document.body.scrollHeight; y += 600) { window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 60)); }
     });
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(1500);
+    const hydrated = await page.locator('astro-island[ssr]').count();
+    const islands = await page.locator('astro-island').count();
     await context.close();
+    assert.ok(islands > 0, `${path} : aucun astro-island sur la page`);
+    assert.equal(hydrated, 0, `${path} : ${hydrated} îlot(s) non hydraté(s)`);
     const hydration = messages.filter((m) => /hydrat/i.test(m));
     assert.deepEqual(hydration, [], hydration.join('\n'));
   });
