@@ -245,7 +245,8 @@ lots:
     finished: 2026-10-07
   - id: L31
     title: "Mineurs revue UX L27 : (1) Nouveautés utilise le alt écrit de l'entrée (e.alts[i]) au lieu du alt générique tiré du titre, image et aria-label (nouveautes.astro ~106-109) ; (2) hermes-agent : tableau lisible à 320 px (p-3 au téléphone, 1re colonne sticky) ; (3) aetherwx-encyclopedia : cadre ou ombre de bord sur les tableaux qui défilent ; (4) blocs défilants (pre, overflow-x-auto) : tabindex=0 + role=region + aria-label (axe scrollable-region-focusable) ; + accents graves Markdown bruts dans les descriptions de cartes de l'index"
-    status: todo
+    status: doing
     estimate: 0.5
     visible: true
     created: 2026-10-07
+    started: 2026-10-07
