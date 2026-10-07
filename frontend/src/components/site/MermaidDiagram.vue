@@ -19,7 +19,7 @@ let svgString = "";
 
 const escapeHtml = (v: string) =>
   v.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-const noscriptHtml = `<pre class="px-4 py-4 overflow-x-auto text-xs leading-snug font-mono text-ink/80 whitespace-pre">${escapeHtml(props.definition)}</pre>`;
+const noscriptHtml = `<pre tabindex="0" role="region" aria-label="Diagramme (source)" class="px-4 py-4 overflow-x-auto text-xs leading-snug font-mono text-ink/80 whitespace-pre">${escapeHtml(props.definition)}</pre>`;
 
 function injectInto(el: HTMLDivElement | null) {
   if (!el || !svgString) return;
@@ -154,6 +154,9 @@ onBeforeUnmount(() => {
     >
       <div
         ref="inlineContainer"
+        tabindex="0"
+        role="region"
+        aria-label="Diagramme"
         class="px-4 py-6 overflow-x-auto min-h-[200px]"
       ></div>
     </div>

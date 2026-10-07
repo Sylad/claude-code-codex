@@ -423,7 +423,7 @@ const lessons = [
     <CaseStudySection eyebrow="Smoke tests terminal">
       <p>Les 3 commandes que je voulais voir vertes à la fin de la nuit :</p>
 
-      <div class="my-4 rounded-lg border border-white/10 bg-black/40 p-4 font-mono text-xs overflow-x-auto">
+      <div tabindex="0" role="region" aria-label="Sortie : applications ArgoCD" class="my-4 rounded-lg border border-white/10 bg-black/40 p-4 font-mono text-xs overflow-x-auto">
         <p class="text-emerald-300 mb-1">$ kubectl get app -n argocd -o custom-columns='NAME:.metadata.name,SYNC:.status.sync.status,HEALTH:.status.health.status'</p>
         <pre class="text-ink/90 whitespace-pre">NAME                SYNC     HEALTH
 finance-tracker     Synced   Healthy
@@ -433,7 +433,7 @@ ol-companion        Synced   Healthy
 warhammer40k        Synced   Healthy</pre>
       </div>
 
-      <div class="my-4 rounded-lg border border-white/10 bg-black/40 p-4 font-mono text-xs overflow-x-auto">
+      <div tabindex="0" role="region" aria-label="Sortie : pods du namespace" class="my-4 rounded-lg border border-white/10 bg-black/40 p-4 font-mono text-xs overflow-x-auto">
         <p class="text-emerald-300 mb-1">$ kubectl get pods -n maritime</p>
         <pre class="text-ink/90 whitespace-pre">NAME                                READY   STATUS    RESTARTS   AGE
 ais-decoder-6549dc648c-j7p56        1/1     Running   0          51m
@@ -447,7 +447,7 @@ rmq-server-0                        1/1     Running   0          95m
 track-builder-856676fd85-l9gl6      1/1     Running   0          20m</pre>
       </div>
 
-      <div class="my-4 rounded-lg border border-white/10 bg-black/40 p-4 font-mono text-xs overflow-x-auto">
+      <div tabindex="0" role="region" aria-label="Sortie : réponses HTTP" class="my-4 rounded-lg border border-white/10 bg-black/40 p-4 font-mono text-xs overflow-x-auto">
         <p class="text-emerald-300 mb-1">$ for u in ol finance warhammer maritime argocd ; do curl -sI -L "https://$u.dev.local" | head -1 ; done</p>
         <pre class="text-ink/90 whitespace-pre">HTTP/2 200
 HTTP/2 200
@@ -467,7 +467,7 @@ HTTP/2 200</pre>
     </CaseStudySection>
 
     <CaseStudySection eyebrow="Bilan technique">
-      <div class="overflow-x-auto my-4">
+      <div tabindex="0" role="region" aria-label="Tableau : bilan technique" class="overflow-x-auto my-4">
         <table class="w-full text-sm border-collapse">
           <thead>
             <tr class="border-b border-white/10">
@@ -509,7 +509,7 @@ HTTP/2 200</pre>
         publique. Trois compromis explicites pour rester scopés à la
         nuit, tous documentés avec un plan de fix :
       </p>
-      <div class="overflow-x-auto my-4">
+      <div tabindex="0" role="region" aria-label="Tableau : compromis de la migration" class="overflow-x-auto my-4">
         <table class="w-full text-sm border-collapse">
           <thead>
             <tr class="border-b border-white/10">
@@ -681,7 +681,7 @@ HTTP/2 200</pre>
       <p>
         Le workflow devient <strong>3 lignes</strong> :
       </p>
-      <pre class="bg-zinc-900 border border-zinc-700 rounded p-4 text-sm font-mono overflow-x-auto"><code>{`docker push ghcr.io/sylad/maritime-X:vY
+      <pre tabindex="0" role="region" aria-label="Commandes de déploiement" class="bg-zinc-900 border border-zinc-700 rounded p-4 text-sm font-mono overflow-x-auto"><code>{`docker push ghcr.io/sylad/maritime-X:vY
 ./scripts/upgrade-app.sh maritime vY
 # → 2 clusters synchronisés en ~60s, zéro touche humaine`}</code></pre>
       <p>

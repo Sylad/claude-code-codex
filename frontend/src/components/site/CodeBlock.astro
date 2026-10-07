@@ -20,5 +20,8 @@ const { language, filename, code } = Astro.props;
     </span>
   </figcaption>
   <pre
+    tabindex="0"
+    role="region"
+    aria-label={`Code : ${filename ?? language}`}
     class="px-4 py-3 overflow-x-auto text-sm leading-relaxed font-mono text-ink/90"><code>{code}</code></pre>
 </figure>
