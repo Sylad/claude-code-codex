@@ -232,7 +232,9 @@ lots:
     started: 2026-10-06
   - id: L30
     title: orchestrate.ux déclaré (port 4311) pour la revue UX automatique des vagues — suite de cadence L95
-    status: doing
+    status: done
     estimate: 1
     created: 2026-10-07
     started: 2026-10-07
+    review: { date: 2026-10-07, verdict: "conforme (lead) : cadence.yaml seul ; commande essayée avec startApp de cadence (Node 20 au départ, Node du .nvmrc injecté) → ready, HTTP 200, port libéré après stop", commit: 635978ec89bfdc7ec06a4ac249f15a2ab66985f3 }
+    finished: 2026-10-07
