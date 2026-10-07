@@ -20,7 +20,7 @@ test('index des études de cas : plus d’accent grave Markdown brut dans les ca
   const cartes = [...html.matchAll(/<p class="text-sm text-ink-muted leading-relaxed flex-1[^>]*>([\s\S]*?)<\/p>/g)];
   assert.ok(cartes.length > 5, 'cartes introuvables');
   for (const [, texte] of cartes) assert.ok(!texte.includes('`'), `accent grave brut : ${texte.slice(0, 80)}`);
-  assert.match(html, /<code>--dry-run<\/code>/);
+  assert.match(html, /<code[^>]*>--dry-run<\/code>/);
 });
 
 // (4) tout bloc qui défile au clavier : tabindex=0 + role=region + nom accessible

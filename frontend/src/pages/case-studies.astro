@@ -301,7 +301,7 @@ function formatStars(n?: number): string {
                       </div>
 
                       <p
-                        class="text-sm text-ink-muted leading-relaxed flex-1 [&_code]:font-mono [&_code]:whitespace-nowrap [&_code]:text-claude-soft [&_code]:text-[0.9em] [&_code]:px-1 [&_code]:rounded [&_code]:bg-white/5"
+                        class="text-sm text-ink-muted leading-relaxed flex-1 [&_code]:font-mono [overflow-wrap:anywhere] [&_code[data-opt]]:whitespace-nowrap [&_code]:text-claude-soft [&_code]:text-[0.9em] [&_code]:px-1 [&_code]:rounded [&_code]:bg-white/5"
                         set:html={inlineCodeHtml(tool.description)}
                       />
 

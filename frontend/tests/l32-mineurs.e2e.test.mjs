@@ -40,11 +40,13 @@ test('index des études de cas : <code> des cartes sans retour à la ligne (--dr
     const response = await page.goto(`${env.base}/case-studies/`, { waitUntil: 'load' });
     assert.equal(response?.status(), 200);
     const r = await page.evaluate(() => {
-      const codes = [...document.querySelectorAll('p code')].filter((c) => /^--/.test(c.textContent.trim()));
-      return codes.map((c) => ({ t: c.textContent, lines: c.getClientRects().length }));
+      const codes = [...document.querySelectorAll('p code[data-opt]')];
+      const over = [...document.querySelectorAll('article p')].filter((p) => p.scrollWidth > p.clientWidth + 1).map((p) => p.textContent.slice(0, 40));
+      return { opts: codes.map((c) => ({ t: c.textContent, lines: c.getClientRects().length })), over };
     });
-    assert.ok(r.length >= 2, `options CLI introuvables (${width} px)`);
-    for (const c of r) assert.equal(c.lines, 1, `${c.t} coupé à ${width} px`);
+    assert.deepEqual(r.over, [], `paragraphes de carte qui débordent (${width} px)`);
+    assert.ok(r.opts.length >= 2, `options CLI introuvables (${width} px)`);
+    for (const c of r.opts) assert.equal(c.lines, 1, `${c.t} coupé à ${width} px`);
     await ctx.close();
   }
 });
