@@ -212,13 +212,15 @@ lots:
     finished: 2026-10-06
   - id: L27
     title: "Étude de cas maritime-atlas à 390 px : les blocs de code font défiler la page latéralement (scrollWidth 600 pour clientWidth 390) — QA prod 05-10, à joindre à la revue L8"
-    status: doing
+    status: done
     estimate: 1
     quickwin: true
     visible: true
     created: 2026-10-05
     started: 2026-10-06
     review: { date: 2026-10-06, verdict: "conforme — orchestré (vague 2026-10-06-2138, 1 passe(s) de correction)", commit: 518bf03e1861f003bbead7f3ee122a453a0ba2c4 }
+    ux: { date: 2026-10-07, verdict: conforme — 0 débordement de page sur les 22 études de cas + index à 320/390/1440 px (prod c7701f4) ; 4 points mineurs reportés en L31 }
+    finished: 2026-10-07
   - id: L28
     title: "Route inexistante : servir un vrai 404 (aujourd'hui 200 + page d'accueil, 26 665 octets ; /404.html en 200) — QA prod 05-10"
     status: todo
@@ -238,3 +240,9 @@ lots:
     started: 2026-10-07
     review: { date: 2026-10-07, verdict: "conforme (lead) : cadence.yaml seul ; commande essayée avec startApp de cadence (Node 20 au départ, Node du .nvmrc injecté) → ready, HTTP 200, port libéré après stop", commit: 635978ec89bfdc7ec06a4ac249f15a2ab66985f3 }
     finished: 2026-10-07
+  - id: L31
+    title: "Mineurs revue UX L27 : (1) Nouveautés utilise le alt écrit de l'entrée (e.alts[i]) au lieu du alt générique tiré du titre, image et aria-label (nouveautes.astro ~106-109) ; (2) hermes-agent : tableau lisible à 320 px (p-3 au téléphone, 1re colonne sticky) ; (3) aetherwx-encyclopedia : cadre ou ombre de bord sur les tableaux qui défilent ; (4) blocs défilants (pre, overflow-x-auto) : tabindex=0 + role=region + aria-label (axe scrollable-region-focusable) ; + accents graves Markdown bruts dans les descriptions de cartes de l'index"
+    status: todo
+    estimate: 0.5
+    visible: true
+    created: 2026-10-07
