@@ -3,7 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { setupBrowser } from './lib/e2e-dist.mjs';
 
-// (1) un diagramme = un seul arrêt Tab (le role=button), rien d'interactif imbriqué
+// (1) un diagramme = un seul arrêt Tab (le bouton « Agrandir »), rien d'interactif ni de région sur le conteneur du diagramme
 test('diagramme Mermaid : un seul arrêt Tab par diagramme, pas de région imbriquée', async (t) => {
   const env = await setupBrowser(t);
   if (!env) return;
@@ -14,19 +14,21 @@ test('diagramme Mermaid : un seul arrêt Tab par diagramme, pas de région imbri
   await page.evaluate(async () => {
     for (let y = 0; y <= document.body.scrollHeight; y += 600) { window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 60)); }
   });
-  await page.waitForSelector('figure [data-mermaid-inline] svg', { timeout: 15000 });
+  // chaque diagramme doit être rendu (son svg présent) avant de compter ses arrêts
+  await page.waitForFunction(() => {
+    const figs = [...document.querySelectorAll('figure')].filter((f) => f.querySelector('[data-mermaid-inline]'));
+    return figs.length > 0 && figs.every((f) => f.querySelector('[data-mermaid-inline] svg'));
+  }, null, { timeout: 15000 });
   const r = await page.evaluate(() => {
     const figs = [...document.querySelectorAll('figure')].filter((f) => f.querySelector('[data-mermaid-inline]'));
     return figs.map((f) => {
       const stops = [...f.querySelectorAll('button, a[href], input, select, textarea, [tabindex]')].filter((n) => n.tabIndex >= 0 && !n.closest('noscript'));
-      const nested = f.querySelector('[role="button"] [tabindex], [role="button"] [role="region"], [role="button"] [aria-label]');
+      const nested = f.querySelector('[data-mermaid-inline][tabindex], [data-mermaid-inline][role], [data-mermaid-inline][aria-label], [role="button"] [tabindex], [role="button"] [role="region"], [role="button"] [aria-label]');
       return { stops: stops.length, nested: !!nested };
     });
   });
   assert.ok(r.length > 0, 'aucun diagramme trouvé');
-  const ready = r.filter((x) => x.stops > 0);
-  assert.ok(ready.length > 0, 'aucun diagramme rendu');
-  for (const x of ready) assert.deepEqual(x, { stops: 1, nested: false });
+  for (const x of r) assert.deepEqual(x, { stops: 1, nested: false });
   await ctx.close();
 });
 
