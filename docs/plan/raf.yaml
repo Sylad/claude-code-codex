@@ -197,6 +197,7 @@ lots:
     created: 2026-10-05
   - id: L25
     title: "Accueil : sur-titre orange 12 px posé sur la vidéo de fond (index.astro:80) — le mesurer au pire pixel (6 largeurs × 3 défilements) et le passer sur la pastille sombre comme PageHero s'il est sous 4,5:1 — relevé en revue L16"
+    public: "Accueil : sur-titre lisible sur la vidéo de fond"
     status: todo
     estimate: 1
     visible: true
