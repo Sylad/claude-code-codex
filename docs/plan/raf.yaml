@@ -266,3 +266,10 @@ lots:
     review: { date: 2026-10-07, verdict: "conforme après 3 corrections mineures — orchestré (vague 2026-10-07-1735, 2 passe(s) de correction + passe des mineurs)", commit: ae71eb40c5836cdd35fb9636e30ef1a91a9d125c }
     ux: { date: 2026-10-07, verdict: "conforme (revue UX de la vague 2026-10-07-1735, app lancée par le programme)" }
     finished: 2026-10-07
+  - id: L33
+    title: "Étude de cas cadence : page /case-studies/cadence sur le modèle de maritime-atlas — comment ça marche : schémas (chaîne lot → implémentation → revue de code → correction en session neuve → done → livraison vérifiée → QA ; le lead, les vagues orchestrate, les sessions neuves et courtes, la mémoire partagée = fichiers versionnés raf.yaml / git / .cadence/runs, jamais la conversation), capture de la bande cadence-hud (copie dans ~/projects/developpeur/tmp/cadence-hud-bande-2026-10-08.png, à placer dans frontend/public), lien vers github.com/Sylad/cadence et npm ; schémas en SVG inline lisibles à 390 px (demande Sylvain 08-10)"
+    public: "Étude de cas : cadence, l'outil qui organise le travail avec Claude Code"
+    status: todo
+    estimate: 1
+    visible: true
+    created: 2026-10-08
