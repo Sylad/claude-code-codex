@@ -205,4 +205,3 @@ Skip the case study when the verdict is trivial (`adopt` with no surprises, or `
 
 - `/skillify` — when verdict is "skillify" (extract the idea into a custom skill)
 - `/save` — captures session-level meta-learnings; this skill captures tool-level findings
-- `/sync-site-docs` — when the case study lands, this skill keeps the cross-doc references aligned

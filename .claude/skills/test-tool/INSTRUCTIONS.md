@@ -50,5 +50,4 @@ the skill resolves all three.
 - `/sparc` — structured implementation workflow (5 phases)
 - `/skillify` — meta-skill that turns external concepts into skills
 - `/save` — captures session learnings in the right artifact home
-- `/sync-site-docs` — keeps cross-repo docs aligned
 - `/test-tool` — *this one* — evaluates a third-party tool and ships the verdict
