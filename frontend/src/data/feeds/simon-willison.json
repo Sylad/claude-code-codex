@@ -1,5 +1,32 @@
 [
   {
+    "id": "5af1a93eb20fb54c",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Oct/10/the-new-york-times/",
+    "title": "Quoting The New York Times",
+    "summary": "Les agents IA d'Anthropic ont soumis des demandes de visa incomplètes sur le site du State Dept, révélant les risques des agents autonomes.",
+    "publishedAt": "2026-10-10T02:04:12+00:00",
+    "fetchedAt": "2026-10-12T14:20:00.898Z"
+  },
+  {
+    "id": "f242adb232a8919d",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Oct/8/ttok/",
+    "title": "ttok 0.4",
+    "summary": "ttok 0.4 : CLI pour compter les tokens via tiktoken, utilisable avec uvx pour estimer les coûts API.",
+    "publishedAt": "2026-10-08T23:34:28+00:00",
+    "fetchedAt": "2026-10-12T14:20:00.898Z"
+  },
+  {
+    "id": "231befe88d753d02",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Oct/7/claude-haiku-5-5/",
+    "title": "Claude Haiku 5.5",
+    "summary": "Haiku 5.5 égale le prix de GPT-6 Luna ($0.10/$0.50) jusqu'à 100k tokens, mais un nouveau tokenizer rend ses prompts 25% plus longs.",
+    "publishedAt": "2026-10-07T20:56:21+00:00",
+    "fetchedAt": "2026-10-12T14:20:00.898Z"
+  },
+  {
     "id": "345f1755705d282a",
     "source": "simon-willison",
     "url": "https://simonwillison.net/2026/Oct/3/default-hard-budget-caps/",
@@ -421,32 +448,5 @@
     "summary": "llm-anthropic 0.27 ajoute la compatibilité avec anthropic v1.0.0 et httpx2, migré via Claude Code.",
     "publishedAt": "2026-08-24T16:27:04+00:00",
     "fetchedAt": "2026-08-31T12:36:10.961Z"
-  },
-  {
-    "id": "99acd73254864f62",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Aug/23/anthropics-best-ai-model-struggles-to-attract-users-as-cheaper-t/",
-    "title": "Anthropic’s best AI model struggles to attract users as cheaper tools thrive",
-    "summary": "Opus 4.8 domine l'usage chez les devs (28%), tandis que les modèles coûteux comme Fable 5 peinent à séduire face aux alternatives moins chères.",
-    "publishedAt": "2026-08-23T20:24:52+00:00",
-    "fetchedAt": "2026-08-24T06:50:51.001Z"
-  },
-  {
-    "id": "71343321c7660b7a",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Aug/23/drew-breunig/",
-    "title": "Quoting Drew Breunig",
-    "summary": "Fable change la donne : optimiser son contexte et ses stratégies devient rentable quand les modèles coûtent cher.",
-    "publishedAt": "2026-08-23T19:55:30+00:00",
-    "fetchedAt": "2026-08-24T06:50:51.001Z"
-  },
-  {
-    "id": "0eccfa5da2ee777f",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Aug/22/linus-torvalds/",
-    "title": "Quoting Linus Torvalds",
-    "summary": "Linus Torvalds débogage un problème Linux avec l'aide d'une IA : utile mais peu persistante, elle a failli abandonner plusieurs fois.",
-    "publishedAt": "2026-08-22T21:04:26+00:00",
-    "fetchedAt": "2026-08-24T06:50:51.001Z"
   }
 ]

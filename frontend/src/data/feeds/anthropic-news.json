@@ -63,6 +63,15 @@
     "fetchedAt": "2026-06-15T11:57:53.003Z"
   },
   {
+    "id": "2bd8707fdab8226a",
+    "source": "anthropic-news",
+    "url": "https://www.anthropic.com/news/cyber-verification-program",
+    "title": "Expanding the Cyber Verification Program",
+    "summary": "Anthropic élargit son programme de vérification cyber avec 3 niveaux d'accès aux modèles Claude avancés pour les pros de la sécu.",
+    "publishedAt": "Tue, 06 Oct 2026 19:00:00 GMT",
+    "fetchedAt": "2026-10-12T14:19:58.904Z"
+  },
+  {
     "id": "cde859f5c947a2b8",
     "source": "anthropic-news",
     "url": "https://www.anthropic.com/news/tino-cuellar",
@@ -133,6 +142,15 @@
     "summary": "Claude Opus 4.7 est dispo : meilleure ingénierie logicielle, vision améliorée, et peut gérer les tâches complexes en autonomie.",
     "publishedAt": "Thu, 16 Apr 2026 04:00:00 GMT",
     "fetchedAt": "2026-06-15T11:57:53.003Z"
+  },
+  {
+    "id": "4e66a7e453a3193b",
+    "source": "anthropic-news",
+    "url": "https://www.anthropic.com/news/2026-usage-policy-update",
+    "title": "2026 Usage Policy update",
+    "summary": "Anthropic renforce sa politique d'utilisation 2026 pour limiter les opérations d'influence et précise les règles pour les agents autonomes.",
+    "publishedAt": "Thu, 08 Oct 2026 17:00:00 GMT",
+    "fetchedAt": "2026-10-12T14:19:58.904Z"
   },
   {
     "id": "6c20810f6d90adf9",
