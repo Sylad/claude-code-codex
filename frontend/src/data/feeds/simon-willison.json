@@ -1,5 +1,59 @@
 [
   {
+    "id": "9d2417f40cde50f0",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Oct/18/llm-echo/",
+    "title": "llm-echo 0.5",
+    "summary": "llm-echo 0.5 améliore le plugin de debug LLM en comptabilisant les appels d'outils, prompts système et tokens de raisonnement.",
+    "publishedAt": "2026-10-18T23:16:16+00:00",
+    "fetchedAt": "2026-10-19T12:01:09.247Z"
+  },
+  {
+    "id": "e8a95e9b22df9875",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Oct/16/code-review/",
+    "title": "Quoting Addy Osmani, Morgan Westlee Lunt, and Qing Wang",
+    "summary": "La revue de code continue avec Claude détecte les erreurs routine avant intervention humaine, libérant le temps d'équipe pour l'analyse de haut niveau.",
+    "publishedAt": "2026-10-16T22:06:37+00:00",
+    "fetchedAt": "2026-10-19T12:01:09.247Z"
+  },
+  {
+    "id": "23178e6a594364e0",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Oct/15/chirp-pong/",
+    "title": "Chirp Pong",
+    "summary": "Jeu Pong multijoueur en HTML statique avec synchronisation audio via microphone, créé avec Claude Code.",
+    "publishedAt": "2026-10-15T19:47:52+00:00",
+    "fetchedAt": "2026-10-19T12:01:09.247Z"
+  },
+  {
+    "id": "fdc555784f183633",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Oct/13/redesigning-source-control-at-anthropic/",
+    "title": "Redesigning source control at Anthropic",
+    "summary": "Anthropic a construit un système de contrôle de version personnalisé pour gérer 30k changements/jour, 12x plus qu'en mai 2026.",
+    "publishedAt": "2026-10-13T23:00:06+00:00",
+    "fetchedAt": "2026-10-19T12:01:09.247Z"
+  },
+  {
+    "id": "7e80df2842c6c98c",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Oct/13/geoffrey-huntley/",
+    "title": "Quoting Geoffrey Huntley",
+    "summary": "Un pre-commit hook peut forcer les agents IA à utiliser ta libraire de diagnostics en rejetant les appels directs aux modules d'observabilité.",
+    "publishedAt": "2026-10-13T13:32:00+00:00",
+    "fetchedAt": "2026-10-19T12:01:09.247Z"
+  },
+  {
+    "id": "ace58ee31866ab85",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Oct/13/web-edit/",
+    "title": "web-edit 0.1a1",
+    "summary": "web-edit 0.1a1 : optimisations perf codées par Claude Opus après analyse de profiling Python 3.15.",
+    "publishedAt": "2026-10-13T01:40:05+00:00",
+    "fetchedAt": "2026-10-19T12:01:09.247Z"
+  },
+  {
     "id": "5af1a93eb20fb54c",
     "source": "simon-willison",
     "url": "https://simonwillison.net/2026/Oct/10/the-new-york-times/",
@@ -394,59 +448,5 @@
     "summary": "[off-topic]\n\nCe post concerne les system prompts de Claude.ai et des apps mobiles, non documentés pour Claude Code ou l'API.",
     "publishedAt": "2026-09-02T14:16:42+00:00",
     "fetchedAt": "2026-09-07T11:29:50.340Z"
-  },
-  {
-    "id": "b6e93fadaf7ee802",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Sep/2/rick-brewster/",
-    "title": "Quoting Rick Brewster",
-    "summary": "Paint.NET a utilisé Claude pour réécrire 180k lignes de Direct2D en reverse-engineering pour Linux, démontrant les capacités de génération de code complexe à grande échelle.",
-    "publishedAt": "2026-09-02T05:50:57+00:00",
-    "fetchedAt": "2026-09-07T11:29:50.340Z"
-  },
-  {
-    "id": "6cb14383ff4a603d",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Sep/1/claude-fable-5-1/",
-    "title": "Claude Fable 5.1 made me a really nice animated pelican",
-    "summary": "Claude Fable 5.1 améliore significativement la recherche scientifique (+52.6%) et propose 5 niveaux de reasoning pour optimiser les tâches complexes.",
-    "publishedAt": "2026-09-01T23:57:28+00:00",
-    "fetchedAt": "2026-09-07T11:29:50.340Z"
-  },
-  {
-    "id": "983102b3ea3b4340",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Aug/28/just-a-rumour-of-a-bug/",
-    "title": "Just a rumour of a bug is enough to find a security exploit these days",
-    "summary": "Les agents IA trouvent les vulnérabilités en minutes après leur divulgation, forçant la communauté open source à repenser ses processus de sécurité.",
-    "publishedAt": "2026-08-28T22:12:02+00:00",
-    "fetchedAt": "2026-08-31T12:36:10.961Z"
-  },
-  {
-    "id": "bc6639b3f24621f6",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Aug/27/breaking-claude-code-opus-5-auto-mode/",
-    "title": "Breaking Claude Code Opus 5 Auto Mode",
-    "summary": "Auto Mode de Claude Code contournable à 80% : toujours sandboxer les agents en production.",
-    "publishedAt": "2026-08-27T22:50:25+00:00",
-    "fetchedAt": "2026-08-31T12:36:10.961Z"
-  },
-  {
-    "id": "69963c113d8fc5e8",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Aug/26/paul-dix/",
-    "title": "Quoting Paul Dix",
-    "summary": "L'IA peut produire du code complexe et fiable à grande échelle avec la bonne vérification et direction, raffinage continu inclus.",
-    "publishedAt": "2026-08-26T08:07:55+00:00",
-    "fetchedAt": "2026-08-31T12:36:10.961Z"
-  },
-  {
-    "id": "49fca70a70651d4f",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Aug/24/llm-anthropic/",
-    "title": "llm-anthropic 0.27",
-    "summary": "llm-anthropic 0.27 ajoute la compatibilité avec anthropic v1.0.0 et httpx2, migré via Claude Code.",
-    "publishedAt": "2026-08-24T16:27:04+00:00",
-    "fetchedAt": "2026-08-31T12:36:10.961Z"
   }
 ]
