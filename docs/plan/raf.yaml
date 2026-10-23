@@ -43,31 +43,37 @@ lots:
   - id: L3
     title: Revue UX — Start
     status: todo
+    visible: true
     estimate: 0.25
     created: 2026-09-28
   - id: L4
     title: Revue UX — Learning
     status: todo
+    visible: true
     estimate: 0.25
     created: 2026-09-28
   - id: L5
     title: Revue UX — Theory
     status: todo
+    visible: true
     estimate: 0.25
     created: 2026-09-28
   - id: L6
     title: Revue UX — Ecosystem
     status: todo
+    visible: true
     estimate: 0.25
     created: 2026-09-28
   - id: L7
     title: Revue UX — Atelier IA
     status: todo
+    visible: true
     estimate: 0.25
     created: 2026-09-28
   - id: L8
     title: "Revue UX — Études de cas : index et gabarit de page"
     status: todo
+    visible: true
     estimate: 0.25
     created: 2026-09-28
     notes:
@@ -76,16 +82,19 @@ lots:
   - id: L9
     title: "Revue UX — Guides longs : Kubernetes pour développeurs Java, ArgoCD/K8s pour les nuls, Cloudflare pour les nuls"
     status: todo
+    visible: true
     estimate: 0.25
     created: 2026-09-28
   - id: L10
     title: Revue UX — Vidéos
     status: todo
+    visible: true
     estimate: 0.25
     created: 2026-09-28
   - id: L11
     title: Revue UX — À propos
     status: todo
+    visible: true
     estimate: 0.25
     created: 2026-09-28
     notes:
@@ -93,6 +102,7 @@ lots:
   - id: L12
     title: "Revue UX — Gabarit commun : navigation, en-tête, pied, rendu téléphone"
     status: todo
+    visible: true
     estimate: 0.25
     created: 2026-09-28
   - id: L13
