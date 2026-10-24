@@ -325,12 +325,14 @@ lots:
     created: 2026-10-24
   - id: L40
     title: "Plan déplacé vers .cadence/raf.yaml avec raf migrate (cadence L284, L305) : --dry-run d'abord, chaque lecteur du chemin (scripts plan-data, tests, CI, CLAUDE.md, skills) mis à jour ou signalé ; un lecteur non traité (chemin construit à la main) corrigé à la main dans le même lot ; tests, build et raf check verts ; l'avertissement « ancien emplacement » disparaît"
-    status: doing
+    status: done
     estimate: 0.1
     created: 2026-10-24
     started: 2026-10-24
     review: { date: 2026-10-24, verdict: "compliant (0 blocking, 0 major, 2 minor notes: a lot-title vestige and a lead commit citing L284 that keeps `raf check` at 1 écart) — orchestré (vague 2026-10-24-2005, 0 passe(s) de correction)", commit: a1e7b5e0a4d1715545cf24475ea12c4e006b721e }
+    finished: 2026-10-24
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
   - { sha: 3525d95fffbfb6338f40f2a06bac5c5bdf1efce2, subject: "config: la documentation suit le code (docs.sync) et l'étude de cas du projet est déclarée (docs.articles) — outillage cadence, lead 24-10", date: 2026-10-24, reason: "réglage d'outillage cadence (docs.sync, docs.articles), pas un lot du projet — lead 24-10" }
+  - { sha: 36221848ecff29d324ffc81ddee7a09a4f87a8ef, subject: "plan: L40 migration du plan vers .cadence/raf.yaml (cadence L284)", date: 2026-10-24, reason: "commit de plan du lead dont le message cite un lot de cadence, pas de ce dépôt — lead 24-10" }
