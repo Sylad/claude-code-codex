@@ -1,5 +1,5 @@
 /**
- * L15 — ce que la page « Plan de travail » publie du plan (docs/plan/raf.yaml, tenu par raf).
+ * L15 — ce que la page « Plan de travail » publie du plan (.cadence/raf.yaml, tenu par raf).
  * Repris d'evatosorus (L28, après ses revues de code et d'ergonomie), modèle finance-tracker :
  *
  *   1. seuls les lots `visible: true` (changements pour le visiteur), non abandonnés ;
@@ -195,7 +195,7 @@ export function parsePublicPlan(
 ): PublicPlan {
   const plan: unknown = parse(yamlText);
   if (typeof plan !== 'object' || plan === null || !Array.isArray((plan as { lots?: unknown }).lots)) {
-    throw new Error('plan illisible : docs/plan/raf.yaml doit contenir une liste « lots »');
+    throw new Error('plan illisible : .cadence/raf.yaml doit contenir une liste « lots »');
   }
   return publicPlan(plan, { newsTitles: newsTitlesByLot(newsEntries) });
 }

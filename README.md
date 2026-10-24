@@ -31,7 +31,7 @@ officielle avec Anthropic.
 | `/videos` | Chaînes YouTube EN/FR spécifiques Claude Code, filtrables par langue/officiel |
 | `/about` | Genèse du site, stack technique, crédits IA (Claude Code + openart.ai) |
 | `/nouveautes` | Journal des évolutions visibles du site, la plus récente en premier (pastille sur le lien quand il y a du neuf) |
-| `/plan-de-travail` | Ce qui est en cours, prévu et récemment livré — titres publics du plan `docs/plan/raf.yaml`, générés au build |
+| `/plan-de-travail` | Ce qui est en cours, prévu et récemment livré — titres publics du plan `.cadence/raf.yaml`, générés au build |
 
 ## Stack
 

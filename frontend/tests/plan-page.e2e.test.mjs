@@ -1,5 +1,5 @@
 // L15 — page « Plan de travail » (/plan-de-travail/) : en cours, prévu, récemment livré,
-// générée AU BUILD depuis docs/plan/raf.yaml. Titres publics et états seulement : AUCUN
+// générée AU BUILD depuis .cadence/raf.yaml. Titres publics et états seulement : AUCUN
 // texte privé du plan (titre brut, note, verdict UX, raison, sous-tâche, public: d'un lot
 // masqué) ne doit sortir dans le site construit — vérifié sur TOUS les fichiers de dist,
 // y compris sous forme échappée (HTML, JSON).
@@ -17,7 +17,7 @@ import { MIN_NEEDLE, listFiles, normalize, privateTexts, scanForLeaks, splitNeed
 import { newsTitlesByLot, parsePublicPlan, publicTitleOf } from '../src/lib/plan-public.ts';
 
 const { parse } = createRequire(new URL('../package.json', import.meta.url))('yaml');
-const RAF_TEXT = readFileSync(new URL('../../docs/plan/raf.yaml', import.meta.url), 'utf8');
+const RAF_TEXT = readFileSync(new URL('../../.cadence/raf.yaml', import.meta.url), 'utf8');
 const RAF = parse(RAF_TEXT);
 const NEWS = JSON.parse(readFileSync(new URL('../public/nouveautes-data/nouveautes.json', import.meta.url), 'utf8')).entries;
 const PAGE = join(DIST, 'plan-de-travail', 'index.html');

@@ -3,7 +3,7 @@
   L15 — Plan de travail : ce qui est en cours, prévu et récemment livré sur le site
   (repris d'evatosorus L28, lui-même inspiré de la page « À venir » d'AetherWX).
 
-  Source : docs/plan/raf.yaml (tenu par raf, cadence), lu AU BUILD. On ne publie que
+  Source : .cadence/raf.yaml (tenu par raf, cadence), lu AU BUILD. On ne publie que
   les lots visibles qui ont un TITRE PUBLIC (champ public: du plan ; pour un lot livré,
   à défaut, le titre de sa Nouveauté ; jamais le titre brut), avec leur état et le
   décompte de leurs sous-tâches (liste blanche de lib/plan-public.ts) : titres bruts,
@@ -19,9 +19,9 @@ import { parsePublicPlan, planSummary, stepsLabel, RECENT_DONE, type PublicLot }
 import news from "../../public/nouveautes-data/nouveautes.json";
 
 // Le build se lance depuis frontend/ (npm run build ; Cloudflare Pages : « cd frontend &&
-// npm install && npm run build ») : le plan est à ../docs/plan/raf.yaml. Un seul chemin ;
+// npm install && npm run build ») : le plan est à ../.cadence/raf.yaml. Un seul chemin ;
 // absent, le build échoue.
-const rafPath = join(process.cwd(), "..", "docs", "plan", "raf.yaml");
+const rafPath = join(process.cwd(), "..", ".cadence", "raf.yaml");
 if (!existsSync(rafPath)) {
   throw new Error(`plan introuvable : ${rafPath} — le build doit se lancer depuis frontend/ (cd frontend && npm run build)`);
 }

@@ -2,7 +2,7 @@
 
 ## Plan, sessions et revue UX (cadence)
 
-Le reste à faire vit dans `docs/plan/raf.yaml`, tenu par `raf`
+Le reste à faire vit dans `.cadence/raf.yaml`, tenu par `raf`
 ([cadence](https://github.com/Sylad/cadence)) : chaque commit cite son lot dans le
 message (`fix(L4): …`, `L2/t1`), `raf now` dit la suite, `raf check` repère les
 écarts. Début et fin de session : skills `/cadence:session-start` et
@@ -21,7 +21,7 @@ dans `docs/nouveautes/captures/`). Après tout ajout ou modification d'une entr�
 Tests : `cd frontend && npx astro build && npm test` (node --test ; les tests e2e lisent `dist`) —
 ils échouent si le JSON versionné n'est plus à jour. Node ≥ 22.12 obligatoire pour Astro 6.
 
-**Plan de travail** (page `/plan-de-travail/`, L15) : rendue AU BUILD depuis `docs/plan/raf.yaml`
+**Plan de travail** (page `/plan-de-travail/`, L15) : rendue AU BUILD depuis `.cadence/raf.yaml`
 (`frontend/src/lib/plan-public.ts`, dépendance `yaml`). N'est publié qu'un lot `visible: true`, non
 abandonné, avec un **titre public** : son champ `public:` (une chaîne sur une ligne), sinon — lot livré
 seulement — le titre de sa Nouveauté la plus récente ; les lots « Revue … », « Audit … »,

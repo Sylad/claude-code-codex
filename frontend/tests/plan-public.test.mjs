@@ -1,4 +1,4 @@
-// L15 — page « Plan de travail » : ce qui est publié du plan (docs/plan/raf.yaml).
+// L15 — page « Plan de travail » : ce qui est publié du plan (.cadence/raf.yaml).
 // Repris d'evatosorus (L28) : un lot n'apparaît que s'il est `visible: true`, non abandonné,
 // et a un titre PUBLIC — son champ `public:`, sinon (lot LIVRÉ seulement) le titre de sa
 // Nouveauté la plus récente, sinon il est masqué ; JAMAIS le titre brut du plan. Liste
@@ -119,7 +119,7 @@ test('newsTitlesByLot : titre de l’entrée la plus récente (première du JSON
 });
 
 test('le vrai raf.yaml : publié = visible + titre public ; aucun titre brut (sauf s’il est aussi le titre public), aucune note ni sous-tâche', () => {
-  const text = readFileSync(new URL('../../docs/plan/raf.yaml', import.meta.url), 'utf8');
+  const text = readFileSync(new URL('../../.cadence/raf.yaml', import.meta.url), 'utf8');
   const entries = JSON.parse(readFileSync(new URL('../public/nouveautes-data/nouveautes.json', import.meta.url), 'utf8')).entries;
   const p = parsePublicPlan(text, entries);
   const shown = [...p.doing, ...p.todo, ...p.done];

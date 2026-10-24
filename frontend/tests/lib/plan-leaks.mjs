@@ -1,4 +1,4 @@
-// L15 — preuve qu'aucun texte privé du plan (docs/plan/raf.yaml) ne sort dans le site
+// L15 — preuve qu'aucun texte privé du plan (.cadence/raf.yaml) ne sort dans le site
 // construit. La règle « publié ou pas » n'est PAS recopiée ici : elle vient du code de la
 // page (publicTitleOf, src/lib/plan-public.ts).
 import { readdirSync, readFileSync } from 'node:fs';
