@@ -19,3 +19,14 @@ orchestrate:
     command: 'cd frontend && npx astro dev --port 4311 --host 127.0.0.1'
     url: http://127.0.0.1:4311
     timeout: 300
+
+# Documentation qui suit le code (cadence docs.sync, L307 de cadence, 24-10) : raf check et la revue signalent un lot dont le code laisse sa doc en retard ; docs.articles = étude de cas du projet dans claude-code-codex (le bibliothécaire propose un lot là-bas).
+docs:
+  sync:
+    # Structure du site (composants, layouts, lib, pages de premier niveau, config Astro) : le tableau « Pages » et la « Stack » du README, le CLAUDE.md. Exclus : les études de cas et les données (`data/`), ce sont des contenus, pas la structure.
+    - paths: ['frontend/src/components/**', 'frontend/src/layouts/**', 'frontend/src/lib/**', 'frontend/src/pages/*.astro', 'frontend/astro.config.mjs', '!**/*.test.*', '!**/*.spec.*', '!**/__snapshots__/**']
+      docs: [README.md, CLAUDE.md, 'docs/nouveautes/*.md']
+    # Batch hebdomadaire et workflow : section « Mise à jour hebdo » du README et règles du CLAUDE.md.
+    - paths: ['scripts/**', '.github/workflows/**', '!**/*.test.*']
+      docs: [README.md, CLAUDE.md]
+  since: 2026-10-24
