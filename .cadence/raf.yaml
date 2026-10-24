@@ -329,6 +329,7 @@ lots:
     estimate: 0.1
     created: 2026-10-24
     started: 2026-10-24
+    review: { date: 2026-10-24, verdict: "compliant (0 blocking, 0 major, 2 minor notes: a lot-title vestige and a lead commit citing L284 that keeps `raf check` at 1 écart) — orchestré (vague 2026-10-24-2005, 0 passe(s) de correction)", commit: a1e7b5e0a4d1715545cf24475ea12c4e006b721e }
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
