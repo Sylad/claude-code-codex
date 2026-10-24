@@ -302,6 +302,27 @@ lots:
     status: todo
     estimate: 0.25
     created: 2026-10-24
+  - id: L37
+    title: "Études de cas des apps loisir à jour d'après leur état réel : ol-companion (dernière mise à jour 10-05 ; depuis : animations, carte L1 L191–L197, Bleus, k3s), warhammer40k (10-05 ; visionneuse Concepts, galaxie…), finance-tracker (13-08 ; Crédits, Abonnements, revues UX) — lire le README, le CHANGELOG/Nouveautés et le plan de chaque projet, mettre à jour stack, architecture, chiffres et captures, dater la page ; demande Sylvain 24-10"
+    public: "Études de cas : ol-companion, warhammer40k et finance-tracker à jour"
+    status: todo
+    estimate: 0.5
+    visible: true
+    created: 2026-10-24
+  - id: L38
+    title: "Études de cas AetherWX à jour d'après l'état réel : maritime-atlas (17-09), aetherwx-qa-harness (09-09), aetherwx-encyclopedia (07-10) — référentiel WIGOS B28, SYNOP/METAR, livraison cadence ; et jobmail-assistant (09-06) ; lire README, docs/architecture.md, Nouveautés, plan ; chiffres et captures datés ; demande Sylvain 24-10"
+    public: "Études de cas : AetherWX et jobmail-assistant à jour"
+    status: todo
+    estimate: 0.5
+    visible: true
+    created: 2026-10-24
+  - id: L39
+    title: "Études de cas avatar-pandora, evatosorus (10-05) et claude-code-codex (01-10) à jour d'après leur état réel ; règle durable : chaque étude de cas porte en tête sa date de mise à jour et la liste des dépôts qu'elle décrit (pour que l'agent bibliothécaire de cadence sache quelle page suit quel projet) ; demande Sylvain 24-10"
+    public: "Études de cas : sites Astro et codex à jour, datés"
+    status: todo
+    estimate: 0.25
+    visible: true
+    created: 2026-10-24
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
