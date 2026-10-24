@@ -288,6 +288,8 @@ lots:
     status: todo
     estimate: 0.25
     created: 2026-10-24
+    notes:
+      - { date: 2026-10-24, text: "24-10 (Sylvain) — ajouter : lire ce que Cloudflare en dit (README du dépôt, article de blog ou doc associée s'il y en a) ; séparer l'affirmé du vérifiable, comparer à nos pratiques de revue de sécurité (code-reviewer, skill security-review), et ne proposer de lot que pour une idée qui se mesure chez nous." }
   - id: L35
     title: "/ecosystem : afficher la veille déjà récoltée — les skills d'anthropics/skills et les serveurs MCP des flux hebdo (data/feeds/github-anthropics-skills.json, github-mcp-servers.json) absents du catalogue, en « nouveautés à tester » (ex. 24-10 : academy-guide, discernment-nudge) ; date de relevé affichée. Constat 24-10 : la page sert le catalogue statique de 42 entrées inchangé depuis le 22-06, les flux sont récoltés chaque lundi mais aucune page ne les lit"
     public: "Écosystème : les nouveaux skills et serveurs MCP à tester"
