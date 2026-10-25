@@ -333,11 +333,14 @@ lots:
     finished: 2026-10-24
   - id: L41
     title: "config cadence : porte de tests — orchestrate.test (cd frontend && npm test, node --test, vérifié vert sur main avant d'être déclaré) et orchestrate.build (astro build, vérifié vert), dans cadence.yaml avec un commentaire ; precheck: true ; CLAUDE.md si la section cadence le décrit"
-    status: doing
+    status: done
     estimate: 0.1
     created: 2026-10-25
     started: 2026-10-25
     review: { date: 2026-10-25, verdict: "conforme — orchestré (vague 2026-10-25-2120, 1 passe(s) de correction)", commit: e07693844db2c951acac4070c07af8daa6a25913 }
+    finished: 2026-10-25
+    notes:
+      - { date: 2026-10-25, text: "Re-vérifié par le lead le 25-10 depuis un dist supprimé : astro build vert, node --test 123 passés / 1 ignoré, raf check propre. Sous-tâche proposée (construire avant les tests) déjà faite par e076938. Config seule : rien à livrer." }
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
