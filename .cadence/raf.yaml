@@ -341,6 +341,16 @@ lots:
     finished: 2026-10-25
     notes:
       - { date: 2026-10-25, text: "Re-vérifié par le lead le 25-10 depuis un dist supprimé : astro build vert, node --test 123 passés / 1 ignoré, raf check propre. Sous-tâche proposée (construire avant les tests) déjà faite par e076938. Config seule : rien à livrer." }
+  - id: L42
+    title: "config cadence : retirer le build en double de orchestrate.test — cadence L333 joue build avant test, ligne de base comprise (lead 25-10)"
+    status: done
+    estimate: 0.05
+    created: 2026-10-25
+    started: 2026-10-25
+    review: { date: 2026-10-25, verdict: "conforme (lead : config d'une ligne, build puis test rejoués verts à la main)", commit: f3a3e3dff77d884136b833b396c370a99144c39d }
+    finished: 2026-10-25
+    notes:
+      - { date: 2026-10-25, text: "Re-vérifié par le lead le 25-10 : build puis test dans l'ordre de la porte, verts. Config seule : rien à livrer." }
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
