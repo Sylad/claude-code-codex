@@ -16,9 +16,11 @@ deliver:
 # sonde l'URL puis tue le groupe. Node 22 (.nvmrc) : le Node par défaut de la machine est trop ancien pour Astro 6.
 orchestrate:
   # Porte de tests de la vague (L41) : lancée par le programme après chaque étape d'écriture, depuis la racine.
-  # Commandes vérifiées vertes sur main le 2026-10-25 (npm test : 122 tests node --test, 121 passés, 1 ignoré ;
-  # astro build : 36 pages). Les tests e2e lisent `dist` : la construction passe avant eux, comme ici.
-  test: 'cd frontend && npm test'
+  # Commandes vérifiées vertes sur main le 2026-10-25 (npm test : 124 tests node --test, 123 passés, 1 ignoré ;
+  # astro build : 36 pages). Cadence joue `test` PUIS `build`, et les tests e2e lisent `dist` (ignoré par git) :
+  # `test` construit donc lui-même avant `npm test`, pour ne dépendre ni d'un `dist` absent (clone, worktree)
+  # ni d'un ancien `dist`. `build` reste la porte de construction.
+  test: 'cd frontend && npx astro build && npm test'
   build: 'cd frontend && npx astro build'
   precheck: true
   ux:
