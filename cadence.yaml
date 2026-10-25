@@ -15,6 +15,12 @@ deliver:
 # Revue UX automatique des vagues (cadence orchestrate) : le programme lance l'app depuis la racine,
 # sonde l'URL puis tue le groupe. Node 22 (.nvmrc) : le Node par défaut de la machine est trop ancien pour Astro 6.
 orchestrate:
+  # Porte de tests de la vague (L41) : lancée par le programme après chaque étape d'écriture, depuis la racine.
+  # Commandes vérifiées vertes sur main le 2026-10-25 (npm test : 122 tests node --test, 121 passés, 1 ignoré ;
+  # astro build : 36 pages). Les tests e2e lisent `dist` : la construction passe avant eux, comme ici.
+  test: 'cd frontend && npm test'
+  build: 'cd frontend && npx astro build'
+  precheck: true
   ux:
     command: 'cd frontend && npx astro dev --port 4311 --host 127.0.0.1'
     url: http://127.0.0.1:4311
