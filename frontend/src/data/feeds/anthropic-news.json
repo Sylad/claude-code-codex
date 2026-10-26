@@ -126,6 +126,15 @@
     "fetchedAt": "2026-08-31T12:36:05.284Z"
   },
   {
+    "id": "bdc7b775ab8d2106",
+    "source": "anthropic-news",
+    "url": "https://www.anthropic.com/news/donating-agent-skills-to-the-agentic-ai-foundation",
+    "title": "Donating Agent Skills to the Agentic AI Foundation",
+    "summary": "Agent Skills, le standard pour des agents IA spécialisés, passe sous contrôle de la Agentic AI Foundation avec 1M de skills publiées.",
+    "publishedAt": "Thu, 22 Oct 2026 00:00:00 GMT",
+    "fetchedAt": "2026-10-26T12:11:46.692Z"
+  },
+  {
     "id": "a3c8e138d995ff55",
     "source": "anthropic-news",
     "url": "https://www.anthropic.com/news/life-sciences-verification-program",

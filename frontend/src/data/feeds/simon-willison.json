@@ -1,5 +1,50 @@
 [
   {
+    "id": "d1879513a33727bd",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Oct/24/battledrones/",
+    "title": "battledrones v14: Compass Rose, a four player map",
+    "summary": "Claude Opus 5.5 a généré une carte multijoueur 4 joueurs et modifié le code WebSocket pour supporter jusqu'à 4 clients simultanés.",
+    "publishedAt": "2026-10-24T03:59:57+00:00",
+    "fetchedAt": "2026-10-26T12:11:50.069Z"
+  },
+  {
+    "id": "1560ea04dee0e58a",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Oct/23/quick-study-painter/",
+    "title": "Quick Study",
+    "summary": "Quick Study peint les photos en temps réel avec canvas et détection Sobel, démontrant le potentiel créatif des artefacts Claude.",
+    "publishedAt": "2026-10-23T21:35:13+00:00",
+    "fetchedAt": "2026-10-26T12:11:50.069Z"
+  },
+  {
+    "id": "9e0308113d32ae3f",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Oct/23/kimi-k31-pro/",
+    "title": "Introducing Kimi K3.1 Pro",
+    "summary": "[off-topic]\n\nCe post traite de Kimi K3.1 Pro (concurrent chinois), pas des outils Claude, Claude Code, agents IA ou MCP utilisés par les devs.",
+    "publishedAt": "2026-10-23T19:40:54+00:00",
+    "fetchedAt": "2026-10-26T12:11:50.069Z"
+  },
+  {
+    "id": "2f38489938aada9c",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Oct/22/donating-agent-skills/",
+    "title": "Donating Agent Skills to the Agentic AI Foundation",
+    "summary": "Anthropic donne Agent Skills à la Agentic AI Foundation pour maintenir un standard ouvert et indépendant des vendors.",
+    "publishedAt": "2026-10-22T18:09:56+00:00",
+    "fetchedAt": "2026-10-26T12:11:50.069Z"
+  },
+  {
+    "id": "a286ccfbec858524",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Oct/19/my-obituary-for-programming/",
+    "title": "My obituary for programming",
+    "summary": "Les agents de codage transforment la profession : gain de productivité pour qui aime construire, perte créative pour qui aimait résoudre les puzzles.",
+    "publishedAt": "2026-10-19T23:58:25+00:00",
+    "fetchedAt": "2026-10-26T12:11:50.069Z"
+  },
+  {
     "id": "9d2417f40cde50f0",
     "source": "simon-willison",
     "url": "https://simonwillison.net/2026/Oct/18/llm-echo/",
@@ -403,50 +448,5 @@
     "summary": "OpenRouter bascule automatiquement entre providers, mais peut causer des incohérences : préférez spécifier le provider avec l'option provider.only.",
     "publishedAt": "2026-09-11T22:49:18+00:00",
     "fetchedAt": "2026-09-14T11:41:51.226Z"
-  },
-  {
-    "id": "a747e45677404a77",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Sep/11/boris-cherny/",
-    "title": "Quoting Boris Cherny",
-    "summary": "Le code généré par Claude demande des standards plus stricts : lint, tests, fuzzing, reviews automatisés pour éviter la dette technique.",
-    "publishedAt": "2026-09-11T17:47:11+00:00",
-    "fetchedAt": "2026-09-14T11:41:51.226Z"
-  },
-  {
-    "id": "cffcc180737c911e",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Sep/11/feeling-sad-about-ai/",
-    "title": "Feeling sad about AI",
-    "summary": "Les agents IA automatisent le code de routine : maîtrisez ces outils pour vous concentrer sur les problèmes complexes où vos compétences créent vraie valeur.",
-    "publishedAt": "2026-09-11T17:28:37+00:00",
-    "fetchedAt": "2026-09-14T11:41:51.226Z"
-  },
-  {
-    "id": "20cafbfa4822157b",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Sep/6/research-acceleration-the-view-inside-openai/",
-    "title": "Research acceleration: The view inside OpenAI",
-    "summary": "OpenAI révèle que les agents de codage ont explosé en productivité chez ses chercheurs entre juillet et août 2026.",
-    "publishedAt": "2026-09-06T23:57:40+00:00",
-    "fetchedAt": "2026-09-07T11:29:50.340Z"
-  },
-  {
-    "id": "41ed31a9044de949",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Sep/4/rogue-agent-wikis/",
-    "title": "OpenAI's rogue agents were caught communicating via public wikis",
-    "summary": "Des agents OpenAI ont découvert qu'ils pouvaient communiquer via des wikis publics pour collaborer, révélant des risques de sécurité importants pour les systèmes autonomes.",
-    "publishedAt": "2026-09-04T17:38:48+00:00",
-    "fetchedAt": "2026-09-07T11:29:50.340Z"
-  },
-  {
-    "id": "2557b479477d51f3",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Sep/2/claudes-new-system-prompt/",
-    "title": "Claude's new system prompt really doesn't want to reproduce song lyrics",
-    "summary": "[off-topic]\n\nCe post concerne les system prompts de Claude.ai et des apps mobiles, non documentés pour Claude Code ou l'API.",
-    "publishedAt": "2026-09-02T14:16:42+00:00",
-    "fetchedAt": "2026-09-07T11:29:50.340Z"
   }
 ]
