@@ -47,6 +47,7 @@ lots:
     estimate: 0.25
     created: 2026-09-28
     started: 2026-10-29
+    review: { date: 2026-10-29, verdict: "compliant: 0 blocking, 0 major, 2 minor notes (h2 shared with CaseStudySection checked on 5 other pages; formal cadence:ux-reviewer review still to be recorded) — orchestré (vague 2026-10-29-ux2, 0 passe(s) de correction)", commit: 169d42c98312a2ac78ccd6a72b8c2a47665b249d }
   - id: L4
     title: Revue UX — Learning
     status: todo
