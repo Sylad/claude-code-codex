@@ -1,6 +1,6 @@
 {
   "project": "claude-code-codex",
-  "generated": "2026-10-29 12:27",
+  "generated": "2026-10-29 12:34",
   "entries": [
     {
       "slug": "2026-10-29-la-page-demarrer-se-lit-mieux-titres-de-section-prompts-enti",
@@ -15,7 +15,7 @@
       "alts": [
         "Page Démarrer à 390 px : les prompts 1 et 2 s'affichent en entier, sur plusieurs lignes"
       ],
-      "html": "<p>Sur la page Démarrer, chaque section a maintenant un vrai titre : les lecteurs d'écran peuvent passer de l'une à l'autre par les titres. Les cinq prompts d'exemple se lisent en entier sur un téléphone, sur plusieurs lignes, sans avoir à faire défiler de côté. Les petites étiquettes (« Prompt 1 », le nom du langage au-dessus des blocs de code) sont plus grosses et plus contrastées, et les six liens « → » de la fin de page sont plus faciles à toucher.</p>"
+      "html": "<p>Sur la page Démarrer, chaque section a maintenant un vrai titre : les lecteurs d'écran peuvent passer de l'une à l'autre par les titres. Les cinq prompts d'exemple se lisent en entier sur un téléphone, sur plusieurs lignes, sans avoir à faire défiler de côté. Les petites étiquettes (« Prompt 1 », le nom du langage au-dessus des blocs de code) sont plus grosses et plus contrastées, et les six liens « → » de la fin de page sont plus faciles à toucher.</p>"
     },
     {
       "slug": "2026-10-07-options-de-ligne-de-commande-lisibles-dans-les-etudes-de-cas",
