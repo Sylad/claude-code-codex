@@ -42,12 +42,15 @@ lots:
     finished: 2026-10-01
   - id: L3
     title: Revue UX — Start
-    status: doing
+    public: Page Démarrer plus facile à suivre
+    status: done
     visible: true
     estimate: 0.25
     created: 2026-09-28
     started: 2026-10-29
     review: { date: 2026-10-29, verdict: "compliant: 0 blocking, 0 major, 2 minor notes (h2 shared with CaseStudySection checked on 5 other pages; formal cadence:ux-reviewer review still to be recorded) — orchestré (vague 2026-10-29-ux2, 0 passe(s) de correction)", commit: 169d42c98312a2ac78ccd6a72b8c2a47665b249d }
+    ux: { date: 2026-10-29, verdict: "conforme : vu par le lead (captures 390 px de la revue UX 29-10) — en-tête et intro lisibles, titres en h2 ; notes mineures (numérotation « 06.5 » hors de la liste de l'intro)" }
+    finished: 2026-10-29
   - id: L4
     title: Revue UX — Learning
     status: todo
