@@ -141,8 +141,8 @@ import { APP_COUNT } from "@/data/apps";
 
       <div class="space-y-4">
         <div class="rounded-lg border border-white/10 bg-paper-elevated p-4">
-          <p class="font-mono text-[10px] uppercase tracking-wider text-claude mb-2">Prompt 1 · L'explorateur</p>
-          <CodeBlock language="prompt" code={`Lis le fichier src/auth/login.ts et explique-moi en 5 lignes ce qu'il fait.`} />
+          <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">Prompt 1 · L'explorateur</p>
+          <CodeBlock language="prompt" wrap code={`Lis le fichier src/auth/login.ts et explique-moi en 5 lignes ce qu'il fait.`} />
           <p class="text-sm text-ink-muted">
             Pourquoi : tu vérifies qu'il sait lire ton repo, et tu
             constates qu'il <em>résume</em> mieux qu'il ne devine.
@@ -151,8 +151,8 @@ import { APP_COUNT } from "@/data/apps";
         </div>
 
         <div class="rounded-lg border border-white/10 bg-paper-elevated p-4">
-          <p class="font-mono text-[10px] uppercase tracking-wider text-claude mb-2">Prompt 2 · Le détective</p>
-          <CodeBlock language="prompt" code={`Trouve où on appelle la fonction logUserAction et liste tous les call sites.`} />
+          <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">Prompt 2 · Le détective</p>
+          <CodeBlock language="prompt" wrap code={`Trouve où on appelle la fonction logUserAction et liste tous les call sites.`} />
           <p class="text-sm text-ink-muted">
             Pourquoi : il utilise grep tout seul. Plus rapide que toi.
             Surtout sur un gros repo que tu connais mal.
@@ -160,8 +160,8 @@ import { APP_COUNT } from "@/data/apps";
         </div>
 
         <div class="rounded-lg border border-white/10 bg-paper-elevated p-4">
-          <p class="font-mono text-[10px] uppercase tracking-wider text-claude mb-2">Prompt 3 · La modif chirurgicale</p>
-          <CodeBlock language="prompt" code={`Dans src/components/Button.tsx, ajoute un prop "loading" qui affiche un spinner et désactive le bouton. Garde le même style que les autres props.`} />
+          <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">Prompt 3 · La modif chirurgicale</p>
+          <CodeBlock language="prompt" wrap code={`Dans src/components/Button.tsx, ajoute un prop "loading" qui affiche un spinner et désactive le bouton. Garde le même style que les autres props.`} />
           <p class="text-sm text-ink-muted">
             Pourquoi : tu donnes <strong>un seul fichier</strong>, <strong>une seule
             modif</strong>, et <strong>une contrainte de style</strong>. Le combo qui
@@ -170,8 +170,8 @@ import { APP_COUNT } from "@/data/apps";
         </div>
 
         <div class="rounded-lg border border-white/10 bg-paper-elevated p-4">
-          <p class="font-mono text-[10px] uppercase tracking-wider text-claude mb-2">Prompt 4 · Le débuggueur</p>
-          <CodeBlock language="prompt" code={`Lance "npm test", regarde l'erreur, et propose un fix. Ne modifie rien sans me demander.`} />
+          <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">Prompt 4 · Le débuggueur</p>
+          <CodeBlock language="prompt" wrap code={`Lance "npm test", regarde l'erreur, et propose un fix. Ne modifie rien sans me demander.`} />
           <p class="text-sm text-ink-muted">
             Pourquoi : <em>« ne modifie rien sans me demander »</em>.
             Important au début. Tu veux voir ce qu'il propose avant
@@ -180,8 +180,8 @@ import { APP_COUNT } from "@/data/apps";
         </div>
 
         <div class="rounded-lg border border-white/10 bg-paper-elevated p-4">
-          <p class="font-mono text-[10px] uppercase tracking-wider text-claude mb-2">Prompt 5 · Le réfacteur prudent</p>
-          <CodeBlock language="prompt" code={`Refactor src/utils/format.ts pour extraire les fonctions liées aux dates dans un nouveau fichier src/utils/dates.ts. Update tous les imports. Lance les tests à la fin.`} />
+          <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">Prompt 5 · Le réfacteur prudent</p>
+          <CodeBlock language="prompt" wrap code={`Refactor src/utils/format.ts pour extraire les fonctions liées aux dates dans un nouveau fichier src/utils/dates.ts. Update tous les imports. Lance les tests à la fin.`} />
           <p class="text-sm text-ink-muted">
             Pourquoi : il fait la modif + le suivi (imports + tests).
             C'est typiquement le genre de truc où Copilot tape pas et
@@ -472,7 +472,7 @@ import { APP_COUNT } from "@/data/apps";
       </p>
       <ul class="grid gap-3 sm:grid-cols-2">
         <li class="rounded-lg border border-white/10 bg-paper-elevated p-4">
-          <a href="/theory" class="text-claude hover:text-claude-soft font-medium">
+          <a href="/theory" class="inline-block py-1 text-claude hover:text-claude-soft font-medium">
             → Théorie
           </a>
           <p class="text-sm text-ink-muted mt-1">
@@ -482,7 +482,7 @@ import { APP_COUNT } from "@/data/apps";
           </p>
         </li>
         <li class="rounded-lg border border-white/10 bg-paper-elevated p-4">
-          <a href="/ecosystem" class="text-claude hover:text-claude-soft font-medium">
+          <a href="/ecosystem" class="inline-block py-1 text-claude hover:text-claude-soft font-medium">
             → Écosystème
           </a>
           <p class="text-sm text-ink-muted mt-1">
@@ -493,7 +493,7 @@ import { APP_COUNT } from "@/data/apps";
           </p>
         </li>
         <li class="rounded-lg border border-white/10 bg-paper-elevated p-4">
-          <a href="/case-studies" class="text-claude hover:text-claude-soft font-medium">
+          <a href="/case-studies" class="inline-block py-1 text-claude hover:text-claude-soft font-medium">
             → Case studies
           </a>
           <p class="text-sm text-ink-muted mt-1">
@@ -505,7 +505,7 @@ import { APP_COUNT } from "@/data/apps";
           </p>
         </li>
         <li class="rounded-lg border border-white/10 bg-paper-elevated p-4">
-          <a href="/learning" class="text-claude hover:text-claude-soft font-medium">
+          <a href="/learning" class="inline-block py-1 text-claude hover:text-claude-soft font-medium">
             → Learning
           </a>
           <p class="text-sm text-ink-muted mt-1">
@@ -516,7 +516,7 @@ import { APP_COUNT } from "@/data/apps";
           </p>
         </li>
         <li class="rounded-lg border border-white/10 bg-paper-elevated p-4">
-          <a href="/videos" class="text-claude hover:text-claude-soft font-medium">
+          <a href="/videos" class="inline-block py-1 text-claude hover:text-claude-soft font-medium">
             → Vidéos
           </a>
           <p class="text-sm text-ink-muted mt-1">
@@ -526,7 +526,7 @@ import { APP_COUNT } from "@/data/apps";
           </p>
         </li>
         <li class="rounded-lg border border-white/10 bg-paper-elevated p-4">
-          <a href="/about" class="text-claude hover:text-claude-soft font-medium">
+          <a href="/about" class="inline-block py-1 text-claude hover:text-claude-soft font-medium">
             → À propos
           </a>
           <p class="text-sm text-ink-muted mt-1">

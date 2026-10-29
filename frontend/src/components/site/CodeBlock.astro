@@ -3,9 +3,11 @@ interface Props {
   language: string;
   filename?: string;
   code: string;
+  /** Texte en prose (un prompt) : revient à la ligne au lieu de défiler de côté. */
+  wrap?: boolean;
 }
 
-const { language, filename, code } = Astro.props;
+const { language, filename, code, wrap = false } = Astro.props;
 ---
 
 <figure class="rounded-lg border border-white/10 bg-paper overflow-hidden my-4">
@@ -15,13 +17,13 @@ const { language, filename, code } = Astro.props;
     <span class="font-mono text-xs text-ink-muted">
       {filename ?? `[${language}]`}
     </span>
-    <span class="font-mono text-[10px] uppercase tracking-wider text-claude/70">
+    <span class="font-mono text-xs uppercase tracking-wider text-claude">
       {language}
     </span>
   </figcaption>
   <pre
-    tabindex="0"
-    role="region"
-    aria-label={`Code : ${filename ?? language}`}
-    class="px-4 py-3 overflow-x-auto text-sm leading-relaxed font-mono text-ink/90"><code>{code}</code></pre>
+    tabindex={wrap ? undefined : "0"}
+    role={wrap ? undefined : "region"}
+    aria-label={wrap ? undefined : `Code : ${filename ?? language}`}
+    class:list={["px-4 py-3 text-sm leading-relaxed font-mono text-ink/90", wrap ? "whitespace-pre-wrap break-words" : "overflow-x-auto"]}><code>{code}</code></pre>
 </figure>

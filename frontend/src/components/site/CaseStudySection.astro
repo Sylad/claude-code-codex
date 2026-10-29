@@ -7,9 +7,9 @@ const { eyebrow } = Astro.props;
 ---
 
 <article class="space-y-4">
-  <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+  <h2 class="font-mono text-xs font-normal uppercase tracking-[0.2em] text-claude">
     {eyebrow}
-  </p>
+  </h2>
   <div class="text-ink leading-relaxed space-y-4 [&>p]:leading-relaxed [&_strong]:text-ink [&_a]:text-claude [&_a:hover]:text-claude-soft [&_a]:underline [&_a]:underline-offset-4">
     <slot />
   </div>
