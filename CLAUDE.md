@@ -41,3 +41,11 @@ barre avec sa pastille ; « Plan de travail » et « À propos » n'y tiennent p
 menu du téléphone et rangée du pied de page (`Footer.astro`, toutes les pages) + encart « Suivre
 le site » de l'accueil. Toute entrée ajoutée à la barre se mesure avec `tests/navbar.e2e.test.mjs`
 (seuil ±1 px, polices web bloquées, police par défaut 18 et 20 px : ≥ 16 px après le logo).
+
+**Livre de bord** (page `/livre-de-bord/`, L44, lot récurrent chaque semaine) : une entrée par semaine ISO dans
+`frontend/src/data/livre-de-bord.ts`, la plus récente EN TÊTE (rubriques `appris`, `fabrique`, `teste` ; sources :
+notes de clôture du plan, CHANGELOG et docs de cadence, Nouveautés, verdicts Tools tested). Filtre strict appliqué
+au build par `src/lib/livre-de-bord.ts` : aucun chemin de machine, secret, nom de machine, compte pro, e-mail ni
+mention de confidentialité ; liens seulement vers une page du site qui existe ou le dépôt public de cadence ; date
+dans la semaine, une seule entrée par semaine. Une entrée refusée fait échouer le build. Tests :
+`tests/livre-de-bord.test.mjs` et `tests/livre-de-bord-page.e2e.test.mjs`. Lien dans le pied de page (`Footer.astro`).

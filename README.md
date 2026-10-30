@@ -32,6 +32,7 @@ officielle avec Anthropic.
 | `/about` | Genèse du site, stack technique, crédits IA (Claude Code + openart.ai) |
 | `/nouveautes` | Journal des évolutions visibles du site, la plus récente en premier (pastille sur le lien quand il y a du neuf) |
 | `/plan-de-travail` | Ce qui est en cours, prévu et récemment livré — titres publics du plan `.cadence/raf.yaml`, générés au build |
+| `/livre-de-bord` | Livre de bord du développement avec l'IA : une entrée par semaine (appris, fabriqué, testé), liens vers cadence, études de cas et Tools tested. Contenu dans `frontend/src/data/livre-de-bord.ts`, filtré au build (rien de privé) |
 
 ## Stack
 

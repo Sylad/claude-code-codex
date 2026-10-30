@@ -1,7 +1,22 @@
 {
   "project": "claude-code-codex",
-  "generated": "2026-10-29 12:34",
+  "generated": "2026-10-30 12:57",
   "entries": [
+    {
+      "slug": "2026-10-30-un-livre-de-bord-hebdomadaire-sur-le-developpement-avec-l-ia",
+      "title": "Un livre de bord hebdomadaire sur le développement avec l'IA",
+      "date": "2026-10-30",
+      "lots": [
+        "L44"
+      ],
+      "captures": [
+        "captures/L44-livre-de-bord.png"
+      ],
+      "alts": [
+        "La page Livre de bord à 1440 px : en-tête, liens vers les semaines et l'entrée de la semaine 44"
+      ],
+      "html": "<p>Une nouvelle page, <strong>Livre de bord</strong>, raconte chaque semaine ce que nous apprenons en développant avec l'IA.</p>\n<ul><li>Une entrée par semaine, la plus récente en premier, avec trois rubriques : ce que nous avons appris (une perte de temps et ce qui l'a supprimée, une décision de méthode, un piège), ce que nous fabriquons (versions de cadence, mods, agents) et ce que nous avons testé.</li><li>Chaque entrée renvoie vers les pages détaillées : documentation de cadence, études de cas et Tools tested.</li><li>Seul ce qui est public y figure : la page ne se construit pas si une entrée contient autre chose.</li><li>Vous la trouvez en bas de chaque page, à côté de <strong>Nouveautés</strong> et <strong>Plan de travail</strong>.</li></ul>"
+    },
     {
       "slug": "2026-10-29-la-page-demarrer-se-lit-mieux-titres-de-section-prompts-enti",
       "title": "La page Démarrer se lit mieux : titres de section, prompts entiers au téléphone",
