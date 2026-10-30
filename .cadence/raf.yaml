@@ -406,9 +406,10 @@ lots:
     review: { date: 2026-10-30, verdict: "conforme — 1 note mineure : l’âge au présent, « il a un mois d’existence » dans le chapeau et « en un mois » sur la carte, se périmera comme le numéro de version — orchestré (vague 2026-10-30-1925-cx, 1 passe(s) de correction)", commit: b91348c05834ff4d3e7c8b1acbdc8499174aa2a9 }
   - id: L47
     title: "Index des études de cas : le lien ↗ GitHub de la carte aetherwx n'a pas de href (QA de L19)"
-    status: todo
+    status: doing
     estimate: 0.1
     created: 2026-10-30
+    started: 2026-10-30
   - id: L48
     title: "Nouveautés : une <img> sans src (QA de L19)"
     status: todo
