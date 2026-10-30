@@ -68,7 +68,7 @@ lots:
   - id: L19
     title: "Cadence en bonne place sur le codex : page dédiée à la méthode et à l'outil (plan raf relié aux commits, Nouveautés, rituels de session, livraison vérifiée, mode lead et sous-agents), exemples tirés des projets réels, entrée dans la navigation et sur l'accueil (consigne Sylvain 02-10)"
     public: "Notre méthode de travail, expliquée et illustrée par des projets réels"
-    status: doing
+    status: done
     estimate: 1.5
     visible: true
     created: 2026-10-02
@@ -76,6 +76,7 @@ lots:
     started: 2026-10-30
     review: { date: 2026-10-30, verdict: "conforme : les constats mineurs sont corrigés (paragraphe « Limite assumée » aligné sur les relevés, source du 565 Ko → 5 Ko, contraste de la note de bas de page et du lien de la carte) et couverts par les tests R12 à R16, sans régression — orchestré (vague 2026-10-30-1725-cx, 2 passe(s) de correction + passe des mineurs)", commit: fd76852d21e2605e3c84663f164193fdb4b336d8 }
     ux: { date: 2026-10-30, verdict: "conforme — revue UX de la vague (3 mineurs : trous de grille à 2 colonnes, liens docs non alignés, sources des chiffres sans lien) ; captures vues par le lead (page cadence 1440/390, carte de l'index) ; « version 1.27 » du chapeau à tenir à jour (1.28.0 publiée le 30-10)" }
+    finished: 2026-10-30
   - id: L37
     title: "Études de cas des apps loisir à jour d'après leur état réel : ol-companion (dernière mise à jour 10-05 ; depuis : animations, carte L1 L191–L197, Bleus, k3s), warhammer40k (10-05 ; visionneuse Concepts, galaxie…), finance-tracker (13-08 ; Crédits, Abonnements, revues UX) — lire le README, le CHANGELOG/Nouveautés et le plan de chaque projet, mettre à jour stack, architecture, chiffres et captures, dater la page ; demande Sylvain 24-10"
     public: "Études de cas : ol-companion, warhammer40k et finance-tracker à jour"
