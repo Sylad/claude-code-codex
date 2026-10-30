@@ -9,9 +9,33 @@
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
 import CaseStudySection from "@/components/site/CaseStudySection.astro";
+import Schema from "@/components/site/Schema.astro";
+import StepChain from "@/components/site/StepChain.astro";
+import Callout from "@/components/site/Callout.astro";
 import { inlineCodeHtml } from "@/lib/inline-code.mjs";
 
 const CODE = "[&_code]:font-mono [&_code]:text-claude-soft [&_code]:text-[0.9em] [&_code]:px-1 [&_code]:rounded [&_code]:bg-white/5";
+
+const H3 = "text-lg font-medium text-ink pt-2";
+
+const parcours = [
+  { titre: "Spec", detail: "fiche, maquette, tests d'acceptation verrouillés" },
+  { titre: "Code", detail: "fait passer les tests sans les modifier" },
+  { titre: "Revue", detail: "relecteur de code : bugs, dérive, docs" },
+  { titre: "Correction", detail: "reprend ce que la revue a trouvé", accent: true },
+  { titre: "UX", detail: "application lancée, captures 1440 et 390 px" },
+  { titre: "Prêt", detail: "lot clos, livrable par le livreur", accent: true },
+];
+
+const livreur = [
+  { titre: "Lot prêt", detail: "revue passée, verdict UX enregistré" },
+  { titre: "Porte de tests", detail: "tests et build rejoués sur le sha" },
+  { titre: "Verdict UX", detail: "lu, pas refait : sinon la chaîne s'arrête" },
+  { titre: "Clôture du lot", detail: "le plan note le lot livré" },
+  { titre: "Push", detail: "le commit part vers le dépôt distant" },
+  { titre: "Livraison vérifiée", detail: "CI attendue, déploiement joué, effet contrôlé" },
+  { titre: "Une ligne rendue", detail: "« L84 livré 3d6edf4, QA à lancer <url> »", accent: true },
+];
 
 const CADENCE = "https://github.com/Sylad/cadence";
 
@@ -149,6 +173,7 @@ const echecs = [
 
   <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12 space-y-12">
     <CaseStudySection eyebrow="Le problème de départ">
+      <h3 data-intertitre class={H3}>Deux questions qui reviennent sans cesse</h3>
       <p>
         Coder avec une IA fait aller vite, et perdre le fil tout aussi vite. Deux
         questions reviennent sans cesse : <strong>qu'est-ce qui reste à faire ?</strong>
@@ -156,6 +181,7 @@ const echecs = [
         réponse s'évapore à la fin de la session ; dans un outil de tickets, elle
         vit loin du code et se périme.
       </p>
+      <h3 data-intertitre class={H3}>Ce que ça coûtait</h3>
       <p>
         Avec huit projets menés en parallèle et plusieurs sessions par jour, le
         coût devenait visible : des lots recommencés, des commits sans raison
@@ -163,15 +189,17 @@ const echecs = [
         Le premier commit de cadence (28 septembre 2026) ne contient d'ailleurs
         que l'essentiel : un plan en YAML et le calcul du lien entre commits et lots.
       </p>
-      <p>
-        Le principe qui a guidé la suite : <strong>tout l'état vit dans des
-        fichiers ordinaires à côté du code</strong>, lisibles par l'humain comme
-        par la prochaine session, et chaque affirmation (« c'est livré », « c'est
-        testé ») doit pouvoir être rejouée.
-      </p>
+      <Callout titre="Le principe retenu">
+        <p>
+          <strong>Tout l'état vit dans des fichiers ordinaires à côté du code</strong>,
+          lisibles par l'humain comme par la prochaine session, et chaque
+          affirmation (« c'est livré », « c'est testé ») doit pouvoir être rejouée.
+        </p>
+      </Callout>
     </CaseStudySection>
 
     <CaseStudySection eyebrow="La méthode">
+      <h3 data-intertitre class={H3}>Sept pièces qui s'emboîtent</h3>
       <p>
         Sept pièces, chacune optionnelle, qui s'emboîtent. Le détail de chaque
         commande est dans la documentation du dépôt ; ici, ce que chacune
@@ -191,14 +219,97 @@ const echecs = [
           </li>
         ))}
       </ol>
+      <h3 data-intertitre class={H3}>Le plan, relié aux commits</h3>
       <p>
-        Le cycle d'un lot dans une vague : contrôle préalable, puis (pour un
-        écran) fiche et maquette relues, tests d'acceptation écrits par une
-        session à part et verrouillés rouges, implémentation qui doit les faire
-        passer sans les toucher, revue de code, passe UX avec l'application
-        lancée, corrections. Le lead choisit les lots ; la livraison est
-        vérifiée en bout de chaîne.
+        Tout part du plan : un lot a un numéro, et chaque commit qui travaille
+        dessus le cite. Le lien se lit dans les deux sens, sans base de données.
       </p>
+      <Schema id="plan-commits" legende="Le plan (un fichier YAML) liste des lots ; chaque commit cite son lot dans son message ; trois commandes lisent ce lien.">
+        <svg viewBox="0 0 420 372" role="img" aria-labelledby="sch-plan-commits-t sch-plan-commits-d" xmlns="http://www.w3.org/2000/svg">
+          <title id="sch-plan-commits-t">Le plan relié aux commits</title>
+          <desc id="sch-plan-commits-d">Un fichier de plan contient les lots L4 et L5. Les commits « fix(L4) » et « feat(L5) » citent chacun leur lot. Les commandes raf commits, raf now et raf check lisent ce lien et en tirent ce qu'un lot a produit, la suite du travail et les écarts.</desc>
+          <rect class="sch-box" x="16" y="12" width="388" height="96" rx="10" />
+          <text class="sch-a" x="30" y="34">Le plan · fichier YAML versionné</text>
+          <rect class="sch-box-accent" x="30" y="48" width="170" height="46" rx="8" />
+          <text class="sch-t sch-mono" x="42" y="68">L4</text>
+          <text class="sch-m" x="42" y="86">lot en cours</text>
+          <rect class="sch-box" x="220" y="48" width="170" height="46" rx="8" />
+          <text class="sch-t sch-mono" x="232" y="68">L5</text>
+          <text class="sch-m" x="232" y="86">lot à faire</text>
+          <line class="sch-line" x1="115" y1="108" x2="115" y2="142" />
+          <path class="sch-arrow" d="M109 140 L121 140 L115 150 Z" />
+          <text class="sch-m" x="126" y="132">cité par</text>
+          <rect class="sch-box" x="16" y="152" width="388" height="96" rx="10" />
+          <text class="sch-a" x="30" y="174">Les commits · git</text>
+          <rect class="sch-box-accent" x="30" y="188" width="170" height="46" rx="8" />
+          <text class="sch-t sch-mono" x="42" y="208">fix(L4): …</text>
+          <text class="sch-m" x="42" y="226">cite le lot L4</text>
+          <rect class="sch-box" x="220" y="188" width="170" height="46" rx="8" />
+          <text class="sch-t sch-mono" x="232" y="208">feat(L5): …</text>
+          <text class="sch-m" x="232" y="226">cite le lot L5</text>
+          <line class="sch-line" x1="115" y1="248" x2="115" y2="272" />
+          <path class="sch-arrow" d="M109 270 L121 270 L115 280 Z" />
+          <rect class="sch-box" x="16" y="282" width="388" height="78" rx="10" />
+          <text class="sch-t sch-mono" x="30" y="304">raf commits L4</text>
+          <text class="sch-m" x="190" y="304">ce que le lot a produit</text>
+          <text class="sch-t sch-mono" x="30" y="326">raf now</text>
+          <text class="sch-m" x="190" y="326">la suite du travail</text>
+          <text class="sch-t sch-mono" x="30" y="348">raf check</text>
+          <text class="sch-m" x="190" y="348">commit sans lot, lot sans commit</text>
+        </svg>
+      </Schema>
+
+      <h3 data-intertitre class={H3}>Le parcours d'un lot dans une vague</h3>
+      <p>
+        Dans une vague, un lot passe de session en session, chacune courte et
+        neuve. Les tests d'acceptation sont écrits par une session à part et
+        verrouillés rouges : l'implémentation doit les faire passer sans les
+        toucher.
+      </p>
+      <Schema id="parcours-lot" legende="Les six étapes d'un lot. La revue peut renvoyer le lot en correction, puis le relire : la boucle en pointillés.">
+        <StepChain
+          id="parcours-lot"
+          steps={parcours}
+          boucle={{ de: 3, vers: 2, nom: "correction-revue", mot: "reprise" }}
+          titre="Le parcours d'un lot dans une vague"
+          desc="Six étapes dans l'ordre : spec, code, revue, correction, UX, prêt. Une boucle en pointillés ramène de la correction à la revue tant que la revue trouve quelque chose."
+        />
+      </Schema>
+      <Callout titre="À retenir">
+        <p>
+          Le lead choisit les lots à jouer, mais aucune étape ne se croit sur
+          parole : chacune laisse une trace (sha, verdict, capture) que la
+          suivante relit.
+        </p>
+      </Callout>
+
+      <h3 data-intertitre class={H3}>La livraison, déléguée</h3>
+      <p>
+        Un lot prêt n'est pas livré pour autant. Le lead le confie au livreur,
+        qui joue la chaîne ci-dessous et ne rend qu'une ligne ou une question.
+        Les lots visibles se lisent dans le panneau du plan publié sur ce site.
+      </p>
+      <Schema id="chaine-livreur" legende="La chaîne du livreur, du lot prêt à la ligne rendue au lead. Une étape qui échoue arrête la chaîne.">
+        <StepChain
+          id="chaine-livreur"
+          steps={livreur}
+          titre="La chaîne du livreur"
+          desc="Sept étapes dans l'ordre : lot prêt, porte de tests sur le sha, verdict UX, clôture du lot, push, livraison vérifiée, puis une ligne rendue au lead."
+        />
+      </Schema>
+      <figure data-capture="panneau-lots" class="rounded-xl border border-white/10 bg-paper-elevated p-3">
+        <img
+          src="/case-studies/cadence-panneau-lots.png"
+          alt="Le panneau des lots de la page Plan de travail : la section « Prévu » et la liste des lots à venir, chacun avec son titre public."
+          width="705"
+          height="615"
+          loading="lazy"
+          class="w-full h-auto rounded-lg"
+        />
+        <figcaption class="mt-2 text-xs text-ink-muted leading-relaxed">
+          Le panneau des lots tel que le publie la page Plan de travail : un titre par lot, rangé en cours, prévu ou livré.
+        </figcaption>
+      </figure>
     </CaseStudySection>
 
     <CaseStudySection eyebrow="Les chiffres mesurés">

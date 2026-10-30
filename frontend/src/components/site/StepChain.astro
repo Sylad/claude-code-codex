@@ -1,0 +1,51 @@
+---
+// L50 — chaîne verticale d'étapes en SVG, pour le parcours d'un lot et la chaîne du livreur.
+// Les positions se calculent des étapes : ajouter une étape ne demande aucune coordonnée.
+interface Step { titre: string; detail: string; accent?: boolean }
+interface Props {
+  id: string;
+  steps: Step[];
+  titre: string;
+  desc: string;
+  // boucle en pointillés de l'étape `de` vers l'étape `vers` (indices), côté droit
+  boucle?: { de: number; vers: number; nom: string; mot: string };
+  largeur?: number;
+}
+
+const { id, steps, titre, desc, boucle, largeur = 420 } = Astro.props;
+const BOX_W = boucle ? 350 : 388;
+const X = 16;
+const H = 56;
+const GAP = 28;
+const top = (i: number) => 12 + i * (H + GAP);
+const height = top(steps.length - 1) + H + 12;
+const uid = `sch-${id}`;
+---
+
+<svg viewBox={`0 0 ${largeur} ${height}`} role="img" aria-labelledby={`${uid}-t ${uid}-d`} xmlns="http://www.w3.org/2000/svg">
+  <title id={`${uid}-t`}>{titre}</title>
+  <desc id={`${uid}-d`}>{desc}</desc>
+  {steps.map((s, i) => (
+    <g>
+      <rect class={s.accent ? "sch-box-accent" : "sch-box"} x={X} y={top(i)} width={BOX_W} height={H} rx="10" />
+      <text class="sch-t" x={X + 14} y={top(i) + 24}>{`${i + 1}. ${s.titre}`}</text>
+      <text class="sch-m" x={X + 14} y={top(i) + 44}>{s.detail}</text>
+      {i < steps.length - 1 && (
+        <g>
+          <line class="sch-line" x1={X + BOX_W / 2} y1={top(i) + H} x2={X + BOX_W / 2} y2={top(i) + H + GAP - 8} />
+          <path class="sch-arrow" d={`M${X + BOX_W / 2 - 6} ${top(i) + H + GAP - 10} L${X + BOX_W / 2 + 6} ${top(i) + H + GAP - 10} L${X + BOX_W / 2} ${top(i) + H + GAP - 1} Z`} />
+        </g>
+      )}
+    </g>
+  ))}
+  {boucle && (
+    <g data-boucle={boucle.nom}>
+      <path
+        class="sch-line-accent"
+        d={`M${X + BOX_W} ${top(boucle.de) + H / 2} H${largeur - 16} V${top(boucle.vers) + H / 2} H${X + BOX_W + 8}`}
+      />
+      <path class="sch-arrow-accent" d={`M${X + BOX_W + 10} ${top(boucle.vers) + H / 2 - 6} L${X + BOX_W + 10} ${top(boucle.vers) + H / 2 + 6} L${X + BOX_W} ${top(boucle.vers) + H / 2} Z`} />
+      <text class="sch-a" x={largeur - 28} y={(top(boucle.de) + top(boucle.vers)) / 2 + H / 2} text-anchor="middle" transform={`rotate(-90 ${largeur - 28} ${(top(boucle.de) + top(boucle.vers)) / 2 + H / 2})`}>{boucle.mot}</text>
+    </g>
+  )}
+</svg>

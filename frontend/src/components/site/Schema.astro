@@ -1,0 +1,56 @@
+---
+// L50 — cadre d'un schéma : <figure> à fond propre (lisible quoi que fasse le thème de la page),
+// jetons --sch-* en sombre par défaut et en clair sous prefers-color-scheme: light.
+interface Props {
+  id: string;
+  legende: string;
+}
+
+const { id, legende } = Astro.props;
+---
+
+<figure class="schema" data-schema={id}>
+  <slot />
+  <figcaption>{legende}</figcaption>
+</figure>
+
+<style is:global>
+  .schema {
+    --sch-bg: #1b1b1f;
+    --sch-box: #26262c;
+    --sch-line: #6b6b78;
+    --sch-text: #ececf1;
+    --sch-muted: #b4b4c0;
+    --sch-accent: #f0936a;
+    margin: 0;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--sch-line);
+    background: var(--sch-bg);
+    color: var(--sch-text);
+    text-shadow: none;
+  }
+  @media (prefers-color-scheme: light) {
+    .schema {
+      --sch-bg: #faf7f2;
+      --sch-box: #ffffff;
+      --sch-line: #7a7a86;
+      --sch-text: #1c1c22;
+      --sch-muted: #4d4d58;
+      --sch-accent: #a8401a;
+    }
+  }
+  .schema svg { display: block; width: 100%; max-width: 100%; height: auto; margin: 0 auto; }
+  .schema .sch-box { fill: var(--sch-box); stroke: var(--sch-line); stroke-width: 1.5; }
+  .schema .sch-box-accent { fill: var(--sch-box); stroke: var(--sch-accent); stroke-width: 2; }
+  .schema .sch-line { fill: none; stroke: var(--sch-line); stroke-width: 2; }
+  .schema .sch-line-accent { fill: none; stroke: var(--sch-accent); stroke-width: 2; stroke-dasharray: 6 4; }
+  .schema .sch-head { fill: var(--sch-accent); }
+  .schema .sch-arrow { fill: var(--sch-line); }
+  .schema .sch-arrow-accent { fill: var(--sch-accent); }
+  .schema .sch-t { fill: var(--sch-text); font: 600 15px/1 var(--font-sans, system-ui, sans-serif); }
+  .schema .sch-m { fill: var(--sch-muted); font: 400 13px/1 var(--font-sans, system-ui, sans-serif); }
+  .schema .sch-mono { font-family: var(--font-mono, ui-monospace, monospace); }
+  .schema .sch-a { fill: var(--sch-accent); font: 600 13px/1 var(--font-sans, system-ui, sans-serif); }
+  .schema figcaption { margin-top: 0.75rem; font-size: 0.8125rem; line-height: 1.5; color: var(--sch-muted); }
+</style>
