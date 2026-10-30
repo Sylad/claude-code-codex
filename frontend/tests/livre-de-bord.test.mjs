@@ -4,7 +4,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readdirSync } from 'node:fs';
-import { weekOf, weekBounds, findProblems, PRIVATE_PATTERNS } from '../src/lib/livre-de-bord.ts';
+import { weekOf, weekBounds, findProblems, entryId, PRIVATE_PATTERNS } from '../src/lib/livre-de-bord.ts';
 import { ENTRIES } from '../src/data/livre-de-bord.ts';
 
 const PAGES = readdirSync(new URL('../src/pages/', import.meta.url), { recursive: true })
@@ -89,7 +89,7 @@ test('R5 — un lien est interne et existant, ou le dépôt public de cadence', 
 
 test('R6 — le livre réel passe tout le filtre, a une entrée par semaine depuis le 19-10 et des liens vers cadence, études de cas et Tools tested', () => {
   assert.deepEqual(problems(ENTRIES), []);
-  assert.deepEqual(ENTRIES.map((e) => e.semaine).slice(0, 2), ['2026-W44', '2026-W43']);
+  assert.deepEqual(ENTRIES.filter((e) => !e.theme).map((e) => e.semaine).slice(0, 2), ['2026-W44', '2026-W43']);
   const hrefs = ENTRIES.flatMap((e) => [...e.appris, ...e.fabrique, ...e.teste]).flatMap((i) => (i.liens ?? []).map((l) => l.href));
   assert.ok(hrefs.some((h) => h.startsWith('https://github.com/Sylad/cadence')), 'aucun lien vers cadence');
   assert.ok(hrefs.some((h) => h.startsWith('/case-studies')), 'aucun lien vers les études de cas / Tools tested');
@@ -97,7 +97,7 @@ test('R6 — le livre réel passe tout le filtre, a une entrée par semaine depu
 });
 
 test('R7 — la semaine 44 couvre toutes les versions de cadence du 26-10 au 30-10 (1.12.1 à 1.26.0), pas seulement les trois dernières', () => {
-  const w44 = ENTRIES.find((e) => e.semaine === '2026-W44');
+  const w44 = ENTRIES.find((e) => e.semaine === '2026-W44' && !e.theme);
   assert.match(w44.resume, /de 1\.12 à 1\.26/);
   const fabrique = w44.fabrique.map((i) => `${i.titre} ${i.texte}`).join('\n');
   const versions = [
@@ -106,4 +106,39 @@ test('R7 — la semaine 44 couvre toutes les versions de cadence du 26-10 au 30-
     '1.25.0', '1.25.1', '1.26.0',
   ];
   for (const v of versions) assert.ok(fabrique.includes(v), `version ${v} absente de « fabriqué »`);
+});
+
+test('R12 — une entrée thématique cohabite avec l’entrée hebdomadaire de sa semaine ; pas deux du même genre', () => {
+  const theme = entry({ theme: 'Un sujet' });
+  assert.deepEqual(problems([theme, entry()]), []);
+  assert.deepEqual(problems([entry(), theme]), []);
+  assert.match(problems([theme, entry({ theme: 'Autre', date: '2026-10-29' })]).join('\n'), /deux entrées thématiques pour la semaine 2026-W44/);
+  assert.match(problems([entry({ theme: '  ' })]).join('\n'), /thème vide/);
+  assert.notEqual(entryId(theme), entryId(entry()));
+  assert.match(problems([entry({ theme: 'Contact : ana@exemple.fr' })]).join('\n'), /contenu privé/);
+  assert.match(problems([entry({ rubriques: { appris: 'Mon compte pro' } })]).join('\n'), /contenu privé/);
+});
+
+test('R13 — seule la chaîne de la vidéo commentée est permise parmi les liens externes hors cadence', () => {
+  const withLink = (href) => problems([entry({ appris: [item({ liens: [{ label: 'La vidéo', href }] })] })]);
+  assert.deepEqual(withLink('https://www.youtube.com/@melvynxdev'), []);
+  assert.match(withLink('https://www.youtube.com/@autre').join('\n'), /adresse non permise/);
+  assert.match(withLink('https://www.youtube.com/@melvynxdev/videos').join('\n'), /adresse non permise/);
+});
+
+test('R14 — l’entrée thématique du 30-10 : vérification plutôt que confiance, quatre faits sourcés, lien vers la vidéo, ton sans attaque', () => {
+  const t = ENTRIES.find((e) => e.theme);
+  assert.ok(t, 'entrée thématique absente');
+  assert.equal(t.semaine, '2026-W44');
+  assert.equal(t.date, '2026-10-30');
+  assert.match(t.theme, /vérification, pas la confiance/);
+  const all = [...t.appris, ...t.fabrique, ...t.teste];
+  const text = all.map((i) => `${i.titre} ${i.texte}`).join('\n');
+  for (const f of ['L166', 'L167', 'L37', 'L217', 'L439', 'L44']) assert.ok(text.includes(f), `fait ${f} absent`);
+  for (const w of ['finance', 'warhammer', 'cadence', 'avatar']) assert.match(text, new RegExp(w, 'i'));
+  for (const k of ['contexte persistant', 'je ne regarde jamais', 'souveraineté', 'chiffres', 'peur', 'coût']) {
+    assert.match(`${t.resume}\n${text}`, new RegExp(k, 'i'), `point « ${k} » absent`);
+  }
+  assert.ok(all.flatMap((i) => i.liens ?? []).some((l) => l.href === 'https://www.youtube.com/@melvynxdev'), 'lien vidéo absent');
+  assert.doesNotMatch(`${t.resume}\n${text}`, /\b(menteur|nul|arnaque|escroc|charlatan|imbécile)\b/i);
 });

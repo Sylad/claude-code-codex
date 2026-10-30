@@ -7,6 +7,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { DIST, setupBrowser } from './lib/e2e-dist.mjs';
 import { ENTRIES } from '../src/data/livre-de-bord.ts';
+import { entryId } from '../src/lib/livre-de-bord.ts';
 import { PRIVATE_PATTERNS } from '../src/lib/livre-de-bord.ts';
 import { formatDay } from '../src/lib/format-date.mjs';
 
@@ -27,10 +28,12 @@ test('R8 — une entrée par semaine, dans l’ordre, datée en français, avec 
   arts.forEach((m, i) => {
     const e = ENTRIES[i];
     assert.match(m[2], new RegExp(`<time datetime="${e.date}"[^>]*>${formatDay(e.date)}</time>`), `${e.semaine} : date`);
-    assert.match(m[0], new RegExp(`id="semaine-${e.semaine}"`));
-    for (const h of ['Ce que nous avons appris', 'Ce que nous fabriquons', 'Ce que nous avons testé']) {
-      assert.match(m[2], new RegExp(`<h3[^>]*>${h}</h3>`), `${e.semaine} : rubrique « ${h} »`);
+    assert.match(m[0], new RegExp(`id="${entryId(e)}"`));
+    const titres = { appris: 'Ce que nous avons appris', fabrique: 'Ce que nous fabriquons', teste: 'Ce que nous avons testé', ...e.rubriques };
+    for (const h of Object.values(titres)) {
+      assert.ok(unescape(m[2]).includes(`${h}</h3>`) || new RegExp(`<h3[^>]*>${h}</h3>`).test(unescape(m[2])), `${e.semaine} : rubrique « ${h} »`);
     }
+    if (e.theme) assert.match(unescape(m[2]), new RegExp(`<h2[^>]*>\\s*${e.theme.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*</h2>`), 'titre du thème');
     for (const it of [...e.appris, ...e.fabrique]) assert.ok(unescape(m[2]).includes(it.titre), `${e.semaine} : « ${it.titre} » absent`);
   });
 });

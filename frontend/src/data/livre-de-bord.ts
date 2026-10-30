@@ -15,6 +15,98 @@ export const ENTRIES: BookEntry[] = [
   {
     semaine: "2026-W44",
     date: "2026-10-30",
+    theme: "Ce qui rend une IA fiable : la vérification, pas la confiance",
+    rubriques: {
+      appris: "Ce qui tient dans la vidéo",
+      fabrique: "Ce qui ne tient pas",
+      teste: "Ce que montre notre historique",
+    },
+    resume:
+      "Regard critique sur la vidéo « Ton métier va changer dans 2 ans » de Melvynx (29 octobre). Cinq idées tiennent et nous les appliquons déjà ; cinq autres ne tiennent pas, et la raison tient en une phrase : ce qui rend une IA fiable, c'est ce qu'on vérifie après elle, pas la confiance qu'on lui fait. Quatre épisodes du jour, relus dans l'historique de nos dépôts, le montrent.",
+    appris: [
+      {
+        titre: "Le contexte persistant en fichiers",
+        texte:
+          "Donner à l'IA des fichiers de consignes qui restent d'une session à l'autre, plutôt que de tout réexpliquer, est la bonne pratique. C'est ce que font nos fichiers CLAUDE.md et le plan tenu par cadence : une session qui démarre lit ce qui a été décidé avant elle.",
+        liens: [{ label: "La chaîne de Melvynx (la vidéo y figure)", href: "https://www.youtube.com/@melvynxdev" }],
+      },
+      {
+        titre: "Les tâches répétitives et vérifiables d'abord",
+        texte:
+          "Confier à l'IA ce qui revient souvent et dont on peut contrôler le résultat avec un test est le meilleur point d'entrée. Le critère décisif est le mot « vérifiables » : une tâche qu'on ne sait pas contrôler ne devient pas fiable parce qu'elle est répétitive.",
+      },
+      {
+        titre: "Le minimalisme des outils",
+        texte:
+          "Peu d'outils, bien maîtrisés, valent mieux qu'une pile qui s'allonge. Notre catalogue Tools tested va dans le même sens : un verdict de septembre a écarté un routeur de requêtes devenu un service multi-agents trop envahissant pour le besoin.",
+        liens: [{ label: "Tools tested", href: "/case-studies" }],
+      },
+      {
+        titre: "L'IA propose, puis on décide",
+        texte:
+          "Le partage des rôles est juste : l'IA écrit, une personne tranche. Chez nous, la décision a des points d'arrêt écrits (revue de code, revue d'écran, verdict de QA) et l'agent ne les passe pas de lui-même.",
+      },
+      {
+        titre: "Les skills comme recettes",
+        texte:
+          "Une consigne qui a bien marché se range dans un skill et se rejoue, au lieu d'être retapée de mémoire. Nous en utilisons plusieurs, et la page Démarrer explique comment s'en servir.",
+        liens: [{ label: "Démarrer", href: "/start" }],
+      },
+    ],
+    fabrique: [
+      {
+        titre: "« Je ne regarde jamais avant de publier »",
+        texte:
+          "C'est le point qui ne tient pas, et celui qui compte le plus. Ne pas regarder, c'est faire de la confiance l'unique contrôle. Les quatre épisodes plus bas montrent que, sur une même journée, des vérifications ont arrêté des défauts que personne n'attendait. Regarder avant de publier est précisément le travail qui reste à la personne.",
+      },
+      {
+        titre: "La souveraineté des données, vraie à moitié",
+        texte:
+          "Garder ses données chez soi est une bonne idée, mais ce n'est vrai que du stockage. Tant que le modèle tourne chez un fournisseur, ce qu'on lui envoie quitte la machine ; seul un modèle local garde tout sur place. Nous les mélangeons déjà, selon la donnée : un modèle local quand elle ne doit pas sortir, un modèle hébergé sinon. La vraie question est « où va quoi », pas « chez moi ou pas ».",
+      },
+      {
+        titre: "Des chiffres d'étude invérifiables",
+        texte:
+          "Les pourcentages avancés pour appuyer le propos étaient donnés sans source que nous ayons pu retrouver. Un chiffre qu'on ne peut pas remonter à sa source est une opinion avec un habillage : nous ne le reprenons pas ici.",
+      },
+      {
+        titre: "Le marketing de la peur",
+        texte:
+          "« Ton métier va changer dans 2 ans » joue sur l'urgence. Le métier change en effet, mais à l'échelle de nos propres projets le changement se voit en pratiques (tester, relire, borner) plutôt qu'en date butoir. Une échéance annoncée sans mesure ne dit pas quoi faire lundi matin.",
+      },
+      {
+        titre: "Le coût et la qualité, absents de ses niveaux",
+        texte:
+          "Les niveaux de maturité décrits mesurent la quantité d'autonomie laissée à l'IA, jamais ce qu'elle coûte ni la qualité de ce qu'elle rend. Nous suivons les deux : cadence compte les jetons et les passes de correction par lot, parce qu'une automatisation qui coûte cher ou qui oblige à tout reprendre n'est pas un progrès.",
+      },
+    ],
+    teste: [
+      {
+        titre: "Finance (L166 puis L167) : une vérification partielle, un défaut attrapé par la QA",
+        texte:
+          "Le lot L166 corrigeait la démo : le bilan annuel de /yearly devait être celui de l'année des relevés. Il était terminé et relu. La QA du 30 octobre a confirmé que la vue par défaut était conforme, mais a trouvé que le bilan 2025, généré le 23 octobre, restait servi et offert dans l'onglet 2025, avec des mois absents de l'historique. Le lot L167 fait purger par le préchargement de la démo tout bilan d'une autre année. Une vérification de la seule vue par défaut laissait passer le défaut.",
+      },
+      {
+        titre: "Warhammer (L37 puis L217) : une régression que l'e2e a attrapée",
+        texte:
+          "Le lot L37 a transformé le méga-menu Lore en bouton à divulgation, ce qui a retiré onze liens de la tabulation. Un test de bout en bout d'un lot livré plus tôt (L49) a rougi en CI : 90 tabulations depuis la recherche faisaient désormais le tour de la page. L'ordre réel de la galerie restait conforme ; c'était l'hypothèse du test qui n'était plus vraie. Le lot L217 a rescellé ce test le jour même. Sans lui, le changement de tabulation serait passé inaperçu.",
+      },
+      {
+        titre: "Cadence (L439) : un lot repris trois fois, et c'est la revue qui a trouvé le défaut",
+        texte:
+          "Le livreur délégué (L439) a eu trois revues de code successives. La dernière, faite par une revue neuve, a relevé un défaut majeur que les deux premières avaient laissé : l'entrée du CHANGELOG était rangée sous une version déjà publiée. Corrigé, relu, puis la suite complète est repassée au vert, 4549 tests sur 4549. Reprendre n'est pas un échec : c'est la vérification qui fait son travail, à condition d'être refaite à neuf plutôt que cochée.",
+      },
+      {
+        titre: "Avatar (L44) : la porte rejouée sur un commit de plan",
+        texte:
+          "Pour ce lot, le dernier commit de code est de 12 h 21. Les quatre suivants, jusqu'à 12 h 35, ne touchent que le plan (revue enregistrée, lot terminé, note de livraison). Rejouer toute la porte de tests sur l'un d'eux contrôlait un code déjà contrôlé : environ cinq minutes perdues. Vérifier trop est aussi une perte ; c'est pourquoi cadence lit désormais le verdict de la vague quand seuls des commits de plan séparent le sha livré du dernier contrôlé.",
+        liens: [{ label: "Livre de bord, semaine 44", href: "/livre-de-bord#semaine-2026-W44" }],
+      },
+    ],
+  },
+  {
+    semaine: "2026-W44",
+    date: "2026-10-30",
     resume:
       "Semaine de plomberie utile : trois pertes de temps mesurées (la porte de tests rejouée pour rien, une publication cassée par un fichier que git ne suit pas, une reprise de vague qui attendait en vain) et, pour chacune, le mécanisme qui la supprime. Cadence passe de 1.12 à 1.26, vingt-trois versions en cinq jours.",
     appris: [

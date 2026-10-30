@@ -24,6 +24,10 @@ export interface BookEntry {
   semaine: string;
   /** Jour d'écriture « YYYY-MM-DD », dans la semaine. */
   date: string;
+  /** Présent pour une entrée thématique (un sujet, en plus de l'entrée hebdomadaire de la même semaine). */
+  theme?: string;
+  /** Titres de rubriques propres à une entrée thématique (par défaut : appris, fabriqué, testé). */
+  rubriques?: Partial<Record<'appris' | 'fabrique' | 'teste', string>>;
   resume: string;
   appris: BookItem[];
   fabrique: BookItem[];
@@ -47,6 +51,12 @@ export const PRIVATE_PATTERNS: RegExp[] = [
   /confidentiel/i,
   /contractuel/i,
 ];
+
+/** Seul lien externe hors cadence : la chaîne de la vidéo commentée par l'entrée thématique du 30-10. */
+const VIDEO_CHANNEL = 'https://www.youtube.com/@melvynxdev';
+
+/** Ancre d'une entrée : la semaine, suffixée « -theme » pour l'entrée thématique de cette semaine. */
+export const entryId = (e: Pick<BookEntry, 'semaine' | 'theme'>) => `semaine-${e.semaine}${e.theme ? '-theme' : ''}`;
 
 const DAY = /^\d{4}-\d{2}-\d{2}$/;
 const WEEK = /^\d{4}-W\d{2}$/;
@@ -82,6 +92,7 @@ function linkProblem(l: BookLink | undefined, isKnownPath: (path: string) => boo
     const path = l.href.split('#')[0];
     return isKnownPath(path.length > 1 ? path.replace(/\/$/, '') : path) ? null : `page inconnue ${l.href}`;
   }
+  if (l.href === VIDEO_CHANNEL) return null;
   if (/^https:\/\/github\.com\/Sylad\/cadence(\/[\w./#-]*)?$/.test(l.href)) return null;
   return `adresse non permise ${l.href}`;
 }
@@ -105,9 +116,12 @@ export function findProblems(entries: BookEntry[], isKnownPath: (path: string) =
     }
     if (typeof e.date !== 'string' || !DAY.test(e.date)) out.push(`${where} : date attendue au format AAAA-MM-JJ`);
     else if (weekOf(e.date) !== e.semaine) out.push(`${where} : la date ${e.date} est hors de la semaine ${e.semaine}`);
-    if (seen.has(e.semaine)) out.push(`${where} : deux entrées pour la semaine ${e.semaine}`);
+    const key = entryId(e);
+    if (e.theme !== undefined && (typeof e.theme !== 'string' || !e.theme.trim())) out.push(`${where} : thème vide`);
+    texts(`${where} thème`, e.theme, ...Object.values(e.rubriques ?? {}));
+    if (seen.has(key)) out.push(`${where} : deux entrées ${e.theme ? 'thématiques ' : ''}pour la semaine ${e.semaine}`);
     else if (previous !== undefined && e.semaine > previous) out.push(`${where} : la plus récente en premier (après ${previous})`);
-    seen.add(e.semaine);
+    seen.add(key);
     previous = e.semaine;
     if (typeof e.resume !== 'string' || !e.resume.trim()) out.push(`${where} : résumé vide`);
     texts(`${where} résumé`, e.resume);

@@ -9,7 +9,7 @@ import { readdirSync } from "node:fs";
 import { join } from "node:path";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { ENTRIES } from "@/data/livre-de-bord";
-import { findProblems, type BookItem } from "@/lib/livre-de-bord";
+import { findProblems, entryId, type BookItem } from "@/lib/livre-de-bord";
 import { formatDay } from "@/lib/format-date.mjs";
 
 // Le build se lance depuis frontend/ : les pages sont à src/pages.
@@ -27,6 +27,8 @@ const rubriques: { key: "appris" | "fabrique" | "teste"; title: string }[] = [
   { key: "fabrique", title: "Ce que nous fabriquons" },
   { key: "teste", title: "Ce que nous avons testé" },
 ];
+const rubriqueTitle = (e: (typeof ENTRIES)[number], key: "appris" | "fabrique" | "teste", fallback: string) =>
+  e.rubriques?.[key] ?? fallback;
 const external = (href: string) => href.startsWith("https://");
 ---
 
@@ -55,8 +57,8 @@ const external = (href: string) => href.startsWith("https://");
       <ul class="flex flex-wrap gap-x-5 gap-y-1">
         {ENTRIES.map((e) => (
           <li>
-            <a class="inline-flex items-center min-h-11 text-claude-soft underline underline-offset-4 hover:text-ink" href={`#semaine-${e.semaine}`}>
-              Semaine {e.semaine.slice(-2)}
+            <a class="inline-flex items-center min-h-11 text-claude-soft underline underline-offset-4 hover:text-ink" href={`#${entryId(e)}`}>
+              {e.theme ? `Semaine ${e.semaine.slice(-2)} · thème` : `Semaine ${e.semaine.slice(-2)}`}
             </a>
           </li>
         ))}
@@ -64,18 +66,18 @@ const external = (href: string) => href.startsWith("https://");
     </nav>
 
     {ENTRIES.map((e) => (
-      <article class="book-entry mb-8 rounded-xl border border-white/10 bg-paper-elevated p-6 sm:p-8" id={`semaine-${e.semaine}`} data-semaine={e.semaine} aria-labelledby={`titre-${e.semaine}`}>
-        <h2 id={`titre-${e.semaine}`} class="text-xl sm:text-2xl font-semibold text-ink">
-          Semaine {e.semaine.slice(-2)}
+      <article class="book-entry mb-8 rounded-xl border border-white/10 bg-paper-elevated p-6 sm:p-8" id={entryId(e)} data-semaine={e.semaine} aria-labelledby={`titre-${entryId(e)}`}>
+        <h2 id={`titre-${entryId(e)}`} class="text-xl sm:text-2xl font-semibold text-ink">
+          {e.theme ?? `Semaine ${e.semaine.slice(-2)}`}
         </h2>
         <p class="mt-1 font-mono text-sm text-ink-muted">
-          <time datetime={e.date} class="whitespace-nowrap">{formatDay(e.date)}</time>
+          {e.theme && <span>Semaine {e.semaine.slice(-2)} · </span>}<time datetime={e.date} class="whitespace-nowrap">{formatDay(e.date)}</time>
         </p>
         <p class="mt-4 text-ink leading-relaxed">{e.resume}</p>
 
         {rubriques.map((r) => (
-          <section class="mt-8" aria-labelledby={`${r.key}-${e.semaine}`}>
-            <h3 id={`${r.key}-${e.semaine}`} class="text-lg font-semibold text-ink">{r.title}</h3>
+          <section class="mt-8" aria-labelledby={`${r.key}-${entryId(e)}`}>
+            <h3 id={`${r.key}-${entryId(e)}`} class="text-lg font-semibold text-ink">{rubriqueTitle(e, r.key, r.title)}</h3>
             <ul class="mt-3">
               {(e[r.key] as BookItem[]).map((it) => (
                 <li class="book-item border-t border-white/10 py-4">
@@ -114,6 +116,10 @@ const external = (href: string) => href.startsWith("https://");
   .book-hero h1,
   .book-hero .book-lede {
     text-shadow: 0 0 2px rgb(0 0 0 / 0.9), 0 1px 3px rgb(0 0 0 / 0.85);
+  }
+  /* Les liens de la barre des semaines laissent le titre d'une entrée visible sous l'en-tête fixe du site. */
+  .book-entry {
+    scroll-margin-top: 5rem;
   }
   .book-entry a:focus-visible,
   .book-weeks a:focus-visible {
