@@ -425,9 +425,10 @@ lots:
     finished: 2026-10-30
   - id: L49
     title: "Audit de lisibilité du site (lecture seule) : par page, nombre de mots, schémas et images présents, plus long bloc sans intertitre ; liste ordonnée des pages « mur de texte » à reprendre (demande de Sylvain le 30-10 : schémas et images en plus du texte, lisible, pas rebutant)"
-    status: todo
+    status: doing
     estimate: 0.25
     created: 2026-10-30
+    started: 2026-10-30
   - id: L50
     title: "Étude de cas cadence : trois schémas SVG (plan relié aux commits ; parcours d'un lot dans une vague spec → code → revue → correction → UX → prêt ; chaîne du livreur) et une capture du panneau des lots ; texte découpé (intertitres, encadrés) — lisible clair et sombre"
     status: doing
