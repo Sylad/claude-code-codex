@@ -437,10 +437,11 @@ lots:
     started: 2026-10-30
   - id: L51
     title: "Livre de bord « la vérification, pas la confiance » : un schéma de la boucle vérifier plutôt que croire (porte, revue, QA) et une illustration par épisode ; texte découpé"
-    status: todo
+    status: doing
     estimate: 0.25
     visible: true
     created: 2026-10-30
+    started: 2026-10-30
   - id: L52
     title: "Relecture de vérité du site (lecture seule) : chaque affirmation datée ou chiffrée (versions, prix, modèles, fonctionnalités Claude Code, verdicts d'outils, état des apps) vérifiée vraie, sourcée et à jour ; liste classée faux / dépassé / non sourcé / ok par page, sans réécriture ; les corrections deviennent un lot par page (demande de Sylvain le 30-10)"
     status: todo
