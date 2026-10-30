@@ -423,6 +423,34 @@ lots:
     docs_ok: { date: 2026-10-30, reason: "Correctif interne de la visionneuse (image créée à l'ouverture au lieu d'une <img> sans src) : comportement visible inchangé, aucune doc ne décrit ce détail." }
     review: { date: 2026-10-30, verdict: "conforme (1 note mineure : le retrait de l'image à la fermeture n'est pas testé) — orchestré (vague 2026-10-30-1925-cx, 1 passe(s) de correction)", commit: a4a48ddd734d3496bff31c85bf2084f152108a09 }
     finished: 2026-10-30
+  - id: L49
+    title: "Audit de lisibilité du site (lecture seule) : par page, nombre de mots, schémas et images présents, plus long bloc sans intertitre ; liste ordonnée des pages « mur de texte » à reprendre (demande de Sylvain le 30-10 : schémas et images en plus du texte, lisible, pas rebutant)"
+    status: todo
+    estimate: 0.25
+    created: 2026-10-30
+  - id: L50
+    title: "Étude de cas cadence : trois schémas SVG (plan relié aux commits ; parcours d'un lot dans une vague spec → code → revue → correction → UX → prêt ; chaîne du livreur) et une capture du panneau des lots ; texte découpé (intertitres, encadrés) — lisible clair et sombre"
+    status: todo
+    estimate: 0.5
+    visible: true
+    created: 2026-10-30
+  - id: L51
+    title: "Livre de bord « la vérification, pas la confiance » : un schéma de la boucle vérifier plutôt que croire (porte, revue, QA) et une illustration par épisode ; texte découpé"
+    status: todo
+    estimate: 0.25
+    visible: true
+    created: 2026-10-30
+  - id: L52
+    title: "Relecture de vérité du site (lecture seule) : chaque affirmation datée ou chiffrée (versions, prix, modèles, fonctionnalités Claude Code, verdicts d'outils, état des apps) vérifiée vraie, sourcée et à jour ; liste classée faux / dépassé / non sourcé / ok par page, sans réécriture ; les corrections deviennent un lot par page (demande de Sylvain le 30-10)"
+    status: todo
+    estimate: 0.5
+    created: 2026-10-30
+  - id: L53
+    title: "Veille mensuelle des outils des études de cas et de Tools tested : chaque outil existe, dépôt actif, version citée juste, lien vivant, verdict toujours valable (au doute : test-tool en bac à sable) ; rapport daté + corrections ; un verdict qui change devient une entrée du livre de bord"
+    status: todo
+    estimate: 0.25
+    every: 30
+    created: 2026-10-30
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
