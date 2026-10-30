@@ -1,7 +1,22 @@
 {
   "project": "claude-code-codex",
-  "generated": "2026-10-30 19:00",
+  "generated": "2026-10-30 21:18",
   "entries": [
+    {
+      "slug": "2026-10-30-l-etude-de-cas-cadence-s-illustre-trois-schemas-et-un-texte",
+      "title": "L'étude de cas Cadence s'illustre : trois schémas et un texte découpé",
+      "date": "2026-10-30",
+      "lots": [
+        "L50"
+      ],
+      "captures": [
+        "captures/L50-parcours-lot.png"
+      ],
+      "alts": [
+        "Schéma du parcours d'un lot : spec, code, revue, correction, UX, prêt, avec la boucle en pointillés de la correction vers la revue"
+      ],
+      "html": "<p>L'étude de cas Cadence se lit plus facilement : elle est découpée et illustrée.</p>\n<ul><li>Trois schémas montrent la méthode d'un coup d'œil : le plan relié aux commits, le parcours d'un lot (spec, code, revue, correction, UX, prêt, avec sa boucle de reprise) et la chaîne du livreur, du lot prêt à la ligne rendue.</li><li>Une capture du panneau des lots, tel que la page Plan de travail le publie, montre à quoi ressemble ce suivi.</li><li>Le texte est coupé en intertitres, et les idées à retenir sont mises dans des encadrés.</li><li>Les schémas restent lisibles que votre appareil soit réglé en thème clair ou sombre, et tiennent dans la largeur d'un téléphone.</li></ul>"
+    },
     {
       "slug": "2026-10-30-livre-de-bord-ce-qui-rend-une-ia-fiable",
       "title": "Livre de bord : ce qui rend une IA fiable",
