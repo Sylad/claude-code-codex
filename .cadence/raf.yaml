@@ -60,6 +60,7 @@ lots:
     every: 7
     created: 2026-10-30
     started: 2026-10-30
+    review: { date: 2026-10-30, verdict: "conforme après 4 corrections mineures (0 bloquant, 0 majeur, 6 mineurs) — orchestré (vague 2026-10-30-1500-ccc, 2 passe(s) de correction)", commit: 3f9a49936eaf71d3ef7188de45f019b0b5b1baa6 }
   - id: L19
     title: "Cadence en bonne place sur le codex : page dédiée à la méthode et à l'outil (plan raf relié aux commits, Nouveautés, rituels de session, livraison vérifiée, mode lead et sous-agents), exemples tirés des projets réels, entrée dans la navigation et sur l'accueil (consigne Sylvain 02-10)"
     public: "Notre méthode de travail, expliquée et illustrée par des projets réels"
