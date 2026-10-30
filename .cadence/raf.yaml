@@ -410,6 +410,7 @@ lots:
     estimate: 0.1
     created: 2026-10-30
     started: 2026-10-30
+    docs_ok: { date: 2026-10-30, reason: "Correctif : la carte sans dépôt public n'affiche plus de lien ↗ GitHub vide. README (ligne /case-studies) et CLAUDE.md restent vrais ; aucune Nouveauté pour une correction de lien sans effet visible." }
   - id: L48
     title: "Nouveautés : une <img> sans src (QA de L19)"
     status: todo
