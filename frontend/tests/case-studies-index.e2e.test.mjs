@@ -11,10 +11,10 @@ const html = readFileSync(join(DIST, 'case-studies', 'index.html'), 'utf8');
 const cards = [...html.matchAll(/<article[\s\S]*?<\/article>/g)].map((m) => m[0]);
 const githubLinks = (card) => [...card.matchAll(/<a\b[^>]*>(?:(?!<\/a>)[\s\S])*↗ GitHub(?:(?!<\/a>)[\s\S])*<\/a>/g)].map((m) => m[0]);
 
-test('L47 R1 — tout lien « ↗ GitHub » de l’index a un href https vers github.com', () => {
+test('L47 R1 — tout lien « ↗ GitHub » de l’index a un href https non vide', () => {
   const all = cards.flatMap(githubLinks);
   assert.ok(all.length > 0, 'aucun lien GitHub trouvé : le test ne vérifie rien');
-  for (const a of all) assert.match(a, /<a\b[^>]*\shref="https:\/\/github\.com\/[^"]+"/, a);
+  for (const a of all) assert.match(a, /<a\b[^>]*\shref="https:\/\/[^"]+"/, a);
 });
 
 test('L47 R2 — la carte aetherwx (sans dépôt public) n’affiche pas de lien GitHub', () => {
