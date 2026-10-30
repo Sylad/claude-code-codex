@@ -142,3 +142,33 @@ test('R14 — l’entrée thématique du 30-10 : vérification plutôt que confi
   assert.ok(all.flatMap((i) => i.liens ?? []).some((l) => l.href === 'https://www.youtube.com/@melvynxdev'), 'lien vidéo absent');
   assert.doesNotMatch(`${t.resume}\n${text}`, /\b(menteur|nul|arnaque|escroc|charlatan|imbécile)\b/i);
 });
+
+// L51 — schéma de l'entrée et illustration par épisode : identifiants connus, texte découpé.
+const withIds = (entries, ids) => findProblems(entries, knownPath, ids);
+
+test('R12 — un schéma d’entrée ou une illustration d’épisode doit être un identifiant connu', () => {
+  assert.deepEqual(withIds([entry({ schema: 'boucle', appris: [item({ illustration: 'finance' })] })], ['boucle', 'finance']), []);
+  assert.match(withIds([entry({ schema: 'inconnu' })], ['boucle']).join('\n'), /schéma inconnu/);
+  assert.match(withIds([entry({ teste: [item({ illustration: 'inconnue' })] })], ['finance']).join('\n'), /illustration inconnue/);
+  // sans liste d'identifiants fournie, rien n'est connu : on ne laisse pas passer un identifiant non vérifié
+  assert.match(problems([entry({ schema: 'boucle' })]).join('\n'), /schéma inconnu/);
+  assert.match(withIds([entry({ schema: '' })], ['boucle']).join('\n'), /schéma inconnu/);
+});
+
+test('R13 — dans un texte découpé en paragraphes (ligne vide), un paragraphe vide ou privé est refusé', () => {
+  assert.deepEqual(problems([entry({ appris: [item({ texte: 'Un.\n\nDeux.' })] })]), []);
+  assert.match(problems([entry({ appris: [item({ texte: '   \n\n  ' })] })]).join('\n'), /texte vide/);
+  assert.match(problems([entry({ appris: [item({ texte: 'Un.\n\nVoir /home/x/secret' })] })]).join('\n'), /contenu privé/);
+});
+
+test('R14 — l’entrée thématique « vérification » porte son schéma et une illustration par épisode, en paragraphes courts', () => {
+  const e = ENTRIES.find((x) => x.theme?.includes('vérification'));
+  assert.ok(e, 'entrée thématique absente');
+  assert.equal(e.schema, 'boucle-verification');
+  assert.deepEqual(e.teste.map((i) => i.illustration), ['episode-finance', 'episode-warhammer', 'episode-cadence', 'episode-avatar']);
+  for (const it of [...e.appris, ...e.fabrique, ...e.teste]) {
+    const paras = it.texte.split(/\n{2,}/);
+    for (const p of paras) assert.ok(p.length <= 420, `« ${it.titre} » : paragraphe de ${p.length} caractères`);
+  }
+  for (const it of e.teste) assert.ok(it.texte.split(/\n{2,}/).length >= 2, `« ${it.titre} » : texte non découpé`);
+});
