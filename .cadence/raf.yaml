@@ -54,11 +54,12 @@ lots:
   - id: L44
     title: "Livre de bord du développement avec IA (récurrent, chaque semaine) : ce qu'on a appris (pertes de temps et le mécanisme qui les a supprimées, décisions de méthode, pièges des agents et des modèles), les outils qu'on fabrique (versions de cadence et ce qu'elles apportent, mods, skills, agents), les outils testés (verdicts /test-tool) — sources : notes de clôture des plans (raf), CHANGELOG et whats-new de cadence, cadence perf, Nouveautés des projets ; une entrée datée par semaine, liens vers les pages détaillées (cadence, études de cas, Tools tested) ; filtre strict : rien de privé ni de contractuel, rien du compte pro, aucun secret ni chemin de machine (demande de Sylvain le 30-10 : le codex est aussi notre livre de bord)"
     public: "Livre de bord : ce que nous apprenons en développant avec l'IA"
-    status: todo
+    status: doing
     estimate: 0.5
     visible: true
     every: 7
     created: 2026-10-30
+    started: 2026-10-30
   - id: L19
     title: "Cadence en bonne place sur le codex : page dédiée à la méthode et à l'outil (plan raf relié aux commits, Nouveautés, rituels de session, livraison vérifiée, mode lead et sous-agents), exemples tirés des projets réels, entrée dans la navigation et sur l'accueil (consigne Sylvain 02-10)"
     public: "Notre méthode de travail, expliquée et illustrée par des projets réels"
