@@ -54,13 +54,17 @@ lots:
   - id: L44
     title: "Livre de bord du développement avec IA (récurrent, chaque semaine) : ce qu'on a appris (pertes de temps et le mécanisme qui les a supprimées, décisions de méthode, pièges des agents et des modèles), les outils qu'on fabrique (versions de cadence et ce qu'elles apportent, mods, skills, agents), les outils testés (verdicts /test-tool) — sources : notes de clôture des plans (raf), CHANGELOG et whats-new de cadence, cadence perf, Nouveautés des projets ; une entrée datée par semaine, liens vers les pages détaillées (cadence, études de cas, Tools tested) ; filtre strict : rien de privé ni de contractuel, rien du compte pro, aucun secret ni chemin de machine (demande de Sylvain le 30-10 : le codex est aussi notre livre de bord)"
     public: "Livre de bord : ce que nous apprenons en développant avec l'IA"
-    status: doing
+    status: done
     estimate: 0.5
     visible: true
     every: 7
     created: 2026-10-30
     started: 2026-10-30
     review: { date: 2026-10-30, verdict: "conforme après 4 corrections mineures (0 bloquant, 0 majeur, 6 mineurs) — orchestré (vague 2026-10-30-1500-ccc, 2 passe(s) de correction)", commit: 3f9a49936eaf71d3ef7188de45f019b0b5b1baa6 }
+    ux: { date: 2026-10-30, verdict: "conforme, capture 390 regardée par le lead (en-tête, sommaire des semaines, entrée semaine 44) ; ux-reviewer : conforme après 4 corrections mineures, 0 bloquant, 0 majeur ; contenu filtré au build (aucun privé, chemin, secret ni compte pro)" }
+    finished: 2026-10-30
+    notes:
+      - { date: 2026-10-30, text: "Sources premières des prochaines entrées (précision de Sylvain le 30-10) : historique git de chaque dépôt (git log --since=<lundi>, les commits citent leur lot) et archives de plans (.cadence/archive/ et lots done de .cadence/raf.yaml : titres, notes, verdicts) ; puis CHANGELOG et whats-new de cadence, cadence perf, Nouveautés." }
   - id: L19
     title: "Cadence en bonne place sur le codex : page dédiée à la méthode et à l'outil (plan raf relié aux commits, Nouveautés, rituels de session, livraison vérifiée, mode lead et sous-agents), exemples tirés des projets réels, entrée dans la navigation et sur l'accueil (consigne Sylvain 02-10)"
     public: "Notre méthode de travail, expliquée et illustrée par des projets réels"
@@ -68,6 +72,7 @@ lots:
     estimate: 1.5
     visible: true
     created: 2026-10-02
+    goal: "Étude de cas cadence dans /case-studies/ (frontend/src/pages/case-studies/cadence.astro), au gabarit des études existantes — lire d'abord l'index case-studies.astro, deux études de projet (finance-tracker, maritime-atlas) et une d'outil testé (ruflo ou claude-mem) pour la forme ; vérifier ce qui existe déjà sur cadence dans le site (grep cadence, page livre-de-bord) et s'y relier sans dupliquer ; contenu tiré du dépôt cadence voisin (README, docs/whats-new.md, CHANGELOG 1.0 → 1.27, docs/lead.md, docs/orchestrate.md) et de son historique git : le problème de départ, la méthode (plan raf relié aux commits, Nouveautés, rituels de session, livraison vérifiée, vagues orchestrate, lead et sous-agents, livreur délégué), les chiffres mesurés (cadence perf), les échecs et ce qu'ils ont changé ; entrée dans l'index des études de cas et lien depuis l'accueil ; rien de privé ni du compte pro (demande de Sylvain le 30-10 : cadence a sa place dans les études de cas)"
   - id: L37
     title: "Études de cas des apps loisir à jour d'après leur état réel : ol-companion (dernière mise à jour 10-05 ; depuis : animations, carte L1 L191–L197, Bleus, k3s), warhammer40k (10-05 ; visionneuse Concepts, galaxie…), finance-tracker (13-08 ; Crédits, Abonnements, revues UX) — lire le README, le CHANGELOG/Nouveautés et le plan de chaque projet, mettre à jour stack, architecture, chiffres et captures, dater la page ; demande Sylvain 24-10"
     public: "Études de cas : ol-companion, warhammer40k et finance-tracker à jour"
