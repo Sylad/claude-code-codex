@@ -93,3 +93,16 @@ test('R11 — le code en ligne est rendu en <code> : aucun backtick littéral da
   assert.equal(main(html).includes('`'), false);
   assert.match(main(html), /<code[^>]*>raf now<\/code>/);
 });
+
+test('R12 — la limite assumée distingue le relevé relu (10 octobre) du relevé non relu (30 octobre)', () => {
+  const t = text(read('case-studies', 'cadence', 'index.html'));
+  assert.equal(t.includes('relu à la main sur un échantillon seulement'), false);
+  assert.match(t, /relevé du 10 octobre[^.]*relu[^.]*échantillon/);
+  assert.match(t, /relevé du 30 octobre[^.]*pas été relu/);
+});
+
+test('R13 — « 565 Ko → 5 Ko » cite docs/whats-new.md, où le chiffre se trouve', () => {
+  const t = text(read('case-studies', 'cadence', 'index.html'));
+  assert.equal(t.includes('CHANGELOG 1.19.0'), false);
+  assert.match(t, /docs\/whats-new\.md \(1\.19\.0\)/);
+});
