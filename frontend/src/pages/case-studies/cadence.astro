@@ -1,0 +1,277 @@
+---
+/*
+  L19 — étude de cas de cadence, l'outil de méthode de ce travail. Contenu tiré du dépôt public
+  Sylad/cadence (README, docs/whats-new.md, CHANGELOG, docs/mesures/, docs/perf/) : chaque chiffre
+  y a sa source, nommée dans la section « Les chiffres mesurés ». Le détail semaine par semaine vit
+  dans le Livre de bord (/livre-de-bord/), les changements visibles dans /nouveautes/ : cette page
+  y renvoie, elle ne les recopie pas. Rien de privé : pas de machine, pas de chemin, pas de compte pro.
+*/
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import CaseStudySection from "@/components/site/CaseStudySection.astro";
+import { inlineCodeHtml } from "@/lib/inline-code.mjs";
+
+const CODE = "[&_code]:font-mono [&_code]:text-claude-soft [&_code]:text-[0.9em] [&_code]:px-1 [&_code]:rounded [&_code]:bg-white/5";
+
+const CADENCE = "https://github.com/Sylad/cadence";
+
+const pieces = [
+  {
+    nom: "Le plan raf, relié aux commits",
+    corps:
+      "Le reste à faire est un fichier YAML versionné à côté du code : des lots, des sous-tâches, des notes. Chaque commit cite son lot (`fix(L4): …`) ; `raf commits L4` retrouve ce qu'un lot a produit, `raf now` dit la suite, `raf check` repère les écarts (un commit sans lot, un lot clos sans commit).",
+    doc: "docs/raf.md",
+  },
+  {
+    nom: "Les Nouveautés",
+    corps:
+      "Un lot visible n'est pas fini sans une entrée écrite du point de vue de l'utilisateur, avec une capture. `cadence news build` en fait un JSON que le site lit : la page Nouveautés de ce codex en vient.",
+    doc: "docs/news.md",
+  },
+  {
+    nom: "Les rituels de session",
+    corps:
+      "`cadence session start` rend l'état du travail au matin (lots en cours, commits des autres sessions, écarts) ; `cadence session close` fait l'hygiène du soir et sort en erreur tant que quelque chose reste ouvert. La mémoire d'une journée à l'autre est dans des fichiers, pas dans la tête de la conversation.",
+    doc: "docs/session.md",
+  },
+  {
+    nom: "La livraison vérifiée",
+    corps:
+      "`cadence deliver` attend la CI du commit, joue le déploiement, puis vérifie l'effet : une URL qui répond avec le bon sha, une commande qui sort à zéro. Une livraison est finie quand ses contrôles passent, pas quand un outil écrit « success ».",
+    doc: "docs/deliver.md",
+  },
+  {
+    nom: "Les vagues orchestrate",
+    corps:
+      "Un programme, sans modèle, lance des sessions Claude Code courtes et neuves, une par étape : contrôle préalable, fiche et maquette pour un écran, tests d'acceptation rouges et verrouillés, implémentation, revue, passe UX, corrections. Chaque session lit un brief, rend un résultat structuré et disparaît ; le journal de la vague garde la trace.",
+    doc: "docs/orchestrate.md",
+  },
+  {
+    nom: "Le lead et les sous-agents",
+    corps:
+      "Une session de pilotage garde un contexte petit : elle lit des synthèses (`cadence lead tour`), décide avec l'humain des lots à jouer, relaie les questions des sessions et ne répond jamais à la place de l'humain. Le travail est fait par les sessions de la vague et par des agents spécialisés (relecteur de code, relecteur UX, rédacteur de fiche).",
+    doc: "docs/lead.md",
+  },
+  {
+    nom: "Le livreur délégué",
+    corps:
+      "Depuis la 1.26, le lead confie la livraison d'un lot prêt à l'agent `livreur` : porte de tests sur le sha, verdict UX, clôture du lot, push, livraison, puis une seule ligne rendue (`L84 livré 3d6edf4, QA à lancer <url>`) ou une seule question. Le lead garde son contexte pour décider, pas pour exécuter.",
+    doc: "docs/lead.md",
+  },
+];
+
+const chiffres = [
+  {
+    valeur: "61 % · 29 %",
+    legende:
+      "des 263 lots du premier relevé (10 octobre) avaient au moins une, puis au moins deux passes de correction après la première écriture.",
+    source: "docs/mesures/corrections-2026-10-10.md",
+  },
+  {
+    valeur: "136 passes",
+    legende:
+      "de cause « bug de code » sur 201 passes classables du 24 au 30 octobre ; 96 d'entre elles sont des cas limites. Le maillon dominant est donc le brief d'implémentation, qui demande depuis la 1.27 la liste des cas limites avant la première ligne de code.",
+    source: "docs/mesures/bug-code-2026-10-30.md",
+  },
+  {
+    valeur: "−4 211 jetons",
+    legende:
+      "au premier tour de chaque session de vague (42 541 → 38 330, −9,9 %) en désactivant les plugins de l'utilisateur, qui n'ont rien à faire dans une session qui lit, édite et lance des commandes.",
+    source: "docs/mesures/contexte-session-2026-10-28.md",
+  },
+  {
+    valeur: "565 Ko → 5 Ko",
+    legende:
+      "le plan d'un projet qui ne faisait que grossir, une fois les lots clos rangés par `raf archive` ; les commandes qui le lisent affichent la même chose avant et après.",
+    source: "CHANGELOG 1.19.0",
+  },
+  {
+    valeur: "1 h 53 min",
+    legende:
+      "d'attente cumulée d'un créneau de session sur 199 vagues, un seul arrêt par le quota : de quoi décider de ne pas relever le plafond de sessions sans l'avoir mesuré.",
+    source: "docs/mesures/attente-creneaux-2026-10-12.md",
+  },
+];
+
+const echecs = [
+  {
+    id: "classement",
+    titre: "Un classement des corrections qui se trompait presque toujours",
+    corps:
+      "Pour savoir pourquoi les lots étaient corrigés, un modèle local classait chaque passe par cause. Au premier essai il mettait 169 passes sur 254 en « spec floue » et ne s'accordait avec une relecture à la main que sur 5 passes sur 24.",
+    change:
+      "Le prompt a été resserré (le bug de code par défaut, « spec floue » seulement si le constat dit que l'énoncé est flou) : accord de 17 sur 24 (71 %). Chaque mesure publiée dit désormais qui l'a faite et ce qui n'a pas été relu.",
+  },
+  {
+    id: "regression-apparente",
+    titre: "Une régression qui n'en était qu'à moitié une",
+    corps:
+      "`cadence perf` du 18 octobre annonçait 51 % de lots livrés en moins et des durées de revue en hausse de près de 50 %. Ventilées par projet et à effort égal, les hausses tombaient à +12 % ou 0 % pour l'implémentation, et le recul des livraisons à −35 % une fois écartées des copies de travail comptées deux fois.",
+    change:
+      "`cadence perf` ne lit plus les dossiers de copies de travail (`tmp/`), et la ventilation qui a fait tomber ces chiffres est un script versionné qui se rejoue sur les journaux.",
+  },
+  {
+    id: "publication",
+    titre: "Une version publiée sur le papier, jamais arrivée sur npm",
+    corps:
+      "À quatre reprises (1.5.0, 1.14.0, 1.16.0, 1.25.0), le tag est parti mais la version n'a jamais atteint npm. Pour la 1.25.0, les tests lisaient un fichier de types que l'éditeur écrit en chargeant un module et que git ne suit pas : aucun de nos arbres de travail ne pouvait le voir manquer.",
+    change:
+      "Les tests passent dans un clone neuf, et `cadence release` rejoue le commit de version dans un clone neuf avant de rendre la main. Chaque version perdue a été republiée sous un numéro de correction.",
+  },
+  {
+    id: "reglages-copies",
+    titre: "Une première conception du contexte allégé, abandonnée",
+    corps:
+      "Pour alléger le contexte des sessions de vague, une première idée écartait tout le dossier de réglages de l'utilisateur et en relayait une copie dans un fichier temporaire : −29 % de jetons. Mais la copie recopiait des secrets en lecture large, jamais supprimée, et ignorait des variables de configuration.",
+    change:
+      "On a gardé un gain plus modeste (−9,9 %) qui ne copie rien : un seul réglage désactive les plugins, et il se fusionne avec les réglages existants au lieu de les remplacer.",
+  },
+  {
+    id: "mesure-manquante",
+    titre: "Un mécanisme posé sans pouvoir dire s'il a servi",
+    corps:
+      "Le premier bloc de consignes contre les bugs de code (brief d'implémentation) a été livré sans mesure « après » : les vagues déjà lancées gardent le brief de leur création.",
+    change:
+      "Le protocole de mesure date maintenant la mise en service, ne compte que les vagues créées après, et mesure les deux mécanismes ensemble sur deux fenêtres de sept jours. Tant que ces fenêtres ne sont pas relevées, la page n'annonce aucun gain.",
+  },
+];
+---
+
+<BaseLayout
+  title="Cadence"
+  description="Étude de cas de cadence, la méthode de travail et l'outil de ce codex : un plan versionné relié aux commits, des vagues de sessions IA pilotées par un programme, des livraisons prouvées par leur effet. Le problème, la méthode, les chiffres mesurés, les échecs."
+>
+  <PageHero
+    eyebrow="Case study · cadence"
+    title="Un plan relié aux commits et des vagues de sessions IA"
+    intro="Cadence est la méthode de travail derrière les projets de ce codex : un plan versionné à côté du code, des sessions Claude Code courtes lancées par un programme, des livraisons prouvées par leur effet. Né le 28 septembre 2026, il en est à la version 1.27 un mois plus tard — et ses propres mesures disent où il se trompe encore."
+  />
+
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12 space-y-12">
+    <CaseStudySection eyebrow="Le problème de départ">
+      <p>
+        Coder avec une IA fait aller vite, et perdre le fil tout aussi vite. Deux
+        questions reviennent sans cesse : <strong>qu'est-ce qui reste à faire ?</strong>
+        et <strong>à quoi servait ce commit ?</strong> Dans une conversation, la
+        réponse s'évapore à la fin de la session ; dans un outil de tickets, elle
+        vit loin du code et se périme.
+      </p>
+      <p>
+        Avec huit projets menés en parallèle et plusieurs sessions par jour, le
+        coût devenait visible : des lots recommencés, des commits sans raison
+        écrite, des livraisons « réussies » qui ne faisaient pas ce qu'on croyait.
+        Le premier commit de cadence (28 septembre 2026) ne contient d'ailleurs
+        que l'essentiel : un plan en YAML et le calcul du lien entre commits et lots.
+      </p>
+      <p>
+        Le principe qui a guidé la suite : <strong>tout l'état vit dans des
+        fichiers ordinaires à côté du code</strong>, lisibles par l'humain comme
+        par la prochaine session, et chaque affirmation (« c'est livré », « c'est
+        testé ») doit pouvoir être rejouée.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="La méthode">
+      <p>
+        Sept pièces, chacune optionnelle, qui s'emboîtent. Le détail de chaque
+        commande est dans la documentation du dépôt ; ici, ce que chacune
+        règle.
+      </p>
+      <ol class="grid gap-3 sm:grid-cols-2">
+        {pieces.map((p, i) => (
+          <li class="rounded-xl border border-white/10 bg-paper-elevated p-5">
+            <p class="font-mono text-xs text-claude/80 mb-2">
+              {String(i + 1).padStart(2, "0")}
+            </p>
+            <h3 class="text-base font-medium text-ink mb-1.5">{p.nom}</h3>
+            <p class={`text-sm text-ink-muted leading-relaxed [overflow-wrap:anywhere] ${CODE}`} set:html={inlineCodeHtml(p.corps)} />
+            <p class="mt-3 font-mono text-[11px] text-ink/60">
+              <a href={`${CADENCE}/blob/main/${p.doc}`} target="_blank" rel="noopener">↗ {p.doc}</a>
+            </p>
+          </li>
+        ))}
+      </ol>
+      <p>
+        Le cycle d'un lot dans une vague : contrôle préalable, puis (pour un
+        écran) fiche et maquette relues, tests d'acceptation écrits par une
+        session à part et verrouillés rouges, implémentation qui doit les faire
+        passer sans les toucher, revue de code, passe UX avec l'application
+        lancée, corrections. Le lead choisit les lots ; la livraison est
+        vérifiée en bout de chaîne.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Les chiffres mesurés">
+      <p>
+        Cadence se mesure lui-même : <code>cadence perf</code> affiche chaque
+        indicateur de vitesse à côté de son jumeau de qualité (« vite <em>et</em>
+        bien »), sans compter de volume produit. Les relevés ci-dessous sont dans
+        le dépôt, avec la commande qui les rejoue.
+      </p>
+      <dl class="grid gap-3 sm:grid-cols-2">
+        {chiffres.map((c) => (
+          <div class="rounded-xl border border-white/10 bg-paper-elevated p-5">
+            <dt class="font-mono text-lg text-claude">{c.valeur}</dt>
+            <dd class="mt-2 text-sm text-ink-muted leading-relaxed [overflow-wrap:anywhere]">
+              <span class={CODE} set:html={inlineCodeHtml(c.legende)} />
+              <span class="mt-2 block font-mono text-[11px] text-ink/60">Source : {c.source}</span>
+            </dd>
+          </div>
+        ))}
+      </dl>
+      <p class="text-sm text-ink-muted">
+        Limite assumée : le classement des causes est celui d'un modèle local de
+        24 milliards de paramètres, relu à la main sur un échantillon seulement. Le
+        relevé du 30 octobre est un point de départ ; l'effet du mécanisme posé
+        contre les cas limites n'est pas encore mesuré.
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Les échecs et ce qu'ils ont changé">
+      <p>
+        Une méthode qui ne raconte pas ses ratés n'est qu'une plaquette. Cinq
+        épisodes, tirés du journal des versions et des relevés du dépôt :
+      </p>
+      <ul class="space-y-4 list-none">
+        {echecs.map((e) => (
+          <li data-echec={e.id} class="rounded-xl border border-white/10 bg-paper-elevated p-5">
+            <h3 class="text-base font-medium text-ink mb-1.5">{e.titre}</h3>
+            <p class={`text-sm text-ink-muted leading-relaxed [overflow-wrap:anywhere] ${CODE}`} set:html={inlineCodeHtml(e.corps)} />
+            <p class="mt-3 text-sm text-ink leading-relaxed">
+              <strong>Ce que ça a changé.</strong> <span class={CODE} set:html={inlineCodeHtml(e.change)} />
+            </p>
+          </li>
+        ))}
+      </ul>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Pour aller plus loin">
+      <ul class="list-none space-y-2.5">
+        <li class="flex gap-3">
+          <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+          <span>Semaine par semaine, ce qui a été appris, fabriqué et testé :
+          le <a href="/livre-de-bord/">Livre de bord</a>.</span>
+        </li>
+        <li class="flex gap-3">
+          <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+          <span>Ce qui change pour l'utilisateur de ce site, lot par lot, sur la
+          page <a href="/nouveautes/">Nouveautés</a>, et ce qui se prépare dans le
+          <a href="/plan-de-travail/">Plan de travail</a>.</span>
+        </li>
+        <li class="flex gap-3">
+          <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+          <span>Le même fonctionnement, appliqué à un produit complet :
+          <a href="/case-studies/maritime-atlas">AetherWX</a>.</span>
+        </li>
+      </ul>
+      <div class="mt-4 flex flex-wrap gap-3 text-xs">
+        <a href={CADENCE} target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">↗ Dépôt cadence</a>
+        <a href={`${CADENCE}/blob/main/CHANGELOG.md`} target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">↗ CHANGELOG</a>
+        <a href={`${CADENCE}/blob/main/docs/quickstart.md`} target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">↗ Démarrage en 10 minutes</a>
+      </div>
+      <p class="text-center text-xs text-ink/50 font-mono pt-4">
+        Chiffres relevés dans le dépôt cadence au 30 octobre 2026, version 1.27.0.
+      </p>
+    </CaseStudySection>
+  </section>
+</BaseLayout>

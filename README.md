@@ -22,7 +22,7 @@ officielle avec Anthropic.
 | `/start` | **Démarrer** — Claude Code pour les vrais débutants. Pas de jargon, 7 sections progressives, exemples copy-pastable. La porte d'entrée du site. |
 | `/theory` | Comment Claude Code fonctionne sous le capot — architecture agentique, context window, sessions, hooks, slash commands, MCP, skills, agents SDK |
 | `/ecosystem` | Catalogue triable des plugins, MCP servers, skills officiels Anthropic et SDKs |
-| `/case-studies` | 7 deep-dives d'apps perso construites en pair-programming + récits transverses (K8s migration overnight, AetherWX encyclopedia) + section **Tools tested** (RTK adopté, Ruflo rejeté+8 leçons, code-review-graph adopt-conditional) |
+| `/case-studies` | 7 deep-dives d'apps perso construites en pair-programming + récits transverses (K8s migration overnight, AetherWX encyclopedia, **Cadence** — la méthode de travail, ses chiffres mesurés et ses échecs, `/case-studies/cadence`) + section **Tools tested** (RTK adopté, Ruflo rejeté+8 leçons, code-review-graph adopt-conditional) |
 | `/atelier-ia` | L'atelier IA perso — quels outils (Claude Code, Codex…), quels rôles, quelles frontières |
 | `/k8s-for-java-developers` | **Guide** — introduction Kubernetes pour dev Java, du jar au pod |
 | `/argocd-k8s-pour-les-nuls` | **Guide** — bible ArgoCD + K8s : pourquoi tant de YAML, GitOps, incidents vécus maritime-atlas |
