@@ -398,9 +398,10 @@ lots:
       - { date: 2026-10-30, text: "QA du 30-10 (2 mineurs de rédaction) : identifiants de lot cités dans le texte du livre de bord (retirer ou assumer) ; titre de l'épisode Warhammer L37→L217 dit « régression » alors que le texte dit « hypothèse du test devenue fausse »." }
   - id: L46
     title: "Étude de cas cadence : la version citée dans le chapeau (« 1.27 ») est périmée (1.28.0 publiée le 30-10) — la lire depuis une source unique ou la formuler sans numéro (QA de L19)"
-    status: todo
+    status: doing
     estimate: 0.1
     created: 2026-10-30
+    started: 2026-10-30
   - id: L47
     title: "Index des études de cas : le lien ↗ GitHub de la carte aetherwx n'a pas de href (QA de L19)"
     status: todo
