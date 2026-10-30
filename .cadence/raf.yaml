@@ -392,6 +392,22 @@ lots:
     created: 2026-10-30
     started: 2026-10-30
     review: { date: 2026-10-30, verdict: "compliant after 2 minor notes: link to the channel rather than the video, and the L37→L217 episode title says regression when the text says the test's hypothesis became false — orchestré (vague 2026-10-30-1850-cx, 0 passe(s) de correction)", commit: c78272176206f3dae7ac821ee0e4cae235c46187 }
+    ux: { date: 2026-10-30, verdict: "conforme — revue UX de la vague (2 mineurs : lien vers la chaîne plutôt que la vidéo, titre de l'épisode L37→L217 qui dit « régression » quand le texte dit « hypothèse du test devenue fausse ») ; capture 1440 vue par le lead" }
+  - id: L46
+    title: "Étude de cas cadence : la version citée dans le chapeau (« 1.27 ») est périmée (1.28.0 publiée le 30-10) — la lire depuis une source unique ou la formuler sans numéro (QA de L19)"
+    status: todo
+    estimate: 0.1
+    created: 2026-10-30
+  - id: L47
+    title: "Index des études de cas : le lien ↗ GitHub de la carte aetherwx n'a pas de href (QA de L19)"
+    status: todo
+    estimate: 0.1
+    created: 2026-10-30
+  - id: L48
+    title: "Nouveautés : une <img> sans src (QA de L19)"
+    status: todo
+    estimate: 0.1
+    created: 2026-10-30
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
