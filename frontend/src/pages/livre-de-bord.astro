@@ -13,9 +13,10 @@ import { findProblems, type BookItem } from "@/lib/livre-de-bord";
 import { formatDay } from "@/lib/format-date.mjs";
 
 // Le build se lance depuis frontend/ : les pages sont à src/pages.
-const pages = readdirSync(join(process.cwd(), "src", "pages"))
+const pages = readdirSync(join(process.cwd(), "src", "pages"), { recursive: true })
+  .map(String)
   .filter((f) => f.endsWith(".astro"))
-  .map((f) => (f === "index.astro" ? "/" : `/${f.replace(/\.astro$/, "")}`));
+  .map((f) => `/${f.replace(/\.astro$/, "").replace(/(^|\/)index$/, "")}`);
 const problems = findProblems(ENTRIES, (path) => pages.includes(path));
 if (problems.length > 0) {
   throw new Error(`Livre de bord non publiable :\n- ${problems.join("\n- ")}`);

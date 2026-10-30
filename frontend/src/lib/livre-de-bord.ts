@@ -78,7 +78,10 @@ export function weekBounds(week: string): { from: string; to: string } {
 function linkProblem(l: BookLink | undefined, isKnownPath: (path: string) => boolean): string | null {
   if (!l || typeof l.label !== 'string' || !l.label.trim()) return 'libellé vide';
   if (typeof l.href !== 'string') return 'adresse absente';
-  if (/^\/[a-z0-9-]*(#[a-z0-9-]+)?$/.test(l.href)) return isKnownPath(l.href.split('#')[0]) ? null : `page inconnue ${l.href}`;
+  if (/^\/(?:[a-z0-9-]+(?:\/[a-z0-9-]+)*\/?)?(?:#[\w-]+)?$/.test(l.href)) {
+    const path = l.href.split('#')[0];
+    return isKnownPath(path.length > 1 ? path.replace(/\/$/, '') : path) ? null : `page inconnue ${l.href}`;
+  }
   if (/^https:\/\/github\.com\/Sylad\/cadence(\/[\w./#-]*)?$/.test(l.href)) return null;
   return `adresse non permise ${l.href}`;
 }

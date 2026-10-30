@@ -7,9 +7,9 @@ import { readdirSync } from 'node:fs';
 import { weekOf, weekBounds, findProblems, PRIVATE_PATTERNS } from '../src/lib/livre-de-bord.ts';
 import { ENTRIES } from '../src/data/livre-de-bord.ts';
 
-const PAGES = readdirSync(new URL('../src/pages/', import.meta.url))
+const PAGES = readdirSync(new URL('../src/pages/', import.meta.url), { recursive: true })
   .filter((f) => f.endsWith('.astro'))
-  .map((f) => (f === 'index.astro' ? '/' : `/${f.replace(/\.astro$/, '')}`));
+  .map((f) => `/${f.replace(/\.astro$/, '').replace(/(^|\/)index$/, '')}`);
 const knownPath = (p) => PAGES.includes(p);
 
 const item = (over = {}) => ({ titre: 'Un titre', texte: 'Un texte.', ...over });
@@ -75,9 +75,13 @@ test('R5 — un lien est interne et existant, ou le dépôt public de cadence', 
   const ok = (href) => problems([entry({ fabrique: [item({ liens: [{ label: 'Lien', href }] })] })]);
   assert.deepEqual(ok('/case-studies'), []);
   assert.deepEqual(ok('/case-studies#tools-tested'), []);
+  assert.deepEqual(ok('/case-studies/ruflo'), []);
+  assert.deepEqual(ok('/case-studies/ruflo#Verdict'), []);
+  assert.deepEqual(ok('/case-studies/'), []);
+  assert.deepEqual(ok('/livre-de-bord#semaine-2026-W43'), []);
   assert.deepEqual(ok('https://github.com/Sylad/cadence'), []);
   assert.deepEqual(ok('https://github.com/Sylad/cadence/blob/main/CHANGELOG.md'), []);
-  for (const bad of ['/page-qui-n-existe-pas', 'https://exemple.com/x', 'https://github.com/Sylad/cadence-evil', 'http://github.com/Sylad/cadence', 'case-studies', '//exemple.com', 'javascript:alert(1)']) {
+  for (const bad of ['/page-qui-n-existe-pas', '/case-studies/page-qui-n-existe-pas', '/case-studies//ruflo', '/case-studies/../about', 'https://exemple.com/x', 'https://github.com/Sylad/cadence-evil', 'http://github.com/Sylad/cadence', 'case-studies', '//exemple.com', 'javascript:alert(1)']) {
     assert.match(ok(bad).join('\n'), /lien/, `« ${bad} » accepté`);
   }
   assert.match(problems([entry({ fabrique: [item({ liens: [{ label: '', href: '/about' }] })] })]).join('\n'), /lien/);
