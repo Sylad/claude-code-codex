@@ -55,3 +55,11 @@ test('R4 — le rapport donne un décompte par classe cohérent avec ses lignes'
     assert.equal(Number(m[1]), reel, `décompte de ${c}`);
   }
 });
+
+test("R5 — aucune page n'est laissée « non relue » : chaque section a une ligne vérifiée contre une source", () => {
+  for (const [route, lignes] of sections) {
+    assert.ok(lignes.length > 0, `${route} : section vide`);
+    for (const l of lignes) assert.ok(!/non relue/.test(l), `${route} : page non relue : ${l.slice(0, 60)}`);
+  }
+  assert.ok(!/non relue/i.test(rapport.split('## Par page')[0].replace(/ne sont pas relues|ne pas relue/g, '')), "le préambule ne déclare plus de page non relue");
+});

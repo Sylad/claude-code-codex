@@ -16,10 +16,10 @@ classe et une source, décomptes exacts).
 
 | classe | lignes |
 |---|---|
-| faux | 2 |
-| dépassé | 13 |
-| non sourcé | 29 |
-| ok | 10 |
+| faux | 6 |
+| dépassé | 25 |
+| non sourcé | 22 |
+| ok | 32 |
 
 ## Ce qui a été vérifié, et ce qui ne l'a pas été
 
@@ -28,10 +28,13 @@ classe et une source, décomptes exacts).
   `@bifrost_inc/superclaude` et du SDK Agent.
 - Vérifié par la documentation Anthropic (30-10) : minimums de cache, coefficients de lecture et d'écriture, gamme de
   modèles et tarifs.
-- **Non vérifié** : l'état du cluster (pas de contexte `kubectl` sur la session), le contenu détaillé des pages
-  longues (`maritime-atlas`, `aetherwx-encyclopedia`, `k8s-migration-overnight`, guides « pour les nuls »,
-  `/start`, `/nouveautes`, `/livre-de-bord`), les fonctionnalités de Claude Code hors `/theory`, les verdicts
-  d'outils refaits en bac à sable (affaire du lot L53). Ces pages portent la ligne « non relue ».
+- Les 22 pages relues dans un second temps l'ont été contre le dépôt (manifestes `package.json`, `wc -l`, `ls`, `rtk gain`,
+  workflow GitHub Actions, `CLAUDE.md` du dossier developpeur) et contre les dépôts frères en lecture seule. Chaque page a
+  maintenant au moins une ligne classée avec sa source.
+- **Non vérifié** : l'état du cluster en direct (aucun contexte `kubectl` sur la session : les lignes cluster s'appuient
+  sur le `CLAUDE.md` du dossier developpeur), l'interface Cloudflare, les ordres de grandeur d'expérience (durées, pourcentages
+  de récit : classés « non sourcé »), les fonctionnalités de Claude Code hors `/theory`, les verdicts d'outils refaits en bac
+  à sable (affaire du lot L53, veille mensuelle).
 - Les étoiles et dates de push dérivent chaque jour : leur classement « dépassé » dit surtout qu'aucune date de relevé
   n'est affichée.
 
@@ -43,15 +46,22 @@ classe et une source, décomptes exacts).
 
 ## `/about`
 
-- **non sourcé** — aucune affirmation datée ou chiffrée vérifiée : la page n'a pas été relue dans cette passe (source : aucune, page non relue dans cette passe)
+- **faux** — « J'utilise Claude Code depuis fin 2026 » : la page est écrite en 2026 et la même page dit six mois de pratique en mai 2026 ; on ne peut pas utiliser un outil « depuis fin 2026 » en octobre 2026 (la date juste serait fin 2025) (source : `about.astro` (deux paragraphes « L'histoire courte »))
+- **dépassé** — « cinq apps perso en prod » au lancement : le site en présente 8 aujourd'hui (`APP_COUNT`) ; la page ne dit pas que le chiffre date de mai (source : `frontend/src/data/apps.ts`)
+- **ok** — résumés hebdomadaires par `claude-haiku-4-5` : le script de batch utilise `claude-haiku-4-5-20251001` (source : `scripts/lib/claude.ts` ligne 14)
+- **ok** — Astro 6, Vue 3, Tailwind 4, batch GitHub Actions hebdomadaire (cron du lundi 6 h) (source : `frontend/package.json`, `.github/workflows/batch-update.yml`)
+- **non sourcé** — « 0 ligne de code écrite par l'humain » : affirmation invérifiable (le dépôt ne distingue pas l'auteur de la frappe) (source : aucune)
 
 ## `/argocd-k8s-pour-les-nuls`
 
-- **non sourcé** — aucune affirmation datée ou chiffrée vérifiée : la page n'a pas été relue dans cette passe (source : aucune, page non relue dans cette passe)
+- **ok** — polling ArgoCD de 3 minutes par défaut et sync immédiat par webhook : comportement documenté d'ArgoCD, repris tel quel dans la bible (source : documentation ArgoCD (`timeout.reconciliation` 180 s))
+- **non sourcé** — « ~3 min de build + 15 s de sync », « l'UI bat la CLI pour 90 % des usages » : ordres de grandeur d'expérience, non mesurés ni datés (source : aucune)
+- **dépassé** — cas d'école sur un tag `v1.4.2` : les images réelles sont taguées `sha-<shortsha>` depuis le pipeline actuel ; l'exemple est pédagogique mais la page ne le dit pas (source : `CLAUDE.md` du dossier developpeur, section pipeline gitops)
 
 ## `/atelier-ia`
 
-- **non sourcé** — aucune affirmation datée ou chiffrée vérifiée : la page n'a pas été relue dans cette passe (source : aucune, page non relue dans cette passe)
+- **dépassé** — schéma « Cloudflare / NAS / K8s » : le NAS n'héberge plus d'app (migration sur dark-blue le 2026-09-03), il ne garde que médias et sauvegardes (source : `CLAUDE.md` du dossier developpeur, topologie machines)
+- **non sourcé** — liste d'outils (Codex, Ollama, ChatGPT, OpenArt/DALL-E, Kombai) : usages déclarés, aucun chiffre ni date à confronter (source : aucune)
 
 ## `/case-studies`
 
@@ -65,11 +75,14 @@ classe et une source, décomptes exacts).
 
 ## `/case-studies/aetherwx-encyclopedia`
 
-- **non sourcé** — aucune affirmation datée ou chiffrée vérifiée : la page n'a pas été relue dans cette passe (source : aucune, page non relue dans cette passe)
+- **ok** — dark-blue : Ubuntu 26.04, k3s v1.36.4, Ryzen 9 9900X, 64 Go, RTX 4080, prod depuis septembre 2026 (source : `CLAUDE.md` du dossier developpeur, topologie machines (état du cluster non relu en direct : aucun contexte `kubectl` sur cette session))
+- **dépassé** — « ~20 pods maritime + 3 apps NestJS » et « Mini-Blue, un mini-PC always-on » : mini-blue est devenu le PC Windows d'outillage le 2026-10-14 et n'héberge rien ; le nombre de pods n'a pas été recompté (source : `CLAUDE.md` du dossier developpeur ; recomptage impossible sans `kubectl`)
+- **non sourcé** — « une vingtaine de services », « 6 tokens », « 5 leçons », webhook « ~2 sec » : décomptes de la page non recoupés avec le dépôt GitOps (source : aucune)
 
 ## `/case-studies/aetherwx-qa-harness`
 
-- **non sourcé** — aucune affirmation datée ou chiffrée vérifiée : la page n'a pas été relue dans cette passe (source : aucune, page non relue dans cette passe)
+- **non sourcé** — « cause racine identifiée en 10 minutes » et opacité 100 % → 30 % : récit d'un incident daté non rattaché à un commit ou à un rapport (source : aucune)
+- **ok** — aucune version, prix ni modèle cité : rien d'autre de chiffré à périmer sur la page (source : `aetherwx-qa-harness.astro`)
 
 ## `/case-studies/alexgreensh-polyform`
 
@@ -77,11 +90,14 @@ classe et une source, décomptes exacts).
 
 ## `/case-studies/avatar-pandora`
 
-- **non sourcé** — aucune affirmation datée ou chiffrée vérifiée : la page n'a pas été relue dans cette passe (source : aucune, page non relue dans cette passe)
+- **ok** — Astro 6 (dépôt avatar-pandora : `astro ^6.2.1`), hébergé sur Cloudflare Pages (source : `avatar-pandora/frontend/package.json`, `CLAUDE.md` du dossier developpeur)
+- **non sourcé** — « ~2 min de pipeline Cloudflare » et « 100 % codé avec Claude Code » : durée non mesurée, part de Claude non vérifiable (source : aucune)
 
 ## `/case-studies/cadence`
 
-- **non sourcé** — aucune affirmation datée ou chiffrée vérifiée : la page n'a pas été relue dans cette passe (source : aucune, page non relue dans cette passe)
+- **dépassé** — « Depuis la 1.26… » : cadence est en 1.29.0 dans le dépôt ; la formule reste vraie mais la page ne nomme pas la version courante (source : `cadence/package.json` (version 1.29.0))
+- **ok** — chiffres des mesures (61 % · 29 %, 1 h 53 min, accord 17 sur 24) : chacun renvoie à un fichier `docs/mesures/…` du dépôt cadence, relevés au 30 octobre 2026 (source : bloc « Chiffres relevés dans le dépôt cadence au 30 octobre 2026 » de la page)
+- **ok** — quatre tags partis sans atteindre npm (1.5.0, 1.14.0, 1.16.0, 1.25.0) : récit daté du CHANGELOG de cadence (source : CHANGELOG de cadence)
 
 ## `/case-studies/ccproxy`
 
@@ -89,7 +105,9 @@ classe et une source, décomptes exacts).
 
 ## `/case-studies/claude-code-codex`
 
-- **non sourcé** — aucune affirmation datée ou chiffrée vérifiée : la page n'a pas été relue dans cette passe (source : aucune, page non relue dans cette passe)
+- **faux** — mémoire « ~70 fichiers .md » dans `~/.claude/projects/<cwd>/memory/` : le dossier mémoire du projet en compte 612 (source : `ls` du dossier mémoire du projet developpeur, relevé le 30-10-2026)
+- **dépassé** — « 6e app perso » et « 6 sites perso » : vrai en mai 2026 (la page le dit), le site en présente 8 aujourd'hui (source : `frontend/src/data/apps.ts`)
+- **non sourcé** — « six mois de pair-programming intensif » à la date de lancement : durée déclarée, sans trace datée dans le dépôt (source : aucune)
 
 ## `/case-studies/claude-code-templates`
 
@@ -101,7 +119,8 @@ classe et une source, décomptes exacts).
 
 ## `/case-studies/code-review-graph`
 
-- **non sourcé** — aucune affirmation datée ou chiffrée vérifiée : la page n'a pas été relue dans cette passe (source : aucune, page non relue dans cette passe)
+- **dépassé** — test du 2026-05-20, version 2.3.3, 929 nodes / 7 939 edges sur maritime-atlas : le graphe a grossi depuis ; la page est datée, donc ces chiffres ne sont pas faux mais plus représentatifs (source : date affichée sur la page ; verdict dans `tools-tested.ts`)
+- **ok** — version et date du test affichées sur la page (« Test mené 2026-05-20 · version 2.3.3 ») (source : `code-review-graph.astro`)
 
 ## `/case-studies/drona23-token-efficient`
 
@@ -109,7 +128,8 @@ classe et une source, décomptes exacts).
 
 ## `/case-studies/evatosorus`
 
-- **non sourcé** — aucune affirmation datée ou chiffrée vérifiée : la page n'a pas été relue dans cette passe (source : aucune, page non relue dans cette passe)
+- **dépassé** — « V1 livrée, 1527 pages, dist ~27 MB » (2026-05-06) : le dossier `dist` actuel compte 1 532 pages HTML (source : `find evatosorus/frontend/dist -name '*.html'`, relevé le 30-10-2026)
+- **ok** — versions épinglées `astro@6.2.1` et `vite@7.3.2` (source : `evatosorus/frontend/package.json`)
 
 ## `/case-studies/finance-tracker`
 
@@ -122,11 +142,14 @@ classe et une source, décomptes exacts).
 
 ## `/case-studies/jobmail-assistant`
 
-- **non sourcé** — aucune affirmation datée ou chiffrée vérifiée : la page n'a pas été relue dans cette passe (source : aucune, page non relue dans cette passe)
+- **ok** — API locale sur `127.0.0.1:8765`, Python 3.12 (source : `jobmail-assistant/README.md` ligne 238, `pyproject.toml` (`requires-python >=3.12`))
+- **non sourcé** — chantier Codex de juin 2026 et état de l'outil : date déclarée, non recoupée avec les commits de jobmail-assistant (source : aucune)
 
 ## `/case-studies/k8s-migration-overnight`
 
-- **non sourcé** — aucune affirmation datée ou chiffrée vérifiée : la page n'a pas été relue dans cette passe (source : aucune, page non relue dans cette passe)
+- **dépassé** — récit du 13-14 mai 2026 : cluster k3s sur Big-Blue (i9-14900KF, 31 GiB), 5 apps ; depuis le 2026-09-03 la prod est sur dark-blue et le cluster de Big-Blue n'existe plus. La page l'annonce en tête (« depuis le 03/09/2026 »), les chiffres du récit restent ceux de mai (source : `CLAUDE.md` du dossier developpeur, topologie machines)
+- **ok** — k3s v1.36.4 sur Ubuntu 26.04 pour dark-blue (source : `CLAUDE.md` du dossier developpeur (non relu en direct : pas de contexte `kubectl`))
+- **non sourcé** — « 6 h de bootstrap cloud + €40/mo économisés », « 15 min de grâce » du démarrage GeoServer : estimations du récit, non mesurées (source : aucune)
 
 ## `/case-studies/maritime-atlas`
 
@@ -138,7 +161,8 @@ classe et une source, décomptes exacts).
 
 ## `/case-studies/ruflo`
 
-- **non sourcé** — aucune affirmation datée ou chiffrée vérifiée : la page n'a pas été relue dans cette passe (source : aucune, page non relue dans cette passe)
+- **ok** — test du 2026-05-08, versions 3.7.0-alpha.17 + 3.6.30 stable, 8 leçons : date et versions affichées, verdict « testé puis rejeté » cohérent avec le catalogue (source : `tools-tested.ts` (entrée ruflo), `ruflo.astro`)
+- **dépassé** — étoiles et dernier push de Ruflo : relevés du rapport `/case-studies` (46 787 → 80 279 étoiles) (source : ligne `/case-studies` de ce rapport, API GitHub du 30-10-2026)
 
 ## `/case-studies/superclaude`
 
@@ -157,11 +181,14 @@ classe et une source, décomptes exacts).
 
 ## `/case-studies/warhammer40k`
 
-- **non sourcé** — aucune affirmation datée ou chiffrée vérifiée : la page n'a pas été relue dans cette passe (source : aucune, page non relue dans cette passe)
+- **ok** — Angular 19, NestJS 11, Anthropic SDK 0.91 (source : `warhammer40k/backend/package.json` (`@anthropic-ai/sdk ^0.91.1`, `@nestjs/core ^11`))
+- **faux** — « CLAUDE.md de 130 lignes au root du repo » : le fichier compte 309 lignes (source : `wc -l warhammer40k/CLAUDE.md`, relevé le 30-10-2026)
+- **non sourcé** — « cinq polygones tracés en ~10 minutes », seuils de détection (0,65, 0,55) : chiffres de récit non rattachés à un commit (source : aucune)
 
 ## `/cloudflare-pour-les-nuls`
 
-- **non sourcé** — aucune affirmation datée ou chiffrée vérifiée : la page n'a pas été relue dans cette passe (source : aucune, page non relue dans cette passe)
+- **ok** — tunnel Cloudflare pour l'accès externe `*.sladoire.dev` et Pages pour les sites statiques (source : `CLAUDE.md` du dossier developpeur)
+- **non sourcé** — « Piège d'interface (2026) » : « Public Hostnames » renommé « Published applications » dans « Cloudflare One » ; l'interface Cloudflare n'a pas été rouverte dans cette passe (source : aucune)
 
 ## `/ecosystem`
 
@@ -170,27 +197,34 @@ classe et une source, décomptes exacts).
 
 ## `/k8s-for-java-developers`
 
-- **non sourcé** — aucune affirmation datée ou chiffrée vérifiée : la page n'a pas été relue dans cette passe (source : aucune, page non relue dans cette passe)
+- **non sourcé** — « ~30 min par service complexe », « GHCR ~2-5 min », « -Xmx = 80 % du limit » : ordres de grandeur d'expérience, non mesurés (source : aucune)
+- **dépassé** — « K8s en 2026 … je recommande » : k3s est en v1.36.4 sur la prod, la page ne cite aucune version de Kubernetes (source : `CLAUDE.md` du dossier developpeur)
 
 ## `/learning`
 
-- **non sourcé** — aucune affirmation datée ou chiffrée vérifiée : la page n'a pas été relue dans cette passe (source : aucune, page non relue dans cette passe)
+- **faux** — « le batch hebdo retirera les sources qui n'ont pas publié depuis 6+ mois » : aucun code du batch n'applique cette règle (`scripts/` ne contient aucun test d'ancienneté) ; la phrase est au futur et reste fausse (source : `grep -rniE '6 mois|stale|months' scripts/`, relevé le 30-10-2026)
+- **ok** — batch hebdomadaire (cron du lundi 6 h) qui nourrit la page (source : `.github/workflows/batch-update.yml`)
 
 ## `/livre-de-bord`
 
-- **non sourcé** — aucune affirmation datée ou chiffrée vérifiée : la page n'a pas été relue dans cette passe (source : aucune, page non relue dans cette passe)
+- **ok** — entrée 2026-W44 datée du 2026-10-30, dans la semaine ISO ; filtre de contenu appliqué au build qui fait échouer l'entrée fautive (source : `frontend/src/data/livre-de-bord.ts`, `src/lib/livre-de-bord.ts`)
+- **non sourcé** — les chiffres cités dans les entrées reprennent les notes de clôture et les verdicts d'outils ; ils n'ont pas été recoupés un à un avec le CHANGELOG de cadence (source : aucune)
 
 ## `/nouveautes`
 
-- **non sourcé** — aucune affirmation datée ou chiffrée vérifiée : la page n'a pas été relue dans cette passe (source : aucune, page non relue dans cette passe)
+- **ok** — les 14 entrées viennent de `docs/nouveautes/*.md`, avec date propre ; le JSON versionné est vérifié à jour par les tests (`npm run news`) (source : `docs/nouveautes/`, `tests/` (e2e Nouveautés))
+- **non sourcé** — le contenu chiffré de chaque entrée (dates de livraison, durées) n'a pas été recoupé avec le plan (source : aucune)
 
 ## `/plan-de-travail`
 
-- **non sourcé** — aucune affirmation datée ou chiffrée vérifiée : la page n'a pas été relue dans cette passe (source : aucune, page non relue dans cette passe)
+- **ok** — page rendue au build depuis `.cadence/raf.yaml` : aucun chiffre écrit à la main, titres publics bornés par le build (source : `frontend/src/lib/plan-public.ts`, `tests/plan-page.e2e.test.mjs`)
 
 ## `/start`
 
-- **non sourcé** — aucune affirmation datée ou chiffrée vérifiée : la page n'a pas été relue dans cette passe (source : aucune, page non relue dans cette passe)
+- **dépassé** — bloc RTK : statistiques figées au 2026-05-08 (1 546 commandes, 23 % d'économie) alors que `rtk gain` en compte aujourd'hui 148 104 (47 % d'économie) (source : `frontend/src/data/rtk-stats.json` (`lastUpdated` 2026-05-08) contre `rtk gain --format json`, 30-10-2026)
+- **ok** — « 3 flux RSS (Simon Willison, Anthropic, Human Coders) » : trois flux présents dans le dossier des flux, plus deux flux GitHub (source : `frontend/src/data/feeds/`)
+- **ok** — « Ruflo testé puis rejeté avec 8 leçons » : cohérent avec le catalogue et la page Ruflo (source : `tools-tested.ts`, `ruflo.astro`)
+- **non sourcé** — « Tu verras déjà 80 % de ce… » et « 10 fichiers de 1000 lignes par prompt va coûter cher » : ordres de grandeur pédagogiques non mesurés (source : aucune)
 
 ## `/theory`
 
@@ -203,4 +237,4 @@ classe et une source, décomptes exacts).
 
 ## `/videos`
 
-- **non sourcé** — aucune affirmation datée ou chiffrée vérifiée : la page n'a pas été relue dans cette passe (source : aucune, page non relue dans cette passe)
+- **ok** — la page liste 15 vidéos issues de `videos.ts`, sans chiffre écrit en dur (source : `frontend/src/data/videos.ts`)
