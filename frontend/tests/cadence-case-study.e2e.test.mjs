@@ -41,9 +41,17 @@ test('R3 — la méthode couvre les sept pièces nommées par le lot', () => {
 
 test('R4 — les chiffres cités sont ceux du dépôt cadence (CHANGELOG, docs/mesures)', () => {
   const t = text(read('case-studies', 'cadence', 'index.html'));
-  for (const n of ['1.27', '28 septembre 2026', '61 %', '263 lots', '136', '96', '4 211', '565']) {
+  for (const n of ['28 septembre 2026', '61 %', '263 lots', '136', '96', '4 211', '565']) {
     assert.ok(t.includes(n), `chiffre « ${n} » absent`);
   }
+});
+
+test('L46 — aucune version courante de cadence n’est figée dans le chapeau, le pied ni la carte de l’index', () => {
+  const page = text(read('case-studies', 'cadence', 'index.html'));
+  const index = text(read('case-studies', 'index.html'));
+  const figee = /(?:à la version|version) \d+\.\d+(?:\.\d+)?\b/;
+  assert.doesNotMatch(page, figee, 'version figée sur la page cadence');
+  assert.doesNotMatch(index, figee, 'version figée dans l’index');
 });
 
 test('R5 — les échecs disent ce qu’ils ont changé (au moins trois, chacun avec sa conséquence)', () => {
