@@ -81,14 +81,16 @@ function formatStars(n?: number): string {
               >
                 Deep dive →
               </a>
-              <a
-                href={app.repo}
-                target="_blank"
-                rel="noopener"
-                class="ml-auto font-mono text-[10px] uppercase tracking-wider text-ink-muted hover:text-claude transition-colors"
-              >
-                ↗ GitHub
-              </a>
+              {app.repo && (
+                <a
+                  href={app.repo}
+                  target="_blank"
+                  rel="noopener"
+                  class="ml-auto font-mono text-[10px] uppercase tracking-wider text-ink-muted hover:text-claude transition-colors"
+                >
+                  ↗ GitHub
+                </a>
+              )}
             </div>
           </div>
         </article>
