@@ -16,7 +16,7 @@ export const ENTRIES: BookEntry[] = [
     semaine: "2026-W44",
     date: "2026-10-30",
     resume:
-      "Semaine de plomberie utile : trois pertes de temps mesurées (la porte de tests rejouée pour rien, une publication cassée par un fichier que git ne suit pas, une reprise de vague qui attendait en vain) et, pour chacune, le mécanisme qui la supprime. Cadence passe de 1.24 à 1.26.",
+      "Semaine de plomberie utile : trois pertes de temps mesurées (la porte de tests rejouée pour rien, une publication cassée par un fichier que git ne suit pas, une reprise de vague qui attendait en vain) et, pour chacune, le mécanisme qui la supprime. Cadence passe de 1.12 à 1.26, vingt-trois versions en cinq jours.",
     appris: [
       {
         titre: "Rejouer toute la porte de tests pour un simple commit de plan : environ 5 minutes perdues par lot prêt",
@@ -48,6 +48,30 @@ export const ENTRIES: BookEntry[] = [
       },
     ],
     fabrique: [
+      {
+        titre: "Cadence 1.12.1 à 1.14.1 : l'escalade, la porte rejouée seule, la publication",
+        texte:
+          "1.12.1 corrige la ligne d'escalade d'un lot rendu sans verdict. 1.13.0 : les sessions se partagent la machine (nombre de coeurs divisé par le plafond de sessions) et `cadence release` prépare le commit de version. 1.14.0 : `cadence verify --gate` rejoue la porte d'un sha dans une copie jetable, un test rouge peut être rejoué seul (testReplay), Node 20 n'est plus supporté, et un parcours mesuré d'un nouvel utilisateur liste neuf accrocs. 1.14.1 : 1.14.0 n'avait jamais atteint npm, un test lisait la section vidée par le commit de version.",
+        liens: [CHANGELOG],
+      },
+      {
+        titre: "Cadence 1.15.0 à 1.17.1 : les comptes de commits, le premier parcours, les suites isolées",
+        texte:
+          "1.15.0 et 1.15.1 : `raf ignore` acquitte aussi un commit qui cite des lots connus, une page de démarrage pour un responsable de plusieurs projets, deux modèles de ticket. 1.16.0 et 1.16.1 : `raf now` et `lead tour` comptent les commits d'un lot comme `raf commits`, vérification de la connexion à Claude Code avant de lancer un lot, une page pour les équipes qui ont déjà leur suivi ; la publication 1.16.0 a échoué parce qu'un test dépendait d'un outil installé sur le poste. 1.17.0 et 1.17.1 : l'acquittement d'un écart de documentation vit dans un fichier à part, la suite de tests ne commite plus dans le vrai dépôt, la porte rejouée ne rougit plus pour des raisons de copie.",
+        liens: [CHANGELOG],
+      },
+      {
+        titre: "Cadence 1.18.0 à 1.20.0 : l'archive du plan, la porte réutilisée, le réordonnancement",
+        texte:
+          "1.18.0 : `cadence verify --gate` réutilise le verdict de la porte de la vague au lieu de la rejouer, et le tirage automatique de lots peut exclure les gros lots sans fiche. 1.19.0 et 1.19.1 : `raf archive` sort les lots clos du plan (559 Ko, environ 150 mille jetons, pour des sessions qui en lisent une douzaine), `raf todo` rouvre un lot clos, toutes les vagues appliquent le même plafond de sessions, la porte de tests devient une étape visible. 1.20.0 : `raf move` réordonne les lots.",
+        liens: [CHANGELOG],
+      },
+      {
+        titre: "Cadence 1.21.0 à 1.24.0 : le panneau des lots, la porte avant le push, les corrections moins nombreuses",
+        texte:
+          "1.21.0 et 1.21.1 : le panneau des lots du mod `cadence-hud` (`/hud lots`) s'ouvre à côté de la conversation, un hook de push refuse les commits d'un lot pas prêt, et une session de correction sans commit doit dire pourquoi. 1.22.0 et 1.22.1 : les projets se replient d'un clic dans le panneau. 1.23.0 : réordonner les lots à la souris, au plus cinq lots par projet, créneaux libres toujours affichés, et la porte de tests de cadence joue aussi le mod. 1.24.0 : la consigne d'implémentation pose les limites et règles avant le pas à pas contre la première cause de passes de correction (le bogue de code trouvé en revue), et un push est refusé si son sha n'a pas de verdict vert de la porte.",
+        liens: [CHANGELOG],
+      },
       {
         titre: "Cadence 1.25.0, 1.25.1 et 1.26.0",
         texte:

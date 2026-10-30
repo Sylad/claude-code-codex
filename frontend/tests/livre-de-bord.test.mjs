@@ -91,3 +91,15 @@ test('R6 — le livre réel passe tout le filtre, a une entrée par semaine depu
   assert.ok(hrefs.some((h) => h.startsWith('/case-studies')), 'aucun lien vers les études de cas / Tools tested');
   for (const e of ENTRIES) assert.ok(e.appris.length > 0 && e.fabrique.length > 0, `${e.semaine} : appris et fabriqué attendus`);
 });
+
+test('R7 — la semaine 44 couvre toutes les versions de cadence du 26-10 au 30-10 (1.12.1 à 1.26.0), pas seulement les trois dernières', () => {
+  const w44 = ENTRIES.find((e) => e.semaine === '2026-W44');
+  assert.match(w44.resume, /de 1\.12 à 1\.26/);
+  const fabrique = w44.fabrique.map((i) => `${i.titre} ${i.texte}`).join('\n');
+  const versions = [
+    '1.12.1', '1.13.0', '1.14.0', '1.14.1', '1.15.0', '1.15.1', '1.16.0', '1.16.1', '1.17.0', '1.17.1',
+    '1.18.0', '1.19.0', '1.19.1', '1.20.0', '1.21.0', '1.21.1', '1.22.0', '1.22.1', '1.23.0', '1.24.0',
+    '1.25.0', '1.25.1', '1.26.0',
+  ];
+  for (const v of versions) assert.ok(fabrique.includes(v), `version ${v} absente de « fabriqué »`);
+});
