@@ -1,6 +1,6 @@
 {
   "project": "claude-code-codex",
-  "generated": "2026-10-30 21:42",
+  "generated": "2026-10-30 23:15",
   "entries": [
     {
       "slug": "2026-10-30-le-livre-de-bord-illustre-la-verification-pas-la-confiance",
@@ -30,9 +30,9 @@
         "captures/L50-parcours-lot.png"
       ],
       "alts": [
-        "Schéma du parcours d'un lot : spec, code, revue, correction, UX, prêt, avec la boucle en pointillés de la correction vers la revue"
+        "Schéma du parcours d'un lot : spec, code, revue, correction, UX, prêt, chaque étape disant qui la fait, avec la boucle en pointillés de la correction vers la revue"
       ],
-      "html": "<p>L'étude de cas Cadence se lit plus facilement : elle est découpée et illustrée.</p>\n<ul><li>Trois schémas montrent la méthode d'un coup d'œil : le plan relié aux commits, le parcours d'un lot (spec, code, revue, correction, UX, prêt, avec sa boucle de reprise) et la chaîne du livreur, du lot prêt à la ligne rendue.</li><li>Une capture du panneau des lots, tel que la page Plan de travail le publie, montre à quoi ressemble ce suivi.</li><li>Le texte est coupé en intertitres, et les idées à retenir sont mises dans des encadrés.</li><li>Les schémas restent lisibles que votre appareil soit réglé en thème clair ou sombre, et tiennent dans la largeur d'un téléphone.</li></ul>"
+      "html": "<p>L'étude de cas Cadence se lit plus facilement : elle est découpée et illustrée.</p>\n<ul><li>Trois schémas montrent la méthode d'un coup d'œil : le plan relié aux commits, le parcours d'un lot (spec, code, revue, correction, UX, prêt, avec sa boucle de reprise), qui dit aussi qui fait chaque étape : une session spec-writer, une session de code (Sonnet), un relecteur neuf (Opus) qui n'a pas écrit le code, une session de correction (escalade Fable), l'agent ux-reviewer, puis le lead pour les captures, la porte et la livraison et la chaîne du livreur, du lot prêt à la ligne rendue.</li><li>Une capture du panneau des lots, tel que la page Plan de travail le publie, montre à quoi ressemble ce suivi.</li><li>Le texte est coupé en intertitres, et les idées à retenir sont mises dans des encadrés.</li><li>Les schémas restent lisibles que votre appareil soit réglé en thème clair ou sombre, et tiennent dans la largeur d'un téléphone.</li></ul>"
     },
     {
       "slug": "2026-10-30-livre-de-bord-ce-qui-rend-une-ia-fiable",

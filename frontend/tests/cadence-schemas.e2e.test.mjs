@@ -125,3 +125,13 @@ test('R11 — le parcours d’un lot dit QUI fait chaque étape, dans l’ordre 
     from = at + qui.length;
   }
 });
+
+test('R12 — l’entrée Nouveautés du parcours dit qui fait chaque étape, comme le schéma affiché', () => {
+  const dir = join(import.meta.dirname, '..', '..', 'docs', 'nouveautes');
+  const f = readdirSync(dir).find((n) => /etude-de-cas-cadence/.test(n));
+  assert.ok(f, 'entrée Nouveautés de L50 introuvable');
+  const t = readFileSync(join(dir, f), 'utf8');
+  for (const qui of ['spec-writer', 'Sonnet', 'Opus', 'Fable', 'ux-reviewer', 'lead']) {
+    assert.ok(t.includes(qui), `« ${qui} » absent de l’entrée Nouveautés`);
+  }
+});
