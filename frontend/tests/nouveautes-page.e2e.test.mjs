@@ -24,6 +24,16 @@ test('dist/nouveautes/index.html est construit, titré « Nouveautés »', () =>
   assert.match(html(), /<h1[^>]*>\s*Ce qui a changé\s*<\/h1>/);
 });
 
+// L48 — QA de L19 : la visionneuse portait une <img alt=""> sans src dans le HTML servi
+// (requête vide / image cassée possible selon le navigateur, balise invalide).
+test('R1 — aucune <img> sans src non vide dans la page construite (visionneuse comprise)', () => {
+  const imgs = [...html().matchAll(/<img\b[^>]*>/g)].map((m) => m[0]);
+  assert.ok(imgs.length > 0, 'aucune <img> trouvée : le test ne vérifie rien');
+  for (const tag of imgs) {
+    assert.match(tag, /\ssrc="[^"]+"/, `<img> sans src : ${tag}`);
+  }
+});
+
 test('une entrée par nouveauté, dans l’ordre du JSON (la plus récente en haut), titre + date + texte + captures', () => {
   const page = html();
   const ids = [...page.matchAll(/<article[^>]*class="news-entry[^"]*"[^>]*id="([^"]+)"/g)].map((m) => m[1]);

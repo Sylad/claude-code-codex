@@ -152,7 +152,6 @@ const pngSize = (rel: string) => {
         tabindex="0"
         aria-label="Capture agrandie, faire défiler pour voir la suite"
       >
-        <img alt="" />
       </div>
     </div>
   </dialog>
@@ -358,7 +357,7 @@ const pngSize = (rel: string) => {
   }
   /* Téléphone : capture à sa largeur naturelle, au plus deux largeurs d'écran, dans une
      zone qui défile (leçon d'ol-companion L13 : réduite à l'écran, elle est illisible). */
-  .news-viewer-zone img {
+  .news-viewer-zone :global(img) {
     display: block;
     height: auto;
     max-width: none;
@@ -368,7 +367,7 @@ const pngSize = (rel: string) => {
     .news-viewer {
       padding: 1.5rem;
     }
-    .news-viewer-zone img {
+    .news-viewer-zone :global(img) {
       width: auto;
       max-width: calc(100vw - 3rem - 2px);
       max-height: calc(100dvh - 6.5rem);
@@ -376,7 +375,7 @@ const pngSize = (rel: string) => {
     /* Capture qui, entière à l'écran, perdrait plus de 20 % de sa largeur (capture haute
        de téléphone : 241 px sur 390 à 1440×900) : largeur naturelle, la zone défile
        verticalement ; « Fermer » reste hors zone (revue UX L13). */
-    .news-viewer[data-mode="natural"] .news-viewer-zone img {
+    .news-viewer[data-mode="natural"] .news-viewer-zone :global(img) {
       width: min(var(--cap-w), calc(100vw - 3rem - 2px));
       max-width: none;
       max-height: none;
@@ -399,7 +398,10 @@ const pngSize = (rel: string) => {
     const dialog = document.querySelector<HTMLDialogElement>("dialog.news-viewer");
     const source = link.querySelector("img");
     if (!dialog || !source) return;
-    const img = dialog.querySelector("img")!;
+    // L'image est créée à l'ouverture : pas d'<img> sans src dans le HTML servi.
+    const zone = dialog.querySelector(".news-viewer-zone")!;
+    const img = document.createElement("img");
+    zone.replaceChildren(img);
     img.src = link.getAttribute("href")!;
     img.alt = source.alt;
     img.style.setProperty("--cap-w", `${link.dataset.width}px`);
@@ -444,6 +446,7 @@ const pngSize = (rel: string) => {
     (e) => {
       if (!(e.target as Element).matches?.("dialog.news-viewer")) return;
       document.body.style.overflow = "";
+      (e.target as Element).querySelector(".news-viewer-zone")?.replaceChildren();
       if (opener?.isConnected) opener.focus();
       opener = null;
     },
