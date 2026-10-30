@@ -291,13 +291,13 @@ test('captures des Nouveautés (CCC_E2E_SHOTS) : accueil 1440×500 « Ressources
 });
 
 // ── Pied de page et accueil ─────────────────────────────────────────────────
-test('pied de page de toutes les pages : rangée Nouveautés, Plan de travail, À propos (sans séparateur)', () => {
+test('pied de page de toutes les pages : rangée Nouveautés, Plan de travail, Livre de bord, À propos (sans séparateur)', () => {
   for (const p of ['index.html', 'about/index.html', 'nouveautes/index.html', 'plan-de-travail/index.html', 'case-studies/ruflo/index.html', 'videos/index.html']) {
     const html = readFileSync(join(DIST, p), 'utf8');
     const footer = html.slice(html.indexOf('<footer'));
     const row = footer.slice(footer.indexOf('aria-label="Le site"'), footer.indexOf('</nav>'));
     const hrefs = [...row.matchAll(/href="([^"]+)"/g)].map((m) => m[1]);
-    assert.deepEqual(hrefs, ['/nouveautes', '/plan-de-travail', '/about'], p);
+    assert.deepEqual(hrefs, ['/nouveautes', '/plan-de-travail', '/livre-de-bord', '/about'], p);
     assert.doesNotMatch(row.replace(/<[^>]+>/g, ''), /[·|•]/, `${p} : séparateur`);
   }
   // L'accueil mène aussi aux deux pages hors du pied de page.
@@ -306,13 +306,13 @@ test('pied de page de toutes les pages : rangée Nouveautés, Plan de travail, �
   for (const h of ['/nouveautes', '/plan-de-travail']) assert.match(main, new RegExp(`href="${h}"`), `accueil → ${h}`);
 });
 
-test('pied de page : la page courante est marquée (aria-current + style actif) sur Nouveautés, Plan de travail, À propos ; aucune ailleurs', () => {
+test('pied de page : la page courante est marquée (aria-current + style actif) sur Nouveautés, Plan de travail, Livre de bord, À propos ; aucune ailleurs', () => {
   const row = (p) => {
     const html = readFileSync(join(DIST, p), 'utf8');
     const footer = html.slice(html.indexOf('<footer'));
     return footer.slice(footer.indexOf('aria-label="Le site"'), footer.indexOf('</nav>'));
   };
-  for (const [p, href] of [['nouveautes/index.html', '/nouveautes'], ['plan-de-travail/index.html', '/plan-de-travail'], ['about/index.html', '/about']]) {
+  for (const [p, href] of [['nouveautes/index.html', '/nouveautes'], ['plan-de-travail/index.html', '/plan-de-travail'], ['livre-de-bord/index.html', '/livre-de-bord'], ['about/index.html', '/about']]) {
     const current = [...row(p).matchAll(/<a [^>]*aria-current="page"[^>]*>/g)].map((m) => m[0]);
     assert.equal(current.length, 1, `${p} : ${current.length} lien(s) courant(s)`);
     assert.match(current[0], new RegExp(`href="${href}"`), p);
@@ -348,7 +348,7 @@ test('pied de page (320 px tactile, 1440 px) : cibles ≥ 44 px, rien hors de l�
     const page = await context.newPage();
     await page.goto(`${env.base}/`, { waitUntil: 'load' });
     const r = await page.$$eval('footer nav[aria-label="Le site"] a', (as) => as.map((a) => { const b = a.getBoundingClientRect(); return { t: a.textContent.trim(), h: b.height, l: b.left, r: b.right }; }));
-    assert.equal(r.length, 3);
+    assert.equal(r.length, 4);
     for (const x of r) assert.ok(x.h >= 44 && x.l >= 0 && x.r <= width, `${width}px ${x.t} : ${JSON.stringify(x)}`);
     await context.close();
   }
