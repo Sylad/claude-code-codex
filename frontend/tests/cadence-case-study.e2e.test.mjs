@@ -107,12 +107,21 @@ test('R13 — « 565 Ko → 5 Ko » cite docs/whats-new.md, où le chiffre se tr
   assert.match(t, /docs\/whats-new\.md \(1\.19\.0\)/);
 });
 
-test('R14 — la note « Chiffres relevés… » est en text-ink-muted (contraste ≥ 4,5:1), pas en text-ink/50', () => {
+test('R14 — la note « Chiffres relevés… » est en text-ink-muted posée sur un fond opaque bg-paper-elevated (contraste ≥ 4,5:1), pas en text-ink/50', () => {
   const html = read('case-studies', 'cadence', 'index.html');
   const p = html.match(/<p[^>]*class="([^"]*)"[^>]*>\s*Chiffres relevés dans le dépôt cadence/);
   assert.ok(p, 'note de bas de page introuvable');
   assert.match(p[1], /text-ink-muted/);
+  assert.match(p[1], /(^|\s)bg-paper-elevated(\s|$)/);
   assert.doesNotMatch(p[1], /text-ink\/50/);
+});
+
+test('R16 — le paragraphe « Limite assumée » est posé sur un fond opaque bg-paper-elevated, pas sur l’image de fond', () => {
+  const html = read('case-studies', 'cadence', 'index.html');
+  const p = html.match(/<p[^>]*class="([^"]*)"[^>]*>\s*Limite assumée/);
+  assert.ok(p, 'paragraphe « Limite assumée » introuvable');
+  assert.match(p[1], /text-ink-muted/);
+  assert.match(p[1], /(^|\s)bg-paper-elevated(\s|$)/);
 });
 
 test('R15 — le lien « Lire l’étude → » de la carte cadence est en text-claude sans opacité', () => {
