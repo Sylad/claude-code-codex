@@ -9,7 +9,9 @@ import { readdirSync } from "node:fs";
 import { join } from "node:path";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { ENTRIES } from "@/data/livre-de-bord";
-import { findProblems, entryId, type BookItem } from "@/lib/livre-de-bord";
+import { findProblems, entryId, paragraphs, type BookItem } from "@/lib/livre-de-bord";
+import { SCHEMAS } from "@/data/livre-de-bord-schemas";
+import BookSchema from "@/components/site/BookSchema.astro";
 import { formatDay } from "@/lib/format-date.mjs";
 
 // Le build se lance depuis frontend/ : les pages sont à src/pages.
@@ -17,7 +19,7 @@ const pages = readdirSync(join(process.cwd(), "src", "pages"), { recursive: true
   .map(String)
   .filter((f) => f.endsWith(".astro"))
   .map((f) => `/${f.replace(/\.astro$/, "").replace(/(^|\/)index$/, "")}`);
-const problems = findProblems(ENTRIES, (path) => pages.includes(path));
+const problems = findProblems(ENTRIES, (path) => pages.includes(path), Object.keys(SCHEMAS));
 if (problems.length > 0) {
   throw new Error(`Livre de bord non publiable :\n- ${problems.join("\n- ")}`);
 }
@@ -74,6 +76,7 @@ const external = (href: string) => href.startsWith("https://");
           {e.theme && <span>Semaine {e.semaine.slice(-2)} · </span>}<time datetime={e.date} class="whitespace-nowrap">{formatDay(e.date)}</time>
         </p>
         <p class="mt-4 text-ink leading-relaxed">{e.resume}</p>
+        {e.schema && <BookSchema id={e.schema} />}
 
         {rubriques.map((r) => (
           <section class="mt-8" aria-labelledby={`${r.key}-${entryId(e)}`}>
@@ -82,7 +85,10 @@ const external = (href: string) => href.startsWith("https://");
               {(e[r.key] as BookItem[]).map((it) => (
                 <li class="book-item border-t border-white/10 py-4">
                   <p class="font-medium text-ink leading-snug [overflow-wrap:anywhere]">{it.titre}</p>
-                  <p class="mt-1.5 text-ink-muted leading-relaxed">{it.texte}</p>
+                  {paragraphs(it.texte).map((p) => (
+                    <p data-para class="mt-1.5 text-ink-muted leading-relaxed">{p}</p>
+                  ))}
+                  {it.illustration && <BookSchema id={it.illustration} />}
                   {it.liens && it.liens.length > 0 && (
                     <p class="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-sm">
                       {it.liens.map((l) => (

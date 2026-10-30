@@ -6,6 +6,7 @@ import assert from 'node:assert/strict';
 import { readdirSync } from 'node:fs';
 import { weekOf, weekBounds, findProblems, entryId, PRIVATE_PATTERNS } from '../src/lib/livre-de-bord.ts';
 import { ENTRIES } from '../src/data/livre-de-bord.ts';
+import { SCHEMAS } from '../src/data/livre-de-bord-schemas.ts';
 
 const PAGES = readdirSync(new URL('../src/pages/', import.meta.url), { recursive: true })
   .filter((f) => f.endsWith('.astro'))
@@ -88,7 +89,7 @@ test('R5 — un lien est interne et existant, ou le dépôt public de cadence', 
 });
 
 test('R6 — le livre réel passe tout le filtre, a une entrée par semaine depuis le 19-10 et des liens vers cadence, études de cas et Tools tested', () => {
-  assert.deepEqual(problems(ENTRIES), []);
+  assert.deepEqual(findProblems(ENTRIES, knownPath, Object.keys(SCHEMAS)), []);
   assert.deepEqual(ENTRIES.filter((e) => !e.theme).map((e) => e.semaine).slice(0, 2), ['2026-W44', '2026-W43']);
   const hrefs = ENTRIES.flatMap((e) => [...e.appris, ...e.fabrique, ...e.teste]).flatMap((i) => (i.liens ?? []).map((l) => l.href));
   assert.ok(hrefs.some((h) => h.startsWith('https://github.com/Sylad/cadence')), 'aucun lien vers cadence');

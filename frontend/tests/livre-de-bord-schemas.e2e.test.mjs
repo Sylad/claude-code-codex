@@ -27,10 +27,11 @@ test('R15 — le schéma de la boucle va de la production à la décision (porte
   assert.match(f, /<title[^>]*>[^<]{10,}<\/title>/);
   assert.match(f, /<desc[^>]*>[^<]{30,}<\/desc>/);
   assert.match(f, /<figcaption[^>]*>[^<]{20,}/);
-  const t = plain(f);
+  // seulement les étiquettes dessinées (<text>), pas le titre ni la description lus par les lecteurs d'écran
+  const t = [...f.matchAll(/<text[^>]*>([^<]*)<\/text>/g)].map((m) => m[1]).join(' ');
   let from = 0;
-  for (const step of ['production', 'Porte', 'Revue', 'QA', 'décision']) {
-    const at = t.toLowerCase().indexOf(step.toLowerCase(), from);
+  for (const step of ['produit', 'Porte', 'Revue', 'QA', 'décide']) {
+    const at = t.indexOf(step, from);
     assert.ok(at >= 0, `étape « ${step} » absente ou hors ordre`);
     from = at + step.length;
   }

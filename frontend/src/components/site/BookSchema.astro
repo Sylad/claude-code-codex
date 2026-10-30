@@ -1,0 +1,17 @@
+---
+// L51 — schéma ou illustration du Livre de bord : cadre Schema + StepChain, contenu de
+// data/livre-de-bord-schemas.ts (identifiant déjà vérifié par findProblems au build).
+import Schema from "@/components/site/Schema.astro";
+import StepChain from "@/components/site/StepChain.astro";
+import { SCHEMAS } from "@/data/livre-de-bord-schemas";
+
+interface Props { id: string }
+const { id } = Astro.props;
+const s = SCHEMAS[id];
+---
+
+<div class="mx-auto mt-5 -mx-5 sm:mx-auto max-w-md">
+  <Schema id={id} legende={s.legende}>
+    <StepChain id={id} steps={s.steps} boucle={s.boucle} titre={s.titre} desc={s.desc} />
+  </Schema>
+</div>

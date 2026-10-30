@@ -21,6 +21,7 @@ export const ENTRIES: BookEntry[] = [
       fabrique: "Ce qui ne tient pas",
       teste: "Ce que montre notre historique",
     },
+    schema: "boucle-verification",
     resume:
       "Regard critique sur la vidéo « Ton métier va changer dans 2 ans » de Melvynx (29 octobre). Cinq idées tiennent et nous les appliquons déjà ; cinq autres ne tiennent pas, et la raison tient en une phrase : ce qui rend une IA fiable, c'est ce qu'on vérifie après elle, pas la confiance qu'on lui fait. Quatre épisodes du jour, relus dans l'historique de nos dépôts, le montrent.",
     appris: [
@@ -84,22 +85,26 @@ export const ENTRIES: BookEntry[] = [
       {
         titre: "Finance (L166 puis L167) : une vérification partielle, un défaut attrapé par la QA",
         texte:
-          "Le lot L166 corrigeait la démo : le bilan annuel de /yearly devait être celui de l'année des relevés. Il était terminé et relu. La QA du 30 octobre a confirmé que la vue par défaut était conforme, mais a trouvé que le bilan 2025, généré le 23 octobre, restait servi et offert dans l'onglet 2025, avec des mois absents de l'historique. Le lot L167 fait purger par le préchargement de la démo tout bilan d'une autre année. Une vérification de la seule vue par défaut laissait passer le défaut.",
+          "Le lot L166 corrigeait la démo : le bilan annuel de /yearly devait être celui de l'année des relevés. Il était terminé et relu.\n\nLa QA du 30 octobre a confirmé que la vue par défaut était conforme, mais a trouvé que le bilan 2025, généré le 23 octobre, restait servi et offert dans l'onglet 2025, avec des mois absents de l'historique.\n\nLe lot L167 fait purger par le préchargement de la démo tout bilan d'une autre année. Une vérification de la seule vue par défaut laissait passer le défaut.",
+        illustration: "episode-finance",
       },
       {
         titre: "Warhammer (L37 puis L217) : une régression que l'e2e a attrapée",
         texte:
-          "Le lot L37 a transformé le méga-menu Lore en bouton à divulgation, ce qui a retiré onze liens de la tabulation. Un test de bout en bout d'un lot livré plus tôt (L49) a rougi en CI : 90 tabulations depuis la recherche faisaient désormais le tour de la page. L'ordre réel de la galerie restait conforme ; c'était l'hypothèse du test qui n'était plus vraie. Le lot L217 a rescellé ce test le jour même. Sans lui, le changement de tabulation serait passé inaperçu.",
+          "Le lot L37 a transformé le méga-menu Lore en bouton à divulgation, ce qui a retiré onze liens de la tabulation.\n\nUn test de bout en bout d'un lot livré plus tôt (L49) a rougi en CI : 90 tabulations depuis la recherche faisaient désormais le tour de la page. L'ordre réel de la galerie restait conforme ; c'était l'hypothèse du test qui n'était plus vraie.\n\nLe lot L217 a rescellé ce test le jour même. Sans lui, le changement de tabulation serait passé inaperçu.",
+        illustration: "episode-warhammer",
       },
       {
         titre: "Cadence (L439) : un lot repris trois fois, et c'est la revue qui a trouvé le défaut",
         texte:
-          "Le livreur délégué (L439) a eu trois revues de code successives. La dernière, faite par une revue neuve, a relevé un défaut majeur que les deux premières avaient laissé : l'entrée du CHANGELOG était rangée sous une version déjà publiée. Corrigé, relu, puis la suite complète est repassée au vert, 4549 tests sur 4549. Reprendre n'est pas un échec : c'est la vérification qui fait son travail, à condition d'être refaite à neuf plutôt que cochée.",
+          "Le livreur délégué (L439) a eu trois revues de code successives. La dernière, faite par une revue neuve, a relevé un défaut majeur que les deux premières avaient laissé : l'entrée du CHANGELOG était rangée sous une version déjà publiée.\n\nCorrigé, relu, puis la suite complète est repassée au vert, 4549 tests sur 4549. Reprendre n'est pas un échec : c'est la vérification qui fait son travail, à condition d'être refaite à neuf plutôt que cochée.",
+        illustration: "episode-cadence",
       },
       {
         titre: "Avatar (L44) : la porte rejouée sur un commit de plan",
         texte:
-          "Pour ce lot, le dernier commit de code est de 12 h 21. Les quatre suivants, jusqu'à 12 h 35, ne touchent que le plan (revue enregistrée, lot terminé, note de livraison). Rejouer toute la porte de tests sur l'un d'eux contrôlait un code déjà contrôlé : environ cinq minutes perdues. Vérifier trop est aussi une perte ; c'est pourquoi cadence lit désormais le verdict de la vague quand seuls des commits de plan séparent le sha livré du dernier contrôlé.",
+          "Pour ce lot, le dernier commit de code est de 12 h 21. Les quatre suivants, jusqu'à 12 h 35, ne touchent que le plan (revue enregistrée, lot terminé, note de livraison).\n\nRejouer toute la porte de tests sur l'un d'eux contrôlait un code déjà contrôlé : environ cinq minutes perdues.\n\nVérifier trop est aussi une perte ; c'est pourquoi cadence lit désormais le verdict de la vague quand seuls des commits de plan séparent le sha livré du dernier contrôlé.",
+        illustration: "episode-avatar",
         liens: [{ label: "Livre de bord, semaine 44", href: "/livre-de-bord#semaine-2026-W44" }],
       },
     ],

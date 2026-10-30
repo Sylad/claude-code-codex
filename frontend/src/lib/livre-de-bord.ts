@@ -15,7 +15,10 @@ export interface BookLink {
 
 export interface BookItem {
   titre: string;
+  /** Paragraphes séparés par une ligne vide. */
   texte: string;
+  /** Identifiant d'une illustration (src/data/livre-de-bord-schemas.ts) affichée sous le texte. */
+  illustration?: string;
   liens?: BookLink[];
 }
 
@@ -29,6 +32,8 @@ export interface BookEntry {
   /** Titres de rubriques propres à une entrée thématique (par défaut : appris, fabriqué, testé). */
   rubriques?: Partial<Record<'appris' | 'fabrique' | 'teste', string>>;
   resume: string;
+  /** Identifiant d'un schéma (src/data/livre-de-bord-schemas.ts) affiché après le résumé. */
+  schema?: string;
   appris: BookItem[];
   fabrique: BookItem[];
   teste: BookItem[];
@@ -97,8 +102,11 @@ function linkProblem(l: BookLink | undefined, isKnownPath: (path: string) => boo
   return `adresse non permise ${l.href}`;
 }
 
-/** Tout ce qui empêche de publier ces entrées ; liste vide = publiable. */
-export function findProblems(entries: BookEntry[], isKnownPath: (path: string) => boolean): string[] {
+/** Les paragraphes d'un texte : séparés par une ligne vide, les vides écartés. */
+export const paragraphs = (texte: string): string[] => texte.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
+
+/** Tout ce qui empêche de publier ces entrées ; liste vide = publiable. `schemas` : identifiants de schéma connus. */
+export function findProblems(entries: BookEntry[], isKnownPath: (path: string) => boolean, schemas: readonly string[] = []): string[] {
   const out: string[] = [];
   const texts = (where: string, ...values: unknown[]) => {
     for (const v of values) {
@@ -125,6 +133,7 @@ export function findProblems(entries: BookEntry[], isKnownPath: (path: string) =
     previous = e.semaine;
     if (typeof e.resume !== 'string' || !e.resume.trim()) out.push(`${where} : résumé vide`);
     texts(`${where} résumé`, e.resume);
+    if (e.schema !== undefined && !schemas.includes(e.schema)) out.push(`${where} : schéma inconnu « ${e.schema} »`);
     const rubriques = { appris: e.appris, fabrique: e.fabrique, teste: e.teste };
     let filled = 0;
     for (const [name, items] of Object.entries(rubriques)) {
@@ -136,7 +145,8 @@ export function findProblems(entries: BookEntry[], isKnownPath: (path: string) =
       items.forEach((it, i) => {
         const at = `${where} ${name}[${i}]`;
         if (typeof it.titre !== 'string' || !it.titre.trim()) out.push(`${at} : titre vide`);
-        if (typeof it.texte !== 'string' || !it.texte.trim()) out.push(`${at} : texte vide`);
+        if (typeof it.texte !== 'string' || paragraphs(it.texte).length === 0) out.push(`${at} : texte vide`);
+        if (it.illustration !== undefined && !schemas.includes(it.illustration)) out.push(`${at} : illustration inconnue « ${it.illustration} »`);
         texts(at, it.titre, it.texte);
         for (const l of it.liens ?? []) {
           const p = linkProblem(l, isKnownPath);
