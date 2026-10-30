@@ -446,9 +446,10 @@ lots:
     started: 2026-10-30
   - id: L52
     title: "Relecture de vérité du site (lecture seule) : chaque affirmation datée ou chiffrée (versions, prix, modèles, fonctionnalités Claude Code, verdicts d'outils, état des apps) vérifiée vraie, sourcée et à jour ; liste classée faux / dépassé / non sourcé / ok par page, sans réécriture ; les corrections deviennent un lot par page (demande de Sylvain le 30-10)"
-    status: todo
+    status: doing
     estimate: 0.5
     created: 2026-10-30
+    started: 2026-10-30
   - id: L53
     title: "Veille mensuelle des outils des études de cas et de Tools tested : chaque outil existe, dépôt actif, version citée juste, lien vivant, verdict toujours valable (au doute : test-tool en bac à sable) ; rapport daté + corrections ; un verdict qui change devient une entrée du livre de bord"
     status: todo
