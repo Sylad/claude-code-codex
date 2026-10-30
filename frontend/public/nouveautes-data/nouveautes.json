@@ -1,7 +1,22 @@
 {
   "project": "claude-code-codex",
-  "generated": "2026-10-30 12:57",
+  "generated": "2026-10-30 17:24",
   "entries": [
+    {
+      "slug": "2026-10-30-notre-methode-de-travail-expliquee-et-illustree-par-des-proj",
+      "title": "Notre méthode de travail, expliquée et illustrée par des projets réels",
+      "date": "2026-10-30",
+      "lots": [
+        "L19"
+      ],
+      "captures": [
+        "captures/L19-etude-cadence.png"
+      ],
+      "alts": [
+        "La nouvelle étude de cas Cadence à 1440 px : titre et introduction sur la méthode de travail"
+      ],
+      "html": "<p>Une nouvelle étude de cas, <strong>Cadence</strong>, explique comment les projets de ce site sont menés avec l'IA.</p>\n<ul><li>Elle raconte le problème de départ (perdre le fil de ce qui reste à faire et de ce que chaque commit devait résoudre), puis la méthode en sept pièces : plan relié aux commits, Nouveautés, rituels de session, livraison vérifiée, vagues de sessions, lead et sous-agents, livreur délégué.</li><li>Elle donne des chiffres mesurés, chacun avec le document du dépôt où le retrouver, et cinq échecs avec ce qu'ils ont changé.</li><li>Elle renvoie vers le Livre de bord, les Nouveautés et le Plan de travail pour le détail semaine par semaine.</li><li>Vous la trouvez dans la page Case studies, parmi les récits transverses, et depuis l'accueil.</li></ul>"
+    },
     {
       "slug": "2026-10-30-un-livre-de-bord-hebdomadaire-sur-le-developpement-avec-l-ia",
       "title": "Un livre de bord hebdomadaire sur le développement avec l'IA",
