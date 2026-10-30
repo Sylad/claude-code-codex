@@ -70,6 +70,8 @@ npm run audit      # lisibilité du site construit : pages « mur de texte » à
 
 L'audit de lisibilité (mots, schémas, images, plus long bloc sans intertitre par page) est décrit, avec son dernier résultat, dans [`docs/audit-lisibilite.md`](docs/audit-lisibilite.md).
 
+La relecture de vérité du site (affirmations datées ou chiffrées classées faux / dépassé / non sourcé / ok, page par page, sans réécriture) est dans [`docs/verite-site.md`](docs/verite-site.md).
+
 ## Mise à jour hebdo
 
 Un workflow GitHub Actions (`.github/workflows/batch-update.yml`) tourne chaque
