@@ -379,6 +379,13 @@ lots:
     started: 2026-10-25
     review: { date: 2026-10-25, verdict: "conforme (lead : clé de config d'une ligne, lue sans erreur par cadence orchestrate --dry-run 1.12)", commit: 36f35b8bbbe305e13d95a6e3a4a354555be21fb8 }
     finished: 2026-10-25
+  - id: L45
+    title: "Livre de bord, entrée thématique du 30-10 « Ce qui rend une IA fiable : la vérification, pas la confiance » — regard critique sur la vidéo de Melvynx « Ton métier va changer dans 2 ans » (29-10) : ce qui tient (contexte persistant en fichiers, tâches répétitives et vérifiables d'abord, minimalisme des outils, l'IA propose puis on décide, skills comme recettes), ce qui ne tient pas (« je ne regarde jamais avant de publier », souveraineté des données à moitié vraie, chiffres d'étude invérifiables, marketing de la peur, coût et qualité absents de ses niveaux) ; illustré par les faits du jour tirés de l'historique git et des plans : défaut /yearly attrapé par la QA après une vérification partielle (finance L166 → L167), régression CI attrapée par l'e2e (warhammer L37 → L217), lot repris trois fois (cadence L439), porte rejouée sur un commit de plan (avatar L44) ; ton factuel, lien vers la vidéo, aucune attaque personnelle, rien de privé (demande de Sylvain le 30-10)"
+    public: "Livre de bord : ce qui rend une IA fiable"
+    status: todo
+    estimate: 0.25
+    visible: true
+    created: 2026-10-30
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
