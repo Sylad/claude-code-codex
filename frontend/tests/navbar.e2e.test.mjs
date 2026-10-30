@@ -14,6 +14,7 @@ import assert from 'node:assert/strict';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { DIST, setupBrowser } from './lib/e2e-dist.mjs';
+import { badgeLabel } from '../src/lib/news-badge.ts';
 
 const SEEN_KEY = 'ccc.news.seen-v1';
 const OLD_VISIT = { date: '2026-01-01', slugs: [], at: '2026-01-01T10:00:00.000Z' };
@@ -123,7 +124,7 @@ test('barre : mode attendu à chaque largeur et seuil ±1 px, six configurations
       if (m.slack < 16) bad.push(`${m.slack}px après le logo`);
       if (m.lastRight > width) bad.push(`dernier contrôle coupé (${m.lastRight})`);
       if (m.multi.length) bad.push(`sur deux lignes : ${m.multi.join(', ')}`);
-      if (m.badge !== String(JSON.parse(readFileSync(new URL('../public/nouveautes-data/nouveautes.json', import.meta.url), 'utf8')).entries.length)) bad.push(`pastille « ${m.badge} »`);
+      if (m.badge !== badgeLabel(JSON.parse(readFileSync(new URL('../public/nouveautes-data/nouveautes.json', import.meta.url), 'utf8')).entries.length)) bad.push(`pastille « ${m.badge} »`);
       if (m.mode === 'barre') {
         if (!m.labels.includes('Nouveautés')) bad.push('Nouveautés absent');
         if (!m.labels.includes('Ressources')) bad.push('Ressources absent');

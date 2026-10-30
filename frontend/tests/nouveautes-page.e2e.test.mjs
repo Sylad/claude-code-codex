@@ -11,6 +11,7 @@ import assert from 'node:assert/strict';
 import { existsSync, mkdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { DIST, setupBrowser, worstPixelContrast } from './lib/e2e-dist.mjs';
+import { badgeLabel } from '../src/lib/news-badge.ts';
 
 const DATA = JSON.parse(readFileSync(new URL('../public/nouveautes-data/nouveautes.json', import.meta.url), 'utf8'));
 const PAGE = join(DIST, 'nouveautes', 'index.html');
@@ -470,7 +471,7 @@ test('pastille : premier visiteur sans pastille ; après une visite ancienne, no
   await page.reload({ waitUntil: 'load' });
   const link = page.locator('header ul a[href="/nouveautes"]');
   await link.locator('.news-badge').waitFor();
-  assert.equal((await link.locator('.news-badge').textContent()).trim(), String(n));
+  assert.equal((await link.locator('.news-badge').textContent()).trim(), badgeLabel(n)); // « 9+ » au-delà de neuf
   assert.match(await link.textContent(), new RegExp(sr), 'texte pour lecteur d’écran absent');
   // La pastille ne casse pas la barre (une ligne, dans l'écran) à 1280 px.
   await page.setViewportSize({ width: 1280, height: 800 });
