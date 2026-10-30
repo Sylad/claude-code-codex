@@ -115,3 +115,13 @@ test('R9 — un schéma ne fait pas déborder la page : largeur bornée à 100 %
 test('R10 — le texte des schémas n’hérite d’aucune ombre portée du site (illisible sur fond clair)', () => {
   assert.match(css(), /\.schema\s*\{[^}]*text-shadow:\s*none/);
 });
+
+test('R11 — le parcours d’un lot dit QUI fait chaque étape, dans l’ordre des étapes', () => {
+  const t = plain(figure('parcours-lot'));
+  let from = 0;
+  for (const qui of ['spec-writer', 'Sonnet', 'Opus', 'pas écrit le code', 'Fable', 'ux-reviewer', 'lead']) {
+    const at = t.indexOf(qui, from);
+    assert.ok(at >= 0, `« ${qui} » absent ou hors ordre`);
+    from = at + qui.length;
+  }
+});

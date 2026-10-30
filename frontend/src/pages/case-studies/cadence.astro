@@ -19,12 +19,12 @@ const CODE = "[&_code]:font-mono [&_code]:text-claude-soft [&_code]:text-[0.9em]
 const H3 = "text-lg font-medium text-ink pt-2";
 
 const parcours = [
-  { titre: "Spec", detail: "fiche, maquette, tests d'acceptation verrouillés" },
-  { titre: "Code", detail: "fait passer les tests sans les modifier" },
-  { titre: "Revue", detail: "relecteur de code : bugs, dérive, docs" },
-  { titre: "Correction", detail: "reprend ce que la revue a trouvé", accent: true },
-  { titre: "UX", detail: "application lancée, captures 1440 et 390 px" },
-  { titre: "Prêt", detail: "lot clos, livrable par le livreur", accent: true },
+  { titre: "Spec", detail: "fiche, maquette, tests d'acceptation verrouillés", qui: "session spec-writer, puis tests écrits à part" },
+  { titre: "Code", detail: "fait passer les tests sans les modifier", qui: "session de code (Sonnet)" },
+  { titre: "Revue", detail: "relecteur de code : bugs, dérive, docs", qui: "relecteur neuf (Opus), qui n'a pas écrit le code" },
+  { titre: "Correction", detail: "reprend ce que la revue a trouvé", qui: "session de correction (escalade Fable)", accent: true },
+  { titre: "UX", detail: "application lancée, captures 1440 et 390 px", qui: "agent ux-reviewer" },
+  { titre: "Prêt", detail: "lot clos, livrable par le livreur", qui: "le lead : captures, porte, livraison", accent: true },
 ];
 
 const livreur = [
@@ -272,7 +272,7 @@ const echecs = [
           steps={parcours}
           boucle={{ de: 3, vers: 2, nom: "correction-revue", mot: "reprise" }}
           titre="Le parcours d'un lot dans une vague"
-          desc="Six étapes dans l'ordre : spec, code, revue, correction, UX, prêt. Une boucle en pointillés ramène de la correction à la revue tant que la revue trouve quelque chose."
+          desc="Six étapes dans l'ordre : spec, code, revue, correction, UX, prêt.  Chaque étape nomme qui la fait. Une boucle en pointillés ramène de la correction à la revue tant que la revue trouve quelque chose."
         />
       </Schema>
       <Callout titre="À retenir">

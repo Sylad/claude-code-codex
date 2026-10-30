@@ -1,7 +1,7 @@
 ---
 // L50 — chaîne verticale d'étapes en SVG, pour le parcours d'un lot et la chaîne du livreur.
 // Les positions se calculent des étapes : ajouter une étape ne demande aucune coordonnée.
-interface Step { titre: string; detail: string; accent?: boolean }
+interface Step { titre: string; detail: string; qui?: string; accent?: boolean }
 interface Props {
   id: string;
   steps: Step[];
@@ -15,7 +15,7 @@ interface Props {
 const { id, steps, titre, desc, boucle, largeur = 420 } = Astro.props;
 const BOX_W = boucle ? 350 : 388;
 const X = 16;
-const H = 56;
+const H = steps.some((s) => s.qui) ? 74 : 56;
 const GAP = 28;
 const top = (i: number) => 12 + i * (H + GAP);
 const height = top(steps.length - 1) + H + 12;
@@ -30,6 +30,7 @@ const uid = `sch-${id}`;
       <rect class={s.accent ? "sch-box-accent" : "sch-box"} x={X} y={top(i)} width={BOX_W} height={H} rx="10" />
       <text class="sch-t" x={X + 14} y={top(i) + 24}>{`${i + 1}. ${s.titre}`}</text>
       <text class="sch-m" x={X + 14} y={top(i) + 44}>{s.detail}</text>
+      {s.qui && <text class="sch-a" x={X + 14} y={top(i) + 64}>{`Qui : ${s.qui}`}</text>}
       {i < steps.length - 1 && (
         <g>
           <line class="sch-line" x1={X + BOX_W / 2} y1={top(i) + H} x2={X + BOX_W / 2} y2={top(i) + H + GAP - 8} />
