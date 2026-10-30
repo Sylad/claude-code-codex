@@ -430,10 +430,11 @@ lots:
     created: 2026-10-30
   - id: L50
     title: "Étude de cas cadence : trois schémas SVG (plan relié aux commits ; parcours d'un lot dans une vague spec → code → revue → correction → UX → prêt ; chaîne du livreur) et une capture du panneau des lots ; texte découpé (intertitres, encadrés) — lisible clair et sombre"
-    status: todo
+    status: doing
     estimate: 0.5
     visible: true
     created: 2026-10-30
+    started: 2026-10-30
   - id: L51
     title: "Livre de bord « la vérification, pas la confiance » : un schéma de la boucle vérifier plutôt que croire (porte, revue, QA) et une illustration par épisode ; texte découpé"
     status: todo
