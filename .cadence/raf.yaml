@@ -402,6 +402,7 @@ lots:
     estimate: 0.1
     created: 2026-10-30
     started: 2026-10-30
+    docs_ok: { date: 2026-10-30, reason: "Correctif de contenu d'une étude de cas (numéro de version retiré du chapeau, du pied et de la carte d'index) : ni structure du site, ni README, CLAUDE.md ou Nouveautés ne citent ce numéro ; rien à corriger." }
   - id: L47
     title: "Index des études de cas : le lien ↗ GitHub de la carte aetherwx n'a pas de href (QA de L19)"
     status: todo
