@@ -106,3 +106,20 @@ test('R13 — « 565 Ko → 5 Ko » cite docs/whats-new.md, où le chiffre se tr
   assert.equal(t.includes('CHANGELOG 1.19.0'), false);
   assert.match(t, /docs\/whats-new\.md \(1\.19\.0\)/);
 });
+
+test('R14 — la note « Chiffres relevés… » est en text-ink-muted (contraste ≥ 4,5:1), pas en text-ink/50', () => {
+  const html = read('case-studies', 'cadence', 'index.html');
+  const p = html.match(/<p[^>]*class="([^"]*)"[^>]*>\s*Chiffres relevés dans le dépôt cadence/);
+  assert.ok(p, 'note de bas de page introuvable');
+  assert.match(p[1], /text-ink-muted/);
+  assert.doesNotMatch(p[1], /text-ink\/50/);
+});
+
+test('R15 — le lien « Lire l’étude → » de la carte cadence est en text-claude sans opacité', () => {
+  const html = read('case-studies', 'index.html');
+  const a = html.match(/<a[^>]*href="\/case-studies\/cadence"[^>]*class="([^"]*)"[^>]*>\s*Lire l/)
+    ?? html.match(/<a[^>]*class="([^"]*)"[^>]*href="\/case-studies\/cadence"[^>]*>\s*Lire l/);
+  assert.ok(a, 'lien introuvable');
+  assert.match(a[1], /(^|\s)text-claude(\s|$)/);
+  assert.doesNotMatch(a[1], /text-claude\/\d+/);
+});
