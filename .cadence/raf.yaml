@@ -394,6 +394,8 @@ lots:
     review: { date: 2026-10-30, verdict: "compliant after 2 minor notes: link to the channel rather than the video, and the L37→L217 episode title says regression when the text says the test's hypothesis became false — orchestré (vague 2026-10-30-1850-cx, 0 passe(s) de correction)", commit: c78272176206f3dae7ac821ee0e4cae235c46187 }
     ux: { date: 2026-10-30, verdict: "conforme — revue UX de la vague (2 mineurs : lien vers la chaîne plutôt que la vidéo, titre de l'épisode L37→L217 qui dit « régression » quand le texte dit « hypothèse du test devenue fausse ») ; capture 1440 vue par le lead" }
     finished: 2026-10-30
+    notes:
+      - { date: 2026-10-30, text: "QA du 30-10 (2 mineurs de rédaction) : identifiants de lot cités dans le texte du livre de bord (retirer ou assumer) ; titre de l'épisode Warhammer L37→L217 dit « régression » alors que le texte dit « hypothèse du test devenue fausse »." }
   - id: L46
     title: "Étude de cas cadence : la version citée dans le chapeau (« 1.27 ») est périmée (1.28.0 publiée le 30-10) — la lire depuis une source unique ou la formuler sans numéro (QA de L19)"
     status: todo
