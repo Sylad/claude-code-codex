@@ -65,7 +65,10 @@ cd frontend
 npm install
 npm run dev        # http://localhost:4321
 npm run build
+npm run audit      # lisibilité du site construit : pages « mur de texte » à reprendre
 ```
+
+L'audit de lisibilité (mots, schémas, images, plus long bloc sans intertitre par page) est décrit, avec son dernier résultat, dans [`docs/audit-lisibilite.md`](docs/audit-lisibilite.md).
 
 ## Mise à jour hebdo
 

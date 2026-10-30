@@ -81,19 +81,19 @@ const LIBELLES = { 'bloc-long': `bloc de ${SEUILS.blocMax} mots ou plus sans int
 /** Rapport Markdown : pages à reprendre (ordre de priorité) puis toutes les pages mesurées. */
 export function rapportMarkdown(pages) {
   const murs = pages.filter((p) => p.mur);
-  const ligne = (p, rang) =>
-    `| ${rang} | \`${p.route}\` | ${p.mots} | ${p.schemas} | ${p.images} | ${p.plusLongBloc} |` +
-    (rang === '' ? ` ${p.mur ? 'à reprendre' : 'ok'} |` : ` ${p.raisons.map((r) => LIBELLES[r]).join(' ; ')} |`);
-  const entete = (dernier) =>
-    `| Rang | Page | Mots | Schémas | Images | Plus long bloc sans intertitre (mots) | ${dernier} |\n|---|---|---|---|---|---|---|`;
+  const cellules = (p) => `\`${p.route}\` | ${p.mots} | ${p.schemas} | ${p.images} | ${p.plusLongBloc}`;
+  const entete = (premier, dernier) =>
+    `| ${premier}Page | Mots | Schémas | Images | Plus long bloc sans intertitre (mots) | ${dernier} |\n|${premier ? '---|' : ''}---|---|---|---|---|---|`;
   return [
     '## Pages à reprendre (« mur de texte »), par ordre de priorité',
     '',
-    murs.length ? `${entete('Motif')}\n${murs.map((p, i) => ligne(p, i + 1)).join('\n')}` : 'Aucune page ne dépasse les seuils.',
+    murs.length
+      ? `${entete('Rang | ', 'Motif')}\n${murs.map((p, i) => `| ${i + 1} | ${cellules(p)} | ${p.raisons.map((r) => LIBELLES[r]).join(' ; ')} |`).join('\n')}`
+      : 'Aucune page ne dépasse les seuils.',
     '',
     '## Toutes les pages mesurées',
     '',
-    `${entete('État')}\n${pages.map((p) => ligne(p, '')).join('\n')}`,
+    `${entete('', 'État')}\n${pages.map((p) => `| ${cellules(p)} | ${p.mur ? 'à reprendre' : 'ok'} |`).join('\n')}`,
     '',
   ].join('\n');
 }
