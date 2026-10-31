@@ -447,6 +447,7 @@ lots:
     visible: true
     created: 2026-10-30
     started: 2026-10-30
+    review: { date: 2026-10-31, verdict: "compliant (2 minor notes: schema text ~8–9 px at 390 px; loop drawn from the review only while the QA also finds defects) — orchestré (vague 2026-10-30-2300-cx, 0 passe(s) de correction)", commit: 7c50189abe381e02fad8e74bc2d0bdf9e250b32f }
   - id: L52
     title: "Relecture de vérité du site (lecture seule) : chaque affirmation datée ou chiffrée (versions, prix, modèles, fonctionnalités Claude Code, verdicts d'outils, état des apps) vérifiée vraie, sourcée et à jour ; liste classée faux / dépassé / non sourcé / ok par page, sans réécriture ; les corrections deviennent un lot par page (demande de Sylvain le 30-10)"
     status: doing
