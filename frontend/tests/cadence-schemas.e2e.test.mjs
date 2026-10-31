@@ -136,6 +136,17 @@ test('R12 — l’entrée Nouveautés du parcours dit qui fait chaque étape, co
   }
 });
 
+test('R15 — l’entrée Nouveautés présente les trois schémas un par un, sans les coller dans une même phrase', () => {
+  const dir = join(import.meta.dirname, '..', '..', 'docs', 'nouveautes');
+  const t = readFileSync(join(dir, readdirSync(dir).find((n) => /etude-de-cas-cadence/.test(n))), 'utf8');
+  const lignes = t.split('\n').filter((l) => /^\s*[-*] /.test(l));
+  for (const nom of ['plan aux commits', 'parcours d.un lot', 'chaîne du livreur']) {
+    const hits = lignes.filter((l) => new RegExp(nom).test(l));
+    assert.equal(hits.length, 1, `« ${nom} » : une ligne attendue, ${hits.length} trouvée(s)`);
+    assert.ok(!/ et la chaîne du livreur/.test(hits[0]), 'la chaîne du livreur est collée à une autre phrase');
+  }
+});
+
 test('R13 — le nom accessible du parcours (title + desc du svg role=img) nomme qui fait chaque étape, dans l’ordre', () => {
   // Sous role="img", les <text> intérieurs sont présentationnels : seul aria-labelledby (title + desc) est lu.
   const f = figure('parcours-lot');
