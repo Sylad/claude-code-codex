@@ -1,6 +1,6 @@
 # Installing the `/update-rtk-stats` skill
 
-Refreshes the RTK savings counters on the claude-code-codex homepage. Project-specific (only useful in this repo).
+Refreshes the RTK savings counters on the claude-code-codex Case studies page (`/case-studies`). Project-specific (only useful in this repo).
 
 ## Install
 

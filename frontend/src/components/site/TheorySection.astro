@@ -1,5 +1,6 @@
 ---
 import CodeBlock from "@/components/site/CodeBlock.astro";
+import { theoryBulletHtml } from "@/lib/theory-bullet.mjs";
 import type { TheorySection } from "@/data/theory";
 
 interface Props {
@@ -32,7 +33,7 @@ const { section } = Astro.props;
         <span
           class="mt-2.5 inline-block w-1 h-1 rounded-full bg-claude shrink-0"
         ></span>
-        <span class="flex-1 min-w-0 [overflow-wrap:anywhere]" set:html={bullet.replace(/`([^`]+)`/g, '<code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">$1</code>')}></span>
+        <span class="flex-1 min-w-0 [overflow-wrap:anywhere]" set:html={theoryBulletHtml(bullet)}></span>
       </li>
     ))}
   </ul>

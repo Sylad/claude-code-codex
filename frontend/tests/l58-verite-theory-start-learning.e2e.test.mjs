@@ -53,7 +53,7 @@ test('R4 — statistiques RTK (bloc affiché par /case-studies, pas par /start) 
   assert.match(stats.lastUpdated, /^2026-10-31/);
   const t = texte('case-studies');
   assert.ok(t.includes(stats.summary.total_commands.toLocaleString('fr-FR').replace(/[\u00a0\u202f]/g, ' ')));
-  assert.match(t, /31 octobre 2026/);
+  assert.match(t, /Relevé du 31\/10\/2026/); // date du bloc RTK (RtkStats), pas une autre date de la page
   assert.doesNotMatch(t, /1 546/);
 });
 

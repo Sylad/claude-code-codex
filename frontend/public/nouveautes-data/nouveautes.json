@@ -1,7 +1,22 @@
 {
   "project": "claude-code-codex",
-  "generated": "2026-10-31 13:12",
+  "generated": "2026-10-31 14:25",
   "entries": [
+    {
+      "slug": "2026-10-31-suite-des-corrections-de-verite-l55-l58-theory-a-390-px-defi",
+      "title": "La page Théorie montre le chemin de la mémoire auto en entier et cite Mythos 5.1 ; RTK, drona23 et Hermes sont datés",
+      "date": "2026-10-31",
+      "lots": [
+        "L59"
+      ],
+      "captures": [
+        "captures/L59-theory-390.png"
+      ],
+      "alts": [
+        "Page Théorie sur téléphone : le chemin de la mémoire auto apparaît en entier, avec son mot « project »"
+      ],
+      "html": "<p>La page Théorie affiche maintenant en entier le chemin de la mémoire auto, <code>~/.claude/projects/&lt;project&gt;/memory/MEMORY.md</code>, dont le mot <code>&lt;project&gt;</code> disparaissait. Le coût de lecture du cache cite aussi Mythos 5.1 (0.025×) avec Fable 5.1. Elle ne défile pas à l'horizontale sur téléphone.</p>\n<p>Le bloc RTK de la page Case studies parle au présent, avec la date de son relevé (31/10/2026). La fiche drona23 dit que le dernier push date du 16 juin 2026, au lieu de « push fréquent ». La fiche Hermes Agent date Sonnet 4.6 de juin 2026.</p>"
+    },
     {
       "slug": "2026-10-31-corrections-de-verite-theory-minimums-de-cache-sous-agents-i",
       "title": "Les pages Théorie, Case studies et Learning disent le vrai sur le cache, les sous-agents et RTK",

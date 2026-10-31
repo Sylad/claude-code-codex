@@ -1,13 +1,13 @@
 ---
 name: update-rtk-stats
-description: Use when the user wants to refresh the RTK savings stats displayed on the claude-code-codex homepage. Triggers on "/update-rtk-stats", "refresh rtk stats", "maj stats rtk", or after a long session where rtk usage might have meaningfully changed the numbers. Reads `rtk gain --format json`, writes to frontend/src/data/rtk-stats.json, and proposes a commit.
+description: Use when the user wants to refresh the RTK savings stats displayed on the claude-code-codex Case studies page (`/case-studies`). Triggers on "/update-rtk-stats", "refresh rtk stats", "maj stats rtk", or after a long session where rtk usage might have meaningfully changed the numbers. Reads `rtk gain --format json`, writes to frontend/src/data/rtk-stats.json, and proposes a commit.
 argument-hint: <optional commit message suffix>
 allowed-tools: Read, Bash, Edit, Write
 ---
 
 # Update RTK Stats
 
-Refreshes the live RTK savings counters shown on the claude-code-codex homepage. Single-purpose skill : read fresh stats from the local `rtk` binary, persist them in the repo, and propose a commit.
+Refreshes the live RTK savings counters shown on the claude-code-codex Case studies page (`/case-studies`). Single-purpose skill : read fresh stats from the local `rtk` binary, persist them in the repo, and propose a commit.
 
 ## When to use
 
