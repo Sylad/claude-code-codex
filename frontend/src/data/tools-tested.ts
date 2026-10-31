@@ -315,7 +315,7 @@ export const testedTools: TestedTool[] = [
     author: "drona23",
     category: "tool",
     description:
-      "Single-file CLAUDE.md copy-paste avec règles anti-verbosity (no preambule, no em-dash, terse). 5.4k stars mais l'output utile = 7 lignes de règles. À piquer comme inspiration pour CLAUDE.md global perso, pas à installer comme outil. Revue radar 2026-09-18 : dormant, règles déjà reprises — clos.",
+      "Single-file CLAUDE.md copy-paste avec règles anti-verbosity (no preambule, no em-dash, terse). 6.1k stars mais l'output utile = 7 lignes de règles. À piquer comme inspiration pour CLAUDE.md global perso, pas à installer comme outil. Revue radar 2026-09-18 : dormant, règles déjà reprises — clos.",
     tags: ["claude-code", "claude-md", "anti-verbosity", "rules"],
     url: "https://github.com/drona23/claude-token-efficient",
     stars: 6135,
