@@ -442,12 +442,14 @@ lots:
       - { date: 2026-10-30, text: "Relance du 30-10 au soir, après un faux positif de L456 (commits 1c6fea9 et 2c8fbda présents, pas encore relus). Ajout demandé par Sylvain (« c'est l'étape 2 où tu codes ? ») : le schéma du parcours d'un lot dit QUI fait chaque étape : session spec-writer puis tests d'acceptation, session de code (Sonnet), relecteur neuf (Opus) qui n'a pas écrit le code, session de correction (escalade Fable), ux-reviewer, lead (captures, porte, livraison)." }
   - id: L51
     title: "Livre de bord « la vérification, pas la confiance » : un schéma de la boucle vérifier plutôt que croire (porte, revue, QA) et une illustration par épisode ; texte découpé"
-    status: doing
+    status: done
     estimate: 0.25
     visible: true
     created: 2026-10-30
     started: 2026-10-30
     review: { date: 2026-10-31, verdict: "compliant (2 minor notes: schema text ~8–9 px at 390 px; loop drawn from the review only while the QA also finds defects) — orchestré (vague 2026-10-30-2300-cx, 0 passe(s) de correction)", commit: 7c50189abe381e02fad8e74bc2d0bdf9e250b32f }
+    ux: { date: 2026-10-31, verdict: "conforme (ux-reviewer + captures 390/1440 regardées par le lead : 5 schémas rendus, boucle de reprise visible) — 2 mineurs : texte des schémas ~8–9 px au téléphone (lot de suite), boucle de reprise dessinée depuis la revue seule alors que la QA trouve aussi des défauts" }
+    finished: 2026-10-31
   - id: L52
     title: "Relecture de vérité du site (lecture seule) : chaque affirmation datée ou chiffrée (versions, prix, modèles, fonctionnalités Claude Code, verdicts d'outils, état des apps) vérifiée vraie, sourcée et à jour ; liste classée faux / dépassé / non sourcé / ok par page, sans réécriture ; les corrections deviennent un lot par page (demande de Sylvain le 30-10)"
     status: doing
@@ -460,6 +462,12 @@ lots:
     estimate: 0.25
     every: 30
     created: 2026-10-30
+  - id: L54
+    title: "Livre de bord : texte des schémas lisible au téléphone (≥ 11 px rendu à 390 px, aujourd'hui ~8–9 px : viewBox 420 réduit à 266 px) et boucle de reprise qui part aussi de la QA (ou légende précisée) — mineurs UX de L51"
+    status: todo
+    estimate: 0.25
+    visible: true
+    created: 2026-10-31
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
