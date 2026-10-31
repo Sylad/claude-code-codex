@@ -10,19 +10,22 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
   description="OL Companion — compagnon de saison Olympique Lyonnais. React + TanStack côté front, NestJS + crons côté back, push live via SSE depuis 365scores. 100% codé en pair-programming avec Claude Code."
 >
   <PageHero
-    eyebrow="Case study · 2026-05-08"
+    eyebrow="Case study · mise à jour 2026-10-31"
     title="OL Companion"
     intro="Compagnon de saison pour l'Olympique Lyonnais : classement Ligue 1, calendrier, brackets de coupe, live-match avec shot map, carte L1 bicolore. React 18 + TanStack côté front, NestJS 11 + crons côté back, push live via SSE depuis 365scores. 100% du code écrit en pair-programming avec Claude Code (zéro ligne tapée à la main)."
   />
 
   <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12">
     <div class="space-y-12">
+      <p class="font-mono text-xs text-ink-muted">Mise à jour 31 octobre 2026 · dépôt décrit : <a class="text-claude hover:underline" href="https://github.com/Sylad/ol-companion" target="_blank" rel="noopener">github.com/Sylad/ol-companion</a> · état relu d'après son README, ses Nouveautés et son plan.</p>
+
       <CaseStudySection eyebrow="Pourquoi cette app">
         <p>
           Suivre l'OL en Ligue 1 sans jongler entre dix sites : un seul écran qui agrège classement,
           forme, prochains matchs, calendrier, brackets de coupe, news communautaires et — le plus
-          tendu — un live-match avec shot map quand l'OL joue. L'app est déployée sur le NAS Synology
-          et tourne en LAN ; elle sert aussi de bac à sable pour la stack <strong>React 18 + Vite +
+          tendu — un live-match avec shot map quand l'OL joue. L'app tourne sur le cluster k3s de dark-blue
+          (namespace <code>preprod</code>, déployée par ArgoCD) et répond sur
+          <a class="text-claude hover:underline" href="https://ol.sladoire.dev" target="_blank" rel="noopener">https://ol.sladoire.dev</a> ; elle sert aussi de bac à sable pour la stack <strong>React 18 + Vite +
           TanStack Router/Query + Tailwind</strong> côté front, et <strong>NestJS 11 + crons
           @nestjs/schedule</strong> côté back.
         </p>
@@ -51,7 +54,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
   subgraph BE["Backend NestJS 11 (port 3002)"]
     bus["EventBusService — RxJS Subject (signature diff)"]
     sseSvc["@Sse() /api/events — heartbeat 30s"]
-    cron["6 crons @nestjs/schedule (Paris TZ)"]
+    cron["8 services planifiés @Cron (@nestjs/schedule, Paris TZ)"]
     pin["PinGuard (écritures only)"]
     cache["Caches JSON local (data/)"]
     wikiProxy["/api/wiki-image — Fandom/Wiki proxy + cache"]
@@ -79,8 +82,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         <p>
           Front (port <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">4202</code>)
           et back (port <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">3002</code>)
-          tournent côte-à-côte sur le NAS Synology dans deux containers Docker du même
-          <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">docker-compose.yml</code>.
+          tournent côte-à-côte dans deux pods du k3s de dark-blue (deux Deployments du chart Helm <code>ol-companion</code>, images GHCR construites par la CI GitHub, tag bumpé dans <code>developpeur-gitops</code> puis synchronisé par ArgoCD ; les caches JSON vivent sur un PVC de 1 Gi).
           nginx proxifie <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">/api/</code>
           vers le backend (même réseau Docker), ce qui permet à la SSE de passer sans
           <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">proxy_buffering</code>
@@ -218,6 +220,31 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         </ul>
       </CaseStudySection>
 
+      <CaseStudySection eyebrow="Depuis mai 2026 · carte L1, Équipe de France, accessibilité">
+        <p>
+          Les 18 clubs de la <strong>carte Ligue 1</strong> ont une zone cliquable de 24 × 24 px,
+          une fiche qui est un vrai dialogue (focus à l'ouverture, Échap pour fermer) et un motif
+          blanc par moitié de marqueur (aplat = victoire, barre = nul, oblique = défaite) pour que
+          la couleur ne porte jamais seule le résultat. La page <strong>Équipe de France</strong>
+          (<code>/equipe-de-france</code>) suit les Bleus avec la même page de match que l'OL
+          (en-tête du score, statistiques, momentum, carte des tirs, compositions). Autour : titre de
+          page par route, lien d'évitement, pastille d'état du flux temps réel, et une page
+          <code>/nouveautes</code> alimentée par les entrées du dépôt.
+        </p>
+      <figure class="my-6">
+        <img src="/case-studies/ol-companion/01-carte-l1.png" alt="Carte Ligue 1 — 18 clubs, marqueurs bicolores aller et retour avec motifs" class="rounded-lg border border-white/10" loading="lazy" />
+        <figcaption class="text-xs text-ink-muted mt-2 font-mono">
+          Carte Ligue 1 (L191) — marqueurs bicolores aller / retour, motif blanc par résultat. Capture du 19 octobre 2026.
+        </figcaption>
+      </figure>
+      <figure class="my-6">
+        <img src="/case-studies/ol-companion/02-match-bleus.png" alt="Page de match des Bleus — score, statistiques et compositions" class="rounded-lg border border-white/10" loading="lazy" />
+        <figcaption class="text-xs text-ink-muted mt-2 font-mono">
+          Page de match de l'Équipe de France — même socle que le match de l'OL. Capture du 16 octobre 2026.
+        </figcaption>
+      </figure>
+      </CaseStudySection>
+
       <article class="space-y-4 pt-2">
         <div
           class="rounded-xl border border-white/10 bg-paper-elevated p-6 sm:p-8"
@@ -229,14 +256,14 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
           </p>
           <ul class="text-sm text-ink-muted space-y-1.5 mb-5">
             <li>
-              <strong class="text-ink">Frontend</strong> · React 18 · Vite 5 · TanStack Router 1.78
+              <strong class="text-ink">Frontend</strong> · React 18 · Vite 5 · Vitest 2 · Playwright 1.61 · TanStack Router 1.78
               · TanStack Query 5.59 · Tailwind 3.4 · Recharts 2.13 · Leaflet + react-leaflet ·
               Lucide.
             </li>
             <li>
               <strong class="text-ink">Backend</strong> · NestJS 11 · @nestjs/schedule v5 · RxJS
               (SSE via <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">@Sse()</code>) ·
-              Jest (>35 tests verts) · stockage JSON local · SDK Anthropic retiré le 1er octobre 2026.
+              Jest côté back, Vitest côté front (≈ 1 630 cas de test au 31 octobre 2026, relevés par recherche de <code>it(</code>/<code>test(</code> dans les sources) · stockage JSON local · SDK Anthropic retiré le 1er octobre 2026.
             </li>
             <li>
               <strong class="text-ink">Sources</strong> · 365scores (classement, forme, brackets,
@@ -248,7 +275,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
               <strong class="text-ink">Infra</strong> · Docker multi-stage
               (<code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">node:20-alpine</code> →
               <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">nginx:alpine</code>)
-              sur NAS Synology, port 4202 / 3002.
+              en images GHCR, chart Helm sur le k3s de dark-blue via ArgoCD, exposé par un tunnel Cloudflare (ports 4202 / 3002 dans les pods).
             </li>
           </ul>
 
@@ -273,18 +300,13 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
             >
               ↗ GitHub Sylad/ol-companion
             </a>
-            <a
-              href="http://nas:4202"
-              class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors"
-            >
-              ↗ Démo LAN · http://nas:4202
-            </a>
+            <a href="https://ol.sladoire.dev" target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">↗ https://ol.sladoire.dev</a>
           </div>
         </div>
       </article>
 
       <p class="text-center text-xs text-ink/50 font-mono pt-4">
-        Snapshot 2026-05-08 · 4 sprints livrés sur main entre 05-02 et 05-08.
+        Mise à jour 2026-10-31 · état relu d'après le README, les 111 Nouveautés et le plan du dépôt.
       </p>
     </div>
   </section>

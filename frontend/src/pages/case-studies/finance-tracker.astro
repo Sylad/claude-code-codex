@@ -10,12 +10,13 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
   description="Deep dive — tracker finances perso avec analyse PDF par Claude, construit en pair-programming avec Claude Code (0 ligne de code humaine)."
 >
   <PageHero
-    eyebrow="Case study · finance-tracker"
+    eyebrow="Case study · mise à jour 2026-10-31"
     title="Analyse de relevés bancaires PDF en two-phase tool_use"
     intro="Une app perso qui ingère des relevés PDF, les fait catégoriser par Claude, calcule un score de santé financière, et propose une démo publique verrouillée pour montrer sans rien fuiter. Stack : React 18 + NestJS 11 + Anthropic SDK, code 100% écrit avec Claude Code."
   />
 
   <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12 space-y-12">
+    <p class="font-mono text-xs text-ink-muted">Mise à jour 31 octobre 2026 · dépôt décrit : <a class="text-claude hover:underline" href="https://github.com/Sylad/finance-tracker" target="_blank" rel="noopener">github.com/Sylad/finance-tracker</a> · état relu d\'après son README, ses 90 Nouveautés et son plan.</p>
     <CaseStudySection eyebrow="Aperçu visuel">
       <p>
         Captures prises en <strong>mode démo</strong> (persona "Alex Démo",
@@ -68,7 +69,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
     <CaseStudySection eyebrow="Architecture">
       <MermaidDiagram
         client:visible
-        caption="Pipeline d'import : PDF → NestJS → Claude two-phase → JSON storage. Démo publique passe par un Cloudflare quick tunnel + bypass PIN host-locked."
+        caption="Pipeline d'import : PDF → NestJS → Claude two-phase → JSON storage. Démo publique : tunnel Cloudflare (finance.sladoire.dev) + bypass PIN host-locked."
         definition={`flowchart TB
   subgraph FE["Frontend (React 18 + TanStack)"]
     ui["Upload multi-PDF (max 12), dashboard, /loans /savings"]
@@ -87,7 +88,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
 
   subgraph EXT["External"]
     claude["Anthropic API"]
-    tunnel["Cloudflare quick tunnel (*.trycloudflare.com — démo verrouillée)"]
+    tunnel["Tunnel Cloudflare (finance.sladoire.dev, *.trycloudflare.com — démo verrouillée)"]
   end
 
   ui -->|fetch + Bearer PIN| pin
@@ -145,8 +146,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
           <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
           <span><strong>Build & deploy</strong> : Docker multi-stage
           (node:20-alpine builder → nginx:alpine pour le frontend,
-          node:20-alpine runtime pour le backend), docker-compose sur NAS
-          Synology DSM. nginx proxifie <code>/api/</code> vers le backend
+          node:20-alpine runtime pour le backend), images GHCR construites par la CI GitHub, chart Helm sur le k3s de dark-blue (namespace <code>preprod</code>) synchronisé par ArgoCD, exposé par un tunnel Cloudflare sur <a class="text-claude hover:underline" href="https://finance.sladoire.dev" target="_blank" rel="noopener">https://finance.sladoire.dev</a>. <strong>Cette instance ne porte que des données de démo</strong> : les vraies données ne tournent qu'en local, jamais sur le cluster. nginx proxifie <code>/api/</code> vers le backend
           sur le même réseau Docker.</span>
         </li>
         <li class="flex gap-3">
@@ -157,6 +157,27 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
           en sessionStorage (volontairement non persistant entre onglets).</span>
         </li>
       </ul>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Depuis août 2026 · Crédits, Abonnements, revues UX">
+      <p>
+        L'écran <strong>Crédits</strong> a des boutons nommés et des fenêtres utilisables au clavier
+        (composant <code>Dialog</code> commun, doublons et suspects compris) ; les
+        <strong>Abonnements</strong> proposent des suggestions à trier (Enregistrer, Connu-masquer,
+        Faux positif) avec des messages d'échec clairs et un focus gardé après chaque action. Les
+        écrans Dépenses, Santé, Heatmap, Objectifs et Règles de catégories ont eux aussi eu leur
+        revue UX : erreurs dites en français, suppression confirmée, mois en toutes lettres.
+        Le modèle d'analyse est <code>claude-sonnet-5-5</code> ; le backend compte ~20 modules, et le
+        projet environ 1 620 cas de test au 31 octobre 2026 (recherche de <code>it(</code>/<code>test(</code>).
+      </p>
+      <figure class="my-6">
+        <img src="/case-studies/finance-tracker/05-credits-actions.png" alt="Crédits — actions nommées sur chaque carte de crédit, en mode démo" class="rounded-lg border border-white/10" loading="lazy" />
+        <figcaption class="text-xs text-ink-muted mt-2 font-mono">Crédits — boutons nommés par carte (mode démo). Capture du 21 octobre 2026.</figcaption>
+      </figure>
+      <figure class="my-6">
+        <img src="/case-studies/finance-tracker/06-abonnements.png" alt="Abonnements — suggestions à trier : Enregistrer, Connu masquer, Faux positif" class="rounded-lg border border-white/10" loading="lazy" />
+        <figcaption class="text-xs text-ink-muted mt-2 font-mono">Abonnements — suggestions à trier (mode démo). Capture du 23 octobre 2026.</figcaption>
+      </figure>
     </CaseStudySection>
 
     <CaseStudySection eyebrow="Le process avec Claude Code">
@@ -324,12 +345,14 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
       >
         ↗ GitHub
       </a>
-      <span
-        class="inline-flex items-center gap-1 px-3 py-1.5 rounded border border-white/10 text-ink-muted text-sm"
-        title="URL de tunnel régénérée à chaque restart"
+      <a
+        href="https://finance.sladoire.dev"
+        target="_blank"
+        rel="noopener"
+        class="inline-flex items-center gap-1 px-3 py-1.5 rounded border border-white/10 text-ink-muted hover:text-claude hover:border-claude/40 transition-colors text-sm"
       >
-        Démo verrouillée — Cloudflare quick tunnel (URL éphémère)
-      </span>
+        ↗ Démo verrouillée · finance.sladoire.dev
+      </a>
     </div>
   </section>
 </BaseLayout>
