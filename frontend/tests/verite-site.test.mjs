@@ -63,3 +63,27 @@ test("R5 — aucune page n'est laissée « non relue » : chaque section a une l
   }
   assert.ok(!/non relue/i.test(rapport.split('## Par page')[0].replace(/ne sont pas relues|ne pas relue/g, '')), "le préambule ne déclare plus de page non relue");
 });
+
+const ligne = (route, re) => (sections.get(route) || []).find((l) => re.test(l));
+
+test('R6 — l’accueil et /about relèvent « déployées sur Kubernetes » comme faux (4 apps sur 8 seulement)', () => {
+  for (const route of ['/', '/about']) {
+    assert.ok(ligne(route, /^- \*\*faux\*\*.*Kubernetes/), `${route} : ligne faux sur Kubernetes manquante`);
+  }
+});
+
+test('R7 — un chiffre juste à sa date (~70 fichiers .md, CLAUDE.md de 130 lignes) est « dépassé », pas « faux »', () => {
+  assert.ok(ligne('/case-studies/claude-code-codex', /^- \*\*dépassé\*\*.*~70 fichiers/), '~70 fichiers .md');
+  assert.ok(ligne('/case-studies/warhammer40k', /^- \*\*dépassé\*\*.*130 lignes/), 'CLAUDE.md de 130 lignes');
+  assert.ok(!ligne('/case-studies/claude-code-codex', /^- \*\*faux\*\*.*~70 fichiers/));
+  assert.ok(!ligne('/case-studies/warhammer40k', /^- \*\*faux\*\*.*130 lignes/));
+});
+
+test('R8 — les fonctionnalités de Claude Code de /theory et /start sont classées contre la documentation, pas « non sourcé » en bloc', () => {
+  assert.ok(ligne('/theory', /^- \*\*ok\*\*.*Task.*Agent.*2\.1\.63.*code\.claude\.com/), 'renommage Task → Agent');
+  assert.ok(ligne('/theory', /^- \*\*ok\*\*.*MEMORY\.md.*200 lignes.*25/), 'MEMORY.md 200 lignes / 25 KB');
+  assert.ok(ligne('/theory', /^- \*\*ok\*\*.*événements de hooks.*5 types de handler/), 'hooks');
+  assert.ok(ligne('/theory', /^- \*\*faux\*\*.*sous-agents ne peuvent pas spawner/), 'nesting des sous-agents');
+  assert.ok(!ligne('/theory', /^- \*\*non sourcé\*\*.*Task renommé/), 'plus de bloc non sourcé sur Task');
+  assert.ok(ligne('/start', /Claude Code \/ Copilot|Copilot/), 'tableau Copilot classé dans /start');
+});

@@ -16,10 +16,10 @@ classe et une source, décomptes exacts).
 
 | classe | lignes |
 |---|---|
-| faux | 6 |
-| dépassé | 25 |
-| non sourcé | 22 |
-| ok | 32 |
+| faux | 7 |
+| dépassé | 27 |
+| non sourcé | 23 |
+| ok | 36 |
 
 ## Ce qui a été vérifié, et ce qui ne l'a pas été
 
@@ -33,7 +33,7 @@ classe et une source, décomptes exacts).
   maintenant au moins une ligne classée avec sa source.
 - **Non vérifié** : l'état du cluster en direct (aucun contexte `kubectl` sur la session : les lignes cluster s'appuient
   sur le `CLAUDE.md` du dossier developpeur), l'interface Cloudflare, les ordres de grandeur d'expérience (durées, pourcentages
-  de récit : classés « non sourcé »), les fonctionnalités de Claude Code hors `/theory`, les verdicts d'outils refaits en bac
+  de récit : classés « non sourcé »), les verdicts d'outils refaits en bac
   à sable (affaire du lot L53, veille mensuelle).
 - Les étoiles et dates de push dérivent chaque jour : leur classement « dépassé » dit surtout qu'aucune date de relevé
   n'est affichée.
@@ -43,6 +43,7 @@ classe et une source, décomptes exacts).
 ## `/`
 
 - **ok** — le nombre d'applications vient de `APP_COUNT` (8, lu dans `apps.ts`), jamais écrit en dur dans la page (source : `frontend/src/data/apps.ts`)
+- **faux** — « {APP_COUNT} applications construites avec Claude Code, déployées sur Kubernetes + GitOps » (`index.astro` l. 106-107) : sur les 8 applications, 4 seulement tournent sur le k3s de dark-blue ; 2 sont sur Cloudflare Pages, jobmail-assistant est en local sur Big-Blue, et ce site est lui aussi sur Pages (source : `CLAUDE.md` du dossier developpeur, tableau « Architecture générale »)
 
 ## `/about`
 
@@ -50,6 +51,7 @@ classe et une source, décomptes exacts).
 - **dépassé** — « cinq apps perso en prod » au lancement : le site en présente 8 aujourd'hui (`APP_COUNT`) ; la page ne dit pas que le chiffre date de mai (source : `frontend/src/data/apps.ts`)
 - **ok** — résumés hebdomadaires par `claude-haiku-4-5` : le script de batch utilise `claude-haiku-4-5-20251001` (source : `scripts/lib/claude.ts` ligne 14)
 - **ok** — Astro 6, Vue 3, Tailwind 4, batch GitHub Actions hebdomadaire (cron du lundi 6 h) (source : `frontend/package.json`, `.github/workflows/batch-update.yml`)
+- **faux** — « les {APP_COUNT} applications … déployées sur Kubernetes + GitOps » (`about.astro` l. 26-32) : même erreur que l'accueil, 4 applications sur 8 sont sur Kubernetes (source : `CLAUDE.md` du dossier developpeur, tableau « Architecture générale »)
 - **non sourcé** — « 0 ligne de code écrite par l'humain » : affirmation invérifiable (le dépôt ne distingue pas l'auteur de la frappe) (source : aucune)
 
 ## `/argocd-k8s-pour-les-nuls`
@@ -105,7 +107,7 @@ classe et une source, décomptes exacts).
 
 ## `/case-studies/claude-code-codex`
 
-- **faux** — mémoire « ~70 fichiers .md » dans `~/.claude/projects/<cwd>/memory/` : le dossier mémoire du projet en compte 612 (source : `ls` du dossier mémoire du projet developpeur, relevé le 30-10-2026)
+- **dépassé** — mémoire « ~70 fichiers .md » dans `~/.claude/projects/<cwd>/memory/` : chiffre écrit le 2026-05-08 (commit 2f58cd2), juste alors (67 fichiers modifiés au plus tard ce jour-là) ; le dossier en compte 614 aujourd'hui et la page ne date pas le chiffre (source : `ls` du dossier mémoire du projet developpeur, relevé le 30-10-2026, filtré sur les dates de modification)
 - **dépassé** — « 6e app perso » et « 6 sites perso » : vrai en mai 2026 (la page le dit), le site en présente 8 aujourd'hui (source : `frontend/src/data/apps.ts`)
 - **non sourcé** — « six mois de pair-programming intensif » à la date de lancement : durée déclarée, sans trace datée dans le dépôt (source : aucune)
 
@@ -182,7 +184,7 @@ classe et une source, décomptes exacts).
 ## `/case-studies/warhammer40k`
 
 - **ok** — Angular 19, NestJS 11, Anthropic SDK 0.91 (source : `warhammer40k/backend/package.json` (`@anthropic-ai/sdk ^0.91.1`, `@nestjs/core ^11`))
-- **faux** — « CLAUDE.md de 130 lignes au root du repo » : le fichier compte 309 lignes (source : `wc -l warhammer40k/CLAUDE.md`, relevé le 30-10-2026)
+- **dépassé** — « CLAUDE.md de 130 lignes au root du repo » : chiffre écrit le 2026-05-08 (commit 2f58cd2), alors à 134 lignes (`git show 7c5a515:CLAUDE.md | wc -l`) ; le fichier en compte 309 aujourd'hui et la page ne date pas le chiffre (source : `wc -l warhammer40k/CLAUDE.md`, relevé le 30-10-2026)
 - **non sourcé** — « cinq polygones tracés en ~10 minutes », seuils de détection (0,65, 0,55) : chiffres de récit non rattachés à un commit (source : aucune)
 
 ## `/cloudflare-pour-les-nuls`
@@ -224,6 +226,8 @@ classe et une source, décomptes exacts).
 - **dépassé** — bloc RTK : statistiques figées au 2026-05-08 (1 546 commandes, 23 % d'économie) alors que `rtk gain` en compte aujourd'hui 148 104 (47 % d'économie) (source : `frontend/src/data/rtk-stats.json` (`lastUpdated` 2026-05-08) contre `rtk gain --format json`, 30-10-2026)
 - **ok** — « 3 flux RSS (Simon Willison, Anthropic, Human Coders) » : trois flux présents dans le dossier des flux, plus deux flux GitHub (source : `frontend/src/data/feeds/`)
 - **ok** — « Ruflo testé puis rejeté avec 8 leçons » : cohérent avec le catalogue et la page Ruflo (source : `tools-tested.ts`, `ruflo.astro`)
+- **ok** — tableau Claude Code / Copilot, ligne « Mémoire » : Claude Code relit `CLAUDE.md` à chaque ouverture de session (source : code.claude.com/docs/en/memory, 31-10-2026)
+- **non sourcé** — tableau Claude Code / Copilot (`start.astro` l. 85), colonne Copilot : « oublie après chaque session », « GPT-* par défaut », « sidebar étroite » ; le comportement de Copilot n'a pas été vérifié dans cette passe et change avec ses versions (source : aucune)
 - **non sourcé** — « Tu verras déjà 80 % de ce… » et « 10 fichiers de 1000 lignes par prompt va coûter cher » : ordres de grandeur pédagogiques non mesurés (source : aucune)
 
 ## `/theory`
@@ -233,7 +237,11 @@ classe et une source, décomptes exacts).
 - **dépassé** — modèles cités : Opus 4.7 (`claude-opus-4-7`, exemple de requête), Opus 4.6/4.5, Sonnet 4.6, Haiku 3.5/4.5. Gamme courante : Fable 5.1, Opus 5.5, Sonnet 5.5, Haiku 5.5 (Opus 4.x et Sonnet 4.6 sont « legacy »). Aucun 5.x n'est mentionné (source : platform.claude.com/docs/en/models/overview)
 - **dépassé** — « Opus 4.7 requiert SDK ≥ v0.2.111 » : le SDK TypeScript est en 0.3.314 (npm), la contrainte n'a plus d'intérêt pratique (source : `npm view @anthropic-ai/claude-agent-sdk version`)
 - **ok** — écritures de cache à 1.25× (5 min) et 2× (1 h), 4 points d'arrêt par requête, fenêtre de recul de 20 blocs (source : prompt-caching)
-- **non sourcé** — « Task renommé Agent en v2.1.63 », « system prompt ~4.2K tokens », MEMORY.md « 200 lignes / 25 KB », liste des événements de hooks et des 5 types de handler : liens vers code.claude.com présents en fin de section mais non comparés ligne à ligne ; le CLI local est en 2.1.293, donc la page décrit une version ancienne de l'outil sans le dire (source : sections `sources` de `theory.ts`, `claude --version`)
+- **ok** — « Task renommé Agent en v2.1.63 » (`Task(...)` reste un alias) : la page des sous-agents dit « In version 2.1.63, the Task tool was renamed to Agent » et garde les références `Task(...)` comme alias (source : code.claude.com/docs/en/sub-agents, 31-10-2026)
+- **ok** — MEMORY.md « 200 lignes / 25 KB » : la documentation de la mémoire donne « first 200 lines or 25KB » (source : code.claude.com/docs/en/memory, 31-10-2026)
+- **ok** — liste d'événements de hooks (sous-ensemble des 33 événements, la page termine par « … ») et les 5 types de handler (command, http, mcp_tool, prompt, agent) (source : code.claude.com/docs/en/hooks, 31-10-2026)
+- **faux** — « Les sous-agents ne peuvent pas spawner d'autres sous-agents (pas de nesting infini) » (`theory.ts` l. 35) : un sous-agent peut en lancer d'autres jusqu'à trois niveaux sous la conversation principale, réglable par `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` (1 désactive l'imbrication) (source : code.claude.com/docs/en/sub-agents, 31-10-2026)
+- **non sourcé** — « system prompt ~4.2K tokens » : aucune page de documentation ne donne ce chiffre, qui change à chaque version ; le CLI local est en 2.1.293 (source : `claude --version`)
 
 ## `/videos`
 
