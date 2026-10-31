@@ -541,6 +541,12 @@ lots:
     review: { date: 2026-10-31, verdict: "compliant — orchestré (vague 2026-10-31-1530-cx, 0 passe(s) de correction)", commit: ca1f1d6bd76f66b1e435449d63ab40fad95f3959 }
     ux: { date: 2026-10-31, verdict: "conforme (ux-reviewer ; schéma de la boucle à 390 regardé par le lead : bord à bord sans débordement, texte lisible, reprise dessinée depuis la QA et légendée revue ou QA) — photo big-blue-tower.jpg retirée de la page en attendant que Sylvain la fournisse" }
     finished: 2026-10-31
+  - id: L61
+    title: "Étude AetherWX encyclopédie : le texte des schémas SVG tombe à 1,6–1,8 px à 360 et 390 px (QA du 31-10 sur 2a19303, majeur) — les rendre lisibles au téléphone (≥ 11 px rendu, ou schéma remplacé par une version verticale / défilement assumé), test de mesure comme R14 ; ajouter à docs/qa/expectations.md la règle « texte SVG ≥ 11 px à 390 px »"
+    status: todo
+    estimate: 0.25
+    visible: true
+    created: 2026-10-31
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
