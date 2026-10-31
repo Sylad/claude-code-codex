@@ -10,7 +10,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
   description="OL Companion — compagnon de saison Olympique Lyonnais. React + TanStack côté front, NestJS + crons côté back, push live via SSE depuis 365scores. 100% codé en pair-programming avec Claude Code."
 >
   <PageHero
-    eyebrow="Case study · mise à jour 2026-10-31"
+    eyebrow="Case study · mise à jour 31 octobre 2026"
     title="OL Companion"
     intro="Compagnon de saison pour l'Olympique Lyonnais : classement Ligue 1, calendrier, brackets de coupe, live-match avec shot map, carte L1 bicolore. React 18 + TanStack côté front, NestJS 11 + crons côté back, push live via SSE depuis 365scores. 100% du code écrit en pair-programming avec Claude Code (zéro ligne tapée à la main)."
   />
@@ -44,9 +44,9 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
 
         <MermaidDiagram
           client:visible
-          caption="Frontend React (4202) ↔ Backend NestJS (3002) ↔ 3 sources externes. SSE @Sse() pousse les invalidations TanStack Query."
+          caption="Frontend React (port 80 du pod) ↔ Backend NestJS (3002) ↔ 3 sources externes. SSE @Sse() pousse les invalidations TanStack Query."
           definition={`flowchart TB
-  subgraph FE["Frontend React 18 (port 4202)"]
+  subgraph FE["Frontend React 18 (port 80 dans le pod)"]
     ui["TanStack Router/Query + Recharts + Leaflet"]
     sse["useEventStream() — EventSource + invalidateQueries"]
   end
@@ -80,11 +80,11 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         />
 
         <p>
-          Front (port <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">4202</code>)
+          Front, nginx (port <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">80</code>)
           et back (port <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">3002</code>)
           tournent côte-à-côte dans deux pods du k3s de dark-blue (deux Deployments du chart Helm <code>ol-companion</code>, images GHCR construites par la CI GitHub, tag bumpé dans <code>developpeur-gitops</code> puis synchronisé par ArgoCD ; les caches JSON vivent sur un PVC de 1 Gi).
           nginx proxifie <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">/api/</code>
-          vers le backend (même réseau Docker), ce qui permet à la SSE de passer sans
+          vers le backend (par son Service Kubernetes), ce qui permet à la SSE de passer sans
           <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">proxy_buffering</code>
           en plus.
         </p>
@@ -281,7 +281,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
               <strong class="text-ink">Infra</strong> · Docker multi-stage
               (<code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">node:20-alpine</code> →
               <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">nginx:alpine</code>)
-              en images GHCR, chart Helm sur le k3s de dark-blue via ArgoCD, exposé par un tunnel Cloudflare (ports 4202 / 3002 dans les pods).
+              en images GHCR, chart Helm sur le k3s de dark-blue via ArgoCD, exposé par un tunnel Cloudflare (ports 80 / 3002 dans les pods).
             </li>
           </ul>
 
@@ -311,9 +311,6 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         </div>
       </article>
 
-      <p class="text-center text-xs text-ink/50 font-mono pt-4">
-        Mise à jour 2026-10-31 · état relu d'après le README, les 111 Nouveautés et le plan du dépôt.
-      </p>
     </div>
   </section>
 </BaseLayout>

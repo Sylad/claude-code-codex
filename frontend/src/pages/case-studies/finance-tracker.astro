@@ -10,7 +10,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
   description="Deep dive — tracker finances perso avec analyse PDF par Claude, construit en pair-programming avec Claude Code (0 ligne de code humaine)."
 >
   <PageHero
-    eyebrow="Case study · mise à jour 2026-10-31"
+    eyebrow="Case study · mise à jour 31 octobre 2026"
     title="Analyse de relevés bancaires PDF en two-phase tool_use"
     intro="Une app perso qui ingère des relevés PDF, les fait catégoriser par Claude, calcule un score de santé financière, et propose une démo publique verrouillée pour montrer sans rien fuiter. Stack : React 18 + NestJS 11 + Anthropic SDK, code 100% écrit avec Claude Code."
   />
@@ -147,7 +147,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
           <span><strong>Build & deploy</strong> : Docker multi-stage
           (node:20-alpine builder → nginx:alpine pour le frontend,
           node:20-alpine runtime pour le backend), images GHCR construites par la CI GitHub, chart Helm sur le k3s de dark-blue (namespace <code>preprod</code>) synchronisé par ArgoCD, exposé par un tunnel Cloudflare sur <a class="text-claude hover:underline" href="https://finance.sladoire.dev" target="_blank" rel="noopener">https://finance.sladoire.dev</a>. <strong>Cette instance ne porte que des données de démo</strong> : les vraies données ne tournent qu'en local, jamais sur le cluster. nginx proxifie <code>/api/</code> vers le backend
-          sur le même réseau Docker.</span>
+          par son Service Kubernetes.</span>
         </li>
         <li class="flex gap-3">
           <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
@@ -163,11 +163,11 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
       <p>
         L'écran <strong>Crédits</strong> a des boutons nommés et des fenêtres utilisables au clavier
         (composant <code>Dialog</code> commun, doublons et suspects compris) ; les
-        <strong>Abonnements</strong> proposent des suggestions à trier (Enregistrer, Connu-masquer,
+        <strong>Abonnements</strong> proposent des suggestions à trier (Enregistrer, Connu, masquer,
         Faux positif) avec des messages d'échec clairs et un focus gardé après chaque action. Les
         écrans Dépenses, Santé, Heatmap, Objectifs et Règles de catégories ont eux aussi eu leur
         revue UX : erreurs dites en français, suppression confirmée, mois en toutes lettres.
-        Le modèle d'analyse est <code>claude-sonnet-5-5</code> ; le backend compte ~20 modules, et le
+        Le modèle d'analyse est <code>claude-sonnet-5-5</code> ; le backend compte 24 modules, et le
         projet environ 1 620 cas de test au 31 octobre 2026 (recherche de <code>it(</code>/<code>test(</code>).
       </p>
       <figure class="my-6">
@@ -182,8 +182,8 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
 
     <CaseStudySection eyebrow="Le process avec Claude Code">
       <p>
-        Construit en 8 phases incrémentales (V3 livrée 2026-05-02, durcissements
-        V3.1 le 2026-05-03), chaque phase écrite en TDD bite-sized via plans
+        Construit en 8 phases incrémentales (V3 livrée le 2 mai 2026, durcissements
+        V3.1 le 3 mai 2026), chaque phase écrite en TDD bite-sized via plans
         markdown que Claude Code génère puis exécute. Mon rôle : tracer la
         vision, valider à chaque étape, repérer ce qui cloche en testant
         l'app avec mes propres relevés. Le rôle de Claude : poser le code,
