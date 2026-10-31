@@ -4,7 +4,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { DIST } from './lib/e2e-dist.mjs';
+import { DIST, setupBrowser } from './lib/e2e-dist.mjs';
 
 const html = () => readFileSync(join(DIST, 'case-studies', 'cadence', 'index.html'), 'utf8');
 const figure = (id) => {
@@ -163,8 +163,24 @@ test('R13 — le nom accessible du parcours (title + desc du svg role=img) nomme
   assert.doesNotMatch(`${title[1]} ${desc[1]}`, /\s{2}/, 'double espace dans le nom accessible');
 });
 
-test('R14 — au téléphone chaque schéma déborde de la gouttière de la page (échelle du SVG lisible)', () => {
+test('R14 — au téléphone chaque schéma déborde de la gouttière et son plus petit texte reste lisible (≥ 11 px rendus)', async (t) => {
   for (const id of IDS) {
     assert.match(html(), new RegExp(`<div class="[^"]*-mx-5 sm:mx-0[^"]*">\\s*<figure[^>]*data-schema="${id}"`), `${id} : sans débord au téléphone`);
+  }
+  const env = await setupBrowser(t);
+  if (!env) return;
+  const page = await env.browser.newPage({ viewport: { width: 390, height: 844 } });
+  await page.goto(`${env.base}/case-studies/cadence/`);
+  // taille rendue = taille de police en unités du viewBox × (largeur rendue du svg / largeur du viewBox)
+  const sizes = await page.evaluate((ids) => ids.map((id) => {
+    const svg = document.querySelector(`figure[data-schema="${id}"] svg`);
+    const scale = svg.getBoundingClientRect().width / svg.viewBox.baseVal.width;
+    const px = [...svg.querySelectorAll('text')].map((x) => parseFloat(getComputedStyle(x).fontSize) * scale);
+    return { id, min: Math.min(...px), n: px.length };
+  }), IDS);
+  await page.close();
+  for (const { id, min, n } of sizes) {
+    assert.ok(n > 0, `${id} : aucun texte mesuré`);
+    assert.ok(min >= 11, `${id} : plus petit texte rendu à ${min.toFixed(1)} px à 390 px (11 px attendus)`);
   }
 });
