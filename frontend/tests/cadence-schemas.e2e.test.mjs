@@ -149,5 +149,5 @@ test('R13 — le nom accessible du parcours (title + desc du svg role=img) nomme
     assert.ok(at >= 0, `« ${qui} » absent du nom accessible ou hors ordre`);
     from = at + qui.length;
   }
-  assert.doesNotMatch(name, /\s{2}/, 'double espace dans le nom accessible');
+  assert.doesNotMatch(`${title[1]} ${desc[1]}`, /\s{2}/, 'double espace dans le nom accessible');
 });
