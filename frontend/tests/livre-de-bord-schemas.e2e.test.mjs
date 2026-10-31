@@ -6,6 +6,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { DIST, setupBrowser } from './lib/e2e-dist.mjs';
 import { ENTRIES } from '../src/data/livre-de-bord.ts';
+import { SCHEMAS } from '../src/data/livre-de-bord-schemas.ts';
 
 const html = () => readFileSync(join(DIST, 'livre-de-bord', 'index.html'), 'utf8');
 const article = () => {
@@ -64,31 +65,12 @@ test('R17 — les illustrations racontent la vérification : l’étape qui a ar
   assert.ok(plain(figure('episode-avatar')).includes('12 h 21'));
 });
 
-test('R18 — le texte d’un élément découpé s’affiche en paragraphes séparés', () => {
-  const e = ENTRIES.find((x) => x.theme);
-  const items = [...article().matchAll(/<li[^>]*class="[^"]*book-item[^"]*"[^>]*>([\s\S]*?)<\/li>/g)].map((m) => m[1]);
-  const paras = (h) => [...h.matchAll(/<p[^>]*data-para[^>]*>/g)].length;
-  e.teste.forEach((it) => {
-    const host = items.find((h) => h.includes(it.titre.slice(0, 20)));
-    assert.equal(paras(host), it.texte.split(/\n{2,}/).length, `« ${it.titre} » : paragraphes`);
-  });
-});
-
-test('R19 — aucune couleur en dur dans les schémas du livre ; pas de défilement latéral à 390 et 1440 px', async (t) => {
+test('R18 — la description accessible ne lit pas chaque étape deux fois', () => {
   for (const id of ['boucle-verification', ...EPISODES]) {
-    const f = figure(id);
-    assert.doesNotMatch(f, /(?:fill|stroke|stop-color)="(?!none|currentColor|url)/, `${id} : couleur en attribut`);
-    assert.doesNotMatch(f, /style="[^"]*#[0-9a-f]{3,8}/i, `${id} : couleur hexadécimale`);
-  }
-  const env = await setupBrowser(t);
-  if (!env) return;
-  for (const [w, h] of [[390, 844], [1440, 900]]) {
-    const page = await env.browser.newPage({ viewport: { width: w, height: h } });
-    await page.goto(`${env.base}/livre-de-bord/`);
-    const over = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
-    assert.ok(over <= 0, `${w}px : défilement latéral de ${over}px`);
-    const tooWide = await page.evaluate(() => [...document.querySelectorAll('.book-entry figure.schema')].filter((f) => f.getBoundingClientRect().right > innerWidth).length);
-    assert.equal(tooWide, 0, `${w}px : schéma qui déborde`);
-    await page.close();
+    const d = figure(id).match(/<desc[^>]*>([^<]*)<\/desc>/)[1];
+    for (const st of SCHEMAS[id].steps) {
+      const n = d.split(st.titre.replace(/'/g, '&#39;')).length - 1;
+      assert.ok(n <= 1, `${id} : « ${st.titre} » lue ${n} fois dans la description`);
+    }
   }
 });

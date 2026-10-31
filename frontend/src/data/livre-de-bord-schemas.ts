@@ -21,7 +21,7 @@ export interface BookSchema {
 export const SCHEMAS: Record<string, BookSchema> = {
   "boucle-verification": {
     titre: "La boucle vérifier plutôt que croire",
-    desc: "Cinq étapes : l'IA produit, la porte de tests contrôle, la revue de code relit, la QA regarde le résultat, la personne décide. Une boucle en pointillés ramène de la revue à la production tant qu'un défaut est trouvé.",
+    desc: "Une boucle de vérification : chaque étape contrôle la précédente. Une boucle en pointillés ramène de la revue à la production tant qu'un défaut est trouvé.",
     legende: "Chaque étape contrôle la précédente au lieu de la croire. Un défaut trouvé renvoie à la production ; seule la personne passe la dernière étape.",
     steps: [
       { titre: "L'IA produit", detail: "code, texte ou page, avec ses tests" },
@@ -34,7 +34,7 @@ export const SCHEMAS: Record<string, BookSchema> = {
   },
   "episode-finance": {
     titre: "Finance : une vérification partielle, un défaut attrapé par la QA",
-    desc: "Quatre étapes : le lot L166 est terminé et relu, la QA confirme la vue par défaut, elle trouve un bilan 2025 périmé encore offert, le lot L167 le fait purger.",
+    desc: "Une vérification partielle : la QA trouve un bilan 2025 périmé que la relecture du lot L166 n'avait pas vu, et le lot L167 le fait purger.",
     legende: "La vue par défaut était conforme ; l'onglet voisin ne l'était pas.",
     steps: [
       { titre: "L166 terminé et relu", detail: "bilan de /yearly = année des relevés" },
@@ -45,7 +45,7 @@ export const SCHEMAS: Record<string, BookSchema> = {
   },
   "episode-warhammer": {
     titre: "Warhammer : une régression attrapée par un test de bout en bout",
-    desc: "Trois étapes : le lot L37 retire onze liens de la tabulation, le test de bout en bout de L49 rougit en CI, le lot L217 rescelle ce test.",
+    desc: "Une régression attrapée par un test de bout en bout écrit trois lots plus tôt, que le lot L217 rescelle.",
     legende: "Le changement de tabulation n'aurait pas été vu sans le test d'un lot plus ancien.",
     steps: [
       { titre: "L37 : menu Lore en bouton", detail: "onze liens retirés de la tabulation" },
@@ -55,7 +55,7 @@ export const SCHEMAS: Record<string, BookSchema> = {
   },
   "episode-cadence": {
     titre: "Cadence : un lot repris trois fois, la revue neuve trouve le défaut",
-    desc: "Quatre étapes : deux revues successives ne voient pas l'entrée mal rangée du CHANGELOG, une revue neuve la trouve, la suite complète repasse au vert avec 4549 tests sur 4549.",
+    desc: "Un lot repris trois fois : deux revues ne voient pas l'entrée mal rangée du CHANGELOG, une revue neuve la trouve, la suite repasse au vert.",
     legende: "Reprendre n'est pas un échec : la vérification refaite à neuf a fait son travail.",
     steps: [
       { titre: "Revue 1 et revue 2 (L439)", detail: "l'entrée mal rangée passe inaperçue" },
@@ -66,7 +66,7 @@ export const SCHEMAS: Record<string, BookSchema> = {
   },
   "episode-avatar": {
     titre: "Avatar : la porte rejouée sur un commit de plan",
-    desc: "Quatre étapes : dernier commit de code à 12 h 21, quatre commits de plan jusqu'à 12 h 35, la porte rejouée pour environ cinq minutes perdues, puis cadence lit le verdict de la vague.",
+    desc: "La porte de tests rejouée sur un simple commit de plan : environ cinq minutes perdues, d'où la lecture du verdict de la vague par cadence.",
     legende: "Vérifier trop est aussi une perte : on vérifie ce qui a changé.",
     steps: [
       { titre: "Dernier commit de code : 12 h 21", detail: "porte de tests déjà passée" },
