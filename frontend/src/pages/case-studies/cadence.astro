@@ -224,6 +224,7 @@ const echecs = [
         Tout part du plan : un lot a un numéro, et chaque commit qui travaille
         dessus le cite. Le lien se lit dans les deux sens, sans base de données.
       </p>
+      <div class="-mx-5 sm:mx-0">
       <Schema id="plan-commits" legende="Le plan (un fichier YAML) liste des lots ; chaque commit cite son lot dans son message ; trois commandes lisent ce lien.">
         <svg viewBox="0 0 420 372" role="img" aria-labelledby="sch-plan-commits-t sch-plan-commits-d" xmlns="http://www.w3.org/2000/svg">
           <title id="sch-plan-commits-t">Le plan relié aux commits</title>
@@ -258,6 +259,7 @@ const echecs = [
           <text class="sch-m" x="190" y="348">commit sans lot, lot sans commit</text>
         </svg>
       </Schema>
+      </div>
 
       <h3 data-intertitre class={H3}>Le parcours d'un lot dans une vague</h3>
       <p>
@@ -266,6 +268,7 @@ const echecs = [
         verrouillés rouges : l'implémentation doit les faire passer sans les
         toucher.
       </p>
+      <div class="-mx-5 sm:mx-0">
       <Schema id="parcours-lot" legende="Les six étapes d'un lot. La revue peut renvoyer le lot en correction, puis le relire : la boucle en pointillés.">
         <StepChain
           id="parcours-lot"
@@ -275,6 +278,7 @@ const echecs = [
           desc="Six étapes dans l'ordre, chacune avec qui la fait. Une boucle en pointillés ramène de la correction à la revue tant que la revue trouve quelque chose."
         />
       </Schema>
+      </div>
       <Callout titre="À retenir">
         <p>
           Le lead choisit les lots à jouer, mais aucune étape ne se croit sur
@@ -289,6 +293,7 @@ const echecs = [
         qui joue la chaîne ci-dessous et ne rend qu'une ligne ou une question.
         Les lots visibles se lisent dans le panneau du plan publié sur ce site.
       </p>
+      <div class="-mx-5 sm:mx-0">
       <Schema id="chaine-livreur" legende="La chaîne du livreur, du lot prêt à la ligne rendue au lead. Une étape qui échoue arrête la chaîne.">
         <StepChain
           id="chaine-livreur"
@@ -297,6 +302,7 @@ const echecs = [
           desc="Sept étapes dans l'ordre, du lot prêt à la ligne rendue au lead. Une étape qui échoue arrête la chaîne."
         />
       </Schema>
+      </div>
       <figure data-capture="panneau-lots" class="rounded-xl border border-white/10 bg-paper-elevated p-3">
         <img
           src="/case-studies/cadence-panneau-lots.png"

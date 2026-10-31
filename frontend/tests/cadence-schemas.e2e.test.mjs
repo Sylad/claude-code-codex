@@ -151,3 +151,9 @@ test('R13 — le nom accessible du parcours (title + desc du svg role=img) nomme
   }
   assert.doesNotMatch(`${title[1]} ${desc[1]}`, /\s{2}/, 'double espace dans le nom accessible');
 });
+
+test('R14 — au téléphone chaque schéma déborde de la gouttière de la page (échelle du SVG lisible)', () => {
+  for (const id of IDS) {
+    assert.match(html(), new RegExp(`<div class="[^"]*-mx-5 sm:mx-0[^"]*">\\s*<figure[^>]*data-schema="${id}"`), `${id} : sans débord au téléphone`);
+  }
+});
