@@ -508,6 +508,7 @@ lots:
     finished: 2026-10-31
   - id: L58
     title: Corrections de vérité — /theory (minimums de cache, sous-agents imbriqués), /start (statistiques RTK), /learning (règle de retrait des sources) (docs/verite-site.md § « Corrections à faire, par page »)
+    public: "Théorie, Case studies et Learning à jour : cache, sous-agents et RTK"
     status: done
     estimate: 0.25
     visible: true

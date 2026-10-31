@@ -25,6 +25,8 @@ orchestrate:
   # n'est plus répété ici ; les tests qui lisent frontend/dist le trouvent construit par la porte `build`.
   test: 'cd frontend && npm test'
   build: 'cd frontend && npx astro build'
+  # La page Plan de travail lit .cadence/raf.yaml au build (titres publics) : verify --gate rejoue sous des commits de plan seuls (cadence L450). Oubli constaté le 31-10 : deux builds Cloudflare rouges (L50, L58) derrière une porte « verte » héritée.
+  gate: { readsPlan: true }
   precheck: true
   ux:
     command: 'cd frontend && npx astro dev --port 4311 --host 127.0.0.1'
