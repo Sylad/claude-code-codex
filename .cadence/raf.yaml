@@ -543,6 +543,7 @@ lots:
     finished: 2026-10-31
   - id: L61
     title: "Étude AetherWX encyclopédie : le texte des schémas SVG tombe à 1,6–1,8 px à 360 et 390 px (QA du 31-10 sur 2a19303, majeur) — les rendre lisibles au téléphone (≥ 11 px rendu, ou schéma remplacé par une version verticale / défilement assumé), test de mesure comme R14 ; ajouter à docs/qa/expectations.md la règle « texte SVG ≥ 11 px à 390 px »"
+    public: Les schémas de l'étude AetherWX se lisent sur téléphone
     status: done
     estimate: 0.25
     visible: true
@@ -551,6 +552,11 @@ lots:
     review: { date: 2026-10-31, verdict: "compliant — aucune anomalie bloquante ni majeure (1 remarque mineure : la portée de la règle QA dépasse ce que le test couvre) — orchestré (vague 2026-10-31-1625-cx, 0 passe(s) de correction)", commit: 7a89584100c6f5121aee24ae170b360c2b8819ce }
     ux: { date: 2026-10-31, verdict: "conforme (ux-reviewer ; capture du schéma de séquence à 390 regardée par le lead : texte lisible, défilement latéral assumé avec barre visible, bouton Agrandir pour le plein écran) — mineur : la règle QA « texte SVG ≥ 11 px » vise tous les schémas mais le test ne mesure que l'étude AetherWX" }
     finished: 2026-10-31
+  - id: L62
+    title: "Titres publics : un test de la porte vérifie AU MOMENT DE LA VAGUE que le titre de chaque entrée Nouveautés d'un lot visible respecte la règle de la page Plan (≤ 80 caractères, aucun nom de technique) — aujourd'hui l'erreur n'apparaît qu'au build après raf done ; trois builds rouges le 31-10 (L50, L58, L61)"
+    status: todo
+    estimate: 0.25
+    created: 2026-10-31
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
