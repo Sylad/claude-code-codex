@@ -74,3 +74,32 @@ test('R18 — la description accessible ne lit pas chaque étape deux fois', () 
     }
   }
 });
+
+test('R19 — le texte d’un élément découpé s’affiche en paragraphes séparés', () => {
+  const e = ENTRIES.find((x) => x.theme);
+  const items = [...article().matchAll(/<li[^>]*class="[^"]*book-item[^"]*"[^>]*>([\s\S]*?)<\/li>/g)].map((m) => m[1]);
+  const paras = (h) => [...h.matchAll(/<p[^>]*data-para[^>]*>/g)].length;
+  e.teste.forEach((it) => {
+    const host = items.find((h) => h.includes(it.titre.slice(0, 20)));
+    assert.equal(paras(host), it.texte.split(/\n{2,}/).length, `« ${it.titre} » : paragraphes`);
+  });
+});
+
+test('R20 — aucune couleur en dur dans les schémas du livre ; pas de défilement latéral à 390 et 1440 px', async (t) => {
+  for (const id of ['boucle-verification', ...EPISODES]) {
+    const f = figure(id);
+    assert.doesNotMatch(f, /(?:fill|stroke|stop-color)="(?!none|currentColor|url)/, `${id} : couleur en attribut`);
+    assert.doesNotMatch(f, /style="[^"]*#[0-9a-f]{3,8}/i, `${id} : couleur hexadécimale`);
+  }
+  const env = await setupBrowser(t);
+  if (!env) return;
+  for (const [w, h] of [[390, 844], [1440, 900]]) {
+    const page = await env.browser.newPage({ viewport: { width: w, height: h } });
+    await page.goto(`${env.base}/livre-de-bord/`);
+    const over = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    assert.ok(over <= 0, `${w}px : défilement latéral de ${over}px`);
+    const tooWide = await page.evaluate(() => [...document.querySelectorAll('.book-entry figure.schema')].filter((f) => f.getBoundingClientRect().right > innerWidth).length);
+    assert.equal(tooWide, 0, `${w}px : schéma qui déborde`);
+    await page.close();
+  }
+});
