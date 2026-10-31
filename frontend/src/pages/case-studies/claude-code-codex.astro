@@ -3,6 +3,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
 import MermaidDiagram from "@/components/site/MermaidDiagram.vue";
 import CaseStudySection from "@/components/site/CaseStudySection.astro";
+import { APP_COUNT } from "@/data/apps";
 ---
 
 <BaseLayout
@@ -35,7 +36,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         Le narratif central est simple :
         <strong>0 ligne de code écrite par l'humain</strong>. C'était le
         cas sur les 6 sites perso au lancement (mai 2026), et c'est ce que
-        cette page documente pour le sixième.
+        cette page documente pour le sixième (aujourd'hui {APP_COUNT} apps).
       </p>
     </CaseStudySection>
 
@@ -140,7 +141,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         <li>
           <strong>Mémoire persistante</strong> dans
           <code>~/.claude/projects/&lt;cwd&gt;/memory/</code> —
-          <em>~70 fichiers .md</em> qui capturent les décisions, les
+          <em>~70 fichiers .md au 8 mai 2026</em> qui capturent les décisions, les
           feedbacks (<code>feedback_*</code>), les patterns gagnants, les
           anti-patterns observés (Ruflo). Rechargés automatiquement à
           chaque session.

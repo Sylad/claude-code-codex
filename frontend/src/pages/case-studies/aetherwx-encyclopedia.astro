@@ -199,7 +199,7 @@ const tokenFlow = `flowchart LR
         <li>
           <strong class="text-ink">Fini le dual-cluster.</strong> La prod
           tournait sur deux clusters k3s en miroir (Big-Blue, la tour de dev
-          sous WSL2 ; Mini-Blue, un mini-PC always-on). Depuis le 03/09/2026
+          sous WSL2 ; Mini-Blue, un PC Windows d'outillage, sans app depuis le 14 octobre 2026). Depuis le 03/09/2026
           elle tourne sur <strong>dark-blue</strong>, un serveur bare-metal
           dédié — un seul cluster, plus de dérive entre les deux.
         </li>
@@ -228,9 +228,10 @@ const tokenFlow = `flowchart LR
         Au départ, une <strong>tour gaming RGB watercooled</strong> (et non
         pas un laptop comme je l'ai écrit par erreur) — c'est
         <strong>Big-Blue</strong>. Pendant 14h, un cluster k3s a tourné dans
-        son WSL2 Ubuntu et servi publiquement l'atlas AetherWX ; un mini-PC
-        always-on, <strong>Mini-Blue</strong>, a ensuite répliqué la même
-        stack en miroir.
+        son WSL2 Ubuntu et servi publiquement l'atlas AetherWX ; un second PC,
+        <strong>Mini-Blue</strong>, a ensuite répliqué la même stack en
+        miroir (c'est aujourd'hui un PC Windows d'outillage, sans app depuis
+        le 14 octobre 2026).
       </p>
       <p>
         Aujourd'hui la prod a quitté les deux. Elle vit sur
@@ -352,7 +353,7 @@ const tokenFlow = `flowchart LR
 
     <CaseStudySection eyebrow="04 · Les services qui tournent">
       <p>
-        Le namespace maritime fait tourner une vingtaine de pods. Voici le
+        Le namespace maritime fait tourner une vingtaine de pods (relevé de mai 2026, non recompté depuis). Voici le
         découpage par rôle :
       </p>
 

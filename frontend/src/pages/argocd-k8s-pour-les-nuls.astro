@@ -112,7 +112,8 @@ import CodeBlock from "@/components/site/CodeBlock.astro";
         <li>
           <strong>Deployment</strong> = le cahier des charges qui dit
           "je veux 2 pods de l'image <code class="text-xs font-mono">maritime/api:v1.4.2</code>
-          en permanence". Si un pod meurt, K8s en recrée un. Si on
+          en permanence" (<code class="text-xs font-mono">v1.4.2</code> est un exemple :
+          les images réelles sont taguées <code class="text-xs font-mono">sha-&lt;shortsha&gt;</code>). Si un pod meurt, K8s en recrée un. Si on
           change l'image, il fait un rolling update (1 nouveau pod up
           → 1 ancien tué → suivant).
         </li>
