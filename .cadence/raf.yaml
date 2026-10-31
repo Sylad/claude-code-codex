@@ -478,36 +478,50 @@ lots:
       - { date: 2026-10-31, text: "L50 (31-10) : le plus petit texte des schémas de l'étude de cas cadence est à 11,02 px à 390 px (R14), marge faible — à garder en tête en traitant les schémas du Livre de bord" }
   - id: L55
     title: "Corrections de vérité — topologie et apps déployées : /, /about, /atelier-ia, /argocd-k8s-pour-les-nuls, /case-studies/aetherwx-encyclopedia, /case-studies/claude-code-codex, /case-studies/k8s-migration-overnight (liste exacte dans docs/verite-site.md § « Corrections à faire, par page »)"
-    status: doing
+    status: done
     estimate: 0.25
     visible: true
     created: 2026-10-31
     started: 2026-10-31
     review: { date: 2026-10-31, verdict: "compliant : les 7 pages de la liste docs/verite-site.md sont corrigées dans le sens décidé, 7/7 tests l55 verts, 2 notes mineures — orchestré (vague 2026-10-31-1130-cx, 0 passe(s) de correction)", commit: d0c508f3f7928908cd102aa71b10f1a5714d40c7 }
+    ux: { date: 2026-10-31, verdict: "conforme (ux-reviewer de la vague ; captures 390/1440 regardées par le lead : textes corrigés lisibles, valeurs datées) — mineurs repris en L59" }
+    finished: 2026-10-31
   - id: L56
     title: "Corrections de vérité — étoiles, versions et licences des outils testés : /case-studies et data/tools-tested.ts, claude-code-templates, claude-mem, code-review-graph, drona23-token-efficient, ruflo, superclaude, token-optimizers-2026, token-savior (valeurs datées, docs/verite-site.md § « Corrections à faire, par page »)"
-    status: doing
+    status: done
     estimate: 0.25
     visible: true
     created: 2026-10-31
     started: 2026-10-31
     review: { date: 2026-10-31, verdict: "conforme après 1 correction (mineure : « push fréquent » non daté sur la page drona23) — orchestré (vague 2026-10-31-1130-cx, 1 passe(s) de correction)", commit: 22f4fd445e1f078eeaa9202eb46c8b783a19a814 }
+    ux: { date: 2026-10-31, verdict: "conforme (ux-reviewer de la vague ; captures 390/1440 regardées par le lead : textes corrigés lisibles, valeurs datées) — mineurs repris en L59" }
+    finished: 2026-10-31
   - id: L57
     title: "Corrections de vérité — études de cas des apps : evatosorus, finance-tracker (claude-sonnet-5-5), hermes-agent, ol-companion (SDK Anthropic retiré, football-data.org), warhammer40k (docs/verite-site.md § « Corrections à faire, par page »)"
-    status: doing
+    status: done
     estimate: 0.25
     visible: true
     created: 2026-10-31
     started: 2026-10-31
     review: { date: 2026-10-31, verdict: "compliant after 0 fixes: 5 corrections de vérité vérifiées contre les dépôts frères (1 532 pages, claude-sonnet-5-5, SDK Anthropic retiré le 2026-10-01, CLAUDE.md à 309 lignes), 3 notes mineures — orchestré (vague 2026-10-31-1130-cx, 0 passe(s) de correction)", commit: 70e1a10f0360a37bb32641b0bfa620cbcec92055 }
+    ux: { date: 2026-10-31, verdict: "conforme (ux-reviewer de la vague ; captures 390/1440 regardées par le lead : textes corrigés lisibles, valeurs datées) — mineurs repris en L59" }
+    finished: 2026-10-31
   - id: L58
     title: Corrections de vérité — /theory (minimums de cache, sous-agents imbriqués), /start (statistiques RTK), /learning (règle de retrait des sources) (docs/verite-site.md § « Corrections à faire, par page »)
-    status: doing
+    status: done
     estimate: 0.25
     visible: true
     created: 2026-10-31
     started: 2026-10-31
     review: { date: 2026-10-31, verdict: "conforme, avec 4 notes mineures (test R4 vert grâce à une autre date de la page, texte du bloc RTK au passé contredisant le relevé du 31-10, Mythos 5.1 absent, `<project>` avalé par set:html sur /theory) — orchestré (vague 2026-10-31-1130-cx, 1 passe(s) de correction)", commit: 6baefb5776419e03b911bc469442929e075820f3 }
+    ux: { date: 2026-10-31, verdict: "conforme (ux-reviewer de la vague ; captures 390/1440 regardées par le lead : textes corrigés lisibles, valeurs datées) — mineurs repris en L59" }
+    finished: 2026-10-31
+  - id: L59
+    title: "Suite des corrections de vérité (L55–L58) : /theory à 390 px défile à l'horizontale (jeton CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH sans coupure, 416 > 390) ; « <project> » avalé par set:html sur /theory (« projects//memory ») ; drona23 « push fréquent » faux (dernier push 2026-06-16) ; bloc RTK de /case-studies au passé alors que le relevé est du 31-10 ; meta description d'hermes-agent « Sonnet 4.6 » non datée ; Mythos 5.1 absent du coût de lecture du cache ; skill update-rtk-stats qui parle encore de la page d'accueil ; test R4 de L58 vert grâce à une autre date"
+    status: todo
+    estimate: 0.25
+    visible: true
+    created: 2026-10-31
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
