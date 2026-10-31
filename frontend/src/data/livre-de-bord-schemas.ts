@@ -21,8 +21,8 @@ export interface BookSchema {
 export const SCHEMAS: Record<string, BookSchema> = {
   "boucle-verification": {
     titre: "La boucle vérifier plutôt que croire",
-    desc: "Une boucle de vérification : chaque étape contrôle la précédente. Une boucle en pointillés ramène de la revue à la production tant qu'un défaut est trouvé.",
-    legende: "Chaque étape contrôle la précédente au lieu de la croire. Un défaut trouvé renvoie à la production ; seule la personne passe la dernière étape.",
+    desc: "Une boucle de vérification : chaque étape contrôle la précédente. Une boucle en pointillés ramène à la production tant qu'un défaut est trouvé, par la revue ou par une étape plus loin.",
+    legende: "Chaque étape contrôle la précédente au lieu de la croire. Un défaut trouvé par la revue ou par la QA renvoie à la production ; seule la personne passe la dernière étape.",
     steps: [
       { titre: "L'IA produit", detail: "code, texte ou page, avec ses tests" },
       { titre: "Porte de tests", detail: "build et suite complète, rejouées" },

@@ -1,6 +1,8 @@
 ---
 // L51 — schéma ou illustration du Livre de bord : cadre Schema + StepChain, contenu de
 // data/livre-de-bord-schemas.ts (identifiant déjà vérifié par findProblems au build).
+// L54 — au téléphone le schéma prend toute la largeur de l'écran, bord à bord, avec peu de marge intérieure :
+// le viewBox de 420 y est rendu à ~372 px, le plus petit texte à plus de 11 px.
 import Schema from "@/components/site/Schema.astro";
 import StepChain from "@/components/site/StepChain.astro";
 import { SCHEMAS } from "@/data/livre-de-bord-schemas";
@@ -10,8 +12,16 @@ const { id } = Astro.props;
 const s = SCHEMAS[id];
 ---
 
-<div class="mx-auto mt-5 -mx-5 sm:mx-auto max-w-md">
+<div class="book-schema relative left-1/2 mt-5 w-screen -translate-x-1/2 sm:static sm:left-auto sm:mx-auto sm:w-auto sm:max-w-md sm:translate-x-0">
   <Schema id={id} legende={s.legende}>
     <StepChain id={id} steps={s.steps} boucle={s.boucle} titre={s.titre} desc={s.desc} />
   </Schema>
 </div>
+
+<style is:global>
+  /* hors couche : les utilités Tailwind sont dans une couche, le .schema de Schema.astro n'en a pas, il l'emporterait */
+  .book-schema .schema { padding: 0.5rem; }
+  @media (min-width: 40rem) {
+    .book-schema .schema { padding: 1rem; }
+  }
+</style>
