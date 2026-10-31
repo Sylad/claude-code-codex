@@ -1,7 +1,17 @@
 {
   "project": "claude-code-codex",
-  "generated": "2026-10-31 11:37",
+  "generated": "2026-10-31 12:15",
   "entries": [
+    {
+      "slug": "2026-10-31-corrections-de-verite-etudes-de-cas-des-apps-evatosorus-fina",
+      "title": "Cinq études de cas d'apps remises d'équerre avec la réalité",
+      "date": "2026-10-31",
+      "lots": [
+        "L57"
+      ],
+      "captures": [],
+      "html": "<p>Les études de cas d'Evatosorus, de finance-tracker, de Hermes Agent, d'OL Companion et de Warhammer 40K disent maintenant ce qui est vrai aujourd'hui. Evatosorus compte 1 532 pages générées (et non 1 527). finance-tracker analyse avec claude-sonnet-5-5 depuis le 15 octobre 2026. OL Companion n'utilise plus le SDK Anthropic, retiré le 1er octobre 2026, et sa fiche cite football-data.org à côté de 365scores.</p>\n<p>Pour Hermes Agent, le test de juin 2026 reste daté : Sonnet 4.6 y est présenté comme le modèle de l'époque, Sonnet 5.5 comme le modèle actuel, et les étoiles passent de 196 852 (18 juin) à 259 005 (31 octobre). Le CLAUDE.md de Warhammer 40K compte 134 lignes au 8 mai 2026 et 309 aujourd'hui.</p>"
+    },
     {
       "slug": "2026-10-31-etoiles-versions-et-licences-des-outils-testes-a-jour",
       "title": "Étoiles, versions et licences des outils testés remises à jour",
