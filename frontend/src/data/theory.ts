@@ -32,7 +32,7 @@ export const sections: TheorySection[] = [
       "Un seul moteur, plusieurs surfaces : terminal CLI, plugins VS Code/JetBrains, app desktop, web (claude.ai/code), GitHub Actions, Slack — tous partagent CLAUDE.md, settings et MCP servers.",
       "Le system prompt est chargé dans un ordre déterministe au démarrage : system prompt (~4.2K tokens) → MEMORY.md (200 lignes / 25KB max) → env info (cwd, platform, git status) → catalogue MCP (deferred par défaut) → CLAUDE.md walked depuis la racine.",
       "Sous-agents = fenêtres de contexte isolées. Built-ins : Explore (read-only, Haiku), Plan (read-only, plan mode), general-purpose (tous les outils). Ils empêchent d'inonder le parent avec des résultats de recherche — seul le résumé remonte.",
-      "Le tool Task a été renommé Agent en v2.1.63 (Task(...) reste un alias). Les sous-agents ne peuvent pas spawner d'autres sous-agents (pas de nesting infini).",
+      "Le tool Task a été renommé Agent en v2.1.63 (Task(...) reste un alias). Un sous-agent peut en lancer d'autres, jusqu'à 3 niveaux sous la conversation principale ; CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH règle cette profondeur (1 désactive l'imbrication).",
       "Les sous-agents sont des fichiers Markdown avec frontmatter YAML dans .claude/agents/ (projet) ou ~/.claude/agents/ (user). Champs requis : name, description. Optionnels : tools, model, permissionMode, isolation: worktree, hooks, mcpServers.",
     ],
     snippets: [
@@ -82,8 +82,8 @@ tail -200 app.log | claude -p "Slack me if you see any anomalies"
     intro:
       "Chaque session démarre avec une fenêtre de contexte fraîche, remplie dans un ordre déterministe : system prompt, MEMORY.md, env info, stubs MCP, puis CLAUDE.md depuis la racine. Comme ce bloc d'amorce est réutilisé tour après tour, c'est exactement ce que le prompt cache de l'API Anthropic est fait pour rendre quasi-gratuit. Quand la conversation approche de la limite de la fenêtre, Claude Code compacte l'historique : il résume les vieux tours et re-lit le CLAUDE.md racine depuis le disque. La leçon pratique : garder CLAUDE.md et MEMORY.md légers, éviter d'invalider le préfixe en milieu de session, et préférer les sous-agents à l'exploration inline pour les tâches latérales.",
     bullets: [
-      "TTL du cache : 5 min par défaut, 1h en option (\"ttl\": \"1h\"). Les écritures par défaut coûtent 1.25× le prix base input ; les écritures 1h coûtent 2×. Les lectures coûtent 0.1× — le fameux discount de 90%.",
-      "Jusqu'à 4 cache breakpoints par requête, fenêtre de lookback de 20 blocks. Longueur minimum cacheable : 4096 tokens pour Opus 4.7/4.6/4.5 et Haiku 4.5, 2048 pour Sonnet 4.6/Haiku 3.5, 1024 pour les anciens.",
+      "TTL du cache : 5 min par défaut, 1h en option (\"ttl\": \"1h\"). Les écritures par défaut coûtent 1.25× le prix base input ; les écritures 1h coûtent 2×. Les lectures coûtent 0.1× pour la plupart des modèles (le fameux discount de 90%), 0.05× pour Opus 5.5 et Sonnet 5.5, 0.025× pour Fable 5.1.",
+      "Jusqu'à 4 cache breakpoints par requête, fenêtre de lookback de 20 blocks. Longueur minimum cacheable : 2048 tokens pour Opus 4.7, 4096 pour Opus 4.6/4.5 et Haiku 4.5, 1024 pour Sonnet 4.6, 2048 pour Haiku 3.5, 1024 pour les anciens.",
       "Auto memory : seules les 200 premières lignes ou 25 KB (premier des deux atteint) de ~/.claude/projects/<project>/memory/MEMORY.md sont chargées au démarrage. Les fichiers topiques (debugging.md…) chargent on-demand.",
       "CLAUDE.md walked dans l'arborescence : ancêtres d'abord, working dir en dernier ; CLAUDE.local.md ajouté après chaque CLAUDE.md ; les fichiers en sous-dir chargent quand Claude lit un fichier dedans. claudeMdExcludes pour skipper du bruit en monorepo.",
       "Ce qui survit à /compact : le CLAUDE.md racine est re-lu depuis le disque et re-injecté. Les CLAUDE.md imbriqués NE sont PAS re-injectés (lazy reload). Les instructions données en conversation sont perdues — promote-les dans CLAUDE.md pour persister.",
@@ -411,7 +411,7 @@ claude --plugin-dir ./my-first-plugin
       "ClaudeAgentOptions est le bouton central : system_prompt, max_turns, allowed_tools (auto-approval), disallowed_tools, permission_mode (ex acceptEdits), cwd, mcp_servers, hooks, agents (sous-agents).",
       "Sous-agents first-class : déclarés via AgentDefinition (Python) ou agents map (TS) avec description/prompt/tools, puis inclure \"Agent\" dans allowedTools pour que le main agent puisse les invoquer. Les messages d'un sous-agent portent parent_tool_use_id pour le tracing.",
       "Le SDK charge les configs .claude/ par défaut (skills, slash commands, CLAUDE.md, plugins). Restreindre via setting_sources / settingSources pour un agent hermétique.",
-      "Auth via ANTHROPIC_API_KEY avec support env-flag pour Amazon Bedrock (CLAUDE_CODE_USE_BEDROCK=1), Google Vertex AI (CLAUDE_CODE_USE_VERTEX=1), Microsoft Azure AI Foundry (CLAUDE_CODE_USE_FOUNDRY=1). Opus 4.7 (claude-opus-4-7) requiert SDK ≥ v0.2.111.",
+      "Auth via ANTHROPIC_API_KEY avec support env-flag pour Amazon Bedrock (CLAUDE_CODE_USE_BEDROCK=1), Google Vertex AI (CLAUDE_CODE_USE_VERTEX=1), Microsoft Azure AI Foundry (CLAUDE_CODE_USE_FOUNDRY=1).",
     ],
     snippets: [
       {

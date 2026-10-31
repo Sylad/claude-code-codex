@@ -1,12 +1,12 @@
 {
   "summary": {
-    "total_commands": 1546,
-    "total_input": 1889477,
-    "total_output": 1459761,
-    "total_saved": 433733,
-    "avg_savings_pct": 22.95518812877849,
-    "total_time_ms": 616294,
-    "avg_time_ms": 398
+    "total_commands": 149888,
+    "total_input": 208554440,
+    "total_output": 110831731,
+    "total_saved": 97899724,
+    "avg_savings_pct": 46.94204736183032,
+    "total_time_ms": 139861788,
+    "avg_time_ms": 933
   },
-  "lastUpdated": "2026-05-08T21:17:51.465Z"
+  "lastUpdated": "2026-10-31T12:02:24.000Z"
 }

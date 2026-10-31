@@ -52,7 +52,7 @@ pour les avoir sur tous tes projets) :
 | `/sparc` | Workflow structuré 5 phases (Specification → Pseudocode → Architecture → Refinement → Completion) pour features algo lourdes |
 | `/skillify` | Méta-skill qui transforme une idée externe (concept Ruflo, blog, paper) en skill Claude Code custom — la procédure inverse de "j'installe l'outil entier" |
 | `/save` | Capture les learnings d'une session dans la bonne maison : memory note, sub-agent, skill, hook, ou CLAUDE.md addition |
-| `/update-rtk-stats` | Refresh les stats RTK affichées sur la homepage (depuis `rtk gain --format json`) |
+| `/update-rtk-stats` | Refresh les stats RTK affichées sur `/case-studies` (depuis `rtk gain --format json`) |
 | `/test-tool` | Évalue un outil tiers Claude Code via le protocole 8 étapes (snapshot → install → diff → verdict → cleanup) et publie le verdict dans la catalogue Tools tested + case study si lessons riches |
 
 Voir `.claude/skills/<name>/INSTRUCTIONS.md` pour les détails d'installation.
