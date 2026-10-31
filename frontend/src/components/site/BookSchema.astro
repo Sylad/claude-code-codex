@@ -24,9 +24,11 @@ const s = SCHEMAS[id];
   /* hors couche : les utilités Tailwind sont dans une couche, le .schema de Schema.astro n'en a pas, il l'emporterait */
   .book-schema { margin-inline: calc(-2.75rem - 1px); }
   .book-schema .schema { padding: 0.5rem 0; border-inline: 0; border-radius: 0; }
+  .book-schema .schema figcaption { padding-inline: 1rem; }
   .book-schema .sch-m, .book-schema .sch-a { font-size: 14px; }
   @media (min-width: 40rem) {
     .book-schema { margin-inline: auto; }
+    .book-schema .schema figcaption { padding-inline: 0; }
     .book-schema .schema { padding: 1rem; border-inline: 1px solid var(--sch-line); border-radius: 0.75rem; }
   }
 </style>

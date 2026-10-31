@@ -1,11 +1,11 @@
 # aetherwx-encyclopedia · assets
 
-Photos référencées par `/case-studies/aetherwx-encyclopedia.astro` :
+Aucune image n'est référencée pour l'instant par `/case-studies/aetherwx-encyclopedia.astro`.
 
-- `big-blue-tower.jpg` — photo de la tour Big-Blue (RGB watercooled, RTX SUPRIM)
-  - Source : photo Sylvain 2026-05-14
-  - À uploader manuellement dans ce dossier
-  - Si absent : le `alt` text s'affiche, pas grave esthétiquement
+La photo de la tour Big-Blue (`big-blue-tower.jpg`) n'a jamais été ajoutée : la page
+n'affiche plus que sa légende. Pour la remettre, déposer le fichier ici **et** réinsérer
+l'`<img>` dans la page ; le test `tests/l60-livre-suite.e2e.test.mjs` (R5) échoue si une
+`<img>` de `dist` pointe un fichier absent.
 
-Pour ajouter d'autres screenshots (ArgoCD UI, k9s, GH Actions) plus tard :
-préfixer en `NN-description.jpg` avec lazy loading + figcaption.
+Pour d'autres captures (ArgoCD UI, k9s, GH Actions) : préfixer en `NN-description.jpg`,
+chargement différé et `figcaption`.

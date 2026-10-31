@@ -80,7 +80,7 @@ test('R3 — la boucle de reprise part de l’étape QA (elle a sa flèche de re
   await page.goto(`${env.base}/livre-de-bord/`);
   const r = await page.evaluate(() => {
     const svg = document.querySelector('figure[data-schema="boucle-verification"] svg');
-    const rects = [...svg.querySelectorAll('rect')].map((x) => x.getBBox());
+    const rects = [...svg.querySelectorAll('rect')].map((x) => { const b = x.getBBox(); return { y: b.y, height: b.height }; });
     const d = svg.querySelector('[data-boucle] path.sch-line-accent').getAttribute('d');
     return { startY: parseFloat(d.match(/^M[\d.]+[ ,]([\d.]+)/)[1]), qa: rects[3], pts: rects.length };
   });
