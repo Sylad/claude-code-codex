@@ -507,6 +507,7 @@ lots:
     visible: true
     created: 2026-10-31
     started: 2026-10-31
+    review: { date: 2026-10-31, verdict: "conforme, avec 4 notes mineures (test R4 vert grâce à une autre date de la page, texte du bloc RTK au passé contredisant le relevé du 31-10, Mythos 5.1 absent, `<project>` avalé par set:html sur /theory) — orchestré (vague 2026-10-31-1130-cx, 1 passe(s) de correction)", commit: 6baefb5776419e03b911bc469442929e075820f3 }
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
