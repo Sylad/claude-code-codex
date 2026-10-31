@@ -565,9 +565,10 @@ lots:
     finished: 2026-10-31
   - id: L63
     title: "Études de cas apps loisir — corrections de vérité de L37 (revue du 31-10) : « d\\'après » affiché avec un antislash (finance-tracker.astro:19, warhammer40k.astro:19 ; R1 doit échouer sur un antislash) ; warhammer : retirer la puce « Live — SSE /api/events » (flux supprimé le 29-09, warhammer L24) et dire que le contenu est lu dans seed/ et non data/ (texte l.76-77 et diagramme) ; ol-companion : port du pod (80, pas 4202), animations du direct décrites (README ol l.54 et 72, Nouveautés 19-10 et 21-10) ; finance : 24 modules et non ~20, libellé « Connu, masquer », plus de « même réseau Docker » (finance et ol, k3s) ; une seule forme de date par page ; R6 qui prouve les captures ajoutées sur finance"
-    status: todo
+    status: doing
     estimate: 0.25
     created: 2026-10-31
+    started: 2026-10-31
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
