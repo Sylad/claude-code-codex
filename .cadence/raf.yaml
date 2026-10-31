@@ -519,10 +519,11 @@ lots:
     finished: 2026-10-31
   - id: L59
     title: "Suite des corrections de vérité (L55–L58) : /theory à 390 px défile à l'horizontale (jeton CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH sans coupure, 416 > 390) ; « <project> » avalé par set:html sur /theory (« projects//memory ») ; drona23 « push fréquent » faux (dernier push 2026-06-16) ; bloc RTK de /case-studies au passé alors que le relevé est du 31-10 ; meta description d'hermes-agent « Sonnet 4.6 » non datée ; Mythos 5.1 absent du coût de lecture du cache ; skill update-rtk-stats qui parle encore de la page d'accueil ; test R4 de L58 vert grâce à une autre date"
-    status: todo
+    status: doing
     estimate: 0.25
     visible: true
     created: 2026-10-31
+    started: 2026-10-31
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
