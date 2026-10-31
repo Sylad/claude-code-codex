@@ -68,10 +68,10 @@ test('R6 — finance-tracker : les six captures (dont Crédits actions et Abonne
   }
 });
 
-test('R7 — une seule forme de date par page : aucune date ISO aaaa-mm-jj affichée', () => {
+test('R7 — une seule forme de date par page : aucune date numérique aaaa-mm ni aaaa-mm-jj affichée', () => {
   for (const p of PAGES) {
     const t = texte(chemin(p));
-    assert.doesNotMatch(t, /\b20\d\d-\d\d-\d\d\b/, `${p} : date ISO affichée`);
+    assert.doesNotMatch(t, /\b20\d\d-\d\d(-\d\d)?\b/, `${p} : date numérique affichée`);
     assert.match(t, /Mise à jour 31 octobre 2026/, p);
   }
 });
