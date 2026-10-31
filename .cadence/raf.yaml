@@ -533,10 +533,11 @@ lots:
     finished: 2026-10-31
   - id: L60
     title: "Livre de bord, suite de L54 : le schéma bord à bord (w-screen, 100vw) fait défiler la page de 8 px et rogne 7 px à gauche quand la barre de défilement est classique (< 640 px, zoom 400 %, WCAG 1.4.10) ; texte à 10,6 px à 360 px (Android courant) ; boucle de reprise sans flèche depuis la QA ; date du relevé RTK dite deux fois (L59) ; image big-blue-tower.jpg absente de /case-studies/aetherwx-encyclopedia + test e2e : chaque <img> de dist pointe un fichier existant (QA du 31-10)"
-    status: todo
+    status: doing
     estimate: 0.25
     visible: true
     created: 2026-10-31
+    started: 2026-10-31
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
