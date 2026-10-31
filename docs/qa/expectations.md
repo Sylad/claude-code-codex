@@ -33,8 +33,14 @@ shows: un lien /case-studies/<slug> par étude publiée ; le nombre d'apps du h1
 ## /case-studies/maritime-atlas/
 shows: toutes les images chargées (naturalWidth > 0) ; à 390 px, blocs de code contenus dans la page (pas de défilement latéral)
 
+## /case-studies/aetherwx-encyclopedia/
+shows: chaque schéma rendu (svg présent) ; texte SVG ≥ 11 px rendus à 390 px (et à 360 px) : un schéma trop large défile dans son cadre au lieu d'être réduit ; la page ne défile pas latéralement
+
 ## /learning/ /theory/ /ecosystem/ /atelier-ia/ /videos/ /k8s-for-java-developers/ /argocd-k8s-pour-les-nuls/ /cloudflare-pour-les-nuls/
 shows: h1 non vide ; contenu non vide (au moins 4 000 caractères de texte) ; liens sortants avec un href réel
 
 ## /<route inexistante>/
 shows: statut 404 (au 05-10 : 200 + page d'accueil, suivi en L28)
+
+## Règle transverse — schémas
+Texte SVG ≥ 11 px à 390 px : mesuré rendu (taille de police × largeur rendue du svg ÷ largeur du viewBox), jamais lu dans le source. Tout schéma, Mermaid compris, qui ne tient pas à cette taille défile dans son cadre.

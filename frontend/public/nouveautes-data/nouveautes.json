@@ -1,7 +1,22 @@
 {
   "project": "claude-code-codex",
-  "generated": "2026-10-31 15:36",
+  "generated": "2026-10-31 16:49",
   "entries": [
+    {
+      "slug": "2026-10-31-etude-aetherwx-encyclopedie-le-texte-des-schemas-svg-tombe-a",
+      "title": "Les schémas de l’étude AetherWX sont lisibles sur téléphone : le texte garde sa taille et le schéma défile de côté",
+      "date": "2026-10-31",
+      "lots": [
+        "L61"
+      ],
+      "captures": [
+        "captures/L61-aetherwx-schema-390.png"
+      ],
+      "alts": [
+        "Un schéma de l’étude AetherWX sur téléphone : le texte est lisible, le schéma déborde à droite et se fait défiler de côté"
+      ],
+      "html": "<p>Sur l’étude de cas AetherWX, les schémas d’architecture n’étaient plus lisibles sur téléphone : leur texte était rétréci à moins de 4 px. Il garde maintenant une taille d’au moins 11 px. Quand un schéma est trop large pour l’écran, il se fait défiler de côté dans son cadre, sans que la page entière bouge.</p>"
+    },
     {
       "slug": "2026-10-31-livre-de-bord-suite-de-l54-le-schema-bord-a-bord-w-screen-10",
       "title": "Livre de bord : les schémas tiennent dans l'écran du téléphone",

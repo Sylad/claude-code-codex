@@ -17,6 +17,10 @@ const isFullscreen = ref(false);
 const mounted = ref(false);
 let svgString = "";
 
+// Taille rendue minimale du texte d'un schéma (px). En dessous, le schéma garde sa largeur
+// et défile dans son cadre plutôt que d'être réduit à la largeur de l'écran (QA 31-10 : 1,6 px).
+const MIN_TEXT_PX = 11;
+
 const escapeHtml = (v: string) =>
   v.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 const noscriptHtml = `<pre tabindex="0" role="region" aria-label="Diagramme (source)" class="px-4 py-4 overflow-x-auto text-xs leading-snug font-mono text-ink/80 whitespace-pre">${escapeHtml(props.definition)}</pre>`;
@@ -34,6 +38,16 @@ function injectInto(el: HTMLDivElement | null) {
       "width: 100%; height: auto; display: block; max-width: 100%;",
     );
     svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+    // Plus petit texte en unités du viewBox : la largeur plancher du svg en découle.
+    const sizes = [...svg.querySelectorAll("text, foreignObject *")]
+      .filter((n) => [...n.childNodes].some((c) => c.nodeType === 3 && c.textContent?.trim()))
+      .map((n) => parseFloat(getComputedStyle(n).fontSize))
+      .filter((px) => px > 0);
+    const viewBoxWidth = svg.viewBox.baseVal.width;
+    if (sizes.length && viewBoxWidth) {
+      const floor = Math.ceil((viewBoxWidth * MIN_TEXT_PX) / Math.min(...sizes));
+      svg.style.minWidth = `${floor}px`;
+    }
   }
 }
 
