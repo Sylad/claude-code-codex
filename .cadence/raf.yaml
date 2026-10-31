@@ -85,6 +85,7 @@ lots:
     visible: true
     created: 2026-10-24
     started: 2026-10-31
+    review: { date: 2026-10-31, verdict: "conforme — 3 notes mineures : port 4202 du frontend présenté comme port du pod (ol-companion, le pod écoute sur 80), « même réseau Docker » resté dans finance et ol, R6 qui ne prouve pas les captures ajoutées sur finance — orchestré (vague 2026-10-31-1820-cx, 2 passe(s) de correction)", commit: 46c3064044530cf4afb664dd5ebc61ad88b649a4 }
   - id: L38
     title: "Études de cas AetherWX à jour d'après l'état réel : maritime-atlas (17-09), aetherwx-qa-harness (09-09), aetherwx-encyclopedia (07-10) — référentiel WIGOS B28, SYNOP/METAR, livraison cadence ; et jobmail-assistant (09-06) ; lire README, docs/architecture.md, Nouveautés, plan ; chiffres et captures datés ; demande Sylvain 24-10"
     public: "Études de cas : AetherWX et jobmail-assistant à jour"
