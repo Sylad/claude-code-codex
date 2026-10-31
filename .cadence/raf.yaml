@@ -433,13 +433,16 @@ lots:
     finished: 2026-10-30
   - id: L50
     title: "Étude de cas cadence : trois schémas SVG (plan relié aux commits ; parcours d'un lot dans une vague spec → code → revue → correction → UX → prêt ; chaîne du livreur) et une capture du panneau des lots ; texte découpé (intertitres, encadrés) — lisible clair et sombre"
-    status: doing
+    status: done
     estimate: 0.5
     visible: true
     created: 2026-10-30
     started: 2026-10-30
     notes:
       - { date: 2026-10-30, text: "Relance du 30-10 au soir, après un faux positif de L456 (commits 1c6fea9 et 2c8fbda présents, pas encore relus). Ajout demandé par Sylvain (« c'est l'étape 2 où tu codes ? ») : le schéma du parcours d'un lot dit QUI fait chaque étape : session spec-writer puis tests d'acceptation, session de code (Sonnet), relecteur neuf (Opus) qui n'a pas écrit le code, session de correction (escalade Fable), ux-reviewer, lead (captures, porte, livraison)." }
+    review: { date: 2026-10-31, verdict: "conforme (revue Opus neuve après reprise du lead : tests R19/R20 de L51 rétablis à l'identique, étape 6 « le lead confie au livreur », R14 mesure le texte rendu ; le majeur restant — entrée Nouveautés — corrigé par 9b2de93, diff relu par le lead, porte verte à 9b2de93)", commit: 9b2de93b3851f933692459422118885376efe74b }
+    ux: { date: 2026-10-31, verdict: "conforme (captures 390 et 1440 du parcours regardées par le lead : six étapes lisibles, texte de l'étape 6 tient dans sa boîte, boucle de reprise visible ; R14 = 11,02 px à 390, marge faible notée sur L54)" }
+    finished: 2026-10-31
   - id: L51
     title: "Livre de bord « la vérification, pas la confiance » : un schéma de la boucle vérifier plutôt que croire (porte, revue, QA) et une illustration par épisode ; texte découpé"
     status: done
@@ -468,6 +471,8 @@ lots:
     estimate: 0.25
     visible: true
     created: 2026-10-31
+    notes:
+      - { date: 2026-10-31, text: "L50 (31-10) : le plus petit texte des schémas de l'étude de cas cadence est à 11,02 px à 390 px (R14), marge faible — à garder en tête en traitant les schémas du Livre de bord" }
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
