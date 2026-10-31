@@ -78,7 +78,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
     pin["PinGuard (global, Bearer PIN)"]
     demo["DemoModeMiddleware (AsyncLocalStorage)"]
     ctrl["AnalysisController"]
-    anth["AnthropicService (Sonnet 4.5)"]
+    anth["AnthropicService (claude-sonnet-5-5)"]
     p1["Phase 1 — tool_use ANALYZE_TOOL: transactions, score, recurring"]
     p2["Phase 2 — tool_use CATEGORIZE_TOOL: category, sub, confidence"]
     store["StorageService — data/finance/statements/&lt;YYYY-MM&gt;.json + archive + yearly + data/demo"]
@@ -133,7 +133,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         </li>
         <li class="flex gap-3">
           <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
-          <span><strong>IA</strong> : Claude Sonnet 4.5 en
+          <span><strong>IA</strong> : Claude <code>claude-sonnet-5-5</code> (depuis le 15 octobre 2026) en
           <code>tool_choice: {`{ type: 'tool' }`}</code> strict pour forcer
           la sortie structurée. Phase 1 extrait les transactions brutes +
           score + suggestions de récurrents ; Phase 2 catégorise chaque

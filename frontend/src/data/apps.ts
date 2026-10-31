@@ -41,7 +41,7 @@ export const apps: CaseStudyApp[] = [
   {
     name: "ol-companion",
     tagline: "Compagnon OL avec live-match et carte Ligue 1",
-    stack: "React · NestJS · 365scores API · SSE",
+    stack: "React · NestJS · 365scores + football-data.org · SSE",
     role: "Live SSE, brackets coupe, carte L1 markers bicolores",
     href: "/case-studies/ol-companion",
     repo: "https://github.com/Sylad/ol-companion",
