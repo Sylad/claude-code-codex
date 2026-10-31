@@ -47,7 +47,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
   end
 
   subgraph DATA["Stockage local"]
-    json["JSON files<br/>data/"]
+    json["contenu JSON<br/>seed/ (dans l'image)"]
     sheets["datasheets<br/>/public/"]
     meta["image-meta.json"]
   end
@@ -73,9 +73,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
   mods -->|descriptions unités/séries| sdk`}
       />
       <p>
-        Le backend lit les JSON au constructor (pattern <code>readFileSync</code>
-        sur <code>data/factions.json</code>, <code>units.json</code>,
-        <code>subfactions.json</code>, etc.). Pas de base de données — le contenu éditorial vit dans <code>backend/seed/*.json</code>, <b>dans l'image</b> : le mettre à jour, c'est un commit, la CI, puis le bump du tag. Seules les données utilisateur (<code>image-meta.json</code>, imports, vidéos importées) sont écrites dans <code>data/</code>, sur le PVC <code>warhammer-backend-data</code>.
+        Le backend lit le contenu éditorial au constructor (<code>readFileSync</code> sur <code>seed/factions.json</code>, <code>seed/units.json</code>, <code>seed/subfactions.json</code>, etc., via <code>contentPath()</code>). Pas de base de données — ce contenu vit dans <code>backend/seed/*.json</code>, <b>dans l'image</b> (un fichier déposé dans <code>data/</code> est ignoré) : le mettre à jour, c'est un commit, la CI, puis le bump du tag. Seules les données utilisateur (<code>image-meta.json</code>, imports, vidéos importées) sont écrites dans <code>data/</code>, sur le PVC <code>warhammer-backend-data</code>.
       </p>
     </CaseStudySection>
 

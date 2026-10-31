@@ -90,3 +90,10 @@ test('R9 — ol-companion parle des animations du direct (carton rouge, remplace
   assert.match(t, /but annulé/i);
   assert.match(t, /poteau/i);
 });
+
+test('R10 — warhammer40k : le contenu éditorial est lu dans seed/, jamais dans data/ (pas de readFileSync data/factions.json)', () => {
+  const t = texte('case-studies/warhammer40k');
+  assert.doesNotMatch(t, /data\/factions\.json|data\/units\.json|data\/subfactions\.json/);
+  assert.doesNotMatch(t, /JSON files\s*data\//);
+  assert.match(t, /seed\/\*\.json/);
+});
