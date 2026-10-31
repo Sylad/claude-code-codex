@@ -25,7 +25,7 @@ const lessons = [
     body: "Quand l'install plante mid-way (ici sur Bun), aucun rollback automatique. Settings.json déjà modifié, plugin enabled, marketplace registrée — mais le runtime ne fonctionne pas. L'utilisateur se retrouve avec un environnement à moitié pollué qu'il faut nettoyer manuellement.",
   },
   {
-    title: "74k★ ≠ adoptable",
+    title: "106k★ ≠ adoptable",
     body: "Stars + activité (push aujourd'hui) sont nécessaires mais pas suffisants. Notre filtre original sur `/ecosystem` (\"actively maintained, ≥200 stars\") aurait validé claude-mem. Le test bench réel révèle ce que la métrique GitHub ne capture pas : l'expérience d'install et les garde-fous opérationnels.",
   },
 ];
@@ -38,7 +38,7 @@ const lessons = [
   <PageHero
     eyebrow="Test bench · 2026-05-10"
     title="claude-mem (thedotmack)"
-    intro="Plugin de mémoire persistante pour Claude Code — capture l'activité des sessions, génère des résumés sémantiques via l'agent SDK, et réinjecte le contexte pertinent à la session suivante. v13.0.1 stable, 74k★, Apache-2.0."
+    intro="Plugin de mémoire persistante pour Claude Code — capture l'activité des sessions, génère des résumés sémantiques via l'agent SDK, et réinjecte le contexte pertinent à la session suivante. v13.0.1 stable au test (v15.7.0 au 2026-10-31), 106k★, Apache-2.0."
   />
 
   <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12">
@@ -46,7 +46,7 @@ const lessons = [
       <CaseStudySection eyebrow="Pourquoi tester">
         <p>
           Le concept est exactement ce qu'on cherche : ne plus perdre le contexte
-          entre deux sessions Claude Code. 74k stars, push récent, Apache-2.0 —
+          entre deux sessions Claude Code. 106k stars (au 2026-10-31), push récent, Apache-2.0 —
           le profile est sain au niveau métriques. Sylvain l'a explicitement
           flagué pour test, le pattern est prometteur.
         </p>
@@ -90,8 +90,8 @@ const lessons = [
             </p>
             <ul class="text-sm text-ink-muted leading-relaxed space-y-1.5">
               <li>• Concept réel et utile (mémoire persistante automatique)</li>
-              <li>• Stable v13.0.1 (pas alpha)</li>
-              <li>• 74k★ + Apache-2.0 + push récent</li>
+              <li>• Stable v13.0.1 au test (v15.7.0 au 2026-10-31)</li>
+              <li>• 106k★ + Apache-2.0 + push récent</li>
               <li>• Site dédié <a href="https://claude-mem.ai" target="_blank" rel="noopener" class="text-emerald-300 hover:text-emerald-200 underline">claude-mem.ai</a> + 30+ traductions README</li>
               <li>• Multi-IDE (Claude Code / Gemini CLI / OpenCode)</li>
             </ul>
@@ -115,7 +115,7 @@ const lessons = [
             Décision
           </p>
           <p class="text-ink leading-relaxed">
-            <strong>Reject + watchlist.</strong> 74 mille stars ne suffisent pas
+            <strong>Reject + watchlist.</strong> 106 mille stars ne suffisent pas
             quand l'install ne respecte pas les garde-fous opérationnels minimums
             (dry-run, uninstall, atomicité). À reconsidérer quand un changelog
             mentionnera explicitement ces fixes.

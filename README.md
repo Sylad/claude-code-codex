@@ -71,6 +71,7 @@ npm run audit      # lisibilité du site construit : pages « mur de texte » à
 L'audit de lisibilité (mots, schémas, images, plus long bloc sans intertitre par page) est décrit, avec son dernier résultat, dans [`docs/audit-lisibilite.md`](docs/audit-lisibilite.md).
 
 La relecture de vérité du site (affirmations datées ou chiffrées classées faux / dépassé / non sourcé / ok, page par page, sans réécriture) est dans [`docs/verite-site.md`](docs/verite-site.md).
+Les étoiles, licences et dates de push des outils testés (`frontend/src/data/tools-tested.ts`) sont relevées à une date affichée sur `/case-studies` (constante `TOOLS_SURVEYED_AT`) ; la corriger avec les valeurs, test : `frontend/tests/l56-verite-outils.e2e.test.mjs`.
 
 ## Mise à jour hebdo
 

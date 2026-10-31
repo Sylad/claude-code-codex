@@ -1,7 +1,24 @@
 {
   "project": "claude-code-codex",
-  "generated": "2026-10-31 10:55",
+  "generated": "2026-10-31 11:31",
   "entries": [
+    {
+      "slug": "2026-10-31-etoiles-versions-et-licences-des-outils-testes-a-jour",
+      "title": "Étoiles, versions et licences des outils testés remises à jour",
+      "date": "2026-10-31",
+      "lots": [
+        "L56"
+      ],
+      "captures": [
+        "captures/L56-outils-testes-1440.png",
+        "captures/L56-outils-testes-390.png"
+      ],
+      "alts": [
+        "Page Case studies, section des outils testés : la ligne « Étoiles, licences et dates de push relevées le 31 octobre 2026 » sous l'introduction (écran large)",
+        "La même section sur téléphone, avec la date du relevé"
+      ],
+      "html": "<p>La page Case studies indique maintenant la date à laquelle les étoiles GitHub, les licences et les dates de dernier push des outils testés ont été relevées : le 31 octobre 2026. Les chiffres eux-mêmes ont été refaits : par exemple RTK passe à 85,1 k étoiles, claude-mem à 106,9 k et ccproxy descend à 356. La licence d'Archify est corrigée (Apache-2.0, et non MIT) et TanStack Start est donné en v1.169.4.</p>\n<p>Les études de cas de claude-code-templates, claude-mem, code-review-graph, drona23 (claude-token-efficient), superclaude, token-optimizers-2026 et token-savior affichent les étoiles actuelles. Quand une version testée en mai est dépassée (claude-mem v15.7.0, claude-code-templates v1.29.7, token-savior v4.24.0), la page garde la version testée et dit quelle est la dernière.</p>"
+    },
     {
       "slug": "2026-10-30-le-livre-de-bord-illustre-la-verification-pas-la-confiance",
       "title": "Le Livre de bord illustre « la vérification, pas la confiance »",

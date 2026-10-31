@@ -3,7 +3,8 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
 import { apps, APP_COUNT } from "@/data/apps";
 import RtkStats from "@/components/site/RtkStats.astro";
-import { testedTools } from "@/data/tools-tested";
+import { testedTools, TOOLS_SURVEYED_AT } from "@/data/tools-tested";
+import { formatDay } from "@/lib/format-date.mjs";
 import { inlineCodeHtml } from "@/lib/inline-code.mjs";
 import {
   STATUS_LABELS,
@@ -282,6 +283,9 @@ function formatStars(n?: number): string {
         <strong class="text-ink">À tester</strong> = identifié comme
         candidat. <strong class="text-ink">Sur le radar</strong> = repéré, à
         explorer si pertinent.
+      </p>
+      <p class="font-mono text-xs text-ink-muted -mt-5 mb-8">
+        Étoiles, licences et dates de push relevées le {formatDay(TOOLS_SURVEYED_AT)}.
       </p>
 
       {groupedTools.map(({ status, tools }) => (
