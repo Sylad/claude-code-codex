@@ -470,12 +470,13 @@ lots:
     created: 2026-10-30
   - id: L54
     title: "Livre de bord : texte des schémas lisible au téléphone (≥ 11 px rendu à 390 px, aujourd'hui ~8–9 px : viewBox 420 réduit à 266 px) et boucle de reprise qui part aussi de la QA (ou légende précisée) — mineurs UX de L51"
-    status: todo
+    status: doing
     estimate: 0.25
     visible: true
     created: 2026-10-31
     notes:
       - { date: 2026-10-31, text: "L50 (31-10) : le plus petit texte des schémas de l'étude de cas cadence est à 11,02 px à 390 px (R14), marge faible — à garder en tête en traitant les schémas du Livre de bord" }
+    started: 2026-10-31
   - id: L55
     title: "Corrections de vérité — topologie et apps déployées : /, /about, /atelier-ia, /argocd-k8s-pour-les-nuls, /case-studies/aetherwx-encyclopedia, /case-studies/claude-code-codex, /case-studies/k8s-migration-overnight (liste exacte dans docs/verite-site.md § « Corrections à faire, par page »)"
     status: done
