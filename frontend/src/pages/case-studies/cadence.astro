@@ -24,7 +24,7 @@ const parcours = [
   { titre: "Revue", detail: "relecteur de code : bugs, dérive, docs", qui: "relecteur neuf (Opus), qui n'a pas écrit le code" },
   { titre: "Correction", detail: "reprend ce que la revue a trouvé", qui: "session de correction (escalade Fable)", accent: true },
   { titre: "UX", detail: "application lancée, captures 1440 et 390 px", qui: "agent ux-reviewer" },
-  { titre: "Prêt", detail: "lot clos, livrable par le livreur", qui: "le lead : captures, porte, livraison", accent: true },
+  { titre: "Prêt", detail: "le lead regarde les captures et décide", qui: "le lead confie au livreur : porte, livraison", accent: true },
 ];
 
 const livreur = [
@@ -290,7 +290,8 @@ const echecs = [
       <h3 data-intertitre class={H3}>La livraison, déléguée</h3>
       <p>
         Un lot prêt n'est pas livré pour autant. Le lead le confie au livreur,
-        qui joue la chaîne ci-dessous et ne rend qu'une ligne ou une question.
+        qui joue la porte et la livraison (chaîne ci-dessous) et ne rend qu'une ligne ou une question ;
+        le lead regarde les captures et décide.
         Les lots visibles se lisent dans le panneau du plan publié sur ce site.
       </p>
       <div class="-mx-5 sm:mx-0">
