@@ -68,3 +68,25 @@ test('R6 — chaque capture ajoutée a un alt et un fichier servi par le site', 
     }
   }
 });
+
+test('R7 — la ligne de date n\'affiche aucune barre oblique inverse', () => {
+  for (const p of PAGES) {
+    const t = texte(`case-studies/${p}`);
+    assert.doesNotMatch(t, /\\/, `${p} : barre oblique inverse affichée`);
+    assert.match(t, /état relu d'après son README/, p);
+  }
+});
+
+test('R8 — warhammer40k ne décrit plus le flux SSE /api/events, supprimé en L24', () => {
+  const t = texte('case-studies/warhammer40k');
+  assert.doesNotMatch(t, /api\/events/);
+  assert.doesNotMatch(t, /\bSSE\b/);
+});
+
+test('R9 — ol-companion parle des animations du direct (carton rouge, remplacement, but annulé)', () => {
+  const t = texte('case-studies/ol-companion');
+  assert.match(t, /animations? du direct/i);
+  assert.match(t, /carton rouge/i);
+  assert.match(t, /but annulé/i);
+  assert.match(t, /poteau/i);
+});

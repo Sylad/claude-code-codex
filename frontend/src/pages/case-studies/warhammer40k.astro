@@ -16,7 +16,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
   />
 
   <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12 space-y-12">
-    <p class="font-mono text-xs text-ink-muted">Mise à jour 31 octobre 2026 · dépôt décrit : <a class="text-claude hover:underline" href="https://github.com/Sylad/warhammer40k" target="_blank" rel="noopener">github.com/Sylad/warhammer40k</a> · état relu d\'après son README, ses 104 Nouveautés et son plan.</p>
+    <p class="font-mono text-xs text-ink-muted">Mise à jour 31 octobre 2026 · dépôt décrit : <a class="text-claude hover:underline" href="https://github.com/Sylad/warhammer40k" target="_blank" rel="noopener">github.com/Sylad/warhammer40k</a> · état relu d'après son README, ses 104 Nouveautés et son plan.</p>
     <CaseStudySection eyebrow="Pourquoi ce projet">
       <p>
         Une encyclopédie Warhammer 40K il en existe déjà des dizaines —
@@ -101,11 +101,6 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         </li>
         <li>
           <strong>Galerie</strong> — 1 500+ œuvres, catégorisation multi-tags (<code>image-meta.json</code>). L'ancien montage en lecture seule des photos du NAS n'existe plus depuis la migration k3s ; l'import (Wiki Fandom / Reddit / URL directe) est réservé au mode édition derrière le PIN et écrit dans <code>data/imported/</code>.
-        </li>
-        <li>
-          <strong>Live</strong> — SSE <code>/api/events</code> pour pousser
-          les changements de solde Claude et les invalidations de cache côté
-          front.
         </li>
         <li>
           <strong>Déploiement</strong> — images Docker multi-stage (<code>node:20-alpine</code> → <code>nginx:alpine</code>) construites par la CI GitHub et poussées sur GHCR ; chart Helm <code>warhammer40k</code> sur le k3s de dark-blue (namespace <code>preprod</code>), synchronisé par ArgoCD, exposé par un tunnel Cloudflare sur <a class="text-claude hover:underline" href="https://warhammer.sladoire.dev" target="_blank" rel="noopener">https://warhammer.sladoire.dev</a>.
