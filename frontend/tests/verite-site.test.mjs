@@ -96,3 +96,11 @@ test('R8 — les étoiles sont attribuées au bon outil : code-review-graph 16 9
   assert.ok(ligne('/case-studies', /Convex.*12 570 → 12 770/), 'Convex relu');
   assert.ok(ligne('/case-studies/code-review-graph', /^- \*\*dépassé\*\*.*16\.9k★.*32/), 'le 16.9k★ de la page code-review-graph est classé');
 });
+
+test('R9 — /case-studies/finance-tracker classe « Sonnet 4.5 » contre le modèle du code (claude-sonnet-5-5 depuis le 2026-10-15)', () => {
+  const l = ligne('/case-studies/finance-tracker', /^- \*\*(dépassé|faux)\*\*.*Sonnet 4\.5/);
+  assert.ok(l, 'ligne sur le modèle Sonnet 4.5 manquante');
+  assert.match(l, /claude-sonnet-5-5/, 'le modèle réel du code est nommé');
+  assert.match(l, /2026-10-15/, 'la date du changement de modèle est donnée');
+  assert.match(l, /claude-model\.ts/, 'la source est le fichier du modèle');
+});

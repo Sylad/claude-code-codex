@@ -17,7 +17,7 @@ classe et une source, décomptes exacts).
 | classe | lignes |
 |---|---|
 | faux | 7 |
-| dépassé | 30 |
+| dépassé | 31 |
 | non sourcé | 23 |
 | ok | 36 |
 
@@ -139,6 +139,7 @@ classe et une source, décomptes exacts).
 ## `/case-studies/finance-tracker`
 
 - **ok** — stack React + NestJS et « démo » à données fictives conformes au CLAUDE.md du projet (k3s dark-blue, namespace `preprod`, données de démo seulement) (source : CLAUDE.md du projet)
+- **dépassé** — « AnthropicService (Sonnet 4.5) » et « Claude Sonnet 4.5 » (`finance-tracker.astro` lignes 81 et 136) : vrai à l'écriture de la fiche, mais le backend analyse les relevés avec `claude-sonnet-5-5` depuis le 2026-10-15 (commits d8a3be1 et 2065917 de finance-tracker) (source : `finance-tracker/backend/src/modules/analysis/claude-model.ts` ligne 2, `git log -S claude-sonnet-5-5 -- backend/src`)
 
 ## `/case-studies/hermes-agent`
 
