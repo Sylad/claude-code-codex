@@ -4,7 +4,7 @@ Demande de Sylvain du 30-10 : chaque affirmation datée ou chiffrée (versions, 
 Claude Code, verdicts d'outils, état des apps) doit être vraie, sourcée et à jour. Cette relecture **ne modifie
 aucune page** : elle classe, page par page, ce qui a été vérifié. Les corrections sont à planifier en un lot par page.
 
-Relecture du 30-10-2026. Test : `frontend/tests/verite-site.test.mjs` (chaque page a sa section, chaque ligne une
+Relecture du 30-10-2026 ; les lignes ajoutées ensuite (Convex, TanStack Start, code-review-graph, fonctionnalités de Claude Code, tableau /start, ol-companion, warhammer40k) sont relevées le 31-10-2026, et leur source le dit. Le lead a arbitré le 31-10 : la relecture n'est plus poussée vers l'exhaustivité, la section finale liste les corrections à faire par page. Test : `frontend/tests/verite-site.test.mjs` (chaque page a sa section, chaque ligne une
 classe et une source, décomptes exacts).
 
 ## Classes
@@ -17,14 +17,14 @@ classe et une source, décomptes exacts).
 | classe | lignes |
 |---|---|
 | faux | 7 |
-| dépassé | 31 |
-| non sourcé | 23 |
-| ok | 36 |
+| dépassé | 30 |
+| non sourcé | 22 |
+| ok | 42 |
 
 ## Ce qui a été vérifié, et ce qui ne l'a pas été
 
-- Vérifié par l'API GitHub : étoiles, licence, archivage, dernier push et dernière version des 21 outils de
-  `tools-tested.ts` et des 10 dépôts de `ecosystem.ts`; versions npm de `claude-code-templates`, `claude-mem`,
+- Vérifié par l'API GitHub : étoiles, licence, archivage, dernier push et dernière version des 21 dépôts GitHub des 23 entrées de
+  `tools-tested.ts` (TanStack Start et Convex, dont l'`url` n'est pas github.com, sont relevés à part)  et des 10 dépôts de `ecosystem.ts`; versions npm de `claude-code-templates`, `claude-mem`,
   `@bifrost_inc/superclaude` et du SDK Agent.
 - Vérifié par la documentation Anthropic (30-10) : minimums de cache, coefficients de lecture et d'écriture, gamme de
   modèles et tarifs.
@@ -79,7 +79,8 @@ classe et une source, décomptes exacts).
 
 ## `/case-studies/aetherwx-encyclopedia`
 
-- **ok** — dark-blue : Ubuntu 26.04, k3s v1.36.4, Ryzen 9 9900X, 64 Go, RTX 4080, prod depuis septembre 2026 (source : `CLAUDE.md` du dossier developpeur, topologie machines (état du cluster non relu en direct : aucun contexte `kubectl` sur cette session))
+- **ok** — dark-blue : Ubuntu 26.04, Ryzen 9 9900X, 64 Go, RTX 4080 (source : `maritime-atlas/docs/architecture.md` l. 66 ; le `CLAUDE.md` du dossier developpeur ne donne que « 24 vCPU / 64 Go / RTX 4080 » et ne nomme pas le processeur)
+- **ok** — dark-blue : k3s v1.36.4, prod depuis septembre 2026 (source : `CLAUDE.md` du dossier developpeur, topologie machines (état du cluster non relu en direct : aucun contexte `kubectl` sur cette session))
 - **dépassé** — « ~20 pods maritime + 3 apps NestJS » et « Mini-Blue, un mini-PC always-on » : mini-blue est devenu le PC Windows d'outillage le 2026-10-14 et n'héberge rien ; le nombre de pods n'a pas été recompté (source : `CLAUDE.md` du dossier developpeur ; recomptage impossible sans `kubectl`)
 - **non sourcé** — « une vingtaine de services », « 6 tokens », « 5 leçons », webhook « ~2 sec » : décomptes de la page non recoupés avec le dépôt GitOps (source : aucune)
 
@@ -99,7 +100,7 @@ classe et une source, décomptes exacts).
 
 ## `/case-studies/cadence`
 
-- **dépassé** — « Depuis la 1.26… » : cadence est en 1.29.0 dans le dépôt ; la formule reste vraie mais la page ne nomme pas la version courante (source : `cadence/package.json` (version 1.29.0))
+- **ok** — « Depuis la 1.26, le lead confie la livraison … à l'agent `livreur` » (`cadence.astro` l. 82) : la formule reste vraie, la page ne prétend pas nommer la version courante (1.29.0) (source : `cadence/package.json` (version 1.29.0))
 - **ok** — chiffres des mesures (61 % · 29 %, 1 h 53 min, accord 17 sur 24) : chacun renvoie à un fichier `docs/mesures/…` du dépôt cadence, relevés au 30 octobre 2026 (source : bloc « Chiffres relevés dans le dépôt cadence au 30 octobre 2026 » de la page)
 - **ok** — quatre tags partis sans atteindre npm (1.5.0, 1.14.0, 1.16.0, 1.25.0) : récit daté du CHANGELOG de cadence (source : CHANGELOG de cadence)
 
@@ -109,7 +110,7 @@ classe et une source, décomptes exacts).
 
 ## `/case-studies/claude-code-codex`
 
-- **dépassé** — mémoire « ~70 fichiers .md » dans `~/.claude/projects/<cwd>/memory/` : chiffre écrit le 2026-05-08 (commit 2f58cd2), juste alors (67 fichiers modifiés au plus tard ce jour-là) ; le dossier en compte 614 aujourd'hui et la page ne date pas le chiffre (source : `ls` du dossier mémoire du projet developpeur, relevé le 30-10-2026, filtré sur les dates de modification)
+- **dépassé** — mémoire « ~70 fichiers .md » dans `~/.claude/projects/<cwd>/memory/` : chiffre écrit le 2026-05-08 (commit 2f58cd2), juste alors (67 fichiers modifiés au plus tard ce jour-là, mesure de la revue non refaite : l'état de mai n'est pas reconstituable) ; le dossier en compte 614 aujourd'hui et la page ne date pas le chiffre (source : `ls` du dossier mémoire du projet developpeur, relevé le 30-10-2026, filtré sur les dates de modification)
 - **dépassé** — « 6e app perso » et « 6 sites perso » : vrai en mai 2026 (la page le dit), le site en présente 8 aujourd'hui (source : `frontend/src/data/apps.ts`)
 - **non sourcé** — « six mois de pair-programming intensif » à la date de lancement : durée déclarée, sans trace datée dans le dépôt (source : aucune)
 
@@ -159,11 +160,13 @@ classe et une source, décomptes exacts).
 
 ## `/case-studies/maritime-atlas`
 
-- **non sourcé** — « GeoServer 3 replicas sur k3s », « k3s v1.36.4 » (5 occurrences sur le site), « ~15 sources externes » : cohérents avec le CLAUDE.md du projet, mais `kubectl` n'avait aucun contexte sur cette session, l'état réel du cluster n'a donc pas été vérifié (source : CLAUDE.md du projet ; `kubectl` indisponible)
+- **ok** — « k3s v1.36.4 » (5 occurrences sur le site) : conforme au `CLAUDE.md` du dossier developpeur, comme les autres pages (source : `CLAUDE.md` du dossier developpeur (non relu en direct : pas de contexte `kubectl`))
+- **non sourcé** — « GeoServer 3 replicas sur k3s », « ~15 sources externes » : `kubectl` n'avait aucun contexte sur cette session, l'état réel du cluster et le décompte des sources n'ont pas été vérifiés (source : aucune)
 
 ## `/case-studies/ol-companion`
 
-- **non sourcé** — `apps.ts` annonce « 365scores API » pour ol-companion alors que le CLAUDE.md du projet et `.env` parlent de football-data.org ; les deux sources existent dans le code (`scores365-squads.ts`, `football-data.schema.ts`) : l'un n'est pas faux mais la fiche est incomplète (source : sources de `ol-companion/backend/src/config`)
+- **ok** — `apps.ts` annonce « 365scores API » pour ol-companion : vrai, le code l'utilise (`scores365-*.ts`) ; la fiche omet football-data.org (`football-data.schema.ts`), fiche incomplète et non fausse (source : `ol-companion/backend/src/config/`)
+- **dépassé** — « Anthropic SDK 0.91 » (`ol-companion.astro` l. 239) : le SDK Anthropic a été retiré du backend le 2026-10-01 (commit 56b30b4, lot L17 d'ol-companion), l'app n'appelle plus Claude (source : `ol-companion/backend/package.json` (aucune dépendance `@anthropic-ai/sdk`), `backend/src/config/anthropic-removed.spec.ts`)
 
 ## `/case-studies/ruflo`
 
@@ -188,6 +191,7 @@ classe et une source, décomptes exacts).
 ## `/case-studies/warhammer40k`
 
 - **ok** — Angular 19, NestJS 11, Anthropic SDK 0.91 (source : `warhammer40k/backend/package.json` (`@anthropic-ai/sdk ^0.91.1`, `@nestjs/core ^11`))
+- **ok** — modèle `claude-sonnet-4-6`, max 1024 tokens (`warhammer40k.astro` l. 95) : le backend utilise bien `claude-sonnet-4-6` (source : `warhammer40k/backend/src/modules/units/claude.service.ts` l. 49, `series/series-claude.service.ts` l. 46, relevé le 31-10-2026)
 - **dépassé** — « CLAUDE.md de 130 lignes au root du repo » : chiffre écrit le 2026-05-08 (commit 2f58cd2), alors à 134 lignes (`git show 7c5a515:CLAUDE.md | wc -l`) ; le fichier en compte 309 aujourd'hui et la page ne date pas le chiffre (source : `wc -l warhammer40k/CLAUDE.md`, relevé le 30-10-2026)
 - **non sourcé** — « cinq polygones tracés en ~10 minutes », seuils de détection (0,65, 0,55) : chiffres de récit non rattachés à un commit (source : aucune)
 
@@ -204,7 +208,7 @@ classe et une source, décomptes exacts).
 ## `/k8s-for-java-developers`
 
 - **non sourcé** — « ~30 min par service complexe », « GHCR ~2-5 min », « -Xmx = 80 % du limit » : ordres de grandeur d'expérience, non mesurés (source : aucune)
-- **dépassé** — « K8s en 2026 … je recommande » : k3s est en v1.36.4 sur la prod, la page ne cite aucune version de Kubernetes (source : `CLAUDE.md` du dossier developpeur)
+- **ok** — « K8s en 2026 … je recommande » : la page ne cite aucune version de Kubernetes, rien à périmer (k3s est en v1.36.4 sur la prod) (source : `k8s-for-java-developers.astro` ; `CLAUDE.md` du dossier developpeur)
 
 ## `/learning`
 
@@ -250,3 +254,32 @@ classe et une source, décomptes exacts).
 ## `/videos`
 
 - **ok** — la page liste 15 vidéos issues de `videos.ts`, sans chiffre écrit en dur (source : `frontend/src/data/videos.ts`)
+
+## Corrections à faire, par page
+
+Une entrée par page ayant au moins une ligne « faux » ou « dépassé » (23 pages). Les fichiers sont sous `frontend/src/` ; les corrections s'appuient sur les lignes du rapport ci-dessus. Les lignes « non sourcé » ne sont pas des corrections : elles demandent une date ou une source sur la page, ou rien.
+
+- `/` — `pages/index.astro` l. 106-107 : « déployées sur Kubernetes + GitOps » → 4 apps sur 8 sur k3s ; reformuler (source : `CLAUDE.md` du dossier developpeur).
+- `/about` — `pages/about.astro` : « depuis fin 2026 » → « depuis fin 2025 » ; « cinq apps perso en prod » → dater (mai 2026) ou 8 (`APP_COUNT`) ; l. 26-32 même correction Kubernetes que `/`.
+- `/argocd-k8s-pour-les-nuls` — `pages/argocd-k8s-pour-les-nuls.astro` : dire que `v1.4.2` est un exemple, les images réelles sont `sha-<shortsha>`.
+- `/atelier-ia` — `pages/atelier-ia.astro` : schéma « Cloudflare / NAS / K8s » → le NAS n'héberge plus d'app depuis le 2026-09-03, il garde médias et sauvegardes.
+- `/case-studies` — `pages/case-studies.astro` + `data/tools-tested.ts` : archify MIT → Apache-2.0 ; étoiles (rtk 44 736 → 85 077, ruflo 46 787 → 80 279, claude-mem 74 236 → 106 054, hermes-agent 196 852 → 258 860, archify 65 708 → 91 806, code-review-graph 16 940 → 32 516, tanstack-start 14 360 → 15 267, claude-code-templates 27 113 → 33 000, token-savior 891 → 1 199, fable-mode 539 → 880, ccusage 15 096 → 19 268, Convex 12 570 → 12 770) ; TanStack Start v1.167 → 1.169.4 ; `lastPush` de 18 outils (rtk → 2026-10-30…) ; ccproxy 400 → 356 étoiles, push → 2026-08-10 ; afficher une date de relevé (source : API GitHub, 30 et 31-10-2026).
+- `/case-studies/aetherwx-encyclopedia` — `pages/case-studies/aetherwx-encyclopedia.astro` : « Mini-Blue, un mini-PC always-on » → PC Windows d'outillage sans app depuis le 2026-10-14 ; recompter « ~20 pods » avec `kubectl` (source : `CLAUDE.md` du dossier developpeur).
+- `/case-studies/claude-code-codex` — `pages/case-studies/claude-code-codex.astro` : « ~70 fichiers .md » → dater (2026-05-08) ou 614 ; « 6e app perso / 6 sites » → dater ou 8 (`APP_COUNT`).
+- `/case-studies/claude-code-templates` — `pages/case-studies/claude-code-templates.astro` : v1.28.16 / 27k★ → v1.29.7 (GitHub) ou 1.30.0 (npm) / 33 000★.
+- `/case-studies/claude-mem` — `pages/case-studies/claude-mem.astro` : v13.0.1 / 74k★ → v15.7.0 / 106 054★ (ou dater « au 2026-05-10 »).
+- `/case-studies/code-review-graph` — `pages/case-studies/code-review-graph.astro` l. 48 et 109 : 16.9k★ → 32 516★ ; chiffres du graphe (929 nodes / 7 939 edges) à dater ou refaire.
+- `/case-studies/drona23-token-efficient` — `pages/case-studies/drona23-token-efficient.astro` : 5.4k stars → 6 136.
+- `/case-studies/evatosorus` — `pages/case-studies/evatosorus.astro` : « 1527 pages » → 1 532 (source : `find evatosorus/frontend/dist -name '*.html'`).
+- `/case-studies/finance-tracker` — `pages/case-studies/finance-tracker.astro` l. 81 et 136 : « Sonnet 4.5 » → `claude-sonnet-5-5` depuis le 2026-10-15 (source : `finance-tracker/backend/src/modules/analysis/claude-model.ts`).
+- `/case-studies/hermes-agent` — `pages/case-studies/hermes-agent.astro` : Sonnet 4.6 pilote → dater (juin) ou Sonnet 5.5 (source : platform.claude.com/docs/en/models/overview).
+- `/case-studies/k8s-migration-overnight` — `pages/case-studies/k8s-migration-overnight.astro` : cluster k3s de Big-Blue (i9-14900KF, 5 apps) → dater le récit en mai 2026 ; la prod est sur dark-blue depuis le 2026-09-03.
+- `/case-studies/ol-companion` — `pages/case-studies/ol-companion.astro` l. 239 : « Anthropic SDK 0.91 » → supprimer, SDK retiré le 2026-10-01 (commit 56b30b4) ; `data/apps.ts` : ajouter football-data.org à côté de 365scores.
+- `/case-studies/ruflo` — `pages/case-studies/ruflo.astro` : étoiles 46 787 → 80 279 (ou dater).
+- `/case-studies/superclaude` — `pages/case-studies/superclaude.astro` : 22.7k★ → 23 915 ; vérifier « v5.0 TypeScript plugin system » encore attendu.
+- `/case-studies/token-optimizers-2026` — `pages/case-studies/token-optimizers-2026.astro` : ccusage 15k → 19 268★ ; revérifier « v20 ».
+- `/case-studies/token-savior` — `pages/case-studies/token-savior.astro` : v4.3.2 → v4.24.0 (2026-10-15).
+- `/case-studies/warhammer40k` — `pages/case-studies/warhammer40k.astro` : « CLAUDE.md de 130 lignes » → dater (134 le 2026-05-08) ou 309 (source : `wc -l warhammer40k/CLAUDE.md`).
+- `/learning` — `pages/learning.astro` : « retirera les sources sans publication depuis 6+ mois » → retirer la phrase ou implémenter la règle dans `scripts/`.
+- `/start` — `pages/start.astro` + `data/rtk-stats.json` : RTK 1 546 commandes / 23 % → 148 104 / 47 % (`rtk gain --format json`) ou relancer la mise à jour du JSON.
+- `/theory` — `pages/theory.astro` + `data/theory.ts` : minimums de cache Opus 4.7 4096 → 2048, Sonnet 4.6 2048 → 1024 ; « sous-agents ne peuvent pas spawner » (l. 35) → imbrication jusqu'à 3 niveaux (`CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH`) ; lecture 0.1× → 0.05× pour Opus 5.5 / Sonnet 5.5, 0.025× pour Fable 5.1 ; gamme de modèles → Fable 5.1, Opus 5.5, Sonnet 5.5, Haiku 5.5 ; « SDK ≥ v0.2.111 » → supprimer (SDK 0.3.314) (source : platform.claude.com/docs).

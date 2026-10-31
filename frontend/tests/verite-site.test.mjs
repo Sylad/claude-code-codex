@@ -22,7 +22,7 @@ const sections = new Map();
 let courante = null;
 for (const l of rapport.split('\n')) {
   const h = l.match(/^## `([^`]+)`/);
-  if (h) { courante = h[1]; sections.set(courante, []); } else if (courante && l.startsWith('- ')) sections.get(courante).push(l);
+  if (h) { courante = h[1]; sections.set(courante, []); } else if (l.startsWith('## ')) courante = null; else if (courante && l.startsWith('- ')) sections.get(courante).push(l);
 }
 
 test('R1 — chaque page du site a sa section « ## `/route` » dans le rapport', () => {
@@ -85,10 +85,11 @@ test('R8 — les fonctionnalités de Claude Code de /theory et /start sont class
   assert.ok(ligne('/theory', /^- \*\*ok\*\*.*événements de hooks.*5 types de handler/), 'hooks');
   assert.ok(ligne('/theory', /^- \*\*faux\*\*.*sous-agents ne peuvent pas spawner/), 'nesting des sous-agents');
   assert.ok(!ligne('/theory', /^- \*\*non sourcé\*\*.*Task renommé/), 'plus de bloc non sourcé sur Task');
-  assert.ok(ligne('/start', /Claude Code \/ Copilot|Copilot/), 'tableau Copilot classé dans /start');
+  assert.ok(ligne('/start', /^- \*\*(ok|non sourcé)\*\*.*tableau Claude Code \/ Copilot.*Mémoire/), 'ligne /start « Mémoire » classée ok ou non sourcé');
+  assert.ok(ligne('/start', /^- \*\*non sourcé\*\*.*colonne Copilot/), 'colonne Copilot classée non sourcé');
 });
 
-test('R8 — les étoiles sont attribuées au bon outil : code-review-graph 16 940 → 32 516, TanStack Start 14 360 → 15 267, Convex relu', () => {
+test('R10 — les étoiles sont attribuées au bon outil : code-review-graph 16 940 → 32 516, TanStack Start 14 360 → 15 267, Convex relu', () => {
   const stars = ligne('/case-studies', /^- \*\*dépassé\*\*.*étoiles figées/) || '';
   assert.ok(/code-review-graph 16 940 → 32 516/.test(stars), 'code-review-graph relevé');
   assert.ok(/tanstack-start 14 360 → 15 267/.test(stars), 'TanStack Start relevé avec sa vraie valeur');
@@ -97,10 +98,17 @@ test('R8 — les étoiles sont attribuées au bon outil : code-review-graph 16 9
   assert.ok(ligne('/case-studies/code-review-graph', /^- \*\*dépassé\*\*.*16\.9k★.*32/), 'le 16.9k★ de la page code-review-graph est classé');
 });
 
-test('R9 — /case-studies/finance-tracker classe « Sonnet 4.5 » contre le modèle du code (claude-sonnet-5-5 depuis le 2026-10-15)', () => {
+test('R11 — /case-studies/finance-tracker classe « Sonnet 4.5 » contre le modèle du code (claude-sonnet-5-5 depuis le 2026-10-15)', () => {
   const l = ligne('/case-studies/finance-tracker', /^- \*\*(dépassé|faux)\*\*.*Sonnet 4\.5/);
   assert.ok(l, 'ligne sur le modèle Sonnet 4.5 manquante');
   assert.match(l, /claude-sonnet-5-5/, 'le modèle réel du code est nommé');
   assert.match(l, /2026-10-15/, 'la date du changement de modèle est donnée');
   assert.match(l, /claude-model\.ts/, 'la source est le fichier du modèle');
+});
+
+test('R12 — la section « Corrections à faire, par page » liste exactement les pages ayant une ligne faux ou dépassé', () => {
+  const corr = rapport.split('## Corrections à faire, par page')[1] || '';
+  const listees = [...corr.matchAll(/^- `([^`]+)` — /gm)].map((m) => m[1]).sort();
+  const attendues = [...sections].filter(([, l]) => l.some((x) => /^- \*\*(faux|dépassé)\*\*/.test(x))).map(([r]) => r).sort();
+  assert.deepEqual(listees, attendues);
 });
