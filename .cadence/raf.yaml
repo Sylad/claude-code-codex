@@ -477,6 +477,7 @@ lots:
     notes:
       - { date: 2026-10-31, text: "L50 (31-10) : le plus petit texte des schémas de l'étude de cas cadence est à 11,02 px à 390 px (R14), marge faible — à garder en tête en traitant les schémas du Livre de bord" }
     started: 2026-10-31
+    review: { date: 2026-10-31, verdict: "compliant after 0 fixes: 0 blocking, 0 major, 3 minor (barre de défilement classique : débordement de 8 px du schéma bord à bord ; légende QA sans flèche de reprise ; 10,6 px à 360 px) — orchestré (vague 2026-10-31-1415-cx, 0 passe(s) de correction)", commit: 38e502583779635b0f4ac4339e544ab63f4f8f70 }
   - id: L55
     title: "Corrections de vérité — topologie et apps déployées : /, /about, /atelier-ia, /argocd-k8s-pour-les-nuls, /case-studies/aetherwx-encyclopedia, /case-studies/claude-code-codex, /case-studies/k8s-migration-overnight (liste exacte dans docs/verite-site.md § « Corrections à faire, par page »)"
     status: done
