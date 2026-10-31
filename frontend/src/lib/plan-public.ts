@@ -115,6 +115,36 @@ export function publicTitleOf(raw: unknown, newsTitles: ReadonlyMap<string, stri
   return checkPublicTitle(title, r.id);
 }
 
+/**
+ * Titres de Nouveautés non conformes des lots visibles, tous états confondus (doing, todo, done) : la
+ * page Plan ne lit ce titre qu'à la livraison du lot (et fait alors échouer le build), la porte de la
+ * vague le lit avant. Même règle que publicTitleOf : lot visible, non abandonné, sans `public:`, hors lots
+ * de processus ou de sujet de sécurité ; seule la Nouveauté la plus récente du lot compte. Retourne un
+ * message par lot en défaut.
+ */
+export function newsTitleProblems(
+  lots: readonly unknown[],
+  entries: readonly { title?: unknown; lots?: unknown }[],
+): string[] {
+  const newsTitles = newsTitlesByLot(entries.filter((e) => typeof e === 'object' && e !== null));
+  const problems: string[] = [];
+  for (const raw of lots) {
+    if (typeof raw !== 'object' || raw === null) continue;
+    const r = raw as Record<string, unknown>;
+    if (r.visible !== true || typeof r.id !== 'string') continue;
+    if (typeof r.status !== 'string' || !STATUSES.has(r.status)) continue;
+    if (r.public != null || isProcessLot(r.title) || isDenied(r.title)) continue;
+    const title = newsTitles.get(r.id);
+    if (title === undefined) continue;
+    try {
+      checkPublicTitle(title, `la Nouveauté de ${r.id}`);
+    } catch (e) {
+      problems.push((e as Error).message);
+    }
+  }
+  return problems;
+}
+
 type Ranked = PublicLot & { sortKey: string };
 
 function toPublic(raw: unknown, newsTitles: ReadonlyMap<string, string | undefined>): Ranked | null {

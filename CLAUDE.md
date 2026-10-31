@@ -29,7 +29,7 @@ seulement — le titre de sa Nouveauté la plus récente ; les lots « Revue …
 (seulement leur décompte). Un titre public non conforme (> 80 caractères, « / », fichier, technique,
 identifiant de lot, sécurité) ou un plan illisible fait **échouer le build**. Pour publier un lot
 visible, lui donner un `public:` en français pour le visiteur. `tests/plan-page.e2e.test.mjs` cherche
-tout texte privé du plan dans tout `dist/`. Dates : un seul formateur, `src/lib/format-date.mjs`
+tout texte privé du plan dans tout `dist/`. Le titre de Nouveauté d'un lot visible sans `public:` est vérifié dès la vague (`newsTitleProblems`, `tests/l62-titres-publics.test.mjs`, tous états de lot), pas seulement au build. Dates : un seul formateur, `src/lib/format-date.mjs`
 (« 1er octobre 2026 », « 20 h 42 »).
 
 **Navigation** (L17, `frontend/src/components/site/Navbar.vue`) : barre du bureau dès 64em (`lg:`,
