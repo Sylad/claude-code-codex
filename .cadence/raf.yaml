@@ -489,6 +489,7 @@ lots:
     visible: true
     created: 2026-10-31
     started: 2026-10-31
+    review: { date: 2026-10-31, verdict: "conforme après 1 correction (mineure : « push fréquent » non daté sur la page drona23) — orchestré (vague 2026-10-31-1130-cx, 1 passe(s) de correction)", commit: 22f4fd445e1f078eeaa9202eb46c8b783a19a814 }
   - id: L57
     title: "Corrections de vérité — études de cas des apps : evatosorus, finance-tracker (claude-sonnet-5-5), hermes-agent, ol-companion (SDK Anthropic retiré, football-data.org), warhammer40k (docs/verite-site.md § « Corrections à faire, par page »)"
     status: todo
