@@ -32,7 +32,7 @@ export const sections: TheorySection[] = [
       "Un seul moteur, plusieurs surfaces : terminal CLI, plugins VS Code/JetBrains, app desktop, web (claude.ai/code), GitHub Actions, Slack — tous partagent CLAUDE.md, settings et MCP servers.",
       "Le system prompt est chargé dans un ordre déterministe au démarrage : system prompt (~4.2K tokens) → MEMORY.md (200 lignes / 25KB max) → env info (cwd, platform, git status) → catalogue MCP (deferred par défaut) → CLAUDE.md walked depuis la racine.",
       "Sous-agents = fenêtres de contexte isolées. Built-ins : Explore (read-only, Haiku), Plan (read-only, plan mode), general-purpose (tous les outils). Ils empêchent d'inonder le parent avec des résultats de recherche — seul le résumé remonte.",
-      "Le tool Task a été renommé Agent en v2.1.63 (Task(...) reste un alias). Un sous-agent peut en lancer d'autres, jusqu'à 3 niveaux sous la conversation principale ; CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH règle cette profondeur (1 désactive l'imbrication).",
+      "Le tool Task a été renommé Agent en v2.1.63 (Task(...) reste un alias). Un sous-agent peut en lancer d'autres, jusqu'à 3 niveaux sous la conversation principale ; `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` règle cette profondeur (1 désactive l'imbrication).",
       "Les sous-agents sont des fichiers Markdown avec frontmatter YAML dans .claude/agents/ (projet) ou ~/.claude/agents/ (user). Champs requis : name, description. Optionnels : tools, model, permissionMode, isolation: worktree, hooks, mcpServers.",
     ],
     snippets: [

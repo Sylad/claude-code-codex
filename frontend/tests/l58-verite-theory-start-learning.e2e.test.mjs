@@ -4,7 +4,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { DIST } from './lib/e2e-dist.mjs';
+import { DIST, setupBrowser } from './lib/e2e-dist.mjs';
 import stats from '../src/data/rtk-stats.json' with { type: 'json' };
 
 const texte = (p) => readFileSync(join(DIST, p, 'index.html'), 'utf8')
@@ -24,6 +24,21 @@ test('R2 — /theory : les sous-agents peuvent s’imbriquer jusqu’à 3 niveau
   assert.doesNotMatch(t, /ne peuvent pas spawner/);
   assert.match(t, /jusqu'à 3 niveaux/);
   assert.match(t, /CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH/);
+});
+
+test('R2 — /theory : pas de défilement latéral de la page à 320 et 390 px (le nom de variable long se coupe)', { timeout: 120_000 }, async (t) => {
+  const env = await setupBrowser(t);
+  if (!env) return;
+  const failures = [];
+  for (const width of [320, 390]) {
+    const context = await env.browser.newContext({ viewport: { width, height: 844 } });
+    const page = await context.newPage();
+    await page.goto(`${env.base}/theory/`, { waitUntil: 'load' });
+    const m = await page.evaluate(() => ({ sw: document.documentElement.scrollWidth, cw: document.documentElement.clientWidth }));
+    if (m.sw > m.cw) failures.push(`@${width}px : scrollWidth ${m.sw} > clientWidth ${m.cw}`);
+    await context.close();
+  }
+  assert.deepEqual(failures, []);
 });
 
 test('R3 — /theory : lecture de cache 0.05× (Opus 5.5, Sonnet 5.5) et 0.025× (Fable 5.1), plus de « SDK ≥ v0.2.111 »', () => {
