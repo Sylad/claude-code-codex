@@ -272,7 +272,7 @@ const echecs = [
           steps={parcours}
           boucle={{ de: 3, vers: 2, nom: "correction-revue", mot: "reprise" }}
           titre="Le parcours d'un lot dans une vague"
-          desc="Six étapes dans l'ordre : spec, code, revue, correction, UX, prêt.  Chaque étape nomme qui la fait. Une boucle en pointillés ramène de la correction à la revue tant que la revue trouve quelque chose."
+          desc="Six étapes dans l'ordre, chacune avec qui la fait. Une boucle en pointillés ramène de la correction à la revue tant que la revue trouve quelque chose."
         />
       </Schema>
       <Callout titre="À retenir">
@@ -294,7 +294,7 @@ const echecs = [
           id="chaine-livreur"
           steps={livreur}
           titre="La chaîne du livreur"
-          desc="Sept étapes dans l'ordre : lot prêt, porte de tests sur le sha, verdict UX, clôture du lot, push, livraison vérifiée, puis une ligne rendue au lead."
+          desc="Sept étapes dans l'ordre, du lot prêt à la ligne rendue au lead. Une étape qui échoue arrête la chaîne."
         />
       </Schema>
       <figure data-capture="panneau-lots" class="rounded-xl border border-white/10 bg-paper-elevated p-3">

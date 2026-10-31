@@ -6,6 +6,7 @@ interface Props {
   id: string;
   steps: Step[];
   titre: string;
+  // phrase d'introduction : la description accessible l'étend avec chaque étape (titre, détail, qui)
   desc: string;
   // boucle en pointillés de l'étape `de` vers l'étape `vers` (indices), côté droit
   boucle?: { de: number; vers: number; nom: string; mot: string };
@@ -20,11 +21,17 @@ const GAP = 28;
 const top = (i: number) => 12 + i * (H + GAP);
 const height = top(steps.length - 1) + H + 12;
 const uid = `sch-${id}`;
+// Sous role="img", les <text> du dessin sont présentationnels : seul title + desc est lu par un lecteur
+// d'écran (WCAG 1.1.1). La desc nomme donc chaque étape, son détail et qui la fait.
+const descAccessible = [
+  desc,
+  ...steps.map((s, i) => `${i + 1}. ${s.titre} : ${s.detail}${s.qui ? ` ; qui : ${s.qui}` : ""}.`),
+].join(" ");
 ---
 
 <svg viewBox={`0 0 ${largeur} ${height}`} role="img" aria-labelledby={`${uid}-t ${uid}-d`} xmlns="http://www.w3.org/2000/svg">
   <title id={`${uid}-t`}>{titre}</title>
-  <desc id={`${uid}-d`}>{desc}</desc>
+  <desc id={`${uid}-d`}>{descAccessible}</desc>
   {steps.map((s, i) => (
     <g>
       <rect class={s.accent ? "sch-box-accent" : "sch-box"} x={X} y={top(i)} width={BOX_W} height={H} rx="10" />

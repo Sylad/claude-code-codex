@@ -135,3 +135,19 @@ test('R12 — l’entrée Nouveautés du parcours dit qui fait chaque étape, co
     assert.ok(t.includes(qui), `« ${qui} » absent de l’entrée Nouveautés`);
   }
 });
+
+test('R13 — le nom accessible du parcours (title + desc du svg role=img) nomme qui fait chaque étape, dans l’ordre', () => {
+  // Sous role="img", les <text> intérieurs sont présentationnels : seul aria-labelledby (title + desc) est lu.
+  const f = figure('parcours-lot');
+  const title = f.match(/<title[^>]*>([^<]*)<\/title>/);
+  const desc = f.match(/<desc[^>]*>([^<]*)<\/desc>/);
+  assert.ok(title && desc, 'title ou desc du svg absent');
+  const name = plain(`${title[1]} ${desc[1]}`);
+  let from = 0;
+  for (const qui of ['spec-writer', 'Sonnet', 'Opus', 'pas écrit le code', 'Fable', 'ux-reviewer', 'lead']) {
+    const at = name.indexOf(qui, from);
+    assert.ok(at >= 0, `« ${qui} » absent du nom accessible ou hors ordre`);
+    from = at + qui.length;
+  }
+  assert.doesNotMatch(name, /\s{2}/, 'double espace dans le nom accessible');
+});
