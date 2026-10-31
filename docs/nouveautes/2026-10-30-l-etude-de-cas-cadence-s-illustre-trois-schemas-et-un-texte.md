@@ -8,7 +8,7 @@ captures: [{ file: captures/L50-parcours-lot.png, alt: "Schéma du parcours d'un
 L'étude de cas Cadence se lit plus facilement : elle est découpée et illustrée.
 
 - Un premier schéma relie le plan aux commits : un lot, son commit et les trois commandes qui lisent ce lien.
-- Un deuxième montre le parcours d'un lot (spec, code, revue, correction, UX, prêt, avec sa boucle de reprise) et dit qui fait chaque étape : une session spec-writer, une session de code (Sonnet), un relecteur neuf (Opus) qui n'a pas écrit le code, une session de correction (escalade Fable), l'agent ux-reviewer, puis le lead pour les captures, la porte et la livraison.
+- Un deuxième montre le parcours d'un lot (spec, code, revue, correction, UX, prêt, avec sa boucle de reprise) et dit qui fait chaque étape : une session spec-writer, une session de code (Sonnet), un relecteur neuf (Opus) qui n'a pas écrit le code, une session de correction (escalade Fable), l'agent ux-reviewer, puis le lead, qui regarde les captures et décide, et confie la porte et la livraison au livreur.
 - Un troisième suit la chaîne du livreur, du lot prêt à la ligne rendue.
 - Une capture du panneau des lots, tel que la page Plan de travail le publie, montre à quoi ressemble ce suivi.
 - Le texte est coupé en intertitres, et les idées à retenir sont mises dans des encadrés.

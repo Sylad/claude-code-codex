@@ -134,6 +134,8 @@ test('R12 — l’entrée Nouveautés du parcours dit qui fait chaque étape, co
   for (const qui of ['spec-writer', 'Sonnet', 'Opus', 'Fable', 'ux-reviewer', 'lead']) {
     assert.ok(t.includes(qui), `« ${qui} » absent de l’entrée Nouveautés`);
   }
+  assert.doesNotMatch(t, /le lead pour[^.]*la porte et la livraison/, 'le lead ne joue pas la porte et la livraison : c’est le livreur');
+  assert.match(t, /livreur/, 'le livreur (porte et livraison) absent de l’entrée Nouveautés');
 });
 
 test('R15 — l’entrée Nouveautés présente les trois schémas un par un, sans les coller dans une même phrase', () => {
