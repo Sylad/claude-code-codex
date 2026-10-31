@@ -483,6 +483,7 @@ lots:
     visible: true
     created: 2026-10-31
     started: 2026-10-31
+    review: { date: 2026-10-31, verdict: "compliant : les 7 pages de la liste docs/verite-site.md sont corrigées dans le sens décidé, 7/7 tests l55 verts, 2 notes mineures — orchestré (vague 2026-10-31-1130-cx, 0 passe(s) de correction)", commit: d0c508f3f7928908cd102aa71b10f1a5714d40c7 }
   - id: L56
     title: "Corrections de vérité — étoiles, versions et licences des outils testés : /case-studies et data/tools-tested.ts, claude-code-templates, claude-mem, code-review-graph, drona23-token-efficient, ruflo, superclaude, token-optimizers-2026, token-savior (valeurs datées, docs/verite-site.md § « Corrections à faire, par page »)"
     status: doing
