@@ -484,10 +484,11 @@ lots:
     created: 2026-10-31
   - id: L56
     title: "Corrections de vérité — étoiles, versions et licences des outils testés : /case-studies et data/tools-tested.ts, claude-code-templates, claude-mem, code-review-graph, drona23-token-efficient, ruflo, superclaude, token-optimizers-2026, token-savior (valeurs datées, docs/verite-site.md § « Corrections à faire, par page »)"
-    status: todo
+    status: doing
     estimate: 0.25
     visible: true
     created: 2026-10-31
+    started: 2026-10-31
   - id: L57
     title: "Corrections de vérité — études de cas des apps : evatosorus, finance-tracker (claude-sonnet-5-5), hermes-agent, ol-companion (SDK Anthropic retiré, football-data.org), warhammer40k (docs/verite-site.md § « Corrections à faire, par page »)"
     status: todo
