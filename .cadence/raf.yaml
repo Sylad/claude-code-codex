@@ -433,6 +433,7 @@ lots:
     finished: 2026-10-30
   - id: L50
     title: "Étude de cas cadence : trois schémas SVG (plan relié aux commits ; parcours d'un lot dans une vague spec → code → revue → correction → UX → prêt ; chaîne du livreur) et une capture du panneau des lots ; texte découpé (intertitres, encadrés) — lisible clair et sombre"
+    public: "L'étude de cas de notre outil de suivi en trois schémas et un texte découpé"
     status: done
     estimate: 0.5
     visible: true
@@ -455,10 +456,12 @@ lots:
     finished: 2026-10-31
   - id: L52
     title: "Relecture de vérité du site (lecture seule) : chaque affirmation datée ou chiffrée (versions, prix, modèles, fonctionnalités Claude Code, verdicts d'outils, état des apps) vérifiée vraie, sourcée et à jour ; liste classée faux / dépassé / non sourcé / ok par page, sans réécriture ; les corrections deviennent un lot par page (demande de Sylvain le 30-10)"
-    status: doing
+    status: done
     estimate: 0.5
     created: 2026-10-30
     started: 2026-10-30
+    review: { date: 2026-10-31, verdict: "conforme sur arbitrage du lead (31-10) : lot rendu malgré l'escalade Fable parce qu'une relecture « de chaque affirmation » ne converge pas (chaque revue trouve un oubli de plus) ; les 30 constats relevés sont appliqués (313d295 : 8 lignes reclassées ou ajoutées, test R8 dédoublé, assertion /start sur la classe, R12 garde la section finale), le rapport finit par « Corrections à faire, par page » (23 pages) → lots L55–L58 ; fonctionnalités Claude Code de /theory et tableau /start non revérifiés en ligne", commit: 313d2952aba1c61d36b83c25fa48bb17354a1f58 }
+    finished: 2026-10-31
   - id: L53
     title: "Veille mensuelle des outils des études de cas et de Tools tested : chaque outil existe, dépôt actif, version citée juste, lien vivant, verdict toujours valable (au doute : test-tool en bac à sable) ; rapport daté + corrections ; un verdict qui change devient une entrée du livre de bord"
     status: todo
@@ -473,6 +476,30 @@ lots:
     created: 2026-10-31
     notes:
       - { date: 2026-10-31, text: "L50 (31-10) : le plus petit texte des schémas de l'étude de cas cadence est à 11,02 px à 390 px (R14), marge faible — à garder en tête en traitant les schémas du Livre de bord" }
+  - id: L55
+    title: "Corrections de vérité — topologie et apps déployées : /, /about, /atelier-ia, /argocd-k8s-pour-les-nuls, /case-studies/aetherwx-encyclopedia, /case-studies/claude-code-codex, /case-studies/k8s-migration-overnight (liste exacte dans docs/verite-site.md § « Corrections à faire, par page »)"
+    status: todo
+    estimate: 0.25
+    visible: true
+    created: 2026-10-31
+  - id: L56
+    title: "Corrections de vérité — étoiles, versions et licences des outils testés : /case-studies et data/tools-tested.ts, claude-code-templates, claude-mem, code-review-graph, drona23-token-efficient, ruflo, superclaude, token-optimizers-2026, token-savior (valeurs datées, docs/verite-site.md § « Corrections à faire, par page »)"
+    status: todo
+    estimate: 0.25
+    visible: true
+    created: 2026-10-31
+  - id: L57
+    title: "Corrections de vérité — études de cas des apps : evatosorus, finance-tracker (claude-sonnet-5-5), hermes-agent, ol-companion (SDK Anthropic retiré, football-data.org), warhammer40k (docs/verite-site.md § « Corrections à faire, par page »)"
+    status: todo
+    estimate: 0.25
+    visible: true
+    created: 2026-10-31
+  - id: L58
+    title: Corrections de vérité — /theory (minimums de cache, sous-agents imbriqués), /start (statistiques RTK), /learning (règle de retrait des sources) (docs/verite-site.md § « Corrections à faire, par page »)
+    status: todo
+    estimate: 0.25
+    visible: true
+    created: 2026-10-31
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
