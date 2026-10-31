@@ -80,12 +80,14 @@ lots:
   - id: L37
     title: "Études de cas des apps loisir à jour d'après leur état réel : ol-companion (dernière mise à jour 10-05 ; depuis : animations, carte L1 L191–L197, Bleus, k3s), warhammer40k (10-05 ; visionneuse Concepts, galaxie…), finance-tracker (13-08 ; Crédits, Abonnements, revues UX) — lire le README, le CHANGELOG/Nouveautés et le plan de chaque projet, mettre à jour stack, architecture, chiffres et captures, dater la page ; demande Sylvain 24-10"
     public: "Études de cas : ol-companion, warhammer40k et finance-tracker à jour"
-    status: doing
+    status: done
     estimate: 0.5
     visible: true
     created: 2026-10-24
     started: 2026-10-31
     review: { date: 2026-10-31, verdict: "conforme — 3 notes mineures : port 4202 du frontend présenté comme port du pod (ol-companion, le pod écoute sur 80), « même réseau Docker » resté dans finance et ol, R6 qui ne prouve pas les captures ajoutées sur finance — orchestré (vague 2026-10-31-1820-cx, 2 passe(s) de correction)", commit: 46c3064044530cf4afb664dd5ebc61ad88b649a4 }
+    ux: { date: 2026-10-31, verdict: "conforme — 3 notes mineures du ux-reviewer (port 4202 présenté comme port du pod, « même réseau Docker » resté, R6 qui ne prouvait pas les captures de finance), toutes corrigées par L63 ; captures warhammer40k 390 et ol-companion 1440 regardées par le lead" }
+    finished: 2026-10-31
   - id: L38
     title: "Études de cas AetherWX à jour d'après l'état réel : maritime-atlas (17-09), aetherwx-qa-harness (09-09), aetherwx-encyclopedia (07-10) — référentiel WIGOS B28, SYNOP/METAR, livraison cadence ; et jobmail-assistant (09-06) ; lire README, docs/architecture.md, Nouveautés, plan ; chiffres et captures datés ; demande Sylvain 24-10"
     public: "Études de cas : AetherWX et jobmail-assistant à jour"
@@ -565,11 +567,12 @@ lots:
     finished: 2026-10-31
   - id: L63
     title: "Études de cas apps loisir — corrections de vérité de L37 (revue du 31-10) : « d\\'après » affiché avec un antislash (finance-tracker.astro:19, warhammer40k.astro:19 ; R1 doit échouer sur un antislash) ; warhammer : retirer la puce « Live — SSE /api/events » (flux supprimé le 29-09, warhammer L24) et dire que le contenu est lu dans seed/ et non data/ (texte l.76-77 et diagramme) ; ol-companion : port du pod (80, pas 4202), animations du direct décrites (README ol l.54 et 72, Nouveautés 19-10 et 21-10) ; finance : 24 modules et non ~20, libellé « Connu, masquer », plus de « même réseau Docker » (finance et ol, k3s) ; une seule forme de date par page ; R6 qui prouve les captures ajoutées sur finance"
-    status: doing
+    status: done
     estimate: 0.25
     created: 2026-10-31
     started: 2026-10-31
     review: { date: 2026-10-31, verdict: "conforme, 1 note mineure (le texte alternatif de la capture Abonnements dit encore « Connu masquer ») — orchestré (vague 2026-10-31-1945-cx, 1 passe(s) de correction)", commit: 72785f140fdf454b76841aa9d43a7dc58eb87c8f }
+    finished: 2026-10-31
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
