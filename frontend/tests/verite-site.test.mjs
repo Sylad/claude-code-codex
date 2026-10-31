@@ -87,3 +87,12 @@ test('R8 — les fonctionnalités de Claude Code de /theory et /start sont class
   assert.ok(!ligne('/theory', /^- \*\*non sourcé\*\*.*Task renommé/), 'plus de bloc non sourcé sur Task');
   assert.ok(ligne('/start', /Claude Code \/ Copilot|Copilot/), 'tableau Copilot classé dans /start');
 });
+
+test('R8 — les étoiles sont attribuées au bon outil : code-review-graph 16 940 → 32 516, TanStack Start 14 360 → 15 267, Convex relu', () => {
+  const stars = ligne('/case-studies', /^- \*\*dépassé\*\*.*étoiles figées/) || '';
+  assert.ok(/code-review-graph 16 940 → 32 516/.test(stars), 'code-review-graph relevé');
+  assert.ok(/tanstack-start 14 360 → 15 267/.test(stars), 'TanStack Start relevé avec sa vraie valeur');
+  assert.ok(!/tanstack-start 16 940/.test(stars), 'les étoiles de code-review-graph ne sont plus attribuées à TanStack Start');
+  assert.ok(ligne('/case-studies', /Convex.*12 570 → 12 770/), 'Convex relu');
+  assert.ok(ligne('/case-studies/code-review-graph', /^- \*\*dépassé\*\*.*16\.9k★.*32/), 'le 16.9k★ de la page code-review-graph est classé');
+});

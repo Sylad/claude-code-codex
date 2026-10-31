@@ -17,7 +17,7 @@ classe et une source, décomptes exacts).
 | classe | lignes |
 |---|---|
 | faux | 7 |
-| dépassé | 27 |
+| dépassé | 30 |
 | non sourcé | 23 |
 | ok | 36 |
 
@@ -68,7 +68,9 @@ classe et une source, décomptes exacts).
 ## `/case-studies`
 
 - **faux** — archify : licence « MIT » dans `tools-tested.ts` ; le dépôt tt-a1i/archify porte une licence Apache 2.0 (texte du fichier LICENSE) (source : API GitHub `repos/<dépôt>` relevée le 30-10-2026, endpoint `/license`)
-- **dépassé** — étoiles figées au relevé de mai–septembre sans date affichée : rtk 44 736 → 85 077, ruflo 46 787 → 80 279, claude-mem 74 236 → 106 054, hermes-agent 196 852 → 258 860, archify 65 708 → 91 806, tanstack-start 16 940 → 32 510, claude-code-templates 27 113 → 33 000, token-savior 891 → 1 199, fable-mode 539 → 880, ccusage 15 096 → 19 268 (source : API GitHub `repos/<dépôt>` relevée le 30-10-2026)
+- **dépassé** — étoiles figées au relevé de mai–septembre sans date affichée : rtk 44 736 → 85 077, ruflo 46 787 → 80 279, claude-mem 74 236 → 106 054, hermes-agent 196 852 → 258 860, archify 65 708 → 91 806, code-review-graph 16 940 → 32 516, tanstack-start 14 360 → 15 267 (monorepo TanStack/router), claude-code-templates 27 113 → 33 000, token-savior 891 → 1 199, fable-mode 539 → 880, ccusage 15 096 → 19 268 (source : API GitHub `repos/<dépôt>` relevée le 30-10-2026)
+- **dépassé** — Convex (hors des 21 dépôts ci-dessus : sa fiche pointe vers convex.dev) : 12 570 → 12 770 étoiles et dernier push 2026-09-18 → 2026-10-31 sur get-convex/convex-backend ; la licence FSL-1.1-Apache-2.0 n'est pas vérifiable par l'API (SPDX « NOASSERTION »), elle reste non confrontée (source : API GitHub `repos/get-convex/convex-backend` relevée le 31-10-2026)
+- **dépassé** — TanStack Start : « v1.167 stable » dans `tools-tested.ts`, `@tanstack/react-start` est en 1.169.4 sur npm ; dernier push 2026-05-11 → 2026-10-30 (source : `npm view @tanstack/react-start version` + API GitHub `repos/TanStack/router` relevée le 31-10-2026)
 - **dépassé** — dates « dernier push » (colonne `lastPush`) : 18 des 21 outils ont un push plus récent (ex. rtk 2026-05-08 → 2026-10-30, vibe-kanban 2026-04-24 → 2026-10-29, superclaude-framework 2026-04-27 → 2026-09-27) ; seuls opcode, claude-context et claude-token-efficient sont à jour (source : API GitHub `repos/<dépôt>` relevée le 30-10-2026)
 - **dépassé** — ccproxy : 400 étoiles affichées, 356 aujourd'hui (le chiffre a baissé) et dernier push 2026-05-10 → 2026-08-10 (source : API GitHub `repos/<dépôt>` relevée le 30-10-2026)
 - **non sourcé** — aucune date de relevé n'accompagne les étoiles ni la licence sur la page ; le lecteur ne peut pas juger leur fraîcheur (source : `case-studies.astro` lignes 311-351)
@@ -122,6 +124,7 @@ classe et une source, décomptes exacts).
 ## `/case-studies/code-review-graph`
 
 - **dépassé** — test du 2026-05-20, version 2.3.3, 929 nodes / 7 939 edges sur maritime-atlas : le graphe a grossi depuis ; la page est datée, donc ces chiffres ne sont pas faux mais plus représentatifs (source : date affichée sur la page ; verdict dans `tools-tested.ts`)
+- **dépassé** — « 16.9k★, MIT » (`code-review-graph.astro` lignes 48 et 109) : 32 516 étoiles aujourd'hui, licence MIT conforme (source : API GitHub `repos/tirth8205/code-review-graph` relevée le 31-10-2026)
 - **ok** — version et date du test affichées sur la page (« Test mené 2026-05-20 · version 2.3.3 ») (source : `code-review-graph.astro`)
 
 ## `/case-studies/drona23-token-efficient`
