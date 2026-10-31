@@ -1,8 +1,10 @@
 ---
 // L51 — schéma ou illustration du Livre de bord : cadre Schema + StepChain, contenu de
 // data/livre-de-bord-schemas.ts (identifiant déjà vérifié par findProblems au build).
-// L54 — au téléphone le schéma prend toute la largeur de l'écran, bord à bord, avec peu de marge intérieure :
-// le viewBox de 420 y est rendu à ~372 px, le plus petit texte à plus de 11 px.
+// L54 — au téléphone le schéma prend toute la largeur de l'écran, bord à bord, sans marge intérieure.
+// L60 — bord à bord par marges négatives (page px-5 + article p-6 + bordure 1 px), jamais en 100vw : 100vw compte la
+// barre de défilement classique, la page défilait de 8 px et le schéma était rogné à gauche. Le texte du schéma est
+// à 14 px dans le viewBox de 420 : il reste à 11 px ou plus rendu, jusqu'à 360 px de large barre comprise.
 import Schema from "@/components/site/Schema.astro";
 import StepChain from "@/components/site/StepChain.astro";
 import { SCHEMAS } from "@/data/livre-de-bord-schemas";
@@ -12,7 +14,7 @@ const { id } = Astro.props;
 const s = SCHEMAS[id];
 ---
 
-<div class="book-schema relative left-1/2 mt-5 w-screen -translate-x-1/2 sm:static sm:left-auto sm:mx-auto sm:w-auto sm:max-w-md sm:translate-x-0">
+<div class="book-schema mt-5 sm:mx-auto sm:max-w-md">
   <Schema id={id} legende={s.legende}>
     <StepChain id={id} steps={s.steps} boucle={s.boucle} titre={s.titre} desc={s.desc} />
   </Schema>
@@ -20,8 +22,11 @@ const s = SCHEMAS[id];
 
 <style is:global>
   /* hors couche : les utilités Tailwind sont dans une couche, le .schema de Schema.astro n'en a pas, il l'emporterait */
-  .book-schema .schema { padding: 0.5rem; }
+  .book-schema { margin-inline: calc(-2.75rem - 1px); }
+  .book-schema .schema { padding: 0.5rem 0; border-inline: 0; border-radius: 0; }
+  .book-schema .sch-m, .book-schema .sch-a { font-size: 14px; }
   @media (min-width: 40rem) {
-    .book-schema .schema { padding: 1rem; }
+    .book-schema { margin-inline: auto; }
+    .book-schema .schema { padding: 1rem; border-inline: 1px solid var(--sch-line); border-radius: 0.75rem; }
   }
 </style>

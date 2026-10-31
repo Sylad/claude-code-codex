@@ -30,7 +30,7 @@ export const SCHEMAS: Record<string, BookSchema> = {
       { titre: "QA", detail: "on regarde ce qui est réellement livré" },
       { titre: "La personne décide", detail: "elle seule publie" },
     ],
-    boucle: { de: 2, vers: 0, nom: "defaut-trouve", mot: "défaut : on reprend" },
+    boucle: { de: 3, vers: 0, nom: "defaut-trouve", mot: "défaut : on reprend" },
   },
   "episode-finance": {
     titre: "Finance : une vérification partielle, un défaut attrapé par la QA",
