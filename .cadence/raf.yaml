@@ -581,9 +581,12 @@ lots:
     created: 2026-10-31
   - id: L65
     title: "Catalogue : ui-ux-pro-max-skill testé le 01-11"
-    status: todo
+    status: done
     estimate: 1
     created: 2026-11-01
+    started: 2026-11-01
+    review: { date: 2026-11-01, verdict: "conforme : 3 entrées du catalogue (ui-ux-pro-max, design-for-ai, claude-design-styles) avec leurs relevés R2, relues par le lead ; test R2 non assoupli ; npm test et build verts", commit: 523d8b6f1dfe72ffcc9510c5194e84db52c8996d }
+    finished: 2026-11-01
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
