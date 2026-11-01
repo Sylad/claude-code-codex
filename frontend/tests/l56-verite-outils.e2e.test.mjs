@@ -19,6 +19,7 @@ const RELEVE = {
   'nadimtuhin-claude-token-optimizer': [638, '2026-10-28'], 'claude-token-efficient': [6135, '2026-06-16'],
   archify: [91964, '2026-10-31'],
   'ui-ux-pro-max-skill': [143594, '2026-11-01'],
+  'design-for-ai': [324, '2026-07-02'], 'claude-design-styles': [37, '2026-07-30'],
 };
 const page = (p) => readFileSync(join(DIST, p, 'index.html'), 'utf8');
 const texte = (p) => page(p).replace(/<[^>]+>/g, ' ').replace(/&nbsp;| /g, ' ').replace(/\s+/g, ' ');

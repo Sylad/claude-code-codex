@@ -352,4 +352,32 @@ export const testedTools: TestedTool[] = [
     license: "MIT",
     status: "tested",
   },
+  {
+    id: "design-for-ai",
+    name: "design-for-ai",
+    author: "ryanthedev",
+    category: "plugin",
+    description:
+      "Plugin de théorie du design (d'après Design for Hackers) : flux research → plan → mock → build, huit domaines de doctrine en fichiers de référence, et trois scripts Node sans dépendance ni réseau — palette.mjs (rampes OKLCH 12 pas, contraste WCAG résolu par construction), dealer.mjs (tirage déterministe de famille, composition et teinte pour éviter la convergence), detect.mjs (16 règles statiques qui repèrent les tics d'IA : dégradé sur texte, triplet violet, lueur sombre, police Inter, jargon). Testé 2026-11-01 en sandbox (rien installé, ~/.claude intact) : palette.mjs donne un tableau de bord sombre aux contrastes tenus (8,8 à 14,3 pour 1), detect.mjs signale 7 défauts sur une page témoin et 0 sur notre site evatosorus ; mais le dealer propose de l'Art déco pour un tableau de bord d'offres, hors charte, et le flux complet double ce que cadence fait déjà. Verdict skillify : rien à installer ; reprendre le détecteur de tics et le générateur de palette contrastée dans la revue UX de cadence.",
+    tags: ["claude-code", "plugin", "design", "ui-ux", "color", "ai-tells", "tested"],
+    url: "https://github.com/ryanthedev/design-for-ai",
+    stars: 324,
+    lastPush: "2026-07-02",
+    license: "MIT",
+    status: "tested",
+  },
+  {
+    id: "claude-design-styles",
+    name: "Design Styles for Claude",
+    author: "chrismccoy",
+    category: "skill",
+    description:
+      "Catalogue de 53 styles visuels nommés : un CLAUDE.md court (environ 70 lignes) liste les styles, et un fichier spec/ par style (polices, couleurs hexadécimales, ombres, composants, animations) n'est lu que si on nomme le style. Pas de code ni de rendu. Testé 2026-11-01 en lecture : le style « dashboard » est clair avec Inter et bleu par défaut, sans variante sombre ; « dark saas » est une page d'accueil de produit ; rien de documentaire ni d'ambre, le plus proche (organic, crème et terracotta) est hors charte d'evatosorus. Aucune licence déclarée. Verdict rejet : un menu de styles génériques tire vers la même allure que celle que nos agents évitent. Seule idée à garder : l'index court et un fichier lu à la demande pour charger une charte.",
+    tags: ["claude-code", "skill", "design", "styles", "tailwind", "tested"],
+    url: "https://github.com/chrismccoy/claude-design-styles",
+    stars: 37,
+    lastPush: "2026-07-30",
+    license: "unlicensed",
+    status: "tested",
+  },
 ];
