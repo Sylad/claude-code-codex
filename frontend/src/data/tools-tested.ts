@@ -338,4 +338,18 @@ export const testedTools: TestedTool[] = [
     license: "Apache-2.0",
     status: "tested",
   },
+  {
+    id: "ui-ux-pro-max-skill",
+    name: "UI UX Pro Max",
+    author: "nextlevelbuilder",
+    category: "skill",
+    description:
+      "Skill de « design intelligence » : un moteur de recherche local en Python (zéro dépendance, zéro réseau) sur des CSV — 79 styles, 192 palettes de produit, 74 appariements de polices, 119 règles UX, 22 stacks — et un générateur de « design system » (motif de page, style, palette, typographie, liste de contrôle avant livraison). Testé 2026-11-01 en sandbox : ~/.claude intact, `python3 -I search.py` fonctionne du premier coup. Mais le résultat est générique : requêtes en français et mots clés (sombre, ambre, paléontologie) ignorés, palette claire par défaut, motif de page de conversion (Hero + CTA) même pour un tableau de bord. Verdict skillify partiel : rien à installer ; reprendre l'idée des jetons de couleur sémantiques avec leur couleur de texte et la liste de contrôle avant livraison dans la spec et la revue UX de cadence, qui travaillent déjà à la charte du projet.",
+    tags: ["claude-code", "skill", "design", "ui-ux", "typography", "palettes", "tested"],
+    url: "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill",
+    stars: 143594,
+    lastPush: "2026-11-01",
+    license: "MIT",
+    status: "tested",
+  },
 ];
