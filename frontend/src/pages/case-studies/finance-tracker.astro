@@ -81,7 +81,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
     ctrl["AnalysisController"]
     anth["AnthropicService (claude-sonnet-5-5)"]
     p1["Phase 1 — tool_use extract_transactions: transactions + infos de compte"]
-    p2["Phase 2 — tool_use analyze_finances: score, charges récurrentes suggérées"]
+    p2["Phase 2 — tool_use analyze_finances: récurrents, commentaire, charges suggérées"]
     store["StorageService — data/finance/statements/&lt;YYYY-MM&gt;.json + archive + yearly + data/demo"]
     sync["AutoSyncService — Loans.splitByAmount + Savings"]
   end
@@ -141,8 +141,9 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
           l'outil, et uniquement lui » et, si la réponse n'a aucun appel d'outil,
           l'appel est relancé une fois puis échoue avec une erreur explicite,
           sans jamais lire un texte libre. Phase 1 extrait les transactions
-          brutes ; Phase 2 analyse la santé financière (score, suggestions de
-          charges récurrentes). La catégorisation automatique (<code>auto-catégorisation</code>)
+          brutes ; Phase 2 analyse (crédits récurrents, commentaire de santé,
+          suggestions de charges récurrentes) ; le score lui-même est
+          calculé côté backend, de façon déterministe. La catégorisation automatique (<code>auto-catégorisation</code>)
           est un appel d'outil à part. Découper en
           deux appels donne un meilleur taux de réussite que tout demander
           d'un coup.</span>
@@ -203,7 +204,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         <li class="flex gap-3">
           <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
           <span><strong>Two-phase tool_use Claude</strong> — Phase 1
-          extraction PDF → transactions, Phase 2 analyse (score, récurrents). Le
+          extraction PDF → transactions, Phase 2 analyse (récurrents, commentaire) ; le score est calculé côté backend. Le
           schéma <code>strict: true</code> évite les hallucinations de format ;
           la validation côté NestJS bloque ce qui passe quand même.</span>
         </li>

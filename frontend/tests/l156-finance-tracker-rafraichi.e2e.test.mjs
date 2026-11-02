@@ -25,6 +25,13 @@ test('R2 — la phase 2 analyse la santé financière, la catégorisation est un
   assert.match(t, /auto-catégorisation/);
 });
 
+test('R2b — le score de santé est calculé côté backend, jamais attribué à la phase 2 de Claude', () => {
+  assert.doesNotMatch(t, /analyze_finances\s*:\s*score/);
+  assert.doesNotMatch(t, /Phase 2 analyse \(score/);
+  assert.doesNotMatch(t, /analyse la santé financière/);
+  assert.match(t, /score[^.]{0,60}calculé côté backend/);
+});
+
 test('R3 — les livraisons de fin octobre sont dites : écran d\'erreur, navigation, démo cohérente, règle proposée, À propos/Nouveautés', () => {
   assert.match(t, /écran d'erreur en français/);
   assert.match(t, /bouton Recharger/);
