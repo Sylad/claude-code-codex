@@ -381,6 +381,20 @@ export const testedTools: TestedTool[] = [
     status: "tested",
   },
   {
+    id: "emilkowalski-apple-design",
+    name: "Apple Design (Emil Kowalski)",
+    author: "emilkowalski",
+    category: "skill",
+    description:
+      "Skill du dépôt emilkowalski/skills (16 skills de design et d'animation pour le web, MIT) : l'approche « interfaces fluides » des conférences WWDC d'Apple traduite pour le web — réponse à l'appui, suivi 1:1 du pointeur, animations interruptibles, ressorts plutôt que courbes, passage de la vitesse du geste à l'animation, projection de l'élan, bords élastiques, matériaux, mouvement réduit. Testée 2026-11-02 en sandbox (copie dans les skills d'un projet jetable, ~/.claude intact) sur un tiroir et un curseur de barre de temps : revue précise et actionnable (curseur qui ne suit pas le pointeur, latence ajoutée par un setTimeout, pas de Pointer Events, ease-in à contresens, left/bottom animés au lieu de transform, vitesse non projetée, pas de rôle slider ni de prefers-reduced-motion), 4 tours, ~0,30 $ d'équivalent quota. Complète une revue UX centrée WCAG, muette sur le mouvement. Verdict : adopt, en skill de projet là où il y a des gestes et des animations.",
+    tags: ["claude-code", "skill", "design", "motion", "animation", "web", "tested"],
+    url: "https://github.com/emilkowalski/skills",
+    stars: 52926,
+    lastPush: "2026-11-02",
+    license: "MIT",
+    status: "tested",
+  },
+  {
     id: "claude-design-styles",
     name: "Design Styles for Claude",
     author: "chrismccoy",
