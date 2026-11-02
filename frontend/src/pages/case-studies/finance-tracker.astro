@@ -80,8 +80,8 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
     demo["DemoModeMiddleware (AsyncLocalStorage)"]
     ctrl["AnalysisController"]
     anth["AnthropicService (claude-sonnet-5-5)"]
-    p1["Phase 1 — tool_use ANALYZE_TOOL: transactions, score, recurring"]
-    p2["Phase 2 — tool_use CATEGORIZE_TOOL: category, sub, confidence"]
+    p1["Phase 1 — tool_use extract_transactions: transactions + infos de compte"]
+    p2["Phase 2 — tool_use analyze_finances: score, charges récurrentes suggérées"]
     store["StorageService — data/finance/statements/&lt;YYYY-MM&gt;.json + archive + yearly + data/demo"]
     sync["AutoSyncService — Loans.splitByAmount + Savings"]
   end
@@ -135,10 +135,15 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         <li class="flex gap-3">
           <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
           <span><strong>IA</strong> : Claude <code>claude-sonnet-5-5</code> (depuis le 15 octobre 2026) en
-          <code>tool_choice: {`{ type: 'tool' }`}</code> strict pour forcer
-          la sortie structurée. Phase 1 extrait les transactions brutes +
-          score + suggestions de récurrents ; Phase 2 catégorise chaque
-          transaction (catégorie / sous-catégorie / confidence). Découper en
+          <code>tool_choice: {`{ type: 'auto' }`}</code> et outils
+          <code>strict: true</code> : ce modèle refuse un <code>tool_choice</code>
+          forcé (erreur 400), donc le prompt se termine par « réponds en appelant
+          l'outil, et uniquement lui » et, si la réponse n'a aucun appel d'outil,
+          l'appel est relancé une fois puis échoue avec une erreur explicite,
+          sans jamais lire un texte libre. Phase 1 extrait les transactions
+          brutes ; Phase 2 analyse la santé financière (score, suggestions de
+          charges récurrentes). La catégorisation automatique (<code>auto-catégorisation</code>)
+          est un appel d'outil à part. Découper en
           deux appels donne un meilleur taux de réussite que tout demander
           d'un coup.</span>
         </li>
@@ -167,6 +172,11 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         Faux positif) avec des messages d'échec clairs et un focus gardé après chaque action. Les
         écrans Dépenses, Santé, Heatmap, Objectifs et Règles de catégories ont eux aussi eu leur
         revue UX : erreurs dites en français, suppression confirmée, mois en toutes lettres.
+        Fin octobre : un écran d'erreur en français avec un bouton Recharger a été ajouté ;
+        la navigation, l'en-tête et la barre du bas sont plus lisibles, comme les pages
+        À propos et Nouveautés ; les chiffres de la démo sont cohérents entre patrimoine, crédits
+        et score du mois ; en auto-catégorisation, la règle proposée suit la catégorie choisie ;
+        le focus clavier est gardé après masquage d'un abonnement.
         Le modèle d'analyse est <code>claude-sonnet-5-5</code> ; le backend compte 24 modules, et le
         projet environ 1 620 cas de test au 31 octobre 2026 (recherche de <code>it(</code>/<code>test(</code>).
       </p>
@@ -193,9 +203,9 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         <li class="flex gap-3">
           <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
           <span><strong>Two-phase tool_use Claude</strong> — Phase 1
-          extraction PDF → transactions + score, Phase 2 catégorisation. Le
-          <code>tool_choice</code> strict évite les hallucinations de format ;
-          la validation Zod côté NestJS bloque ce qui passe quand même.</span>
+          extraction PDF → transactions, Phase 2 analyse (score, récurrents). Le
+          schéma <code>strict: true</code> évite les hallucinations de format ;
+          la validation côté NestJS bloque ce qui passe quand même.</span>
         </li>
         <li class="flex gap-3">
           <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
