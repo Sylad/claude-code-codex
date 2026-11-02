@@ -1,5 +1,14 @@
 [
   {
+    "id": "e63c44ee253751eb",
+    "source": "anthropic-news",
+    "url": "https://www.anthropic.com/news/ai-for-science-expands-foundations-research-institutions",
+    "title": "AI for Science expands to foundations and institutions",
+    "summary": "Anthropic élargit son programme AI for Science à 20 institutions : accès gratuit à Claude pour chercheurs, agents IA pour instruments de labo et analyse de données.",
+    "publishedAt": "Wed, 28 Oct 2026 00:00:00 GMT",
+    "fetchedAt": "2026-11-02T14:41:10.242Z"
+  },
+  {
     "id": "ef1b3a4772eab837",
     "source": "anthropic-news",
     "url": "https://www.anthropic.com/news/claude-discovers-novel-enzyme-system",
@@ -34,6 +43,24 @@
     "summary": "Fable 5 redéployé globalement dès le 1er juillet après levée des contrôles d'export, disponible sur Claude Code avec crédits d'usage.",
     "publishedAt": "Tue, 30 Jun 2026 04:00:00 GMT",
     "fetchedAt": "2026-07-06T10:12:39.698Z"
+  },
+  {
+    "id": "dcad83d827337ce8",
+    "source": "anthropic-news",
+    "url": "https://www.anthropic.com/research/early-progress-drug-development",
+    "title": "Early progress on accelerating drug development with Claude",
+    "summary": "Claude accélère le développement de médicaments via des partenariats stratégiques et améliore ses capacités pour les tâches complexes multi-étapes.",
+    "publishedAt": "Tue, 27 Oct 2026 00:00:00 GMT",
+    "fetchedAt": "2026-11-02T14:41:10.242Z"
+  },
+  {
+    "id": "550f4d88633d4245",
+    "source": "anthropic-news",
+    "url": "https://www.anthropic.com/news/expanding-partnership-gsa",
+    "title": "Expanding our partnership with GSA to bring Claude to all levels of government",
+    "summary": "Anthropic étend son partenariat GSA : 40% de réduction sur Claude Enterprise et l'API pour tous les gouvernements US.",
+    "publishedAt": "Tue, 27 Oct 2026 00:00:00 GMT",
+    "fetchedAt": "2026-11-02T14:41:10.242Z"
   },
   {
     "id": "1e032b3767d6bbcd",

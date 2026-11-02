@@ -1,5 +1,77 @@
 [
   {
+    "id": "b72dc720cf78e393",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Nov/1/kyle-kingsbury/",
+    "title": "Quoting Kyle Kingsbury",
+    "summary": "Les LLMs érodent la confiance en docs et logiciels : comment démontreriez-vous la qualité de votre code dorénavant ?",
+    "publishedAt": "2026-11-01T16:49:04+00:00",
+    "fetchedAt": "2026-11-02T14:41:14.926Z"
+  },
+  {
+    "id": "5433d48c0a4a7162",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Oct/31/datasette-llm/",
+    "title": "datasette-llm 0.1a9",
+    "summary": "datasette-llm 0.1a9 utilise maintenant le modèle LLM par défaut, simplifiant le déploiement de Datasette Agent sans configuration explicite.",
+    "publishedAt": "2026-10-31T22:10:01+00:00",
+    "fetchedAt": "2026-11-02T14:41:14.926Z"
+  },
+  {
+    "id": "49d99f09e516b736",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Oct/29/api-credits/",
+    "title": "API credits benefit for eligible ChatGPT subscriptions",
+    "summary": "OpenAI offre maintenant des crédits API gratuits aux abonnés ($100-500/mois), comme Anthropic le fait déjà.",
+    "publishedAt": "2026-10-29T22:48:29+00:00",
+    "fetchedAt": "2026-11-02T14:41:14.926Z"
+  },
+  {
+    "id": "a41c6b1e5e903c63",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Oct/29/how-i-built-the-most-ai-pilled-company-in-the-world/",
+    "title": "Building a multiplayer game world with autonomous Fable-class models",
+    "summary": "Spawn démontre un monde de jeu multijoueur entièrement généré par agents IA via prompts, explorant les limites de l'ingénierie agentique.",
+    "publishedAt": "2026-10-29T17:00:26+00:00",
+    "fetchedAt": "2026-11-02T14:41:14.926Z"
+  },
+  {
+    "id": "95cafd4597e819bb",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Oct/29/ben-hylak/",
+    "title": "Quoting Ben Hylak",
+    "summary": "Les MCPs headless devraient abstraire tous les produits dans des agents, sauf le nôtre qui mise sur l'UX.",
+    "publishedAt": "2026-10-29T14:06:27+00:00",
+    "fetchedAt": "2026-11-02T14:41:14.926Z"
+  },
+  {
+    "id": "e9a7a10b5a66f3aa",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Oct/28/github-octoverse-2026/",
+    "title": "GitHub Octoverse 2026",
+    "summary": "GitHub Octoverse 2026 montre la montée des agents IA : PRs et commits ont triplé, révélant l'adoption massive des workflows automatisés par IA.",
+    "publishedAt": "2026-10-28T16:45:23+00:00",
+    "fetchedAt": "2026-11-02T14:41:14.926Z"
+  },
+  {
+    "id": "7f577f4b01c6fc58",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Oct/28/vibe-game-development/",
+    "title": "The October inflection point for vibe game development",
+    "summary": "Octobre 2026 marque un tournant : Claude Opus 5.5 rend le développement de jeux viables avec IA générative pour la 3D, musique et game design.",
+    "publishedAt": "2026-10-28T13:55:15+00:00",
+    "fetchedAt": "2026-11-02T14:41:14.926Z"
+  },
+  {
+    "id": "2cf23206607f40da",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Oct/28/terk-terkowitz/",
+    "title": "Quoting Terk Terkowitz",
+    "summary": "Documenter où l'IA n'aide pas encore votre travail démontre du jugement et crée de la valeur pour votre équipe.",
+    "publishedAt": "2026-10-28T10:09:07+00:00",
+    "fetchedAt": "2026-11-02T14:41:14.926Z"
+  },
+  {
     "id": "d1879513a33727bd",
     "source": "simon-willison",
     "url": "https://simonwillison.net/2026/Oct/24/battledrones/",
@@ -376,77 +448,5 @@
     "summary": "<p><strong><a href=\"https://blog.rust-lang.org/2026/09/17/targeted-attacks/\">Be alert: targeted attacks on prominent Rustaceans</a></strong>",
     "publishedAt": "2026-09-17T23:59:19+00:00",
     "fetchedAt": "2026-09-21T11:54:42.889Z"
-  },
-  {
-    "id": "0c114974aa55eb9d",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Sep/17/how-to-write-with-an-llm/",
-    "title": "How To Write With An LLM",
-    "summary": "<p><strong><a href=\"https://sockpuppet.org/blog/2026/09/17/how-to-write-with-an-llm/\">How To Write With An LLM</a></strong></p> Thomas Ptace",
-    "publishedAt": "2026-09-17T23:37:27+00:00",
-    "fetchedAt": "2026-09-21T11:54:42.889Z"
-  },
-  {
-    "id": "6533bdcc0f6c39c5",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Sep/17/compaction-summaries/",
-    "title": "Self-generated prompt injections in compaction summaries",
-    "summary": "<p><strong><a href=\"https://alignment.openai.com/misalignment-reports/self-generated-prompt-injections-in-compaction-summaries/\">Self-genera",
-    "publishedAt": "2026-09-17T20:57:55+00:00",
-    "fetchedAt": "2026-09-21T11:54:42.889Z"
-  },
-  {
-    "id": "3fb5c069cb2ad112",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Sep/16/datasette/",
-    "title": "datasette 1.0a40",
-    "summary": "<p><strong>Release:</strong> <a href=\"https://github.com/simonw/datasette/releases/tag/1.0a40\">datasette 1.0a40</a></p> <p>Same security fix",
-    "publishedAt": "2026-09-16T23:51:43+00:00",
-    "fetchedAt": "2026-09-21T11:54:42.889Z"
-  },
-  {
-    "id": "4e32c351abd8d17d",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Sep/16/datasette-2/",
-    "title": "datasette 0.65.5",
-    "summary": "<p><strong>Release:</strong> <a href=\"https://github.com/simonw/datasette/releases/tag/0.65.5\">datasette 0.65.5</a></p> <p>Security fix for",
-    "publishedAt": "2026-09-16T23:51:08+00:00",
-    "fetchedAt": "2026-09-21T11:54:42.889Z"
-  },
-  {
-    "id": "bc4ce9d50d9b33de",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Sep/16/one-claude/",
-    "title": "Claude Cowork and chat are now one Claude",
-    "summary": "<p><strong><a href=\"https://claude.com/blog/cowork-is-now-claude\">Claude Cowork and chat are now one Claude</a></strong></p> In hopefully go",
-    "publishedAt": "2026-09-16T18:09:49+00:00",
-    "fetchedAt": "2026-09-21T11:54:42.889Z"
-  },
-  {
-    "id": "56ed9309de330598",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Sep/12/astra-running-routes/",
-    "title": "Generating running routes with GPT-6 Astra and ChatGPT Work",
-    "summary": "GPT-6 génère des itinéraires de course via Nominatim et Overpass, mais manque de transparence sur le code exécuté—un risque à éviter dans les agents IA.",
-    "publishedAt": "2026-09-12T23:56:42+00:00",
-    "fetchedAt": "2026-09-14T11:41:51.226Z"
-  },
-  {
-    "id": "b30b0408a14795de",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Sep/12/paul-ford/",
-    "title": "Quoting Paul Ford",
-    "summary": "L'IA code bien mais facilite les mauvaises implémentations : le vrai défi reste la collaboration humaine et la maîtrise du craft.",
-    "publishedAt": "2026-09-12T18:00:21+00:00",
-    "fetchedAt": "2026-09-14T11:41:51.226Z"
-  },
-  {
-    "id": "28569c3c31a0d771",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Sep/11/so-you-want-to-use-openrouter/",
-    "title": "So you want to use OpenRouter?",
-    "summary": "OpenRouter bascule automatiquement entre providers, mais peut causer des incohérences : préférez spécifier le provider avec l'option provider.only.",
-    "publishedAt": "2026-09-11T22:49:18+00:00",
-    "fetchedAt": "2026-09-14T11:41:51.226Z"
   }
 ]
