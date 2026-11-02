@@ -367,6 +367,20 @@ export const testedTools: TestedTool[] = [
     status: "tested",
   },
   {
+    id: "apple-design-skill",
+    name: "Apple Design Skill",
+    author: "dickwu",
+    category: "skill",
+    description:
+      "Skill de revue de design fondée sur les Human Interface Guidelines d'Apple : 123 pages HIG recopiées mot pour mot depuis developer.apple.com (1,27 Mo), une table de correspondance Flutter / React Native / Tauri / Electron, un audit de code (Apple Pay, Liquid Glass, iPhone Duo) et une « lentille d'artisan » contre le look générique. Testée 2026-11-02 en sandbox (clone dans les skills d'un projet jetable, ~/.claude intact) sur une page web sombre : revue en français, juste et chiffrée (contrastes 2,2:1 et 3,0:1, cibles de 22 à 24 px, onglet actif absent, libellé « OK » vague), mais la skill a avoué ne pas avoir ouvert ses pages de référence alors que sa première règle est « Read before you cite », et pour une app web elle n'apporte guère plus que WCAG, que notre revue UX mesure déjà. Aucun fichier LICENSE alors que le contenu est le texte d'Apple : non redistribuable. Verdict : reject, rien à installer ; idée gardée : citer « fichier › section » de la règle appliquée.",
+    tags: ["claude-code", "skill", "design", "ui-ux", "apple-hig", "accessibility", "tested"],
+    url: "https://github.com/dickwu/apple-design-skill",
+    stars: 2641,
+    lastPush: "2026-10-28",
+    license: "unlicensed",
+    status: "tested",
+  },
+  {
     id: "claude-design-styles",
     name: "Design Styles for Claude",
     author: "chrismccoy",
