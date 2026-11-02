@@ -22,7 +22,8 @@ test('R2 — la phase 2 analyse la santé financière, la catégorisation est un
   assert.doesNotMatch(t, /Phase 2 — tool_use CATEGORIZE_TOOL/);
   assert.doesNotMatch(t, /Phase 2 catégorise/);
   assert.match(t, /Phase 2 analyse/);
-  assert.match(t, /auto-catégorisation/);
+  assert.match(t, /categorize_transactions/);
+  assert.doesNotMatch(t, /<code>auto-catégorisation/);
 });
 
 test('R2b — le score de santé est calculé côté backend, jamais attribué à la phase 2 de Claude', () => {
@@ -39,4 +40,19 @@ test('R3 — les livraisons de fin octobre sont dites : écran d\'erreur, naviga
   assert.match(t, /À propos et Nouveautés/);
   assert.match(t, /chiffres de la démo/);
   assert.match(t, /règle proposée suit la catégorie choisie/);
+});
+
+test('R4 — la phase 1 catégorise déjà ; categorize_transactions n\'est lancé qu\'à la demande', () => {
+  assert.match(t, /Phase 1 extrait les transactions et leur attribue une catégorie/);
+  assert.match(t, /categorize_transactions[^.]{0,80}à la demande/);
+});
+
+test('R5 — la consigne est citée telle que le code la produit', () => {
+  assert.match(t, /Tu dois répondre en appelant l'outil [^»]{1,40}, et uniquement lui\./);
+  assert.doesNotMatch(t, /réponds en appelant/);
+});
+
+test('R6 — la liste d\'établissements est nommée comme dans le dépôt', () => {
+  assert.doesNotMatch(t, /KNOWN_LOAN_CREDITORS/);
+  assert.match(t, /CREDIT_INSTITUTIONS/);
 });

@@ -137,14 +137,13 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
           <span><strong>IA</strong> : Claude <code>claude-sonnet-5-5</code> (depuis le 15 octobre 2026) en
           <code>tool_choice: {`{ type: 'auto' }`}</code> et outils
           <code>strict: true</code> : ce modèle refuse un <code>tool_choice</code>
-          forcé (erreur 400), donc le prompt se termine par « réponds en appelant
-          l'outil, et uniquement lui » et, si la réponse n'a aucun appel d'outil,
+          forcé (erreur 400), donc le prompt se termine par « Tu dois répondre en appelant
+          l'outil <code>nom_de_l'outil</code>, et uniquement lui. » et, si la réponse n'a aucun appel d'outil,
           l'appel est relancé une fois puis échoue avec une erreur explicite,
-          sans jamais lire un texte libre. Phase 1 extrait les transactions
-          brutes ; Phase 2 analyse (crédits récurrents, commentaire de santé,
+          sans jamais lire un texte libre. Phase 1 extrait les transactions et leur attribue une catégorie ; Phase 2 analyse (crédits récurrents, commentaire de santé,
           suggestions de charges récurrentes) ; le score lui-même est
-          calculé côté backend, de façon déterministe. La catégorisation automatique (<code>auto-catégorisation</code>)
-          est un appel d'outil à part. Découper en
+          calculé côté backend, de façon déterministe. Un second outil, <code>categorize_transactions</code>, recatégorise
+          à la demande : il n'est lancé que sur action de l'utilisateur. Découper en
           deux appels donne un meilleur taux de réussite que tout demander
           d'un coup.</span>
         </li>
@@ -321,8 +320,8 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
           <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
           <span><strong>Whitelist + regex anti-bruit avant auto-création</strong>.
           Claude suggère parfois "c'est un crédit" sur des paiements CB
-          répétés au même commerçant. Sans <code>KNOWN_LOAN_CREDITORS</code>
-          (organismes REGAFI/ASF) et sans regex
+          répétés au même commerçant. Sans <code>CREDIT_INSTITUTIONS</code>
+          (liste unique des établissements de crédit) et sans regex
           <code>NOT_A_CREDIT</code> (<code>PAIEMENT CB|ACHAT CB|RETRAIT…</code>),
           on créait des crédits fantômes. Leçon : un LLM qui suggère, c'est
           bien. Un code qui filtre avant d'écrire, c'est mieux.</span>
