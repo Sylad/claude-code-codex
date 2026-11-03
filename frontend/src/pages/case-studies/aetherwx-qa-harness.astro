@@ -3,6 +3,11 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
 import CaseStudySection from "@/components/site/CaseStudySection.astro";
 import CodeBlock from "@/components/site/CodeBlock.astro";
+import EtudeFraicheur from "@/components/site/EtudeFraicheur.astro";
+import { chiffreDate } from "@/lib/etude-fraicheur.mjs";
+
+// Relevé du 3 novembre 2026 : entrées du manifeste généré depuis globe.component.ts.
+const nbLayers: number | undefined = 68;
 ---
 
 <BaseLayout
@@ -16,9 +21,11 @@ import CodeBlock from "@/components/site/CodeBlock.astro";
   />
 
   <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12 space-y-12">
+    <EtudeFraicheur depots={["maritime-atlas"]} />
+
     <CaseStudySection eyebrow="Le problème — layers silencieux">
       <p>
-        AetherWX affiche une quarantaine de layers activables : SST, vent
+        AetherWX affiche des dizaines de layers activables : SST, vent
         GFS, vagues WW3, foudre Blitzortung, satellites NASA GIBS et
         EUMETSAT, radars nationaux (Allemagne, Pays-Bas, États-Unis, Canada),
         précipitations globales IMERG, navires AIS, alertes maritimes… Le
@@ -27,6 +34,9 @@ import CodeBlock from "@/components/site/CodeBlock.astro";
         à chaque refactoring du composant principal
         <code>globe.component.ts</code> (8 000+ lignes), quelque chose cassait
         discrètement.
+      </p>
+      <p data-testid="chiffre-date">
+        {chiffreDate({ valeur: nbLayers, unite: "couches de données dans le manifeste du harnais", libelleAbsent: "Nombre de couches de données", date: "2026-11-03", source: "qa/layers.manifest.json, généré depuis globe.component.ts", pourquoi: "le manifeste du harnais QA (qa/layers.manifest.json) n’était pas accessible" })}
       </p>
       <p>
         Symptôme concret : <strong>le slider d'opacité semblait marcher</strong>

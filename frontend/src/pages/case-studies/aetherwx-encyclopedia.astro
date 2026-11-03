@@ -3,6 +3,11 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
 import MermaidDiagram from "@/components/site/MermaidDiagram.vue";
 import CaseStudySection from "@/components/site/CaseStudySection.astro";
+import EtudeFraicheur from "@/components/site/EtudeFraicheur.astro";
+import { chiffreDate } from "@/lib/etude-fraicheur.mjs";
+
+// Pods du namespace maritime : aucun contexte kubectl au 3 novembre 2026, donc pas de relevé.
+const nbPods: number | undefined = undefined;
 
 const globalArchi = `flowchart TB
     subgraph Internet["🌍 Internet (visiteur recruteur)"]
@@ -187,6 +192,8 @@ const tokenFlow = `flowchart LR
 
   <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12 space-y-12">
 
+    <EtudeFraicheur depots={["maritime-atlas", "aetherwx-gitops"]} />
+
     <CaseStudySection eyebrow="00 · Ce qui a changé depuis l'écriture">
       <p>
         Cette page a été écrite le 2026-05-14, au sortir du marathon qui a
@@ -344,6 +351,9 @@ const tokenFlow = `flowchart LR
     </CaseStudySection>
 
     <CaseStudySection eyebrow="04 · Les services qui tournent">
+      <p data-testid="chiffre-date">
+        {chiffreDate({ valeur: nbPods, unite: "pods dans le namespace maritime", libelleAbsent: "Nombre de pods du namespace maritime", date: "2026-11-03", source: "kubectl get pods", pourquoi: "aucun contexte de cluster n’était configuré sur le poste de développement pour interroger kubectl" })}
+      </p>
       <p>
         Le namespace maritime fait tourner une vingtaine de pods (relevé de mai 2026, non recompté depuis). Voici le
         découpage par rôle :
@@ -816,8 +826,8 @@ const tokenFlow = `flowchart LR
 
       <p class="mt-8 text-sm text-ink-muted italic">
         Encyclopédie écrite en pair-programming avec Claude Opus 4.7 le
-        2026-05-14, en fin de journée d'un marathon de 14 heures, et mise à
-        jour en septembre 2026 (prod bare-metal, GeoServer 3.0.1). Si
+        2026-05-14, en fin de journée d'un marathon de 14 heures, et tenue à
+        jour depuis (prod bare-metal, GeoServer 3.0.1 ; date en tête de page). Si
         quelque chose ne te paraît pas clair, ouvre une issue sur le
         repo claude-code-codex — c'est probablement que j'ai sauté une
         étape.

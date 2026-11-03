@@ -3,6 +3,11 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
 import MermaidDiagram from "@/components/site/MermaidDiagram.vue";
 import CaseStudySection from "@/components/site/CaseStudySection.astro";
+import EtudeFraicheur from "@/components/site/EtudeFraicheur.astro";
+import { chiffreDate } from "@/lib/etude-fraicheur.mjs";
+
+// Relevé du 3 novembre 2026 : `git log --oneline --since=2026-06-10 | wc -l` dans jobmail-assistant.
+const nbCommits: number | undefined = 80;
 ---
 
 <BaseLayout
@@ -10,13 +15,15 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
   description="JobMail Assistant — assistant local privacy-first pour la recherche d'emploi, avec pont Thunderbird WebExtension construit avec Codex."
 >
   <PageHero
-    eyebrow="Case study · 2026-06-09"
+    eyebrow="Case study · jobmail-assistant"
     title="JobMail Assistant"
     intro="Assistant local pour trier les mails de recrutement sans exposer la mailbox complète : filtrage local, extraction LLM seulement sur les mails pertinents, dashboard FastAPI, cleaner Thunderbird et extension WebExtension pour déléguer les actions à Thunderbird."
   />
 
   <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12">
     <div class="space-y-12">
+      <EtudeFraicheur depots={["jobmail-assistant"]} />
+
       <CaseStudySection eyebrow="Pourquoi ce projet">
         <p>
           JobMail est né d'un besoin très concret : suivre une recherche
@@ -84,6 +91,18 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
           bras local : elle reçoit une demande, retrouve les messages par
           <code>Message-Id</code>, demande confirmation, puis utilise l'API
           Thunderbird pour déplacer sans suppression définitive.
+        </p>
+      </CaseStudySection>
+
+      <CaseStudySection eyebrow="Depuis juin 2026">
+        <p data-testid="chiffre-date">
+          {chiffreDate({ valeur: nbCommits, unite: "commits depuis le 10 juin 2026", libelleAbsent: "Nombre de commits depuis le 10 juin 2026", date: "2026-11-03", source: "git log du dépôt jobmail-assistant", pourquoi: "le dépôt jobmail-assistant n’était pas accessible" })}
+        </p>
+        <p>
+          Le pont Thunderbird décrit plus bas date du 9 juin 2026 ; le projet a
+          continué d'avancer depuis, toujours en local sur le poste de
+          développement, avec le LLM Ollama <code>llama3.1:8b</code> et la même
+          règle : les filtres locaux passent avant tout appel à un modèle.
         </p>
       </CaseStudySection>
 

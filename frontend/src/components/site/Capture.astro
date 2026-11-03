@@ -1,0 +1,77 @@
+---
+import { legendeCapture, messageCapture } from "@/lib/etude-fraicheur.mjs";
+
+interface Props {
+  /** Identifiant du cadre (nom du fichier sans extension). */
+  id: string;
+  src: string;
+  alt: string;
+  /** Nom court de la capture, repris dans les messages de chargement et d'erreur. */
+  nom: string;
+  /** Description existante de la capture ; la légende la complète de la date, jamais ne la remplace. */
+  description: string;
+  /** Jour de prise (YYYY-MM-DD). */
+  date: string;
+  /** Vrai tant que la capture montre l'ancienne carte 2D. */
+  carte2d: boolean;
+  /** Dimensions du fichier : le cadre réserve ce rapport avant le chargement (16/9 par défaut). */
+  largeur?: number;
+  hauteur?: number;
+  /** Lien sur l'image (version interactive d'un diagramme). */
+  href?: string;
+}
+
+const { id, src, alt, nom, description, date, carte2d, largeur = 1600, hauteur = 900, href } = Astro.props;
+const message = messageCapture(nom);
+const legende = legendeCapture({ date, description, carte2d });
+---
+
+<figure class="my-6">
+  <div class="capture-cadre relative overflow-hidden rounded-lg border border-border" style={`aspect-ratio: ${largeur} / ${hauteur}`} data-capture={id}>
+    {href ? (
+      <a href={href} target="_blank" rel="noopener" class="absolute inset-0">
+        <img src={src} alt={alt} width={largeur} height={hauteur} class="size-full object-cover" loading="lazy" />
+      </a>
+    ) : (
+      <img src={src} alt={alt} width={largeur} height={hauteur} class="absolute inset-0 size-full object-cover" loading="lazy" />
+    )}
+    <p class="capture-message text-ink-muted" role="status" data-message="chargement" hidden>{message.chargement}</p>
+    <p class="capture-message text-ink" role="alert" data-message="erreur" hidden>{message.erreur}</p>
+  </div>
+  <figcaption class="mt-2 font-mono text-xs text-ink-muted" data-testid="legende-capture">{legende}</figcaption>
+</figure>
+
+<style>
+  .capture-cadre {
+    background: repeating-linear-gradient(45deg, var(--paper-elevated), var(--paper-elevated) 12px, color-mix(in oklch, var(--paper-elevated), white 4%) 12px, color-mix(in oklch, var(--paper-elevated), white 4%) 24px);
+  }
+  .capture-message {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    text-align: center;
+    margin: 0;
+  }
+  .capture-message[hidden] { display: none; }
+  .capture-cadre[data-etat="erreur"] img { display: none; }
+  .capture-message { pointer-events: none; }
+</style>
+
+<script>
+  // Chaque cadre passe de « chargement » à « charge » ou « erreur » ; sans JavaScript l'image s'affiche seule.
+  const montrer = (cadre: HTMLElement, etat: "chargement" | "charge" | "erreur") => {
+    cadre.dataset.etat = etat;
+    cadre.querySelectorAll<HTMLElement>("[data-message]").forEach((m) => { m.hidden = m.dataset.message !== etat; });
+  };
+  document.querySelectorAll<HTMLElement>("[data-capture]").forEach((cadre) => {
+    const img = cadre.querySelector("img");
+    if (!img) return;
+    if (img.complete) return montrer(cadre, img.naturalWidth > 0 ? "charge" : "erreur");
+    montrer(cadre, "chargement");
+    img.addEventListener("load", () => montrer(cadre, "charge"), { once: true });
+    img.addEventListener("error", () => montrer(cadre, "erreur"), { once: true });
+  });
+</script>
