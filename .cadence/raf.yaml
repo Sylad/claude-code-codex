@@ -91,11 +91,16 @@ lots:
   - id: L38
     title: "Études de cas AetherWX à jour d'après l'état réel : maritime-atlas (17-09), aetherwx-qa-harness (09-09), aetherwx-encyclopedia (07-10) — référentiel WIGOS B28, SYNOP/METAR, livraison cadence ; et jobmail-assistant (09-06) ; lire README, docs/architecture.md, Nouveautés, plan ; chiffres et captures datés ; demande Sylvain 24-10"
     public: "Études de cas : AetherWX et jobmail-assistant à jour"
-    status: doing
+    status: done
     estimate: 0.5
     visible: true
     created: 2026-10-24
     started: 2026-11-03
+    review: { date: 2026-11-03, verdict: "conforme (revue Opus du lead 03-11 + relecture du lead de 6bcc450) : 0 bloquant, 0 majeur ; 7 chiffres publiés vérifiés contre leurs sources ; build 38 pages, tests 319/320 (1 sauté hors L38)", commit: 6bcc450f25c7ab40440aa8a3087901c26cb0531b }
+    ux: { date: 2026-11-03, verdict: "conforme (ux-reviewer + captures vues par le lead, 03-11) : 1440/390 px conformes à la maquette, contrastes ≥ 4.5:1 ; mineurs en note : à 390 px et texte 200 % « 3 novembre 2026 » et la source du chiffre débordent ; role=status répété sur chaque capture" }
+    notes:
+      - { date: 2026-11-03, text: "Mineurs UX (03-11) : débordements à 390 px / texte 200 % (date insécable, source du chiffre) ; role=status répété sur 8 cadres (WCAG 4.1.3). Revue de code : correctif 6bcc450 (raison du chiffre de pods, crédit Archify, test de l'état erreur)." }
+    finished: 2026-11-03
   - id: L39
     title: "Études de cas avatar-pandora, evatosorus (10-05) et claude-code-codex (01-10) à jour d'après leur état réel ; règle durable : chaque étude de cas porte en tête sa date de mise à jour et la liste des dépôts qu'elle décrit (pour que l'agent bibliothécaire de cadence sache quelle page suit quel projet) ; demande Sylvain 24-10"
     public: "Études de cas : sites statiques et codex à jour, datés"
