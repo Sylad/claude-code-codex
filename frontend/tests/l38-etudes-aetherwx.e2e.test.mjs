@@ -76,6 +76,26 @@ test('R3 — aucun chiffre clé sans date de relevé dans les quatre études', (
   assert.doesNotMatch(texte(html('aetherwx-qa-harness')), /une quarantaine de layers/);
 });
 
+test('R3 — aucun chiffre de l\'état réel (pods, lignes, scripts) sans date de relevé dans sa phrase, balisé ou non', () => {
+  // un chiffre de l'état réel : effectif de pods, taille d'un fichier, nombre de scripts / commits / couches / layers
+  const CLE = /(?:une vingtaine|\d[\d ]*\+?) (?:de )?pods|\d+ scripts?\b|quatre mois de prod/g;
+  const DATEE = new RegExp(`(?:au|le|du|de|en) ${DATE}|(?:au|le|du|de|en) (?:${MOIS.join('|')}) \\d{4}|non relevé`);
+  for (const e of Object.keys(ETUDES)) {
+    const h = html(e);
+    // les extraits de code (diagrammes, scripts) sont des exemples, pas des chiffres de l'étude
+    const prose = texte(h.replace(/<pre[\s\S]*?<\/pre>/g, ' ').replace(/<code[^>]*data-language[\s\S]*?<\/code>/g, ' '));
+    const phrases = prose.split(/(?<=[.!?])\s+(?=[A-ZÉÈÀ«])/);
+    for (const ph of phrases) {
+      // la taille de globe.component.ts est un chiffre de l'état réel ; les « N lignes » d'une anecdote (diagnostic, historique) n'en sont pas
+      const cles = [...ph.matchAll(CLE)].map((m) => m[0]);
+      if (/globe\.component\.ts/.test(ph)) cles.push(...(ph.match(/\d[\d ]*\+? lignes/g) ?? []));
+      for (const m of cles.map((c) => [c])) {
+        assert.match(ph, DATEE, `${e} : « ${m[0]} » sans date de relevé dans « ${ph.slice(0, 160)} »`);
+      }
+    }
+  }
+});
+
 test('R4 — chaque image des études touchées a une légende « Capture du <date> — <description existante> »', () => {
   const attendues = ['Navires AIS live (2500+ positions)', 'SST (température de surface de la mer)', 'Vent (GFS)', 'Vagues — NOAA WaveWatch III',
     'Radar pluie (RainViewer', 'Alerts engine', 'Particules vent style windy.com'];
@@ -158,6 +178,24 @@ test('R7 — image en échec : message affiché, texte de l\'étude intact', { t
   await page.locator('[data-capture="02-sst"]').scrollIntoViewIfNeeded();
   await page.waitForFunction(() => document.querySelector('[data-capture="02-sst"] img')?.naturalWidth > 0, null, { timeout: 10_000 });
   await ctx.close();
+});
+
+test('R7 — le cadre grandit avec le message d\'erreur, texte rogné nulle part (320 px, police à 200 %)', { timeout: 120_000 }, async (t) => {
+  const env = await setupBrowser(t); if (!env) return;
+  for (const [largeur, zoom] of [[320, '100%'], [390, '200%']]) {
+    const ctx = await env.browser.newContext({ viewport: { width: largeur, height: 800 } });
+    const page = await ctx.newPage();
+    await page.route('**/01-vessels.jpg', (r) => r.abort());
+    await page.addInitScript((z) => { document.addEventListener('DOMContentLoaded', () => { document.documentElement.style.fontSize = z; }); }, zoom);
+    await page.goto(`${env.base}/case-studies/maritime-atlas/`, { waitUntil: 'domcontentloaded' });
+    await page.locator(CADRE).scrollIntoViewIfNeeded();
+    const err = page.locator(`${CADRE} [data-message="erreur"]`);
+    await err.waitFor({ state: 'visible', timeout: 10_000 });
+    const m = await err.evaluate((el) => ({ haut: el.scrollHeight, vu: el.clientHeight, cadre: el.parentElement.getBoundingClientRect().height, bas: el.getBoundingClientRect().bottom, basCadre: el.parentElement.getBoundingClientRect().bottom, rogne: getComputedStyle(el.parentElement).overflow }));
+    assert.ok(m.cadre >= m.haut, `${largeur}px/${zoom} : cadre ${m.cadre} < texte ${m.haut}`);
+    assert.ok(m.bas <= m.basCadre + 0.5, `${largeur}px/${zoom} : le texte dépasse le cadre`);
+    await ctx.close();
+  }
 });
 
 test('R7 — toutes les images chargent (naturalWidth > 0)', { timeout: 180_000 }, async (t) => {

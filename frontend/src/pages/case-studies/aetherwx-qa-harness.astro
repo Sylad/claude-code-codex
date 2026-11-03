@@ -8,6 +8,10 @@ import { chiffreDate } from "@/lib/etude-fraicheur.mjs";
 
 // Relevé du 3 novembre 2026 : entrées du manifeste généré depuis globe.component.ts.
 const nbLayers: number | undefined = 68;
+// Relevés du 3 novembre 2026 dans maritime-atlas : `wc -l`, `ls qa/*.mjs`, `git log --since=2026-09-09 -- qa`.
+const nbLignesGlobe: number | undefined = 16692;
+const nbScripts: number | undefined = 89;
+const nbCommitsQa: number | undefined = 228;
 ---
 
 <BaseLayout
@@ -32,8 +36,11 @@ const nbLayers: number | undefined = 68;
         tout pilotable par un slider temporel [-7j, +7j]. Visuellement, ça
         tient. Mais
         à chaque refactoring du composant principal
-        <code>globe.component.ts</code> (8 000+ lignes), quelque chose cassait
-        discrètement.
+        <code>globe.component.ts</code>, un fichier devenu énorme, quelque chose
+        cassait discrètement.
+      </p>
+      <p data-testid="chiffre-date">
+        {chiffreDate({ valeur: nbLignesGlobe, unite: "lignes dans globe.component.ts", libelleAbsent: "Taille de globe.component.ts", date: "2026-11-03", source: "wc -l", pourquoi: "le fichier n’était pas accessible" })}
       </p>
       <p data-testid="chiffre-date">
         {chiffreDate({ valeur: nbLayers, unite: "couches de données dans le manifeste du harnais", libelleAbsent: "Nombre de couches de données", date: "2026-11-03", source: "qa/layers.manifest.json, généré depuis globe.component.ts", pourquoi: "le manifeste du harnais QA (qa/layers.manifest.json) n’était pas accessible" })}
@@ -89,8 +96,9 @@ const nbLayers: number | undefined = 68;
 
     <CaseStudySection eyebrow="Ce qui a été construit — maritime-atlas/qa/">
       <p>
-        Trois modules Node dans <code>maritime-atlas/qa/</code>, lancés en
-        séquence ou indépendamment :
+        Au départ, trois modules Node dans <code>maritime-atlas/qa/</code>,
+        lancés en séquence ou indépendamment (la suite, depuis septembre, est
+        racontée plus bas) :
       </p>
 
       <h3 class="font-bold text-lg mt-6">1. Manifest auto-dérivé</h3>
@@ -362,6 +370,59 @@ aetherwx|wind-speed||iso|europe
         fonctionnait. Règle ajoutée au harnais :
         <strong>si <code>cf-cache-status</code> vaut HIT, aucun en-tête
         applicatif de la réponse n'est concluant.</strong>
+      </p>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Depuis septembre — le dossier qa/ est devenu une bibliothèque de sondes">
+      <p>
+        Le texte ci-dessus décrit le harnais tel qu'il était le 9 septembre 2026.
+        Le dossier <code>qa/</code> a depuis beaucoup grandi, et chaque ajout
+        suit la même règle : un verdict déterministe, jamais un jugement de LLM.
+      </p>
+      <p data-testid="chiffre-date">
+        {chiffreDate({ valeur: nbScripts, unite: "scripts .mjs dans maritime-atlas/qa", libelleAbsent: "Nombre de scripts du dossier qa", date: "2026-11-03", source: "ls qa/*.mjs", pourquoi: "le dossier qa/ n’était pas accessible" })}
+      </p>
+      <p data-testid="chiffre-date">
+        {chiffreDate({ valeur: nbCommitsQa, unite: "commits touchant qa/ depuis le 9 septembre 2026", libelleAbsent: "Nombre de commits touchant qa/", date: "2026-11-03", source: "git log --since=2026-09-09 -- qa", pourquoi: "l’historique git n’était pas accessible" })}
+      </p>
+      <ul>
+        <li>
+          <strong>Performance (B15, 10 septembre 2026).</strong>
+          <code>check-perf.mjs</code> mesure dans un vrai navigateur ce que les
+          cahiers des charges d'un service météo chiffrent : tas mémoire sur une
+          boucle d'animation, nombre de requêtes GetMap, erreurs console. Une
+          mesure sur la prod a révélé un tas qui grimpait de 9,3 Mo par minute
+          et près de 2 000 requêtes par minute sur une couche satellite ; après
+          correction, la boucle de 10 minutes ne faisait plus de requête et le
+          tas restait stable.
+        </li>
+        <li>
+          <strong>Mobile, accessibilité, barre de temps.</strong>
+          <code>check-mobile.mjs</code> (13 septembre) rejoue la carte en
+          390 × 844 tactile — pas de débordement horizontal, cibles d'au moins
+          44 px, feuille des couches — ; <code>check-a11y.mjs</code> contrôle
+          l'accessibilité ; <code>check-timebar.mjs</code> vérifie la cohérence
+          données ↔ temps de toutes les couches du menu.
+        </li>
+        <li>
+          <strong>Chrome distant en WebGL réel (Q-CDP1, 14 octobre 2026).</strong>
+          Sur le poste de développement, le Chromium de Playwright n'obtient plus
+          de contexte WebGL : les sondes ne voyaient plus le globe. Elles se
+          raccordent désormais, par CDP et un tunnel SSH, à un vrai Chrome d'un
+          second poste équipé d'un écran ; <code>cdp-smoke.mjs</code> contrôle
+          que le moteur WebGL n'est pas un rendu logiciel.
+        </li>
+        <li>
+          <strong>Calibrage des contrôles qualité (B27.1, 15 octobre 2026).</strong>
+          Mesure en lecture seule, sur sept jours d'observations SYNOP, METAR et
+          BUOY, des taux de signalement des contrôles de plausibilité — pour
+          régler les seuils sur des données réelles plutôt qu'à l'intuition.
+        </li>
+      </ul>
+      <p>
+        Ces sondes ne remplacent pas la matrice et le canary décrits plus bas :
+        elles couvrent ce que ceux-ci ne voient pas — la performance, la mise en
+        page mobile, le rendu WebGL réel.
       </p>
     </CaseStudySection>
 
