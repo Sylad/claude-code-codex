@@ -4,7 +4,7 @@ import PageHero from "@/components/site/PageHero.astro";
 import MermaidDiagram from "@/components/site/MermaidDiagram.vue";
 import CaseStudySection from "@/components/site/CaseStudySection.astro";
 import EtudeFraicheur from "@/components/site/EtudeFraicheur.astro";
-import { chiffreDate } from "@/lib/etude-fraicheur.mjs";
+import ChiffreDate from "@/components/site/ChiffreDate.astro";
 
 // Relevé du 3 novembre 2026 : `git log --oneline --since=2026-06-10 | wc -l` dans jobmail-assistant.
 const nbCommits: number | undefined = 80;
@@ -95,9 +95,7 @@ const nbCommits: number | undefined = 80;
       </CaseStudySection>
 
       <CaseStudySection eyebrow="Depuis juin 2026">
-        <p data-testid="chiffre-date">
-          {chiffreDate({ valeur: nbCommits, unite: "commits depuis le 10 juin 2026", libelleAbsent: "Nombre de commits depuis le 10 juin 2026", date: "2026-11-03", source: "git log du dépôt jobmail-assistant", pourquoi: "le dépôt jobmail-assistant n’était pas accessible" })}
-        </p>
+        <ChiffreDate {...{ valeur: nbCommits, unite: "commits depuis le 10 juin 2026", libelleAbsent: "Nombre de commits depuis le 10 juin 2026", date: "2026-11-03", source: "git log du dépôt jobmail-assistant", pourquoi: "le dépôt jobmail-assistant n’était pas accessible" }} />
         <p>
           Le pont Thunderbird décrit plus bas date du 9 juin 2026 ; le projet a
           continué d'avancer depuis, toujours en local sur le poste de

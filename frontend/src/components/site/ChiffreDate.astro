@@ -1,0 +1,13 @@
+---
+import { chiffreDate } from "@/lib/etude-fraicheur.mjs";
+
+type Props = Parameters<typeof chiffreDate>[0];
+
+const props: Props = Astro.props;
+const texte = chiffreDate(props);
+const releve = Number.isInteger(props.valeur) && (props.valeur as number) >= 0;
+---
+
+{releve
+  ? <p>À ce jour : <strong data-testid="chiffre-date">{texte}</strong>.</p>
+  : <p class="text-ink-muted" data-testid="chiffre-date">{texte}</p>}

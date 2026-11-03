@@ -78,7 +78,7 @@ test('R3 — aucun chiffre clé sans date de relevé dans les quatre études', (
 
 test('R3 — aucun chiffre de l\'état réel (pods, lignes, scripts) sans date de relevé dans sa phrase, balisé ou non', () => {
   // un chiffre de l'état réel : effectif de pods, taille d'un fichier, nombre de scripts / commits / couches / layers
-  const CLE = /(?:une vingtaine|\d[\d ]*\+?) (?:de )?pods|\d+ scripts?\b|quatre mois de prod/g;
+  const CLE = /(?:une vingtaine|\d[\d ]*\+?) (?:de )?pods|\d+ scripts?\b|\d+ combinaisons|quatre mois de prod/g;
   const DATEE = new RegExp(`(?:au|le|du|de|en) ${DATE}|(?:au|le|du|de|en) (?:${MOIS.join('|')}) \\d{4}|non relevé`);
   for (const e of Object.keys(ETUDES)) {
     const h = html(e);

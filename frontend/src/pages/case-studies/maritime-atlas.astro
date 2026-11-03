@@ -5,10 +5,13 @@ import MermaidDiagram from "@/components/site/MermaidDiagram.vue";
 import CaseStudySection from "@/components/site/CaseStudySection.astro";
 import EtudeFraicheur from "@/components/site/EtudeFraicheur.astro";
 import Capture from "@/components/site/Capture.astro";
+import ChiffreDate from "@/components/site/ChiffreDate.astro";
 import { legendeCapture, chiffreDate } from "@/lib/etude-fraicheur.mjs";
 
 // Relevé du 3 novembre 2026 : entrées du manifeste du harnais QA, généré depuis globe.component.ts.
 const nbLayers: number | undefined = 68;
+// Relevé du 3 novembre 2026 : lignes de la matrice du canary, `grep -c '^[^#]' charts/maritime/files/wms-canary-matrix.txt` dans aetherwx-gitops.
+const nbCombos: number | undefined = 87;
 const DESC_PLATEFORME =
   "État de la prod dark-blue au 2026-09-17. Diagramme Archify — cliquer pour la version interactive (vues guidées Ingestion / Stockage / Publication, trace amont-aval, export). Le frontend n'attaque que GeoServer (WMS-T) et l'API ; toute l'ingestion est en amont.";
 const DESC_LIVRAISON =
@@ -53,8 +56,9 @@ const DESC_PARTICULES = "Particules vent style windy.com — à l'époque 1500 p
           object storage S3.
         </li>
         <li>
-          <strong>Un harnais de non-régression</strong> qui rejoue une matrice
-          de 26 combinaisons layer×style toutes les 6 heures dans le cluster,
+          <strong>Un harnais de non-régression</strong> qui rejoue toutes les 6
+          heures dans le cluster la matrice des combinaisons layer×style
+          ({chiffreDate({ valeur: nbCombos, unite: "combinaisons layer×style dans la matrice du canary", libelleAbsent: "Nombre de combinaisons de la matrice du canary", date: "2026-11-03", source: "aetherwx-gitops, wms-canary-matrix.txt", pourquoi: "la matrice du canary n’était pas accessible" })}),
           et une matrice générée en parsant les sources du frontend — donc
           incapable de dériver en silence.
           <a href="/case-studies/aetherwx-qa-harness">Le détail est ici</a>.
@@ -86,9 +90,7 @@ const DESC_PARTICULES = "Particules vent style windy.com — à l'époque 1500 p
           vérifie la prod après le déploiement GitOps.
         </li>
       </ul>
-      <p data-testid="chiffre-date">
-        {chiffreDate({ valeur: nbLayers, unite: "couches de données", libelleAbsent: "Nombre de couches de données", date: "2026-11-03", source: "qa/layers.manifest.json", pourquoi: "le manifeste du harnais QA (qa/layers.manifest.json) n’était pas accessible" })}
-      </p>
+      <ChiffreDate {...{ valeur: nbLayers, unite: "couches de données", libelleAbsent: "Nombre de couches de données", date: "2026-11-03", source: "qa/layers.manifest.json", pourquoi: "le manifeste du harnais QA (qa/layers.manifest.json) n’était pas accessible" }} />
       <p>
         Le reste de la page raconte le fonctionnel et les pièges, dans
         l'ordre où ils sont tombés.
@@ -1061,12 +1063,13 @@ const DESC_PARTICULES = "Particules vent style windy.com — à l'époque 1500 p
         La règle est née d'une régression de trop, formulée telle quelle :
         <em>« une correction d'un layer ne doit plus jamais casser un autre
         layer »</em>. Ce qui en est sorti : une matrice des
-        <strong>26 combinaisons layer×style</strong> réellement demandées par
+        <strong>combinaisons layer×style</strong> réellement demandées par
         la carte, <strong>générée en parsant les sources du frontend</strong>
         à chaque exécution — donc impossible à laisser pourrir — rejouée par
         un <strong>CronJob canary toutes les 6 heures</strong> dans le
         cluster, plus un test E2E d'animation qui vérifie les invariants du
-        contrat temps.
+        contrat temps. Elle comptait 26 combinaisons le 9 septembre 2026,
+        et {chiffreDate({ valeur: nbCombos, unite: "combinaisons layer×style dans la matrice du canary", libelleAbsent: "Nombre de combinaisons de la matrice du canary", date: "2026-11-03", source: "aetherwx-gitops, wms-canary-matrix.txt", pourquoi: "la matrice du canary n’était pas accessible" })}.
       </p>
       <p>
         <a href="/case-studies/aetherwx-qa-harness">Le détail du harnais est
