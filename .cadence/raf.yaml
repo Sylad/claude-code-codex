@@ -91,10 +91,11 @@ lots:
   - id: L38
     title: "Études de cas AetherWX à jour d'après l'état réel : maritime-atlas (17-09), aetherwx-qa-harness (09-09), aetherwx-encyclopedia (07-10) — référentiel WIGOS B28, SYNOP/METAR, livraison cadence ; et jobmail-assistant (09-06) ; lire README, docs/architecture.md, Nouveautés, plan ; chiffres et captures datés ; demande Sylvain 24-10"
     public: "Études de cas : AetherWX et jobmail-assistant à jour"
-    status: todo
+    status: doing
     estimate: 0.5
     visible: true
     created: 2026-10-24
+    started: 2026-11-03
   - id: L39
     title: "Études de cas avatar-pandora, evatosorus (10-05) et claude-code-codex (01-10) à jour d'après leur état réel ; règle durable : chaque étude de cas porte en tête sa date de mise à jour et la liste des dépôts qu'elle décrit (pour que l'agent bibliothécaire de cadence sache quelle page suit quel projet) ; demande Sylvain 24-10"
     public: "Études de cas : sites statiques et codex à jour, datés"
