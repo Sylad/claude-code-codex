@@ -1,0 +1,81 @@
+# Lot L38 — maquette légère : seul le bloc « fraîcheur » des études de cas change de forme.
+# Charte : site sans palette ajoutée ; variables de frontend/src/styles/global.css réutilisées telles quelles.
+ecran:
+  id: etudes-de-cas-aetherwx
+  titre: Études de cas AetherWX et JobMail à jour
+  route: /case-studies/maritime-atlas
+  lot: L38
+  largeurs: [1440, 390]
+  maquette: docs/specs/etudes-de-cas-aetherwx/maquette.html
+etats: [vide, chargement, erreur, charge]
+
+champs:
+  - { id: date-maj, libelle: Date de mise à jour de l'étude, type: texte, source: statique, obligatoire: true }
+  - { id: depots-decrits, libelle: Dépôts décrits par l'étude, type: texte, source: statique, obligatoire: true }
+  - { id: chiffre-date, libelle: Chiffre clé daté, type: texte, source: statique, obligatoire: true }
+  - { id: legende-capture, libelle: Légende datée d'une capture, type: texte, source: statique, obligatoire: true }
+  - { id: message-chiffre-absent, libelle: Message d'un chiffre non relevé, type: texte, source: statique, obligatoire: false }
+  - { id: message-capture-chargement, libelle: Message de capture en cours de chargement, type: texte, source: statique, obligatoire: false }
+  - { id: message-capture-erreur, libelle: Message de capture indisponible, type: texte, source: statique, obligatoire: false }
+
+regles:
+  - id: R1
+    etat: charge
+    enonce: Chaque étude touchée (maquette ci-dessus, aetherwx-qa-harness, aetherwx-encyclopedia, jobmail-assistant) affiche en tête sa date de mise à jour, au format du site.
+    message: "Mis à jour le 3 novembre 2026"
+    champs: [date-maj]
+    statut: sourcee
+    source: "lot L38 : « chiffres et captures datés » ; format de date : frontend/src/lib/format-date.mjs (CLAUDE.md, Plan de travail)"
+    tests: ["R1 — chaque étude touchée porte « Mis à jour le <date> » avec une date valide"]
+  - id: R2
+    etat: charge
+    enonce: Chaque étude nomme le ou les dépôts qu'elle décrit, sous la date.
+    message: "Dépôt décrit : maritime-atlas"
+    champs: [depots-decrits]
+    statut: hypothese
+    si_faux: Si L39 impose un autre libellé ou un autre emplacement (règle durable date + dépôts), seul ce bloc de texte change ; aucune donnée en jeu.
+    tests: ["R2 — chaque étude touchée nomme au moins un dépôt"]
+  - id: R3
+    etat: charge
+    enonce: Tout chiffre repris de l'état réel porte la date de son relevé et sa source, dans la même phrase.
+    message: "37 layers de données au 3 novembre 2026 (qa/layers.manifest.json)"
+    champs: [chiffre-date]
+    statut: sourcee
+    source: "lot L38 : « chiffres et captures datés » ; chiffre : README de maritime-atlas (37 data layers)"
+    tests: ["R3 — aucun chiffre clé sans date de relevé dans les quatre études"]
+  - id: R4
+    etat: charge
+    enonce: Toute capture est légendée de sa date de prise.
+    message: "Capture du 3 novembre 2026"
+    champs: [legende-capture]
+    statut: sourcee
+    source: "lot L38 : « chiffres et captures datés »"
+    tests: ["R4 — chaque image des études touchées a une légende « Capture du <date> »"]
+  - id: R5
+    etat: vide
+    enonce: Un chiffre que l'on n'a pas pu relever à la date de mise à jour n'est jamais deviné ni laissé vide ; l'étude dit qu'il n'est pas relevé, et pourquoi.
+    message: "Chiffre non relevé au 3 novembre 2026 : la source n'était pas accessible. Il sera ajouté à la prochaine mise à jour."
+    champs: [message-chiffre-absent]
+    masque: [chiffre-date]
+    statut: hypothese
+    si_faux: Si l'on préfère retirer la phrase plutôt que l'afficher, seul ce texte disparaît ; aucune donnée en jeu.
+    tests: ["R5 — chiffre sans relevé : message affiché, ni « undefined » ni « NaN »"]
+  - id: R6
+    etat: chargement
+    enonce: Pendant le chargement d'une capture, son cadre garde sa taille et dit ce qui arrive, pour que la page ne saute pas.
+    message: "Capture en cours de chargement. Elle apparaît dans un instant."
+    champs: [message-capture-chargement]
+    statut: hypothese
+    si_faux: Si le navigateur affiche déjà un cadre vide stable, ce texte est retiré ; aucune donnée en jeu.
+    tests: ["R6 — cadre de capture réservé avant chargement"]
+  - id: R7
+    etat: erreur
+    enonce: Si une capture ne charge pas, l'étude dit laquelle manque, pourquoi, et comment la retrouver ; le texte de l'étude reste lisible.
+    message: "Capture indisponible : le fichier n'a pas pu être chargé. Recharge la page ; si elle manque encore, elle reste consultable dans le dépôt décrit."
+    champs: [message-capture-erreur]
+    statut: sourcee
+    source: "docs/qa/expectations.md : « /case-studies/maritime-atlas/ shows: toutes les images chargées (naturalWidth > 0) »"
+    tests: ["R7 — image en échec : message affiché, texte de l'étude intact", "R7 — toutes les images chargent (naturalWidth > 0)"]
+
+actions:
+  - { id: A1, declencheur: ~, appel: "GET /case-studies/maritime-atlas", regles: [R1, R2, R3, R4] }

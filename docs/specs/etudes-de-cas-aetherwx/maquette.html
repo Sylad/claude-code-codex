@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Maquette L38 — études de cas à jour</title>
+<style>
+:root{--paper:#0a0a0a;--paper-elevated:#131313;--ink:#e4e4e8;--ink-muted:#aaaaae;--claude-orange:#eb7a52;--claude-orange-soft:#eda382;--border:#2a2a2a;--radius:0.625rem}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,system-ui,sans-serif;line-height:1.6}
+section.etat{max-width:48rem;margin:0 auto;padding:2.5rem 1.25rem;border-bottom:1px solid var(--border)}
+.eyebrow{font:0.75rem/1 "JetBrains Mono",ui-monospace,monospace;text-transform:uppercase;letter-spacing:.2em;color:var(--claude-orange);margin:0 0 .75rem}
+.etat-nom{font:0.75rem "JetBrains Mono",monospace;color:var(--ink-muted);margin:0 0 1rem}
+h1{font-size:1.75rem;margin:.25rem 0 .75rem;line-height:1.2}
+.fraicheur{background:var(--paper-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:.75rem 1rem;margin:0 0 1.25rem}
+.fraicheur p{margin:0}
+.fraicheur .date{color:var(--claude-orange-soft);font-weight:600}
+.fraicheur .depots{color:var(--ink-muted);font-size:.9rem}
+.fraicheur code{color:var(--ink)}
+figure{margin:1rem 0;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--paper-elevated)}
+.cadre{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;padding:1rem;text-align:center;color:var(--ink-muted);background:repeating-linear-gradient(45deg,#131313,#131313 12px,#181818 12px,#181818 24px)}
+.cadre.err{color:var(--ink)}
+figcaption{padding:.5rem 1rem;color:var(--ink-muted);font-size:.875rem}
+.note{color:var(--ink-muted)}
+</style></head><body>
+
+<section class="etat" id="etat-charge">
+  <p class="etat-nom">État : chargé (étude maritime-atlas ; même bloc sur aetherwx-qa-harness, aetherwx-encyclopedia, jobmail-assistant)</p>
+  <p class="eyebrow">Case study · aetherwx (ex maritime-atlas)</p>
+  <h1>AetherWX — l'orchestre multi-source</h1>
+  <div class="fraicheur">
+    <p class="date" data-testid="date-maj">Mis à jour le 3 novembre 2026</p>
+    <p class="depots" data-testid="depots-decrits">Dépôt décrit : <code>maritime-atlas</code></p>
+  </div>
+  <p>Atlas live agrégeant les sources externes sur un globe MapLibre. À ce jour :
+    <strong data-testid="chiffre-date">37 layers de données au 3 novembre 2026 (qa/layers.manifest.json)</strong>.</p>
+  <figure><div class="cadre">Capture du globe (exemple)</div>
+    <figcaption data-testid="legende-capture">Capture du 3 novembre 2026</figcaption></figure>
+</section>
+
+<section class="etat" id="etat-vide">
+  <p class="etat-nom">État : vide (chiffre non relevé)</p>
+  <div class="fraicheur"><p class="date">Mis à jour le 3 novembre 2026</p><p class="depots">Dépôt décrit : <code>maritime-atlas</code></p></div>
+  <p class="note" data-testid="message-chiffre-absent">Chiffre non relevé au 3 novembre 2026 : la source n'était pas accessible. Il sera ajouté à la prochaine mise à jour.</p>
+</section>
+
+<section class="etat" id="etat-chargement">
+  <p class="etat-nom">État : chargement (capture)</p>
+  <figure><div class="cadre" data-testid="message-capture-chargement">Capture en cours de chargement. Elle apparaît dans un instant.</div>
+    <figcaption>Capture du 3 novembre 2026</figcaption></figure>
+</section>
+
+<section class="etat" id="etat-erreur">
+  <p class="etat-nom">État : erreur (capture)</p>
+  <figure><div class="cadre err" data-testid="message-capture-erreur">Capture indisponible : le fichier n'a pas pu être chargé. Recharge la page ; si elle manque encore, elle reste consultable dans le dépôt décrit.</div>
+    <figcaption>Capture du 3 novembre 2026</figcaption></figure>
+  <p>Le texte de l'étude reste lisible autour du cadre.</p>
+</section>
+</body></html>
