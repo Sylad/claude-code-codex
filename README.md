@@ -71,6 +71,8 @@ npm run audit      # lisibilité du site construit : pages « mur de texte » à
 L'audit de lisibilité (mots, schémas, images, plus long bloc sans intertitre par page) est décrit, avec son dernier résultat, dans [`docs/audit-lisibilite.md`](docs/audit-lisibilite.md).
 
 La relecture de vérité du site (affirmations datées ou chiffrées classées faux / dépassé / non sourcé / ok, page par page, sans réécriture) est dans [`docs/verite-site.md`](docs/verite-site.md).
+Les quatre études AetherWX et jobmail-assistant (`maritime-atlas`, `aetherwx-qa-harness`, `aetherwx-encyclopedia`, `jobmail-assistant`) portent en tête de colonne un bloc « Mis à jour le <date> » + « Dépôt décrit : … » (composant `EtudeFraicheur`, date unique `DATE_MAJ` de `frontend/src/lib/etude-fraicheur.mjs`, à corriger à chaque relecture). Tout chiffre repris de l'état réel est écrit par `chiffreDate` — valeur, date du relevé et source dans la même phrase ; une valeur absente donne « … non relevé au <date> : <pourquoi> » (un entier ≥ 0 seul est un relevé, jamais de valeur devinée). Toute capture passe par le composant `Capture` : légende « Capture du <date> [(carte 2D, avant le globe)] — <description> », cadre au rapport du fichier réservé avant chargement, message de chargement puis, si le fichier échoue, message d'erreur nommant la capture (sans renvoi vers un dépôt). Tests : `frontend/tests/l38-etude-fraicheur.test.mjs` et `l38-etudes-aetherwx.e2e.test.mjs` (lit `dist`).
+
 Les étoiles, licences et dates de push des outils testés (`frontend/src/data/tools-tested.ts`) sont relevées à une date affichée sur `/case-studies` (constante `TOOLS_SURVEYED_AT`) ; la corriger avec les valeurs, test : `frontend/tests/l56-verite-outils.e2e.test.mjs`.
 
 ## Mise à jour hebdo
