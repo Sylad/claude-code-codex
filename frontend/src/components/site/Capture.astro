@@ -19,9 +19,11 @@ interface Props {
   hauteur?: number;
   /** Lien sur l'image (version interactive d'un diagramme). */
   href?: string;
+  /** Crédit de l'outil ayant produit l'image, rendu en lien après la description. */
+  credit?: { label: string; href: string };
 }
 
-const { id, src, alt, nom, description, date, carte2d, largeur = 1600, hauteur = 900, href } = Astro.props;
+const { id, src, alt, nom, description, date, carte2d, largeur = 1600, hauteur = 900, href, credit } = Astro.props;
 const message = messageCapture(nom);
 const legende = legendeCapture({ date, description, carte2d });
 ---
@@ -38,7 +40,7 @@ const legende = legendeCapture({ date, description, carte2d });
     <p class="capture-message text-ink-muted" role="status" data-message="chargement" hidden>{message.chargement}</p>
     <p class="capture-message text-ink" role="alert" data-message="erreur" hidden>{message.erreur}</p>
   </div>
-  <figcaption class="mt-2 font-mono text-xs text-ink-muted" data-testid="legende-capture">{legende}</figcaption>
+  <figcaption class="mt-2 font-mono text-xs text-ink-muted" data-testid="legende-capture">{legende}{credit && <> Réalisé avec <a href={credit.href} target="_blank" rel="noopener" class="underline" data-testid="credit-capture">{credit.label}</a>.</>}</figcaption>
 </figure>
 
 <style>

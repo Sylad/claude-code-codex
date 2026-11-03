@@ -6,7 +6,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
 import EtudeFraicheur from "@/components/site/EtudeFraicheur.astro";
 import ChiffreDate from "@/components/site/ChiffreDate.astro";
 
-// Pods du namespace maritime : aucun contexte kubectl au 3 novembre 2026, donc pas de relevé.
+// Pods du namespace maritime : relevé reporté au 3 novembre 2026, le cluster étant en maintenance ce jour-là.
 const nbPods: number | undefined = undefined;
 
 const globalArchi = `flowchart TB
@@ -351,7 +351,7 @@ const tokenFlow = `flowchart LR
     </CaseStudySection>
 
     <CaseStudySection eyebrow="04 · Les services qui tournent">
-      <ChiffreDate {...{ valeur: nbPods, unite: "pods dans le namespace maritime", libelleAbsent: "Nombre de pods du namespace maritime", date: "2026-11-03", source: "kubectl get pods", pourquoi: "aucun contexte de cluster n’était configuré sur le poste de développement pour interroger kubectl" }} />
+      <ChiffreDate {...{ valeur: nbPods, unite: "pods dans le namespace maritime", libelleAbsent: "Nombre de pods du namespace maritime", date: "2026-11-03", source: "kubectl get pods", pourquoi: "relevé reporté, le cluster était en maintenance ce jour-là" }} />
       <p>
         Le namespace maritime fait tourner une vingtaine de pods (relevé de mai 2026, non recompté depuis). Voici le
         découpage par rôle :

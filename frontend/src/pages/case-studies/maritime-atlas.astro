@@ -13,7 +13,7 @@ const nbLayers: number | undefined = 68;
 // Relevé du 3 novembre 2026 : lignes de la matrice du canary, `grep -c '^[^#]' charts/maritime/files/wms-canary-matrix.txt` dans aetherwx-gitops.
 const nbCombos: number | undefined = 87;
 const DESC_PLATEFORME =
-  "État de la prod dark-blue au 2026-09-17. Diagramme Archify — cliquer pour la version interactive (vues guidées Ingestion / Stockage / Publication, trace amont-aval, export). Le frontend n'attaque que GeoServer (WMS-T) et l'API ; toute l'ingestion est en amont.";
+  "État de la prod dark-blue au 2026-09-17. Diagramme — cliquer pour la version interactive (vues guidées Ingestion / Stockage / Publication, trace amont-aval, export). Le frontend n'attaque que GeoServer (WMS-T) et l'API ; toute l'ingestion est en amont.";
 const DESC_LIVRAISON =
   "La chaîne de livraison : un seul levier déploie, le tag sha-… dans le values.yaml du chart. ArgoCD lit le dépôt GitOps en SSH lecture seule ; aucun port ouvert, tout passe par le tunnel Cloudflare.";
 const DESC_PARTICULES = "Particules vent style windy.com — à l'époque 1500 particules canvas 2D, advectées par interpolation IDW sur les 4 plus proches voisins de la grille GFS. Depuis le passage au globe, elles sont portées en WebGL (custom layer MapLibre, 3000 particules par défaut, port du webgl-wind de Mapbox sous licence ISC).";
@@ -161,7 +161,7 @@ const DESC_PARTICULES = "Particules vent style windy.com — à l'époque 1500 p
 
     <CaseStudySection eyebrow="Architecture — vue d'ensemble">
       <Capture id="architecture-plateforme" src="/case-studies/maritime-atlas/architecture-plateforme.png" href="/case-studies/maritime-atlas/architecture-plateforme.html" alt="AetherWX — plateforme : sources ouvertes, Argo Workflows et Deployments d'ingestion, PVC /coverage, pg-data PostgreSQL 18 TimescaleDB, RabbitMQ, GeoServer 3.0.1 ×3, pg-catalog, maritime-api NestJS, SeaweedFS S3, frontend Angular 19, utilisateur via Cloudflare Tunnel" nom="Architecture de la plateforme" date="2026-09-17" carte2d={false} largeur={2880} hauteur={2500}
-        description={DESC_PLATEFORME} />
+        description={DESC_PLATEFORME} credit={{ label: "Archify", href: "https://github.com/tt-a1i/archify" }} />
       <Capture id="architecture-livraison" src="/case-studies/maritime-atlas/architecture-livraison.png" href="/case-studies/maritime-atlas/architecture-livraison.html" alt="AetherWX — livraison GitOps : Big-Blue → maritime-atlas → GitHub Actions sur runners auto-hébergés → GHCR privé → bump du tag dans aetherwx-gitops → ArgoCD → k3s dark-blue" nom="Architecture de la livraison" date="2026-09-17" carte2d={false} largeur={2880} hauteur={2500}
         description={DESC_LIVRAISON} />
       <p>

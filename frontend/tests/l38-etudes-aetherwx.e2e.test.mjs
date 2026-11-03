@@ -210,3 +210,17 @@ test('R7 — toutes les images chargent (naturalWidth > 0)', { timeout: 180_000 
     await ctx.close();
   }
 });
+
+test('R7 — image en échec : le lien sur l\'image est masqué (règle CSS [data-etat="erreur"] a), le crédit de la légende reste', { timeout: 120_000 }, async (t) => {
+  const env = await setupBrowser(t); if (!env) return;
+  const cadre = '[data-capture="architecture-plateforme"]';
+  const { ctx, page } = await ALLER(env, '/case-studies/maritime-atlas/', (p) => p.route('**/architecture-plateforme.png', (r) => r.abort()));
+  await page.locator(cadre).scrollIntoViewIfNeeded();
+  await page.locator(`${cadre} [data-message="erreur"]`).waitFor({ state: 'visible', timeout: 10_000 });
+  assert.equal(await page.locator(cadre).getAttribute('data-etat'), 'erreur');
+  assert.equal(await page.locator(`${cadre} a`).evaluate((a) => getComputedStyle(a).display), 'none');
+  const credit = page.locator(`figure:has(${cadre}) [data-testid="credit-capture"]`);
+  assert.equal(await credit.getAttribute('href'), 'https://github.com/tt-a1i/archify');
+  assert.equal(await credit.isVisible(), true);
+  await ctx.close();
+});
