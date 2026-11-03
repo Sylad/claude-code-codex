@@ -21,15 +21,15 @@ champs:
 regles:
   - id: R1
     etat: charge
-    enonce: Chaque étude touchée (maquette ci-dessus, aetherwx-qa-harness, aetherwx-encyclopedia, jobmail-assistant) affiche en tête sa date de mise à jour, au format du site.
+    enonce: "Chaque étude touchée (maquette ci-dessus, aetherwx-qa-harness, aetherwx-encyclopedia, jobmail-assistant) affiche sa date de mise à jour au format du site, dans un bloc en tête de la colonne de contenu (sous le hero). Elle remplace les mentions de fraîcheur existantes (« Où en est le projet — septembre 2026 » devient « … — novembre 2026 » ; la note « Captures prises en mai 2026 » est supprimée) : une seule date de fraîcheur par page."
     message: "Mis à jour le 3 novembre 2026"
     champs: [date-maj]
     statut: sourcee
     source: "lot L38 : « chiffres et captures datés » ; format de date : frontend/src/lib/format-date.mjs (CLAUDE.md, Plan de travail)"
-    tests: ["R1 — chaque étude touchée porte « Mis à jour le <date> » avec une date valide"]
+    tests: ["R1 — chaque étude touchée porte « Mis à jour le <date> » avec une date valide", "R1 — aucune mention « Captures prises en <mois> » ni « Où en est… <mois ancien> » ne contredit la date"]
   - id: R2
     etat: charge
-    enonce: Chaque étude nomme le ou les dépôts qu'elle décrit, sous la date.
+    enonce: "Chaque étude nomme le ou les dépôts qu'elle décrit, sous la date."
     message: "Dépôt décrit : maritime-atlas"
     champs: [depots-decrits]
     statut: hypothese
@@ -37,7 +37,7 @@ regles:
     tests: ["R2 — chaque étude touchée nomme au moins un dépôt"]
   - id: R3
     etat: charge
-    enonce: Tout chiffre repris de l'état réel porte la date de son relevé et sa source, dans la même phrase.
+    enonce: "Tout chiffre repris de l'état réel porte la date de son relevé et sa source, dans la même phrase."
     message: "37 layers de données au 3 novembre 2026 (qa/layers.manifest.json)"
     champs: [chiffre-date]
     statut: sourcee
@@ -45,15 +45,15 @@ regles:
     tests: ["R3 — aucun chiffre clé sans date de relevé dans les quatre études"]
   - id: R4
     etat: charge
-    enonce: Toute capture est légendée de sa date de prise.
-    message: "Capture du 3 novembre 2026"
+    enonce: "Toute capture est légendée de sa date de prise, composée avec la description existante (« Capture du <date> — <description> ») ; la description n'est jamais remplacée par la date."
+    message: "Capture du 3 novembre 2026 — Navires AIS live (2500+ positions) + trajets daily agrégés. Chaque couleur = catégorie de bateau (cargo bleu, tanker rose, pêche jaune, passenger vert)."
     champs: [legende-capture]
     statut: sourcee
     source: "lot L38 : « chiffres et captures datés »"
-    tests: ["R4 — chaque image des études touchées a une légende « Capture du <date> »"]
+    tests: ["R4 — chaque image des études touchées a une légende « Capture du <date> — <description existante> »"]
   - id: R5
     etat: vide
-    enonce: Un chiffre que l'on n'a pas pu relever à la date de mise à jour n'est jamais deviné ni laissé vide ; l'étude dit qu'il n'est pas relevé, et pourquoi.
+    enonce: "Un chiffre que l'on n'a pas pu relever à la date de mise à jour n'est jamais deviné ni laissé vide ; l'étude dit qu'il n'est pas relevé, et pourquoi."
     message: "Chiffre non relevé au 3 novembre 2026 : la source n'était pas accessible. Il sera ajouté à la prochaine mise à jour."
     champs: [message-chiffre-absent]
     masque: [chiffre-date]
@@ -62,16 +62,16 @@ regles:
     tests: ["R5 — chiffre sans relevé : message affiché, ni « undefined » ni « NaN »"]
   - id: R6
     etat: chargement
-    enonce: Pendant le chargement d'une capture, son cadre garde sa taille et dit ce qui arrive, pour que la page ne saute pas.
-    message: "Capture en cours de chargement. Elle apparaît dans un instant."
+    enonce: "Pendant le chargement d'une capture, son cadre garde sa taille et dit ce qui arrive, pour que la page ne saute pas."
+    message: "Capture « Navires AIS live » en cours de chargement. Elle apparaît dans un instant."
     champs: [message-capture-chargement]
     statut: hypothese
     si_faux: Si le navigateur affiche déjà un cadre vide stable, ce texte est retiré ; aucune donnée en jeu.
     tests: ["R6 — cadre de capture réservé avant chargement"]
   - id: R7
     etat: erreur
-    enonce: Si une capture ne charge pas, l'étude dit laquelle manque, pourquoi, et comment la retrouver ; le texte de l'étude reste lisible.
-    message: "Capture indisponible : le fichier n'a pas pu être chargé. Recharge la page ; si elle manque encore, elle reste consultable dans le dépôt décrit."
+    enonce: "Si une capture ne charge pas, le message la nomme, dit pourquoi, et propose de recharger ; sa description reste lisible dans la légende, qui ne dépend pas du fichier ; le texte de l'étude reste lisible. Aucun renvoi vers un dépôt (certains sont privés)."
+    message: "Capture « Navires AIS live » indisponible : le fichier n'a pas pu être chargé. Recharge la page pour la réafficher ; sa description reste lisible dans la légende ci-dessous."
     champs: [message-capture-erreur]
     statut: sourcee
     source: "docs/qa/expectations.md : « /case-studies/maritime-atlas/ shows: toutes les images chargées (naturalWidth > 0) »"

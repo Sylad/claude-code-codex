@@ -5,52 +5,62 @@
 :root{--paper:#0a0a0a;--paper-elevated:#131313;--ink:#e4e4e8;--ink-muted:#aaaaae;--claude-orange:#eb7a52;--claude-orange-soft:#eda382;--border:#2a2a2a;--radius:0.625rem}
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,system-ui,sans-serif;line-height:1.6}
-section.etat{max-width:48rem;margin:0 auto;padding:2.5rem 1.25rem;border-bottom:1px solid var(--border)}
-.eyebrow{font:0.75rem/1 "JetBrains Mono",ui-monospace,monospace;text-transform:uppercase;letter-spacing:.2em;color:var(--claude-orange);margin:0 0 .75rem}
-.etat-nom{font:0.75rem "JetBrains Mono",monospace;color:var(--ink-muted);margin:0 0 1rem}
-h1{font-size:1.75rem;margin:.25rem 0 .75rem;line-height:1.2}
-.fraicheur{background:var(--paper-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:.75rem 1rem;margin:0 0 1.25rem}
+.etat-nom{font:0.75rem "JetBrains Mono",monospace;color:var(--ink-muted);margin:0;padding:.75rem 1.25rem;border-top:3px solid var(--claude-orange)}
+.entete{height:65px;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 1.25rem;font-weight:600}
+.hero{border-bottom:1px solid var(--border);background:repeating-linear-gradient(0deg,#0d0d0d,#0d0d0d 39px,#151515 40px)}
+.hero>div{max-width:72rem;margin:0 auto;padding:5rem 1.25rem}
+.eyebrow{display:inline-block;background:rgba(10,10,10,.85);padding:.25rem .5rem;border-radius:4px;font:0.75rem/1 "JetBrains Mono",ui-monospace,monospace;text-transform:uppercase;letter-spacing:.2em;color:var(--claude-orange-soft);margin:0}
+h1{font-size:2.25rem;margin:.75rem 0 0;line-height:1.1;font-weight:600;letter-spacing:-.02em}
+.hero .intro{max-width:42rem;margin:1.25rem 0 0;font-size:1rem}
+.colonne{max-width:48rem;margin:0 auto;padding:3rem 1.25rem;display:flex;flex-direction:column;gap:2rem}
+.colonne>*{margin:0}
+@media(min-width:640px){.hero>div{padding:7rem 2rem}.colonne{padding:3rem 2rem}h1{font-size:3rem}}
+.fraicheur{background:var(--paper-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:.75rem 1rem}
 .fraicheur p{margin:0}
 .fraicheur .date{color:var(--claude-orange-soft);font-weight:600}
 .fraicheur .depots{color:var(--ink-muted);font-size:.9rem}
 .fraicheur code{color:var(--ink)}
-figure{margin:1rem 0;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--paper-elevated)}
-.cadre{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;padding:1rem;text-align:center;color:var(--ink-muted);background:repeating-linear-gradient(45deg,#131313,#131313 12px,#181818 12px,#181818 24px)}
+h2.section{font:0.75rem "JetBrains Mono",monospace;text-transform:uppercase;letter-spacing:.2em;color:var(--claude-orange);margin:0}
+figure{margin:0;}
+.cadre{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;padding:1rem;text-align:center;color:var(--ink-muted);border:1px solid var(--border);border-radius:var(--radius);background:repeating-linear-gradient(45deg,#131313,#131313 12px,#181818 12px,#181818 24px)}
 .cadre.err{color:var(--ink)}
-figcaption{padding:.5rem 1rem;color:var(--ink-muted);font-size:.875rem}
+figcaption{margin-top:.5rem;color:var(--ink-muted);font:0.75rem "JetBrains Mono",monospace}
 .note{color:var(--ink-muted)}
 </style></head><body>
+<section id="etat-charge">
+<p class="etat-nom">État : chargé (étude maritime-atlas ; même bloc en tête de colonne sur aetherwx-qa-harness, aetherwx-encyclopedia, jobmail-assistant)</p>
+<div class="entete">Claude Code Codex (en-tête du site, 65 px)</div>
+<div class="hero"><div><p class="eyebrow">Case study · aetherwx (ex maritime-atlas)</p>
+<h1>AetherWX — l'orchestre multi-source</h1>
+<p class="intro">Atlas live qui agrège une quinzaine de sources externes sur un globe MapLibre time-scrubable. (introduction existante, inchangée)</p></div></div>
+<div class="colonne">
+<div class="fraicheur"><p class="date" data-testid="date-maj">Mis à jour le 3 novembre 2026</p><p class="depots" data-testid="depots-decrits">Dépôt décrit : <code>maritime-atlas</code></p></div>
+<p class="note" style="font-size:.85rem">Placement : bloc en tête de la colonne de contenu (max-w-3xl), sous le hero, avant la première section. La section « Où en est le projet — septembre 2026 » est renommée « Où en est le projet — novembre 2026 » et la note « Captures prises en mai 2026 » est supprimée : la date unique du bloc et la date de chaque légende la remplacent.</p>
+<h2 class="section">Où en est le projet — novembre 2026</h2>
+<p>Atlas live. À ce jour : <strong data-testid="chiffre-date">37 layers de données au 3 novembre 2026 (qa/layers.manifest.json)</strong>.</p>
+<figure><div class="cadre">Capture « Navires AIS live » (exemple)</div>
+<figcaption data-testid="legende-capture">Capture du 3 novembre 2026 — Navires AIS live (2500+ positions) + trajets daily agrégés. Chaque couleur = catégorie de bateau (cargo bleu, tanker rose, pêche jaune, passenger vert).</figcaption></figure>
+</div></section>
 
-<section class="etat" id="etat-charge">
-  <p class="etat-nom">État : chargé (étude maritime-atlas ; même bloc sur aetherwx-qa-harness, aetherwx-encyclopedia, jobmail-assistant)</p>
-  <p class="eyebrow">Case study · aetherwx (ex maritime-atlas)</p>
-  <h1>AetherWX — l'orchestre multi-source</h1>
-  <div class="fraicheur">
-    <p class="date" data-testid="date-maj">Mis à jour le 3 novembre 2026</p>
-    <p class="depots" data-testid="depots-decrits">Dépôt décrit : <code>maritime-atlas</code></p>
-  </div>
-  <p>Atlas live agrégeant les sources externes sur un globe MapLibre. À ce jour :
-    <strong data-testid="chiffre-date">37 layers de données au 3 novembre 2026 (qa/layers.manifest.json)</strong>.</p>
-  <figure><div class="cadre">Capture du globe (exemple)</div>
-    <figcaption data-testid="legende-capture">Capture du 3 novembre 2026</figcaption></figure>
-</section>
+<section id="etat-vide">
+<p class="etat-nom">État : vide (chiffre non relevé)</p>
+<div class="entete">Claude Code Codex (en-tête du site, 65 px)</div>
+<div class="colonne">
+<div class="fraicheur"><p class="date">Mis à jour le 3 novembre 2026</p><p class="depots">Dépôt décrit : <code>maritime-atlas</code></p></div>
+<h2 class="section">Où en est le projet — novembre 2026</h2>
+<p class="note" data-testid="message-chiffre-absent">Chiffre non relevé au 3 novembre 2026 : la source n'était pas accessible. Il sera ajouté à la prochaine mise à jour.</p>
+</div></section>
 
-<section class="etat" id="etat-vide">
-  <p class="etat-nom">État : vide (chiffre non relevé)</p>
-  <div class="fraicheur"><p class="date">Mis à jour le 3 novembre 2026</p><p class="depots">Dépôt décrit : <code>maritime-atlas</code></p></div>
-  <p class="note" data-testid="message-chiffre-absent">Chiffre non relevé au 3 novembre 2026 : la source n'était pas accessible. Il sera ajouté à la prochaine mise à jour.</p>
-</section>
+<section id="etat-chargement">
+<p class="etat-nom">État : chargement (capture)</p>
+<div class="entete">Claude Code Codex (en-tête du site, 65 px)</div>
+<div class="colonne"><figure><div class="cadre" data-testid="message-capture-chargement">Capture « Navires AIS live » en cours de chargement. Elle apparaît dans un instant.</div>
+<figcaption>Capture du 3 novembre 2026 — Navires AIS live (2500+ positions) + trajets daily agrégés. Chaque couleur = catégorie de bateau (cargo bleu, tanker rose, pêche jaune, passenger vert).</figcaption></figure></div></section>
 
-<section class="etat" id="etat-chargement">
-  <p class="etat-nom">État : chargement (capture)</p>
-  <figure><div class="cadre" data-testid="message-capture-chargement">Capture en cours de chargement. Elle apparaît dans un instant.</div>
-    <figcaption>Capture du 3 novembre 2026</figcaption></figure>
-</section>
-
-<section class="etat" id="etat-erreur">
-  <p class="etat-nom">État : erreur (capture)</p>
-  <figure><div class="cadre err" data-testid="message-capture-erreur">Capture indisponible : le fichier n'a pas pu être chargé. Recharge la page ; si elle manque encore, elle reste consultable dans le dépôt décrit.</div>
-    <figcaption>Capture du 3 novembre 2026</figcaption></figure>
-  <p>Le texte de l'étude reste lisible autour du cadre.</p>
-</section>
+<section id="etat-erreur">
+<p class="etat-nom">État : erreur (capture)</p>
+<div class="entete">Claude Code Codex (en-tête du site, 65 px)</div>
+<div class="colonne"><figure><div class="cadre err" data-testid="message-capture-erreur">Capture « Navires AIS live » indisponible : le fichier n'a pas pu être chargé. Recharge la page pour la réafficher ; sa description reste lisible dans la légende ci-dessous.</div>
+<figcaption>Capture du 3 novembre 2026 — Navires AIS live (2500+ positions) + trajets daily agrégés. Chaque couleur = catégorie de bateau (cargo bleu, tanker rose, pêche jaune, passenger vert).</figcaption></figure>
+<p>Le texte de l'étude reste lisible autour du cadre.</p></div></section>
 </body></html>
