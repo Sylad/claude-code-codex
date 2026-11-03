@@ -27,13 +27,13 @@ const legende = legendeCapture({ date, description, carte2d });
 ---
 
 <figure class="my-6">
-  <div class="capture-cadre relative overflow-hidden rounded-lg border border-border" style={`aspect-ratio: ${largeur} / ${hauteur}`} data-capture={id}>
+  <div class="capture-cadre relative rounded-lg border border-border" style={`aspect-ratio: ${largeur} / ${hauteur}`} data-capture={id}>
     {href ? (
       <a href={href} target="_blank" rel="noopener" class="absolute inset-0">
-        <img src={src} alt={alt} width={largeur} height={hauteur} class="size-full object-cover" loading="lazy" />
+        <img src={src} alt={alt} width={largeur} height={hauteur} class="size-full rounded-lg object-cover" loading="lazy" />
       </a>
     ) : (
-      <img src={src} alt={alt} width={largeur} height={hauteur} class="absolute inset-0 size-full object-cover" loading="lazy" />
+      <img src={src} alt={alt} width={largeur} height={hauteur} class="absolute inset-0 size-full rounded-lg object-cover" loading="lazy" />
     )}
     <p class="capture-message text-ink-muted" role="status" data-message="chargement" hidden>{message.chargement}</p>
     <p class="capture-message text-ink" role="alert" data-message="erreur" hidden>{message.erreur}</p>
@@ -43,14 +43,14 @@ const legende = legendeCapture({ date, description, carte2d });
 
 <style>
   .capture-cadre {
+    /* Le cadre garde le rapport de l'image, mais grandit avec le message (chargement, erreur) au lieu de le rogner. */
+    display: grid;
     background: repeating-linear-gradient(45deg, var(--paper-elevated), var(--paper-elevated) 12px, color-mix(in oklch, var(--paper-elevated), white 4%) 12px, color-mix(in oklch, var(--paper-elevated), white 4%) 24px);
   }
   .capture-message {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    grid-area: 1 / 1;
+    align-self: center;
+    position: relative;
     padding: 1rem;
     text-align: center;
     margin: 0;
