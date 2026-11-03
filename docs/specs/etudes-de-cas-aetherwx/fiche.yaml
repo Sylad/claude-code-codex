@@ -21,7 +21,7 @@ champs:
 regles:
   - id: R1
     etat: charge
-    enonce: "Chaque étude touchée (maquette ci-dessus, aetherwx-qa-harness, aetherwx-encyclopedia, jobmail-assistant) affiche sa date de mise à jour au format du site, dans un bloc en tête de la colonne de contenu (sous le hero). Elle remplace les mentions de fraîcheur existantes (« Où en est le projet — septembre 2026 » devient « … — novembre 2026 » ; la note « Captures prises en mai 2026 » est supprimée) : une seule date de fraîcheur par page."
+    enonce: "Chaque étude touchée (maquette ci-dessus, aetherwx-qa-harness, aetherwx-encyclopedia, jobmail-assistant) affiche sa date de mise à jour au format du site, dans un bloc en tête de la colonne de contenu (sous le hero). Elle remplace les mentions de fraîcheur existantes (« Où en est le projet — septembre 2026 » devient « … — novembre 2026 » ; la note « Captures prises en mai 2026 » est remplacée par la date et la mention « carte 2D, avant le globe » dans chaque légende, voir R4) : une seule date de fraîcheur de page."
     message: "Mis à jour le 3 novembre 2026"
     champs: [date-maj]
     statut: sourcee
@@ -45,8 +45,8 @@ regles:
     tests: ["R3 — aucun chiffre clé sans date de relevé dans les quatre études"]
   - id: R4
     etat: charge
-    enonce: "Toute capture est légendée de sa date de prise, composée avec la description existante (« Capture du <date> — <description> ») ; la description n'est jamais remplacée par la date."
-    message: "Capture du 3 novembre 2026 — Navires AIS live (2500+ positions) + trajets daily agrégés. Chaque couleur = catégorie de bateau (cargo bleu, tanker rose, pêche jaune, passenger vert)."
+    enonce: "Toute capture est légendée de sa date de prise, composée avec la description existante (« Capture du <date> — <description> ») ; la description n’est jamais remplacée par la date. Tant qu’une capture montre l’ancienne carte 2D (fichiers du 11 mai 2026), la légende le dit ; une capture refaite porte sa nouvelle date sans cette mention."
+    message: "Capture du 11 mai 2026 (carte 2D, avant le globe) — Navires AIS live (2500+ positions) + trajets daily agrégés. Chaque couleur = catégorie de bateau (cargo bleu, tanker rose, pêche jaune, passenger vert)."
     champs: [legende-capture]
     statut: sourcee
     source: "lot L38 : « chiffres et captures datés »"
@@ -54,7 +54,7 @@ regles:
   - id: R5
     etat: vide
     enonce: "Un chiffre que l'on n'a pas pu relever à la date de mise à jour n'est jamais deviné ni laissé vide ; l'étude dit qu'il n'est pas relevé, et pourquoi."
-    message: "Chiffre non relevé au 3 novembre 2026 : la source n'était pas accessible. Il sera ajouté à la prochaine mise à jour."
+    message: "Nombre de layers de données non relevé au 3 novembre 2026 : le manifeste du harnais QA (qa/layers.manifest.json) n’était pas accessible. Il sera ajouté à la prochaine mise à jour."
     champs: [message-chiffre-absent]
     masque: [chiffre-date]
     statut: hypothese
