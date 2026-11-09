@@ -598,6 +598,11 @@ lots:
     status: todo
     estimate: 0.1
     created: 2026-11-03
+  - id: L67
+    title: "Retour d'expérience cadence 1 → 2 et veille Claude, QUAND la situation sera stable (Sylvain 09-11) : ce qui a été appris au banc (mesures v1, v2, v2b, v2c, bruit), les changements de cadence et le tri des veilles hebdomadaires (issues label veille de Sylad/cadence) — pas avant que cadence 2 ait un noyau prouvé"
+    status: todo
+    estimate: 2
+    created: 2026-11-09
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
