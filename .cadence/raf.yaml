@@ -603,6 +603,8 @@ lots:
     status: todo
     estimate: 2
     created: 2026-11-09
+    notes:
+      - { date: 2026-11-09, text: "Consigne de Sylvain (09-11) : ne RIEN cacher de la phase d'erreur. Le site est un livre de bord : il raconte aussi l'échec de cadence v1 (trop d'agents tue les perfs : ×3,8 plus lent, A préféré 8/8), la relecture systématique sans gain (58 % du surcoût), mes conclusions trop rapides (v2c « non adopté » corrigé en « non tranché »), le juge contaminé par une règle ajoutée en cours de mesure, les artefacts du banc. Chiffres, causes et ce qu'on en a tiré." }
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
