@@ -234,6 +234,15 @@
     "fetchedAt": "2026-06-15T11:57:53.003Z"
   },
   {
+    "id": "a989f1582084d0cf",
+    "source": "anthropic-news",
+    "url": "https://www.anthropic.com/claude-fable-and-mythos-5-2",
+    "title": "Introducing Claude Fable 5.2 and Claude Mythos 5.2",
+    "summary": "Claude Fable 5.2 accélère drastiquement la productivité dev : projets finalisés en jours au lieu de semaines avec moins de révisions de code.",
+    "publishedAt": "Mon, 09 Nov 2026 05:00:00 GMT",
+    "fetchedAt": "2026-11-16T14:39:51.998Z"
+  },
+  {
     "id": "c34a327604b5be4a",
     "source": "anthropic-news",
     "url": "https://www.anthropic.com/news/claude-opus-5",
