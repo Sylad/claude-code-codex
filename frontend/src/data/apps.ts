@@ -50,8 +50,8 @@ export const apps: CaseStudyApp[] = [
   {
     name: "avatar-pandora",
     tagline: "Codex Avatar / Pandora — atmosphère temps-driven",
-    stack: "Astro 6 · React 19 · R3F · GSAP",
-    role: "Cinema canvas time-driven, particules WebGL, ambient self-running",
+    stack: "Astro 7 · React 19 · R3F · Tailwind 4",
+    role: "Ambiance temps-driven, particules WebGL, 100 % statique sans backend",
     href: "/case-studies/avatar-pandora",
     repo: "https://github.com/Sylad/avatar-pandora",
     accent: "from-cyan-500/20 to-transparent",
@@ -59,8 +59,8 @@ export const apps: CaseStudyApp[] = [
   {
     name: "evatosorus",
     tagline: "Codex paléonto richement illustré",
-    stack: "Astro 6 · React 19 · openart.ai assets",
-    role: "Hero T-Rex IA, vidéos boucle, codex 200+ espèces",
+    stack: "Astro 7 · React 19 · Leaflet · openart.ai",
+    role: "Codex de 1 500 espèces enrichi hors ligne, carte des fossiles, vidéos IA",
     href: "/case-studies/evatosorus",
     repo: "https://github.com/Sylad/evatosorus",
     accent: "from-lime-500/20 to-transparent",

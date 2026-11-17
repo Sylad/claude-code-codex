@@ -4,14 +4,16 @@ import { dateMajLabel } from "@/lib/etude-fraicheur.mjs";
 interface Props {
   /** Dépôts décrits par l'étude (au moins un). */
   depots: string[];
+  /** Jour de la dernière mise à jour de CETTE étude (« YYYY-MM-DD ») ; DATE_MAJ de L38 par défaut. */
+  date?: string;
 }
 
-const { depots } = Astro.props;
+const { depots, date } = Astro.props;
 if (!depots.length) throw new Error("EtudeFraicheur : au moins un dépôt décrit");
 ---
 
 <div class="rounded-lg border border-border bg-paper-elevated px-4 py-3">
-  <p class="font-semibold text-claude-soft" data-testid="date-maj">Mis à jour le {dateMajLabel()}</p>
+  <p class="font-semibold text-claude-soft" data-testid="date-maj">Mis à jour le {dateMajLabel(date)}</p>
   <p class="text-sm text-ink-muted" data-testid="depots-decrits">
     {depots.length > 1 ? "Dépôts décrits" : "Dépôt décrit"} :
     {depots.map((d, i) => (<>{i > 0 && ", "}<code class="text-ink">{d}</code></>))}

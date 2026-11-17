@@ -3,34 +3,43 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
 import MermaidDiagram from "@/components/site/MermaidDiagram.vue";
 import CaseStudySection from "@/components/site/CaseStudySection.astro";
+import EtudeFraicheur from "@/components/site/EtudeFraicheur.astro";
+
+// L39 — état relu le 17 novembre 2026 dans le dépôt avatar-pandora : README, CLAUDE.md, HOW-IT-WORKS.md,
+// historique git, frontend/package.json, frontend/dist (81 pages HTML).
+const DATE_ETUDE = "2026-11-17";
 ---
 
 <BaseLayout
   title="Case study · avatar-pandora (Eywa)"
-  description="Codex Avatar / Pandora cadeau pour une proche. Atmosphère temps-driven, particules WebGL, Astro statique pur sur Cloudflare Pages. 100% codé en pair-programming avec Claude Code."
+  description="Eywa, codex Avatar / Pandora offert à une proche : atmosphère temps-driven, particules WebGL, Astro 7 statique pur sur Cloudflare Pages, sans backend ni image tierce. Codé en pair-programming avec Claude Code, relu avec Codex."
 >
   <PageHero
-    eyebrow="03 · Case study · avatar-pandora"
+    eyebrow="Case study · avatar-pandora"
     title="Eywa — un codex Pandora à offrir"
-    intro="Quatrième app du laboratoire perso. Un codex Avatar offert à une proche, fan absolue des schtroumpfs géants à trois mètres de haut. Moi je trouve ça moyen, mais bon — l'occasion d'apprendre Astro, R3F et GSAP en codant avec Claude Code, en pair-programming intégral. Zéro ligne écrite à la main."
+    intro="Un codex Avatar offert à une proche, fan absolue des schtroumpfs géants à trois mètres de haut. Moi je trouve ça moyen, mais bon — l'occasion d'apprendre Astro, React Three Fiber et les shaders en codant avec Claude Code. Zéro ligne écrite à la main. Depuis octobre 2026, le site est 100 % statique : plus de backend, plus d'image tierce."
   />
 
   <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12">
     <div class="space-y-12">
+      <EtudeFraicheur depots={["avatar-pandora"]} date={DATE_ETUDE} />
+
       <CaseStudySection eyebrow="Le pitch">
         <p>
-          <strong>Eywa</strong> (la déesse-réseau de Pandora) est un codex en français sur
-          l'univers Avatar. Sept sections de contenu lyrique sourcé Pandorapedia
-          + Avatar Wiki + Paul Frommer : Pandora, Clans Na'vi, Bestiaire, Flore,
-          Personnages, Engins, Films + une page dédiée à la langue Na'vi.
+          <strong>Eywa</strong> (la déesse-réseau de Pandora) est un codex en
+          français sur l'univers Avatar. Huit sections : Pandora, Clans Na'vi,
+          Bestiaire, Flore, Personnages, Films, Engins et une page dédiée à la
+          langue Na'vi, plus une page Vidéos et une page À propos. Près
+          de 70 fiches lyriques, réécrites en français à partir de
+          Pandorapedia, d'Avatar Fandom et des travaux de Paul Frommer — 81
+          pages au build.
         </p>
         <p>
-          Public visé : <strong>jeune adulte cinéphile</strong>, fan visuelle avant tout.
-          Donc atmosphère cinématique, images grand format, ambiance
-          bioluminescente. Et un codex explorable pour quand elle veut creuser.
-          Live :
-          <a href="https://eywa-eywa.pages.dev" target="_blank" rel="noopener"
-            >eywa-eywa.pages.dev</a
+          Public visé : <strong>jeune adulte cinéphile</strong>, fan visuelle
+          avant tout. Donc atmosphère cinématique, ambiance bioluminescente, et
+          un codex explorable pour quand elle veut creuser. Live :
+          <a href="https://avatar-pandora-12q.pages.dev" target="_blank" rel="noopener"
+            >avatar-pandora-12q.pages.dev</a
           > · code :
           <a
             href="https://github.com/Sylad/avatar-pandora"
@@ -42,59 +51,58 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
 
       <CaseStudySection eyebrow="Architecture">
         <p>
-          Astro 6 statique pur déployé sur Cloudflare Pages. Quelques îlots
-          React 19 pour les morceaux interactifs (CinemaCanvas R3F,
-          ParticleField WebGL, CycleBackdrop). Le backend NestJS minimal sur
-          port 3003 n'existe que sur le NAS local pour la validation — en
-          public, le proxy <code>/api/wiki-image</code> tourne en Cloudflare
-          Function.
+          <strong>Astro 7</strong> statique pur, déployé sur Cloudflare Pages
+          (build automatique à chaque push sur <code>main</code>). Quelques
+          îlots React 19 pour les morceaux interactifs : CinemaCanvas (React
+          Three Fiber), ParticleField (shader GLSL maison), CycleBackdrop. Le
+          contenu vit en Markdown dans les Content Collections d'Astro, validé
+          par un schéma Zod au build. Style en Tailwind 4.
         </p>
 
         <MermaidDiagram
           client:visible
-          caption="Astro statique + îlots React 19 · une cible publique sans backend (Cloudflare Pages + Functions), une cible NAS pour la validation locale."
+          caption="Astro 7 statique + îlots React 19, une seule cible : Cloudflare Pages. Aucun backend, aucune Function, aucun appel réseau au runtime."
           definition={`flowchart TB
-  subgraph FE["Eywa frontend — Astro 6 (statique pur)"]
-    pages["Pages MDX (78) + sidebar 320px sticky"]
-    islands["Îlots React 19 (client:visible)"]
-    canvas["CinemaCanvas — R3F mode 'time'"]
-    particles["ParticleField — WebGL shader custom"]
-    backdrop["CycleBackdrop — cross-fade 75s"]
-    gsap["GSAP — transitions UI"]
-    logo["Logo SVG codé inline"]
+  subgraph SRC["Dépôt avatar-pandora"]
+    md["Fiches Markdown — Content Collections + schéma Zod"]
+    plan["Plan .cadence/raf.yaml + Nouveautés docs/nouveautes"]
   end
 
-  subgraph PUB["Cible publique — Cloudflare Pages"]
-    cdn["eywa-eywa.pages.dev"]
-    cfn["/api/wiki-image — Cloudflare Function (Fandom -> Wiki proxy)"]
+  subgraph FE["Eywa — Astro 7 (statique pur)"]
+    pages["81 pages — accueil, codex, Vidéos, À propos, Nouveautés, Plan de travail"]
+    islands["Îlots React 19"]
+    canvas["CinemaCanvas — R3F, horloge partagée"]
+    particles["ParticleField — shader GLSL maison"]
+    backdrop["CycleBackdrop — cross-fade 75 s"]
   end
 
-  subgraph NAS["Cible NAS — validation locale"]
-    nas["http://nas:4203 (docker compose)"]
-    nest["/api/wiki-image — NestJS port 3003 (Fandom -> Wiki proxy)"]
+  subgraph PUB["Cloudflare Pages"]
+    cdn["avatar-pandora-12q.pages.dev"]
   end
 
+  md --> pages
+  plan -->|build| pages
   pages --> islands
   islands --> canvas
   islands --> particles
   islands --> backdrop
-  islands --> gsap
-  pages --> logo
-  FE -->|/api/wiki-image?q=...| cfn
-  FE -->|/api/wiki-image?q=...| nest
-  cfn --> cdn
-  nest --> nas`}
+  pages -->|push main, build auto| cdn`}
         />
 
         <p>
           Astro statique = aucun cold start, aucun budget serveur, et un site
-          qui charge en moins d'une seconde même sur le 4G de la destinataire. Le
-          NestJS reste là sur le NAS uniquement pour itérer en local sans
-          pousser à chaque fois sur main.
+          qui charge vite même en 4G. Jusqu'au 1er octobre 2026, un petit
+          backend NestJS et une Cloudflare Function servaient un proxy
+          d'images vers Avatar Fandom et Wikipédia, et une copie du site
+          tournait sur un NAS pour la validation. Fandom a commencé à répondre
+          par un défi anti-robot ; plutôt que de le contourner, on a tout
+          retiré : proxy, Function, backend et copie sur NAS. Les fiches sans
+          illustration propre affichent un visuel par défaut aux couleurs
+          d'Eywa.
         </p>
       </CaseStudySection>
 
-      <CaseStudySection eyebrow="Le pivot — atmosphère vs scroll">
+      <CaseStudySection eyebrow="Le pivot — atmosphère vs scroll (mai 2026)">
         <p>
           La V1 livrée fin avril était un scrollytelling cinéma 700vh : cold
           open → forêt → Hometree → montagnes flottantes → océan Metkayina →
@@ -104,24 +112,21 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
           >. Friction. Le scroll forcé tuait l'envie d'explorer le codex.
         </p>
         <p>
-          Pivot V2 — <strong>atmosphère temps-driven</strong> : on garde le
-          viewport unique, on garde les images grand format, on garde les
-          particules bioluminescentes, mais l'ambiance se transforme toute
-          seule sur une boucle de 75 secondes. Le visiteur arrive, pose son
-          téléphone, l'image se transforme. Six atmosphères se cross-fadent en
-          continu. Les particules WebGL pulsent sur la même clock. Le logo, la
-          tagline et les CTAs restent fixes au-dessus avec une dark vignette
-          pour la lisibilité.
+          Pivot V2 — <strong>atmosphère temps-driven</strong> : un viewport
+          unique, et l'ambiance se transforme toute seule sur une boucle de 75
+          secondes. Six images de Pandora se cross-fadent en continu (globe,
+          Banshee, Hometree, Hallelujah, Metkayina, Fire & Ash) pendant que les
+          particules WebGL changent de palette sur la même horloge. Le logo, la
+          tagline et les boutons restent fixes au-dessus, lisibles grâce à une
+          vignette sombre.
         </p>
         <p>
-          Validation immédiate (<em>"c'est très bien"</em>). Le scroll n'a pas
-          disparu pour autant : il reste valide pour les <strong
-            >pages dédiées</strong
-          > du codex (sidebar warhammer-style, contenu long). Mais sur la
-          racine, plus jamais de scrollytelling forcé. Le pattern technique —
-          <code>CinemaCanvas</code> mode <code>'time'</code> +
-          <code>CycleBackdrop</code> cross-fade synchronisé — est devenu une
-          référence pour les futures landings perso.
+          Validation immédiate (<em>"c'est très bien"</em>). Le scroll reste
+          valide pour les pages du codex (barre latérale, contenu long), mais
+          plus jamais de scrollytelling forcé sur l'accueil. Le pattern —
+          <code>CinemaCanvas</code> sur une horloge partagée +
+          <code>CycleBackdrop</code> synchronisé — a été repris par
+          Evatosorus.
         </p>
       </CaseStudySection>
 
@@ -132,11 +137,10 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
               class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"
             ></span>
             <span
-              ><strong>CinemaCanvas en mode <code>'time'</code></strong> :
-              react-three-fiber tourne sur une horloge globale partagée, pas sur
-              <code>useFrame</code> indépendant. Toutes les couches visuelles
-              (backdrop, particules, GSAP UI) lisent le même <code>t / 75s</code
-              > pour rester synchrones.</span
+              ><strong>Une seule horloge</strong> : React Three Fiber, le
+              backdrop et les particules lisent tous le même <code>t / 75 s</code>
+              au lieu d'avoir chacun leur boucle. GSAP et drei, installés pour la
+              V1, ont été retirés en mai 2026 : ils ne servaient plus.</span
             >
           </li>
           <li class="flex gap-3">
@@ -144,10 +148,10 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
               class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"
             ></span>
             <span
-              ><strong>ParticleField WebGL custom</strong> : shader fragment
-              maison qui simule la bioluminescence des spores Pandora — pulsation
-              lente sur la même clock que le backdrop, dérive vent + atténuation
-              radiale. ~3 000 particules, 60fps stables sur mobile.</span
+              ><strong>ParticleField WebGL</strong> : shader fragment maison qui
+              simule la bioluminescence des spores — pulsation lente sur la même
+              horloge que le backdrop, dérive au vent, atténuation radiale,
+              palette qui change avec la scène.</span
             >
           </li>
           <li class="flex gap-3">
@@ -155,11 +159,11 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
               class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"
             ></span>
             <span
-              ><strong>Logo SVG codé</strong>, pas généré, pas exporté
-              d'Illustrator. Glyphes Na'vi-inspirés tracés en
-              <code>&lt;path&gt;</code> Astro avec animations
-              <code>stroke-dasharray</code> sur l'apparition. Custom de bout en
-              bout.</span
+              ><strong>Bouton pause partout</strong> (WCAG 2.2.2) : sur l'accueil
+              et sur chaque page du codex, il fige images, particules et
+              animations de fond ; le choix est mémorisé, et le bouton disparaît
+              quand le système demande un mouvement réduit (le hook
+              <code>useReducedMotion</code> coupe alors l'ambiance).</span
             >
           </li>
           <li class="flex gap-3">
@@ -167,11 +171,11 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
               class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"
             ></span>
             <span
-              ><strong>Proxy <code>/api/wiki-image</code> Fandom→Wiki</strong> :
-              fallback en chaîne sur Avatar Fandom puis Wikipedia (les deux
-              n'indexent pas les mêmes choses). Implémentation NestJS sur le NAS,
-              re-portée 1:1 en Cloudflare Function pour le public — même contrat,
-              deux runtimes.</span
+              ><strong>Lisible à toute taille de police</strong> : taille de base
+              en pourcentage (suit le réglage du navigateur), titres de fiche
+              fluides sur la largeur de la colonne, points de rupture en rem.
+              Testé sur les 81 pages, police de 16 à 32 px, largeurs de 320 à
+              480 px : ni défilement horizontal ni texte coupé.</span
             >
           </li>
           <li class="flex gap-3">
@@ -179,10 +183,11 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
               class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"
             ></span>
             <span
-              ><strong>Reduced motion</strong> : hook
-              <code>useReducedMotion</code> qui coupe le cinema canvas et fige
-              le backdrop sur une atmosphère statique. Accessibilité
-              non-négociable, même sur un cadeau perso.</span
+              ><strong>Nouveautés et Plan de travail</strong> : un journal des
+              changements avec pastille « non vues », et une page générée au
+              build depuis le plan du projet, qui ne publie que des titres
+              publics — un test cherche tout texte privé du plan dans le site
+              construit.</span
             >
           </li>
           <li class="flex gap-3">
@@ -190,37 +195,59 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
               class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"
             ></span>
             <span
-              ><strong>Fair-use respecté</strong> : aucun still de film
-              re-hosté, uniquement des proxys vers wiki + concept arts linkés.
-              Repo public-ready, LICENSE MIT/CC, déploy auto sur
-              <code>git push origin main</code> (~2 min pipeline Cloudflare).</span
+              ><strong>Aucune image tierce</strong> : ni capture des films, ni
+              image de wiki. Code sous licence MIT, textes du codex sous CC
+              BY-NC-SA 4.0, univers Avatar non couvert par ces licences.</span
             >
           </li>
         </ul>
       </CaseStudySection>
 
+      <CaseStudySection eyebrow="Tests et outillage">
+        <p>
+          Pas de backend, donc pas de tests d'API : c'est le build qui valide
+          la cohérence du contenu (schéma Zod, types), puis une suite
+          <code>node --test</code> lance un Chromium (via
+          <code>playwright-core</code>) sur le site construit — contraste au
+          pire pixel sous le texte posé sur les particules, tiroir du
+          téléphone, lien « Aller au contenu », taille du texte, pages
+          Nouveautés et Plan de travail.
+        </p>
+        <p>
+          Depuis octobre 2026, le travail passe par
+          <a href="/case-studies/cadence">cadence</a> : un plan relié aux
+          commits, une revue UX de chaque écran (une dizaine de lots
+          « Revue UX » ont repris le codex section par section), et une porte
+          de tests avant chaque livraison. Le 17 novembre 2026, le site est
+          passé d'Astro 6 à Astro 7 (Vite 8) ; la montée a révélé que la suite
+          sautait des tests navigateur sans échouer, faute de la bonne version
+          de Chromium — la version de <code>playwright-core</code> est
+          désormais épinglée.
+        </p>
+      </CaseStudySection>
+
       <CaseStudySection eyebrow="Ce que Claude Code a apporté">
         <p>
           Avant Eywa, je n'avais jamais touché Astro, jamais touché
-          react-three-fiber, jamais écrit un shader. Java/Spring depuis 21 ans,
+          React Three Fiber, jamais écrit un shader. Java/Spring depuis 21 ans,
           oui ; WebGL non. Le projet a démarré à zéro et j'ai écrit
-          <strong>zéro ligne</strong> à la main — tout est sorti de
-          conversations avec Claude Code.
+          <strong>zéro ligne</strong> à la main — code et fiches sont sortis de
+          conversations avec Claude Code, puis relus et ajustés avec Codex.
         </p>
         <p>
           Le pivot scroll → temps-driven aurait pris une semaine en solo (lire
-          la doc R3F, comprendre le rendering loop, débugger les
-          synchronisations). Avec Claude Code en pair-programming, c'était une
-          après-midi de discussion, deux refactos et une validation visuelle.
-          Idem pour le shader bioluminescent : description en langage naturel
-          ("je veux des spores qui pulsent doucement, comme dans la scène de la
-          forêt nocturne"), itérations sur les paramètres, code GLSL généré et
-          ajusté. Crédits IA : <strong>100% Claude Code</strong>.
+          la doc R3F, comprendre la boucle de rendu, débugger les
+          synchronisations). En pair-programming, c'était une après-midi de
+          discussion, deux refactos et une validation visuelle. Idem pour le
+          shader : description en langage naturel ("je veux des spores qui
+          pulsent doucement, comme dans la scène de la forêt nocturne"),
+          itérations sur les paramètres, code GLSL généré et ajusté. Aucune IA
+          ne tourne au runtime : le site ne coûte rien à servir.
         </p>
         <p>
           Le code est là, public, lisible. Si tu veux faire pareil — prends un
-          sujet qui t'enflamme (un proche fan d'Avatar, dans mon cas), ouvre
-          Claude Code, et laisse la conversation devenir ton commit log.
+          sujet qui t'enflamme, ouvre Claude Code, et laisse la conversation
+          devenir ton commit log.
         </p>
       </CaseStudySection>
 
@@ -235,7 +262,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
           </p>
           <div class="flex flex-wrap gap-3 text-sm">
             <a
-              href="https://eywa-eywa.pages.dev"
+              href="https://avatar-pandora-12q.pages.dev"
               target="_blank"
               rel="noopener"
               class="inline-flex items-center gap-1 px-3 py-1.5 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors"
@@ -251,7 +278,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
               ↗ Repo GitHub
             </a>
             <a
-              href="https://eywa-eywa.pages.dev/about"
+              href="https://avatar-pandora-12q.pages.dev/about/"
               target="_blank"
               rel="noopener"
               class="inline-flex items-center gap-1 px-3 py-1.5 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors"
@@ -263,8 +290,8 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
       </article>
 
       <p class="text-center text-xs text-ink/50 font-mono pt-4">
-        Stack — Astro 6 · React 19 · @react-three/fiber · GSAP · Tailwind ·
-        NestJS (NAS) · Cloudflare Pages + Functions (public).
+        Stack — Astro 7 · React 19 · React Three Fiber · Tailwind 4 · Content
+        Collections · Cloudflare Pages (aucun backend).
       </p>
     </div>
   </section>

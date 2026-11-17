@@ -3,20 +3,30 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
 import MermaidDiagram from "@/components/site/MermaidDiagram.vue";
 import CaseStudySection from "@/components/site/CaseStudySection.astro";
+import EtudeFraicheur from "@/components/site/EtudeFraicheur.astro";
 import { APP_COUNT } from "@/data/apps";
+
+// L39 — état relu le 17 novembre 2026 dans ce dépôt : README, CLAUDE.md, historique git, package.json,
+// .github/workflows/batch-update.yml, scripts/lib/claude.ts, scripts/sources/.
+const DATE_ETUDE = "2026-11-17";
+// Compté au build : toujours juste, sans relevé à refaire. Vite exclut du glob le fichier qui l'appelle,
+// d'où le + 1 pour cette page.
+const NB_ETUDES = Object.keys(import.meta.glob("./*.astro")).length + 1;
 ---
 
 <BaseLayout
   title="claude-code-codex (méta)"
-  description="Deep dive — ce site lui-même, codex sur Claude Code, construit en pair-programming avec Claude Code (0 ligne de code humaine). Méta pleinement assumé."
+  description="Deep dive — ce site lui-même, codex sur Claude Code, construit en pair-programming avec Claude Code (0 ligne de code humaine) : Astro 7 statique, batch hebdo résumé par Claude, plan public et tests sur le site construit."
 >
   <PageHero
     eyebrow="Case study · claude-code-codex"
     title="Le codex qui se documente lui-même"
-    intro="Ce site a été, à son lancement en mai 2026, la 6e app perso, et reste le projet le plus méta du lot — un codex sur Claude Code, codé en pair-programming avec Claude Code. C'est aussi le case study le plus simple à raconter parce qu'il est encore en cours."
+    intro="Ce site a été, à son lancement en mai 2026, la 6e app perso, et reste le projet le plus méta du lot — un codex sur Claude Code, codé en pair-programming avec Claude Code. Il n'est jamais fini : cette page décrit son état réel, relu dans son dépôt."
   />
 
   <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12 space-y-12">
+    <EtudeFraicheur depots={["claude-code-codex"]} date={DATE_ETUDE} />
+
     <CaseStudySection eyebrow="Pourquoi ce projet">
       <p>
         Au lancement, en mai 2026 : six mois de pair-programming intensif
@@ -27,10 +37,10 @@ import { APP_COUNT } from "@/data/apps";
       <p>
         L'objectif est <strong>double</strong>. D'un côté, un codex
         documentaire qui agrège la théorie Claude Code, l'écosystème
-        officiel, des case studies, des sources de veille, des vidéos —
-        sourcé strictement sur les domaines Anthropic publics. De l'autre,
-        un banc d'essai personnel pour tester les outils tiers (Ruflo a
-        été le premier candidat) et capitaliser sur ce qu'on en apprend.
+        officiel, des études de cas, des sources de veille, des vidéos et des
+        guides d'infra tirés du vécu. De l'autre, un banc d'essai personnel
+        pour tester les outils tiers (Ruflo a été le premier candidat) et
+        capitaliser sur ce qu'on en apprend.
       </p>
       <p>
         Le narratif central est simple :
@@ -43,147 +53,187 @@ import { APP_COUNT } from "@/data/apps";
     <CaseStudySection eyebrow="Architecture">
       <MermaidDiagram
         client:visible
-        caption="Statique pur sur Cloudflare Pages, batch hebdo via GitHub Actions cron + Anthropic SDK. Aucun backend en prod."
+        caption="Statique pur sur Cloudflare Pages, plan et Nouveautés lus au build, batch hebdo via GitHub Actions cron + Anthropic SDK. Aucun backend en prod."
         definition={`flowchart TB
-  subgraph REPO["GitHub repo · Sylad/claude-code-codex (public, MIT)"]
-    subgraph FE["frontend/ (Astro 6)"]
-      vue["Vue 3 islands<br/>shadcn-vue tokens<br/>Tailwind 4 + claude-orange<br/>8 routes statiques"]
+  subgraph REPO["GitHub · Sylad/claude-code-codex (public, MIT)"]
+    subgraph FE["frontend/ (Astro 7)"]
+      vue["Îlots Vue 3 + reka-ui<br/>Tailwind 4, Mermaid 12"]
+      data["data/*.ts — catalogues,<br/>études, livre de bord"]
     end
+    plan[".cadence/raf.yaml — plan<br/>docs/nouveautes — journal"]
     subgraph SCR["scripts/ (TypeScript)"]
-      lib["lib/feed-parser.ts<br/>lib/claude.ts (SDK)<br/>lib/feeds.ts (dedup hash)"]
-      sources["sources/*.ts (4 sources)<br/>batch-update.ts (orchstr)"]
+      batch["batch-update.ts<br/>5 sources"]
     end
   end
 
-  subgraph CF["Cloudflare Pages (build statique pur)"]
-    cfp["claude-code-codex-25m.pages.dev"]
-  end
-
-  subgraph CI["GitHub Actions runner (Ubuntu, Node 22)"]
-    cron["cron lundi 06h UTC<br/>+ workflow_dispatch"]
-    tsx["npx tsx batch-update.ts"]
-    scraped["Sources scrapées:<br/>• simon-willison (Atom)<br/>• anthropics/skills (GH API)<br/>• mcp/servers (GH API)<br/>• anthropic-news (RSS fallback)"]
+  subgraph CI["GitHub Actions (lundi 06h UTC)"]
+    cron["cron + workflow_dispatch"]
   end
 
   subgraph LLM["Anthropic API"]
-    claude["claude-haiku-4-5<br/>résumé 140-char FR<br/>filtre [off-topic]"]
+    claude["claude-haiku-4-5<br/>résumé FR 140 caractères<br/>filtre off-topic"]
   end
 
-  subgraph FEEDS["Output committed"]
-    json["frontend/src/data/feeds/<br/>&lt;source&gt;.json"]
-  end
+  json["data/feeds/*.json"]
+  CF["Cloudflare Pages<br/>claude-code-codex-25m.pages.dev"]
 
-  vue --> cfp
-  REPO -->|push main| cfp
-  cron --> tsx
-  tsx --> scraped
-  scraped -->|summarize| claude
-  claude -->|résumé| json
-  json -->|git commit + push| REPO`}
+  cron --> batch
+  batch -->|résumer| claude
+  claude --> json
+  json -->|commit sur main| REPO
+  plan -->|lu au build| FE
+  REPO -->|push main, build auto| CF`}
       />
       <p>
         Aucun backend en production. Le site est rendu en statique pur à
-        chaque push. Le seul code qui tourne en run-time est le job
-        GitHub Actions hebdo qui scrape les sources, résume via Claude,
-        et commit les feeds JSON sur <code>main</code>.
+        chaque push. Le seul code qui tourne hors build est le job GitHub
+        Actions hebdomadaire, qui lit les sources, résume chaque nouveauté
+        via Claude et commit les flux JSON sur <code>main</code>.
       </p>
     </CaseStudySection>
 
     <CaseStudySection eyebrow="Stack & data flow">
       <ul class="list-none space-y-1.5">
         <li>
-          <strong>Frontend</strong> — Astro 6, Vue 3 + shadcn-vue,
-          Tailwind 4, JetBrains Mono pour le code, Inter pour le body
+          <strong>Frontend</strong> — Astro 7.4 (Vite 8), îlots Vue 3 avec
+          reka-ui, Tailwind 4, schémas Mermaid 12. Node 22.23.5 épinglé
+          (Astro 7 refuse de démarrer sous 22.23.4) ; la montée depuis Astro 6
+          date du 17 novembre 2026.
         </li>
         <li>
-          <strong>Hosting</strong> — Cloudflare Pages (build statique,
-          CDN edge)
+          <strong>Hébergement</strong> — Cloudflare Pages (build statique,
+          CDN edge, build automatique à chaque push sur <code>main</code>)
         </li>
         <li>
-          <strong>Batch</strong> — GitHub Actions cron lundi 06h UTC
-          + workflow_dispatch on-demand
+          <strong>Batch</strong> — GitHub Actions, cron le lundi à 06h UTC
+          + déclenchement à la demande
         </li>
         <li>
           <strong>LLM</strong> — Anthropic SDK avec
           <code>claude-haiku-4-5</code> pour les résumés (140 caractères,
-          FR, filtre <code>[off-topic]</code>)
+          français, filtre <code>[off-topic]</code>)
         </li>
         <li>
-          <strong>Sources scrapées</strong> — atom feed Simon Willison,
-          GitHub API pour <code>anthropics/skills</code> et
-          <code>modelcontextprotocol/servers</code>, RSS Anthropic news
-          (avec fallback gracieux si 404)
+          <strong>Sources lues</strong> — flux Atom de Simon Willison, RSS
+          Anthropic (repli gracieux si 404), RSS Human Coders filtré sur
+          Claude et MCP, API GitHub pour <code>anthropics/skills</code> et
+          <code>modelcontextprotocol/servers</code>
         </li>
         <li>
-          <strong>Données</strong> — TypeScript modules en source de
-          vérité (<code>data/learning.ts</code>,
-          <code>data/ecosystem.ts</code>, etc.) + JSON feeds
-          auto-générés (<code>data/feeds/*.json</code>) à merger plus
-          tard si pertinent
+          <strong>Données</strong> — modules TypeScript en source de vérité
+          (<code>data/learning.ts</code>, <code>data/ecosystem.ts</code>,
+          <code>data/tools-tested.ts</code>, <code>data/livre-de-bord.ts</code>…)
+          + flux JSON générés par le batch (<code>data/feeds/*.json</code>)
+        </li>
+      </ul>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Ce que contient le site aujourd'hui">
+      <ul class="list-none space-y-1.5">
+        <li>
+          <strong>Apprendre</strong> — Démarrer (pour les vrais débutants),
+          Théorie, Écosystème, Learning (flux de veille), Vidéos, Atelier IA.
+        </li>
+        <li>
+          <strong>Guides</strong> — Kubernetes pour développeurs Java, ArgoCD
+          et K8s pour les nuls, Cloudflare pour les nuls : chaque grosse
+          galère d'infra devient une page pédagogique une fois résolue.
+        </li>
+        <li>
+          <strong>Études de cas</strong> — {NB_ETUDES} pages : les apps perso,
+          des récits transverses (migration K8s en une nuit, encyclopédie
+          AetherWX, <a href="/case-studies/cadence">cadence</a>) et les outils
+          tiers passés au banc d'essai (section Tools tested).
+        </li>
+        <li>
+          <strong>Suivre le site</strong> —
+          <a href="/nouveautes/">Nouveautés</a> (journal des changements
+          visibles, pastille « nouveau »),
+          <a href="/plan-de-travail/">Plan de travail</a> (généré au build
+          depuis le plan, titres publics seulement) et
+          <a href="/livre-de-bord/">Livre de bord</a> (une entrée par semaine :
+          appris, fabriqué, testé).
         </li>
       </ul>
     </CaseStudySection>
 
     <CaseStudySection eyebrow="Le process avec Claude Code">
       <p>
-        <strong>0 ligne de code humaine.</strong> La séance qui a
-        produit ce site (et la page que tu lis en ce moment) a été pilotée
-        par instruction conversationnelle. Voici les patterns de collab
-        utilisés concrètement :
+        <strong>0 ligne de code humaine.</strong> Le site (et la page que tu
+        lis en ce moment) est piloté par instruction conversationnelle. Les
+        patterns de collab utilisés concrètement :
       </p>
       <ul class="list-none space-y-1.5">
         <li>
-          <strong>Sub-agents en parallèle</strong> via le tool
-          <code>Agent</code> — pour scraper les sources, rédiger les 8
-          sections de la page Théorie, ou générer les 6 deep-dives case
-          studies (dont celui-ci) sans étrangler le contexte du parent.
+          <strong>Sous-agents en parallèle</strong> via l'outil
+          <code>Agent</code> — pour lire les sources, rédiger les sections de
+          la page Théorie, ou générer les premières études de cas sans
+          étrangler le contexte du parent.
         </li>
         <li>
-          <strong>Mémoire persistante</strong> dans
-          <code>~/.claude/projects/&lt;cwd&gt;/memory/</code> —
-          <em>~70 fichiers .md au 8 mai 2026</em> qui capturent les décisions, les
-          feedbacks (<code>feedback_*</code>), les patterns gagnants, les
-          anti-patterns observés (Ruflo). Rechargés automatiquement à
-          chaque session.
+          <strong>Mémoire persistante</strong> —
+          <em>~70 fichiers .md au 8 mai 2026</em> qui capturent les
+          décisions, les retours, les patterns gagnants et les anti-patterns
+          observés (Ruflo). Rechargés automatiquement à chaque session.
         </li>
         <li>
-          <strong>Skills custom</strong> — deux ont été
-          <em>skillifiés</em> depuis Ruflo lors de cette même séance :
-          <code>/sparc</code> (méthodologie 5 phases) et
-          <code>/skillify</code> (le meta-skill qui crée des skills à
-          partir d'idées externes).
+          <strong>Skills du dépôt</strong> — <code>/sparc</code> et
+          <code>/skillify</code> (tirés de Ruflo), <code>/save</code>,
+          <code>/test-tool</code> (protocole du banc d'essai),
+          <code>/update-rtk-stats</code> et <code>/local</code> (déléguer une
+          tâche bornée à un modèle local).
         </li>
         <li>
-          <strong>CLAUDE.md project-level</strong> — chacun des 6 repos
-          a maintenant son fichier de règles spécifiques (heuristiques,
-          anti-patterns, conventions de naming) en complément du
-          CLAUDE.md cross-app.
+          <strong>CLAUDE.md de projet</strong> — règles propres au dépôt
+          (navigation, Nouveautés, Plan de travail, Livre de bord, filtres de
+          ce qui peut être publié), en complément du CLAUDE.md commun.
         </li>
         <li>
-          <strong>APEX et brainstorming</strong> — pour les chantiers
-          structurés (Theory page, Ecosystem catalog), invocation
-          explicite des skills correspondants au lieu d'improviser.
+          <strong>Depuis septembre 2026 : cadence</strong> — le reste à faire
+          vit dans un plan relié aux commits (chaque commit cite son lot),
+          chaque écran modifié passe une revue UX à 1440 et 390 px avant
+          d'être déclaré fini, et une porte de tests rejoue la suite avant
+          chaque livraison.
         </li>
       </ul>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Vérifier plutôt que croire">
       <p>
-        Le résultat : le site a été scaffold, théorisé, documenté,
-        enrichi de catalogues triables, polish-é (favicon, OG image,
-        hover micro-interactions), et instrumenté d'un batch update
-        hebdo en quelques heures de pair-programming. Sans qu'aucune
-        ligne de code n'ait été tapée par l'humain.
+        Un site qui documente des outils vieillit vite. Depuis octobre 2026,
+        plusieurs garde-fous tournent à chaque build de tests :
       </p>
+      <ul class="list-none space-y-1.5">
+        <li>
+          <strong>Tests sur le site construit</strong> — une suite
+          <code>node --test</code> lit <code>dist</code> et pilote un Chromium
+          (barre de navigation mesurée au pixel près à plusieurs tailles de
+          police, pages Nouveautés et Plan de travail, absence de tout texte
+          privé du plan dans le site).
+        </li>
+        <li>
+          <strong>Relecture de vérité</strong> — chaque affirmation datée ou
+          chiffrée du site classée faux, dépassé, non sourcé ou ok ; les
+          corrections deviennent des tests.
+        </li>
+        <li>
+          <strong>Études datées</strong> — chaque étude d'une app porte en tête
+          sa date de mise à jour et les dépôts qu'elle décrit ; un chiffre
+          repris de l'état réel porte sa date et sa source dans la même phrase.
+        </li>
+        <li>
+          <strong>Audit de lisibilité</strong> — repère les pages « mur de
+          texte » (mots, schémas, plus long bloc sans intertitre).
+        </li>
+      </ul>
     </CaseStudySection>
 
     <CaseStudySection eyebrow="Pivots & lessons learned">
       <ul class="list-none space-y-1.5">
         <li>
           <strong>Émergence du groupe nav "Guides"</strong> — trois
-          tutos infra tirés du vécu homelab (K8s pour Java, ArgoCD
-          pour les nuls, Cloudflare pour les nuls) ont fini par former
-          leur propre famille dans la nav. Pattern : chaque grosse
-          galère d'infra (migration K8s overnight, panne tunnel 1033
-          de 3 semaines) devient une page pédagogique une fois résolue
-          — la douleur est le sommaire.
+          tutos infra tirés du vécu homelab ont fini par former leur propre
+          famille dans la nav. Pattern : la douleur est le sommaire.
         </li>
         <li>
           <strong>Pivot stack Vue (vs React)</strong> — au moment du
@@ -206,14 +256,13 @@ import { APP_COUNT } from "@/data/apps";
           <strong>Catalogue strict Anthropic-officiel</strong> — la
           tentation d'ajouter Ruflo au catalogue Ecosystem a été
           attrapée à temps. Le site documentaire reste sourcé propre,
-          le test bench (cette section) capture les outils tiers
-          séparément.
+          le banc d'essai capture les outils tiers séparément.
         </li>
         <li>
-          <strong>Filtres FR souples vs EN stricts</strong> — pour
-          les vidéos en français, la barre qualité est explicitement
-          assouplie (recommandations personnelles) parce que le pool est
-          plus restreint. Honnêteté > complétude artificielle.
+          <strong>Une étude de cas vieillit</strong> — les études des sites
+          cousins décrivaient encore, en novembre 2026, un backend et un
+          proxy d'images retirés depuis le 1er octobre. D'où la règle : date
+          de mise à jour et dépôts décrits en tête de chaque étude.
         </li>
       </ul>
     </CaseStudySection>

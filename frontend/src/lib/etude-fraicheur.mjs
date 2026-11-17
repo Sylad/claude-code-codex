@@ -17,8 +17,12 @@ function jour(day) {
   return formatDay(day);
 }
 
-/** @returns {string} « 3 novembre 2026 » */
-export const dateMajLabel = () => jour(DATE_MAJ);
+/**
+ * Date de mise à jour affichée en tête d'une étude (L39 : chaque étude porte la sienne).
+ * @param {string} [day] « YYYY-MM-DD » ; DATE_MAJ par défaut (études de L38)
+ * @returns {string} « 3 novembre 2026 »
+ */
+export const dateMajLabel = (day = DATE_MAJ) => jour(day);
 
 /**
  * Légende d'une capture : « Capture du <date> [(carte 2D, avant le globe)] — <description> ».
