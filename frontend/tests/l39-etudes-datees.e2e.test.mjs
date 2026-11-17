@@ -84,7 +84,8 @@ test('R6 — claude-code-codex : Astro 7, cinq sources, nombre d\'études compt�
   const t = texte('case-studies/claude-code-codex');
   assert.match(t, /Astro 7/);
   assert.doesNotMatch(t, /\(Astro 6\)|Frontend — Astro 6/); // seule la montée « depuis Astro 6 » est citée
-  assert.match(t, /Human Coders/);
+  assert.match(t, /Human Coders filtré sur\s+Claude et Anthropic/); // scripts/sources/humancoders.ts, KEYWORD_RE
+  assert.doesNotMatch(t, /Human Coders filtré sur\s+Claude et MCP/);
   const n = readdirSync(join(DIST, 'case-studies'), { withFileTypes: true })
     .filter((e) => e.isDirectory() && existsSync(join(DIST, 'case-studies', e.name, 'index.html'))).length;
   assert.match(t, new RegExp(`${n} pages`));
