@@ -104,12 +104,15 @@ lots:
   - id: L39
     title: "Études de cas avatar-pandora, evatosorus (10-05) et claude-code-codex (01-10) à jour d'après leur état réel ; règle durable : chaque étude de cas porte en tête sa date de mise à jour et la liste des dépôts qu'elle décrit (pour que l'agent bibliothécaire de cadence sache quelle page suit quel projet) ; demande Sylvain 24-10"
     public: "Études de cas : sites statiques et codex à jour, datés"
-    status: doing
+    status: done
     estimate: 0.25
     visible: true
+    delivered: { date: 2026-11-17, sha: 49f8b76acae75148317173773d5187bd65d37921 }
     created: 2026-10-24
     started: 2026-11-17
     review: { date: 2026-11-17, verdict: "conforme : seul mineur corrigé en 0ba5239 (Human Coders filtré sur Claude et Anthropic, test qui le garde), relu par le lead", commit: 0ba5239cefe3a1ec87905b4e6364db8cc2ae28c1 }
+    ux: { date: 2026-11-17, verdict: "conforme (lead, captures regardées) : en-tête daté entre le chapeau et la 1re section, sans niveau de titre, contraste 8:1, aucun défilement horizontal de 320 à 1440, liens 200 ; note : nom du dépôt de l'en-tête pas en lien" }
+    finished: 2026-11-17
   - id: L34
     title: Tester https://github.com/cloudflare/security-audit-skill avec le protocole /test-tool (instantané, installation en bac à sable, pollution, usage minimal sur un de nos dépôts, verdict, nettoyage) ; verdict au catalogue Tools tested — demande Sylvain 24-10, après cadence
     status: todo
