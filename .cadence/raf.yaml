@@ -615,6 +615,7 @@ lots:
     status: done
     estimate: 0.5
     every: 30
+    delivered: { date: 2026-11-17, sha: 325ef618233df773029ce5c02bf752a4343178fd }
     created: 2026-11-16
     started: 2026-11-17
     review: { date: 2026-11-17, verdict: "conforme : 0 bloquant ; aucune majeure directe (Tailwind 4.2.4 → 4.3.5) ; override vite unique sous npm 10 ; 111 tests unitaires ; non vérifié : e2e, build Cloudflare", commit: 4185b924fe4fd862e031196ef16632fc9658c855 }
