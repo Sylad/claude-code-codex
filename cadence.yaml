@@ -23,13 +23,14 @@ orchestrate:
   # astro build : 36 pages). Les tests e2e lisent `dist` (ignoré par git).
   # L42 (25-10) : cadence joue maintenant `build` AVANT `test`, ligne de base comprise (cadence L333) — le build
   # n'est plus répété ici ; les tests qui lisent frontend/dist le trouvent construit par la porte `build`.
-  test: 'cd frontend && npm test'
-  build: 'cd frontend && npx astro build'
+  # Les trois commandes passent par scripts/avec-node.sh : Node de .nvmrc, pas le premier du PATH hérité (porte rouge du 17-11, L70).
+  test: 'cd frontend && ../scripts/avec-node.sh npm test'
+  build: 'cd frontend && ../scripts/avec-node.sh npx astro build'
   # La page Plan de travail lit .cadence/raf.yaml au build (titres publics) : verify --gate rejoue sous des commits de plan seuls (cadence L450). Oubli constaté le 31-10 : deux builds Cloudflare rouges (L50, L58) derrière une porte « verte » héritée.
   gate: { readsPlan: true }
   precheck: true
   ux:
-    command: 'cd frontend && npx astro dev --port 4311 --host 127.0.0.1'
+    command: 'cd frontend && ../scripts/avec-node.sh npx astro dev --port 4311 --host 127.0.0.1'
     url: http://127.0.0.1:4311
     timeout: 300
 

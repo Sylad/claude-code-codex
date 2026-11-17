@@ -21,6 +21,10 @@ librsvg), une **modérée** sur `esbuild` et des **basses** sur `katex`/`mermaid
 1. **Node ≥ 22.23.4 exigé** (`engines` d'Astro 7.4.7 et suivants). La machine avait 22.22.3.
    Correction : Node 22.23.5 installé par nvm (l'alias `22` y pointe), `.nvmrc` fixé à `22.23.5`
    (lu par Cloudflare Pages et par le workflow `batch-update`), `engines` du `package.json` à `>=22.23.4`.
+   La porte de cadence hérite du PATH du processus qui la lance, où `v22.22.3/bin` restait en tête :
+   `npx astro build` y échouait (« Node.js v22.22.3 is not supported by Astro! »). Correction :
+   `scripts/avec-node.sh` charge la version de `.nvmrc` par nvm avant la commande ; les trois
+   commandes de `cadence.yaml` (test, build, revue UX) passent par lui.
 2. **`compressHTML` passe de `true` à `'jsx'`** (guide de migration Astro 7) : les espaces entre
    éléments inline disparaissent. Mesuré : **38 pages sur 40** perdaient des espaces
    (« avecClaude Code », « Dépôt décrit :maritime-atlas », « vibe coded withClaude Code »).
