@@ -58,6 +58,10 @@ onMounted(async () => {
     mermaid.initialize({
       startOnLoad: false,
       securityLevel: "loose",
+      // mermaid 12 passe par défaut à la mise en page ELK et à l'aspect « neo » : on garde
+      // dagre + classic, le rendu relu et mesuré des schémas du site (MIN_TEXT_PX, captures).
+      layout: "dagre",
+      look: "classic",
       theme: "base",
       themeVariables: {
         fontFamily: "'JetBrains Mono', 'ui-monospace', monospace",
@@ -86,6 +90,8 @@ onMounted(async () => {
         rankSpacing: 60,
         useMaxWidth: false,
         htmlLabels: true,
+        // mermaid 12 abaisse ce défaut de 200 à 120 px : libellés repliés plus tôt, boîtes plus hautes.
+        wrappingWidth: 200,
       },
     });
     const id = `mermaid-${Math.random().toString(36).slice(2, 9)}`;

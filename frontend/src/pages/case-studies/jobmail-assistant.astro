@@ -79,7 +79,7 @@ const nbCommits: number | undefined = 80;
 
   cleaner -->|GET /api/thunderbird/cleaner/latest-request| ext
   ext -->|resolve Message-Id| inbox
-  ext -->|messages.delete(deletePermanently=false)| trash
+  ext -->|"messages.delete(deletePermanently=false)"| trash
   ext -->|POST /api/thunderbird/bridge/event| bridge`}
         />
         <p>

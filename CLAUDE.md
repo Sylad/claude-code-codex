@@ -19,7 +19,7 @@ dans `docs/nouveautes/captures/`). Après tout ajout ou modification d'une entr�
 `cd frontend && npm run news` (= `cadence news build` vers `frontend/public/nouveautes-data/`) et
 **commiter le résultat** : Cloudflare Pages construit sans cadence, la page lit ce JSON au build.
 Tests : `cd frontend && npx astro build && npm test` (node --test ; les tests e2e lisent `dist`) —
-ils échouent si le JSON versionné n'est plus à jour. Node ≥ 22.12 obligatoire pour Astro 6.
+ils échouent si le JSON versionné n'est plus à jour. Node ≥ 22.23.4 obligatoire pour Astro 7 (`.nvmrc`).
 
 **Plan de travail** (page `/plan-de-travail/`, L15) : rendue AU BUILD depuis `.cadence/raf.yaml`
 (`frontend/src/lib/plan-public.ts`, dépendance `yaml`). N'est publié qu'un lot `visible: true`, non

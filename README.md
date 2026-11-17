@@ -36,7 +36,7 @@ officielle avec Anthropic.
 
 ## Stack
 
-- **Frontend** — Astro 6 (statique pur)
+- **Frontend** — Astro 7 (statique pur)
 - **UI** — Vue 3 + shadcn-vue + Tailwind 4
 - **Hosting** — Cloudflare Pages
 - **Batch** — GitHub Actions cron hebdo (`scripts/batch-update.ts`)
@@ -60,7 +60,7 @@ Voir `.claude/skills/<name>/INSTRUCTIONS.md` pour les détails d'installation.
 ## Développement local
 
 ```bash
-nvm use            # Node 22+
+nvm use            # Node 22.23.4+ (Astro 7)
 cd frontend
 npm install
 npm run dev        # http://localhost:4321

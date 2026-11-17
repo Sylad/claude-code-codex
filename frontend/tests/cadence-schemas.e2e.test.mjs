@@ -70,7 +70,9 @@ const css = () => {
   const own = readdirSync(dir).filter((f) => f.endsWith('.css')).map((f) => readFileSync(join(dir, f), 'utf8'));
   return own.join('\n') + html();
 };
-const tokens = (block) => Object.fromEntries([...block.matchAll(/--sch-([a-z-]+):\s*(#[0-9a-fA-F]{6})/g)].map((m) => [m[1], m[2].toLowerCase()]));
+// Le minifieur CSS d'Astro 7 abrège les couleurs (#ffffff → #fff) : on relit les deux formes en 6 chiffres.
+const hex6 = (h) => (h.length === 4 ? `#${[...h.slice(1)].map((c) => c + c).join('')}` : h).toLowerCase();
+const tokens = (block) => Object.fromEntries([...block.matchAll(/--sch-([a-z-]+):\s*(#[0-9a-fA-F]{6}|#[0-9a-fA-F]{3})(?![0-9a-fA-F])/g)].map((m) => [m[1], hex6(m[2])]));
 
 test('R6 — clair ET sombre : jetons définis pour les deux thèmes, texte ≥ 4,5:1 sur le fond du schéma et des boîtes', () => {
   const all = css();
