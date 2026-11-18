@@ -122,9 +122,10 @@ lots:
       - { date: 2026-10-24, text: "24-10 (Sylvain) — ajouter : lire ce que Cloudflare en dit (README du dépôt, article de blog ou doc associée s'il y en a) ; séparer l'affirmé du vérifiable, comparer à nos pratiques de revue de sécurité (code-reviewer, skill security-review), et ne proposer de lot que pour une idée qui se mesure chez nous." }
   - id: L36
     title: "Étude : https://www.maketime.fr/articles/meilleurs-skills-claude-2026 — lister les skills cités, séparer l'affirmé du vérifiable (dépôt, doc officielle), confronter à notre catalogue /ecosystem et à Tools tested ; candidats au protocole /test-tool seulement s'ils couvrent un besoin mesuré chez nous ; livrable : note courte dans tmp/ + lots proposés (méthode de l'étude cadence L254) — demande Sylvain 24-10"
-    status: todo
+    status: doing
     estimate: 0.25
     created: 2026-10-24
+    started: 2026-11-18
   - id: L21
     title: "Veille et mise à jour régulière du contenu (consigne Sylvain 02-10) : rechercher les nouveautés de l'écosystème (versions, fonctionnalités, outils, articles de référence), les vérifier sur leurs sources en ligne et les dater, mettre à jour les pages concernées (Écosystème, Théorie, Learning, Vidéos, outils testés), signaler ce qui est périmé ; fixer un rythme de revue et afficher la date de dernière mise à jour de chaque page"
     public: "Un contenu tenu à jour : actualités de l'écosystème, pages révisées"
