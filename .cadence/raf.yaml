@@ -124,6 +124,7 @@ lots:
     title: "Étude : https://www.maketime.fr/articles/meilleurs-skills-claude-2026 — lister les skills cités, séparer l'affirmé du vérifiable (dépôt, doc officielle), confronter à notre catalogue /ecosystem et à Tools tested ; candidats au protocole /test-tool seulement s'ils couvrent un besoin mesuré chez nous ; livrable : note courte dans tmp/ + lots proposés (méthode de l'étude cadence L254) — demande Sylvain 24-10"
     status: done
     estimate: 0.25
+    delivered: { date: 2026-11-19, sha: e6e45ff37da1916cfde0a1090085130b7b079dd6 }
     created: 2026-10-24
     started: 2026-11-18
     review: { date: 2026-11-18, verdict: "conforme (revue du lead) : étude sourcée, 16 entrées vérifiées, affirmé séparé du vérifiable, retenus seulement sur besoin mesuré (contexte relu hors Bash → context-mode sous condition de licence ; fiche superpowers manquante)", commit: a81110dcd88864355666b7deb929e5e527353c94 }
@@ -651,6 +652,7 @@ lots:
     title: "Faire connaître cadence (D-2) : page « pourquoi cadence » dans le codex (les 5 besoins, le banc A/B et ses chiffres, le registre des demandes tenu 3/3 contre 0/3), et proposer à Sylvain où la publier pour de vrais lecteurs (le codex en a peu : billet dev.to, r/ClaudeAI, Hacker News « Show HN », LinkedIn, README de cadence) — rien n'est publié hors du codex sans son accord"
     status: done
     estimate: 1
+    delivered: { date: 2026-11-19, sha: e6e45ff37da1916cfde0a1090085130b7b079dd6 }
     created: 2026-11-19
     notes:
       - { date: 2026-11-19, text: "19-11, Sylvain : la page peut citer AetherWX parmi les projets aux défauts d'avant cadence (m5 de la revue) — garder tel quel." }
