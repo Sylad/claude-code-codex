@@ -19,6 +19,11 @@ const CADENCE = "https://github.com/Sylad/cadence";
 const NPM = "https://www.npmjs.com/package/@sylad/cadence";
 const doc = (chemin: string) => `${CADENCE}/blob/main/${chemin}`;
 const BESOINS = "docs/v2/2026-11-08-banc-sequence-design.md";
+// Un nombre ne se sépare ni de ses milliers ni de son unité en fin de ligne (« 4 954 s » coupé au
+// téléphone, retour du 19-11) : espace insécable U+00A0 posée ici, une fois, sur tous les textes.
+const NBSP = "\u00a0";
+const insecable = (s: string) =>
+  s.replace(/(\d) (?=\d{3}(?!\d))/g, `$1${NBSP}`).replace(/(\d) (?=(?:s|min|px)(?!\p{L})|%)/gu, `$1${NBSP}`);
 
 const besoins = [
   {
@@ -161,7 +166,7 @@ const limites = [
           <li data-besoin={i + 1} class="rounded-xl border border-white/10 bg-paper-elevated p-5">
             <p class="font-mono text-xs text-claude/80 mb-2">Besoin {i + 1}</p>
             <h3 class="text-base font-medium text-ink mb-1.5">{b.nom}</h3>
-            <p class="text-sm text-ink-muted leading-relaxed">{b.corps}</p>
+            <p class="text-sm text-ink-muted leading-relaxed">{insecable(b.corps)}</p>
           </li>
         ))}
       </ol>
@@ -218,7 +223,7 @@ const limites = [
           <li class="rounded-xl border border-white/10 bg-paper-elevated p-5">
             <p class="font-mono text-xs text-claude/80 mb-2">Besoin {r.besoin}</p>
             <h3 class="text-base font-medium text-ink mb-1.5">{r.mecanisme}</h3>
-            <p class="text-sm text-ink-muted leading-relaxed">{r.detail}</p>
+            <p class="text-sm text-ink-muted leading-relaxed">{insecable(r.detail)}</p>
           </li>
         ))}
       </ul>
@@ -237,9 +242,9 @@ const limites = [
       <div class="grid gap-3 sm:grid-cols-2">
         {chiffres.map((c) => (
           <div data-chiffre={c.id} data-nombres={c.nombres} data-source={c.source} class="rounded-xl border border-white/10 bg-paper-elevated p-5">
-            <p class="font-mono text-lg text-claude">{c.valeur}</p>
+            <p class="font-mono text-lg text-claude">{insecable(c.valeur)}</p>
             <p class="mt-1 font-mono text-xs text-ink-muted">{c.date}</p>
-            <p class="mt-2 text-sm text-ink-muted leading-relaxed">{c.legende}</p>
+            <p class="mt-2 text-sm text-ink-muted leading-relaxed">{insecable(c.legende)}</p>
             <p class="mt-2 font-mono text-[11px] text-ink-muted [overflow-wrap:anywhere]">
               Source : <a href={doc(c.source)} target="_blank" rel="noopener">{c.source}</a>
             </p>
@@ -256,8 +261,8 @@ const limites = [
       <ul data-limites class="space-y-3 list-none">
         {limites.map((l) => (
           <li data-limite={l.id} data-nombres={l.nombres || undefined} data-source={l.source} class="rounded-xl border border-white/10 bg-paper-elevated p-5">
-            <h3 class="text-base font-medium text-ink mb-1.5">{l.titre}</h3>
-            <p class="text-sm text-ink-muted leading-relaxed">{l.corps}</p>
+            <h3 class="text-base font-medium text-ink mb-1.5">{insecable(l.titre)}</h3>
+            <p class="text-sm text-ink-muted leading-relaxed">{insecable(l.corps)}</p>
             <p class="mt-2 font-mono text-[11px] text-ink-muted [overflow-wrap:anywhere]">
               Source : <a href={doc(l.source)} target="_blank" rel="noopener">{l.source}</a>
             </p>

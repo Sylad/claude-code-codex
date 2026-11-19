@@ -156,3 +156,48 @@ test('R11 — au téléphone (390 px) et au bureau (1440 px), aucun défilement 
     await context.close();
   }
 });
+
+// Retour du lead (19-11) : au téléphone, « 4 954 s » se coupait en fin de ligne. Un nombre ne se
+// sépare ni de son unité (s, min, %, px) ni de ses milliers : espace insécable dans la source rendue.
+const NBSP = '\u00a0';
+const NOMBRE_UNITE = /(?<![\d,.])\d+(?:\s\d{3})*\s(?:s|min|px|%)(?!\p{L})/gu;
+
+test('R14 — aucun nombre séparé de son unité ou de ses milliers par une espace sécable', () => {
+  const brut = main(page()).replace(/<[^>]+>/g, ' ');
+  const coupables = [...brut.matchAll(/\d[ \t\n](?:\d{3}(?!\d)|(?:s|min|px)(?!\p{L})|%)/gu)].map((m) => m[0]);
+  assert.deepEqual(coupables, [], 'espace ordinaire entre un nombre et son unité ou ses milliers');
+  // la garde voit bien les nombres de la page : ils y sont, tenus par des insécables
+  const tenus = [...brut.matchAll(NOMBRE_UNITE)].map((m) => m[0]);
+  for (const n of ['4 954 s', '6 957 s', '1 990 s', '2 470 s', '199 min', '52 min', '7 %', '1440 px', '390 px'].map((x) => x.replaceAll(' ', NBSP))) {
+    assert.ok(tenus.includes(n), `« ${n} » absent ou mal tenu`);
+  }
+});
+
+test('R15 — à 390 px, chaque nombre et son unité tiennent sur une seule ligne', { timeout: 120_000 }, async (t) => {
+  const env = await setupBrowser(t);
+  if (!env) return;
+  const context = await env.browser.newContext({ viewport: { width: 390, height: 900 } });
+  const p = await context.newPage();
+  await p.goto(`${env.base}/case-studies/pourquoi-cadence/`, { waitUntil: 'load' });
+  const { vus, coupes } = await p.evaluate((src) => {
+    const re = new RegExp(src, 'gu');
+    const walker = document.createTreeWalker(document.querySelector('main'), NodeFilter.SHOW_TEXT);
+    let vus = 0;
+    const coupes = [];
+    for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+      for (const m of n.data.matchAll(re)) {
+        const r = document.createRange();
+        r.setStart(n, m.index);
+        r.setEnd(n, m.index + m[0].length);
+        const tops = [...r.getClientRects()].filter((b) => b.width > 0).map((b) => Math.round(b.top));
+        if (!tops.length) continue;
+        vus += 1;
+        if (Math.max(...tops) - Math.min(...tops) > 1) coupes.push(m[0]);
+      }
+    }
+    return { vus, coupes };
+  }, NOMBRE_UNITE.source);
+  assert.ok(vus >= 10, `${vus} nombres avec unité mesurés`);
+  assert.deepEqual(coupes, [], 'nombre coupé de son unité en fin de ligne');
+  await context.close();
+});
