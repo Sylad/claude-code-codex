@@ -17,7 +17,11 @@
   présenté (demandes isolées = deux bras identiques) ; la garde rouge de la 2.0.0 est dans les limites. Aucune
   citation de Sylvain qui ne soit dans le dépôt cadence ; la liste des besoins renvoie à 2026-11-08-banc-sequence-design.md.
 - D-2 reste « ouverte » tant que la page n'est pas en ligne : c'est le lead qui la passe à « livrée » (URL + sha).
-- La page n'est pas une carte de l'index des études : l'index compte les apps (test R10 de cadence-case-study).
+- Index `/case-studies/` : la page a sa carte « Pourquoi cadence » dans « Récits transverses », juste après la carte
+  cadence (revue UX r3, Nielsen 4 et 6) ; le compte « 8 apps » ne bouge pas (R10 de cadence-case-study). Texte de la
+  carte sans chiffre : seule la page porte les chiffres sourcés.
+- Schéma : boîtes 8-150 et 178-332 (bords extérieurs de 8 unités), chaque libellé a 10 unités de marge à gauche et
+  au moins autant à droite (« Revue code et écran » touchait le bord à 320 px).
 - Où publier hors du codex : proposition dans le rapport du run L73 seulement, rien publié sans accord de Sylvain.
 - Revue r2 (19-11) : la Nouveauté du 19-11 dit la même chose que la page (séquence 2.0.0 chiffrée, défauts et juge
   défavorables, « demande différée », les cinq limites avec leurs chiffres) ; `docs/verite-site.md` relève chaque
@@ -32,4 +36,6 @@
   limites, liens, rien de privé, R12 : chaque nombre (`data-nombres`) cherché dans le fichier `data-source` du dépôt
   cadence quand il est à côté (CADENCE_REPO, ../cadence, ../../cadence ; sinon ignoré), pas de défilement latéral, texte du schéma ≥ 11 px et dans ses cadres à 390 et 1440 px. R8 : aucun morceau ni mot
   long du champ `origine` de `.cadence/demandes/D-2.json` sur la page. R16 : la Nouveauté du 19-11 suit la page.
+- R17 : l'index lie la page par le titre d'une carte voisine de la carte cadence ; R18 : marge droite ≥ marge gauche
+  de chaque libellé du schéma à 320, 390 et 1440 px.
 - `frontend/tests/verite-site.test.mjs` R-L73 : section `/case-studies/pourquoi-cadence` sans cumul, chaque affirmation relevée.

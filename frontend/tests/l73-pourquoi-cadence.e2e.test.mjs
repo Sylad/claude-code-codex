@@ -228,3 +228,46 @@ test('R16 — la Nouveauté du 19-11 dit ce que dit la page : séquence 2.0.0 ch
   // les cinq limites de la page sont dites
   for (const re of [/garde rouge/, /sans document à lire/, /coûte la lecture/, /deux fois sur trois/, /relecteur/]) assert.match(corps, re);
 });
+
+// Revue UX r3 (19-11), constat 2 (Nielsen 4 et 6) : la rubrique « Case studies » contient la page.
+// Une carte « Pourquoi cadence » dans les récits transverses, juste après la carte cadence ; le
+// nombre d'apps de l'index ne bouge pas (R10 de cadence-case-study).
+test('R17 — l’index /case-studies/ a une carte « Pourquoi cadence » qui lie la page, à côté de la carte cadence', () => {
+  const html = main(read('case-studies', 'index.html'));
+  const cartes = [...html.matchAll(/<article[\s\S]*?<\/article>/g)].map((m) => m[0]);
+  const i = cartes.findIndex((c) => /href="\/case-studies\/pourquoi-cadence\/?"/.test(c));
+  assert.ok(i >= 0, 'aucune carte de l’index ne lie /case-studies/pourquoi-cadence/');
+  const carte = cartes[i];
+  assert.match(carte.replace(/<[^>]+>/g, ' ').replace(/&#39;/g, "'"), /Pourquoi cadence/);
+  assert.match(carte, /<h3[\s\S]*?href="\/case-studies\/pourquoi-cadence\/?"[\s\S]*?<\/h3>/, 'le titre de la carte est le lien');
+  const cadence = cartes.findIndex((c) => /<h3[\s\S]*?href="\/case-studies\/cadence"/.test(c));
+  assert.ok(cadence >= 0, 'carte cadence absente');
+  assert.equal(Math.abs(i - cadence), 1, 'la carte n’est pas à côté de la carte cadence');
+  assert.match(text(read('case-studies', 'index.html')), /8 apps construites avec Claude Code/);
+});
+
+// Revue UX r3, constat 3 : à 320 px « Revue code et écran » touchait presque le bord droit de sa
+// boîte. Chaque libellé du schéma garde à droite au moins la marge qu'il a à gauche (10 unités du
+// viewBox), à toutes les largeurs.
+test('R18 — schéma : chaque libellé a à droite la même marge intérieure qu’à gauche (320, 390, 1440 px)', { timeout: 120_000 }, async (t) => {
+  const env = await setupBrowser(t);
+  if (!env) return;
+  for (const width of [320, 390, 1440]) {
+    const context = await env.browser.newContext({ viewport: { width, height: 900 } });
+    const p = await context.newPage();
+    await p.goto(`${env.base}/case-studies/pourquoi-cadence/`, { waitUntil: 'load' });
+    await p.evaluate(() => document.fonts.ready);
+    const serres = await p.evaluate(() => [...document.querySelectorAll('[data-schema="besoins-mecanismes"] g')].flatMap((g) => {
+      const rects = [...g.querySelectorAll('rect')].map((r) => r.getBBox());
+      return [...g.querySelectorAll('text')].flatMap((t) => {
+        const b = t.getBBox();
+        const r = rects.find((r) => b.x >= r.x && b.x < r.x + r.width);
+        const gauche = b.x - r.x;
+        const droite = r.x + r.width - (b.x + b.width);
+        return droite + 0.5 < gauche ? [`${t.textContent} (gauche ${gauche.toFixed(1)}, droite ${droite.toFixed(1)})`] : [];
+      });
+    }));
+    assert.deepEqual(serres, [], `@${width}px : libellé trop près du bord droit`);
+    await context.close();
+  }
+});

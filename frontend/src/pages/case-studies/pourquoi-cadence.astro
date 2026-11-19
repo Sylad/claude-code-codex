@@ -198,7 +198,7 @@ const limites = [
           <title id="sch-besoins-t">Un mécanisme par besoin</title>
           <desc id="sch-besoins-d">Ne rien oublier : le registre des demandes. Lire les documents : la lecture obligatoire. Ne rien casser : la porte de tests. Rester cohérent : la revue. Travailler en équipe : le plan relié aux commits et le banc.</desc>
           <text class="sch-a" x="8" y="20">Besoin</text>
-          <text class="sch-a" x="188" y="20">Pièce de cadence</text>
+          <text class="sch-a" x="178" y="20">Pièce de cadence</text>
           {[
             ["1 · Ne rien oublier", "Registre"],
             ["2 · Lire les docs", "Lecture obligatoire"],
@@ -207,12 +207,12 @@ const limites = [
             ["5 · Faire équipe", "Plan et banc"],
           ].map(([gauche, droite], i) => (
             <g>
-              <rect class="sch-box" x="8" y={34 + i * 58} width="146" height="44" rx="8" />
+              <rect class="sch-box" x="8" y={34 + i * 58} width="142" height="44" rx="8" />
               <text class="sch-t" x="18" y={61 + i * 58} style="font-size:13px">{gauche}</text>
-              <line class="sch-line" x1="154" y1={56 + i * 58} x2="180" y2={56 + i * 58} />
-              <path class="sch-arrow" d={`M178 ${50 + i * 58} L188 ${56 + i * 58} L178 ${62 + i * 58} Z`} />
-              <rect class="sch-box-accent" x="188" y={34 + i * 58} width="146" height="44" rx="8" />
-              <text class="sch-t" x="198" y={61 + i * 58} style="font-size:13px">{droite}</text>
+              <line class="sch-line" x1="150" y1={56 + i * 58} x2="170" y2={56 + i * 58} />
+              <path class="sch-arrow" d={`M168 ${50 + i * 58} L178 ${56 + i * 58} L168 ${62 + i * 58} Z`} />
+              <rect class="sch-box-accent" x="178" y={34 + i * 58} width="154" height="44" rx="8" />
+              <text class="sch-t" x="188" y={61 + i * 58} style="font-size:13px">{droite}</text>
             </g>
           ))}
         </svg>
