@@ -649,11 +649,15 @@ lots:
     created: 2026-11-18
   - id: L73
     title: "Faire connaître cadence (D-2) : page « pourquoi cadence » dans le codex (les 5 besoins, le banc A/B et ses chiffres, le registre des demandes tenu 3/3 contre 0/3), et proposer à Sylvain où la publier pour de vrais lecteurs (le codex en a peu : billet dev.to, r/ClaudeAI, Hacker News « Show HN », LinkedIn, README de cadence) — rien n'est publié hors du codex sans son accord"
-    status: todo
+    status: done
     estimate: 1
     created: 2026-11-19
     notes:
       - { date: 2026-11-19, text: "19-11, Sylvain : la page peut citer AetherWX parmi les projets aux défauts d'avant cadence (m5 de la revue) — garder tel quel." }
+    review: { date: 2026-11-19, verdict: "conforme — revue de code r3 (rapport codex-L73-r3.md) ; correction UX be157bd revue par le lead (diff : carte d'index, marge du schéma, test)", commit: be157bdd2d4cfa29142821bb62487a6317c896fc }
+    ux: { date: 2026-11-19, verdict: "conforme — revue UX (ux-reviewer, 19-11) : 1 majeur dans le lot (page absente de l'index) corrigé en be157bd, vérifié par le lead sur captures 1440/390 de /case-studies/ (carte à côté de cadence) ; contraste accent/fond hors lot → L74 ; porte verte be157bd" }
+    started: 2026-11-19
+    finished: 2026-11-19
   - id: L74
     title: "Contraste : le texte en couleur accent (rgb 235,122,82 — surtitres h2 12 px et liens) posé directement sur l'image de fond fixe descend à 2,11–2,37:1 en haut de la fenêtre (seuil 4,5, WCAG 1.4.3) ; tout le site, mesuré sur /case-studies/cadence et /case-studies/pourquoi-cadence (revue UX de L73, 19-11)"
     status: todo
