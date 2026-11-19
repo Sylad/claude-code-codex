@@ -19,7 +19,7 @@ classe et une source, décomptes exacts).
 | faux | 7 |
 | dépassé | 30 |
 | non sourcé | 22 |
-| ok | 42 |
+| ok | 46 |
 
 ## Ce qui a été vérifié, et ce qui ne l'a pas été
 
@@ -172,6 +172,13 @@ classe et une source, décomptes exacts).
 
 - **ok** — test du 2026-05-08, versions 3.7.0-alpha.17 + 3.6.30 stable, 8 leçons : date et versions affichées, verdict « testé puis rejeté » cohérent avec le catalogue (source : `tools-tested.ts` (entrée ruflo), `ruflo.astro`)
 - **dépassé** — étoiles et dernier push de Ruflo : relevés du rapport `/case-studies` (46 787 → 80 279 étoiles) (source : ligne `/case-studies` de ce rapport, API GitHub du 30-10-2026)
+
+## `/case-studies/pourquoi-cadence`
+
+- **ok** — essai du 7 novembre 2026 : 52 min contre 199 min (×3,8), Claude seul préféré 8 sur 8 (source : `cadence/docs/v2/2026-11-07-cadence-2-design.md`, §0)
+- **ok** — cumul de la 2.0.0 au 10 novembre 2026 : 2 871 s contre 2 878 s, tests cachés 39 contre 24, défauts 3 contre 5, régressions 0 contre 2, pièces lues 2 sur 2 contre 0 sur 2, séquences AetherWX 4 sur 4 contre 0 sur 4 et ×1,40, banc court sans référence ×1,76 (source : `cadence/docs/v2/publications/2.0.0.md`)
+- **ok** — registre des demandes : demande différée tenue 3 fois sur 3 contre 0 sur 3, +7 % de temps, micro-banc du 9 novembre 2026 (source : `cadence/docs/v2/2026-11-09-cadence-run.md`, « Mesures qui le fondent »)
+- **ok** — tests d'origine du 18 novembre 2026 : 80 contre 88, 82 contre 84, 83 contre 81 (source : `cadence/docs/v2/banc.md`, L777)
 
 ## `/case-studies/superclaude`
 

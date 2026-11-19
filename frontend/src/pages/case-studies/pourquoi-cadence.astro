@@ -1,0 +1,267 @@
+---
+/*
+  L73 (D-2) — « Pourquoi cadence » : les cinq besoins qui ont fait naître l'outil (Sylvain, 8 novembre
+  2026), ce qu'il est en une phrase, et les preuves chiffrées du banc A/B. Chaque chiffre vient d'un
+  fichier du dépôt public Sylad/cadence, nommé avec sa date ; rien n'est arrondi ni recalculé ici.
+  Les chiffres défavorables sont dits aussi (section « Ce que les mesures ne prouvent pas »).
+  Rien de privé : ni machine, ni chemin, ni compte de travail, ni donnée personnelle.
+*/
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import CaseStudySection from "@/components/site/CaseStudySection.astro";
+import Schema from "@/components/site/Schema.astro";
+import Callout from "@/components/site/Callout.astro";
+import { inlineCodeHtml } from "@/lib/inline-code.mjs";
+
+const CODE = "[&_code]:font-mono [&_code]:text-claude-soft [&_code]:text-[0.9em] [&_code]:px-1 [&_code]:rounded [&_code]:bg-white/5";
+const H3 = "text-lg font-medium text-ink pt-2";
+const CADENCE = "https://github.com/Sylad/cadence";
+const NPM = "https://www.npmjs.com/package/@sylad/cadence";
+const doc = (chemin: string) => `${CADENCE}/blob/main/${chemin}`;
+
+const besoins = [
+  {
+    nom: "Ne rien oublier",
+    corps:
+      "Les demandes arrivent au fil de l'eau, souvent en une phrase glissée au milieu d'autre chose (« au passage… », « pour plus tard… »). Aucune ne doit être oubliée entre le moment où elle est dite et celui où elle est livrée.",
+  },
+  {
+    nom: "Lire vraiment les documents et les images",
+    corps:
+      "L'IA annonce qu'elle va lire la norme, puis ne la lit presque jamais, et ne regarde pas les figures. Sur AetherWX, cela donnait des spécifications fausses et un dessin qui ne suivait pas les documents de l'OMM.",
+  },
+  {
+    nom: "Ne pas casser ce qui marchait",
+    corps:
+      "Sur AetherWX, chaque nouveau lot cassait une fonctionnalité déjà livrée. Il faut un vrai filet de tests, rejoué à chaque fois, pas seulement les tests du changement.",
+  },
+  {
+    nom: "Un ensemble cohérent et maintenable",
+    corps:
+      "Les fonctionnalités doivent tenir ensemble (une légende qui suit la carte, un réglage appliqué partout) et le code rester lisible lot après lot, pas devenir un plat de spaghettis.",
+  },
+  {
+    nom: "Le sérieux d'une équipe",
+    corps:
+      "Travailler comme une équipe de développement (plan, revues, outils, mémoire écrite) plutôt que produire vite un code que personne ne saura reprendre, comme un développeur seul dans son garage.",
+  },
+];
+
+const reponses = [
+  { besoin: 1, mecanisme: "Le registre des demandes", detail: "Un fichier par demande, son texte mot pour mot, un état (ouverte, livrée, vérifiée) et la preuve de la livraison. Le texte d'origine n'est jamais réécrit." },
+  { besoin: 2, mecanisme: "La lecture obligatoire", detail: "Quand une demande cite des documents, la session ne peut rien écrire tant qu'elle ne les a pas lus en entier : un hook de Claude Code refuse l'écriture." },
+  { besoin: 3, mecanisme: "La porte de tests", detail: "La suite complète du projet est rejouée avant d'intégrer le travail ; rouge, la même session corrige, puis la porte est rejouée." },
+  { besoin: 4, mecanisme: "La revue", detail: "Une revue du code et, pour un écran, une revue sur captures au bureau (1440 px) et au téléphone (390 px), avant de déclarer le lot fini." },
+  { besoin: 5, mecanisme: "Le plan relié aux commits et le banc", detail: "Chaque commit cite son lot, et aucun mécanisme n'entre dans l'outil sans un banc où il gagne contre Claude seul." },
+];
+
+const chiffres = [
+  {
+    id: "essai-v1",
+    valeur: "×3,8 · 8 sur 8",
+    date: "7 novembre 2026",
+    legende:
+      "La première version (des vagues de sessions courtes) contre Claude seul, sur 8 vraies demandes rejouées depuis le même commit : 199 min contre 52 min, soit ×3,8 en temps, et la relecture à l'aveugle a préféré Claude seul 8 sur 8. C'est cet échec qui a fait cadence 2.",
+    source: "docs/v2/2026-11-07-cadence-2-design.md",
+  },
+  {
+    id: "publication-2-0-0",
+    valeur: "2 871 s · 2 878 s",
+    date: "10 novembre 2026",
+    legende:
+      "Cadence 2 contre Claude seul, cumul de quatre comparaisons (trois demandes isolées et une suite de trois demandes sur AetherWX) : le même temps (×1,00), 39 contre 24 tests cachés réussis, 3 contre 5 défauts bloquants ou majeurs, et 0 contre 2 régressions.",
+    source: "docs/v2/publications/2.0.0.md",
+  },
+  {
+    id: "lecture",
+    valeur: "2 sur 2 · 4 sur 4",
+    date: "10 novembre 2026",
+    legende:
+      "Les documents de référence lus en entier avant d'écrire le code : 2 sur 2 pour cadence contre 0 sur 2 pour Claude seul sur la suite de demandes publiée, et 4 sur 4 contre 0 sur 4 sur les suites AetherWX des 9 et 10 novembre.",
+    source: "docs/v2/publications/2.0.0.md",
+  },
+  {
+    id: "registre",
+    valeur: "3 sur 3 · 0 sur 3",
+    date: "9 novembre 2026",
+    legende:
+      "Une seconde demande glissée pendant la première : avec le registre des demandes, elle est tenue 3 fois sur 3 ; sans lui, 0 sur 3. Le prix : +7 % de temps (micro-banc).",
+    source: "docs/v2/2026-11-09-cadence-run.md",
+  },
+];
+
+const limites = [
+  {
+    titre: "Sans document à lire, la lecture obligatoire ne sert à rien",
+    corps:
+      "Au banc du 10 novembre 2026, sur des demandes sans référence, le brief complet perdait : Claude seul préféré 2 fois sur 3, et ×1,76 en temps. Depuis, cadence choisit tout seul : brief complet quand la demande a des documents à lire, brief de Claude seul sinon.",
+    source: "docs/v2/publications/2.0.0.md",
+  },
+  {
+    titre: "Lire en entier coûte du temps",
+    corps:
+      "Sur les suites AetherWX des 9 et 10 novembre 2026, le brief complet a mis 6 957 s contre 4 954 s (×1,40) : le prix de documents vraiment lus.",
+    source: "docs/v2/publications/2.0.0.md",
+  },
+  {
+    titre: "Un critère encore perdu deux fois sur trois",
+    corps:
+      "Le 18 novembre 2026, au banc mécanique, cadence a réussi moins de tests d'origine que Claude seul à deux passages sur trois (80 contre 88, 82 contre 84, puis 83 contre 81). On ne sait pas encore si c'est du bruit ou un vrai écart : le banc le remesure chaque semaine.",
+    source: "docs/v2/banc.md",
+  },
+  {
+    titre: "La cohérence n'est mesurée qu'en partie",
+    corps:
+      "Les suites de demandes suivent les régressions, la duplication et les gros fichiers ; la cohérence d'un écran à l'autre (besoin 4) n'a pas encore de mesure à elle. Et les échantillons restent petits : trois répétitions, quelques demandes.",
+    source: "docs/v2/banc.md",
+  },
+];
+---
+
+<BaseLayout
+  title="Pourquoi cadence"
+  description="Pourquoi cadence existe : cinq besoins d'un développeur qui code avec Claude Code (ne rien oublier, lire vraiment les documents, ne rien casser, rester cohérent, travailler comme une équipe), ce qu'est l'outil en une phrase, et ce qu'en dit le banc A/B, chiffres datés et sourcés."
+>
+  <PageHero
+    eyebrow="Case study · pourquoi cadence"
+    title="Pourquoi cadence : cinq besoins, et ce que le banc en dit"
+    intro="Cadence est né d'une liste de besoins, pas d'une idée d'outil. Cette page dit lesquels, ce que l'outil fait pour chacun, et ce que les mesures en disent : celles qui lui donnent raison comme celles qui lui donnent tort."
+  />
+
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12 space-y-12">
+    <CaseStudySection eyebrow="Cinq besoins">
+      <h3 data-intertitre class={H3}>Ce qui manquait en codant seul avec une IA</h3>
+      <p>
+        Le 8 novembre 2026, après deux mesures défavorables, Sylvain a écrit
+        pourquoi il avait construit cadence : « je n'ai pas fait cadence pour
+        rien ». Cinq besoins, dans son ordre :
+      </p>
+      <ol class="space-y-3 list-none">
+        {besoins.map((b, i) => (
+          <li data-besoin={i + 1} class="rounded-xl border border-white/10 bg-paper-elevated p-5">
+            <p class="font-mono text-xs text-claude/80 mb-2">Besoin {i + 1}</p>
+            <h3 class="text-base font-medium text-ink mb-1.5">{b.nom}</h3>
+            <p class="text-sm text-ink-muted leading-relaxed">{b.corps}</p>
+          </li>
+        ))}
+      </ol>
+      <Callout titre="Le piège à éviter">
+        <p>
+          Un banc qui rejoue une demande isolée sur un dépôt neuf mesure la
+          vitesse, le terrain où Claude seul est bon. Il ne voit ni l'oubli
+          d'une demande, ni la régression d'un lot à l'autre. C'est pourquoi le
+          banc de cadence rejoue aussi des suites de demandes sur un même projet.
+        </p>
+      </Callout>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Cadence en une phrase">
+      <p data-definition class="text-lg text-ink">
+        Cadence, c'est un plan versionné relié aux commits, une session par demande,
+        un registre des demandes, une porte de tests et une revue, chacun gardé
+        seulement si un banc montre qu'il fait mieux que Claude seul.
+      </p>
+      <h3 data-intertitre class={H3}>Un mécanisme par besoin</h3>
+      <p>
+        Chaque demande ouvre une session Claude Code neuve, dans une copie de
+        travail à part ; un programme, pas un modèle, enchaîne la porte et
+        l'intégration. Chaque besoin a sa pièce :
+      </p>
+      <div class="-mx-5 sm:mx-0">
+      <Schema id="besoins-mecanismes" legende="Les cinq besoins, à gauche, et la pièce de cadence qui répond à chacun, à droite.">
+        <svg viewBox="0 0 340 330" style="max-width:26rem" role="img" aria-labelledby="sch-besoins-t sch-besoins-d" xmlns="http://www.w3.org/2000/svg">
+          <title id="sch-besoins-t">Un mécanisme par besoin</title>
+          <desc id="sch-besoins-d">Ne rien oublier : le registre des demandes. Lire les documents : la lecture obligatoire. Ne rien casser : la porte de tests. Rester cohérent : la revue. Travailler en équipe : le plan relié aux commits et le banc.</desc>
+          <text class="sch-a" x="8" y="20">Besoin</text>
+          <text class="sch-a" x="188" y="20">Pièce de cadence</text>
+          {[
+            ["1 · Ne rien oublier", "Registre"],
+            ["2 · Lire les docs", "Lecture obligatoire"],
+            ["3 · Ne rien casser", "Porte de tests"],
+            ["4 · Rester cohérent", "Revue code et écran"],
+            ["5 · Faire équipe", "Plan et banc"],
+          ].map(([gauche, droite], i) => (
+            <g>
+              <rect class="sch-box" x="8" y={34 + i * 58} width="146" height="44" rx="8" />
+              <text class="sch-t" x="18" y={61 + i * 58} style="font-size:13px">{gauche}</text>
+              <line class="sch-line" x1="154" y1={56 + i * 58} x2="180" y2={56 + i * 58} />
+              <path class="sch-arrow" d={`M178 ${50 + i * 58} L188 ${56 + i * 58} L178 ${62 + i * 58} Z`} />
+              <rect class="sch-box-accent" x="188" y={34 + i * 58} width="146" height="44" rx="8" />
+              <text class="sch-t" x="198" y={61 + i * 58} style="font-size:13px">{droite}</text>
+            </g>
+          ))}
+        </svg>
+      </Schema>
+      </div>
+      <ul class="space-y-3 list-none">
+        {reponses.map((r) => (
+          <li class="rounded-xl border border-white/10 bg-paper-elevated p-5">
+            <p class="font-mono text-xs text-claude/80 mb-2">Besoin {r.besoin}</p>
+            <h3 class="text-base font-medium text-ink mb-1.5">{r.mecanisme}</h3>
+            <p class="text-sm text-ink-muted leading-relaxed">{r.detail}</p>
+          </li>
+        ))}
+      </ul>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Les preuves chiffrées">
+      <h3 data-intertitre class={H3}>Le banc A/B : cadence contre Claude seul</h3>
+      <p>
+        Le banc rejoue de vraies demandes déjà livrées, depuis le même commit,
+        avec deux bras : Claude seul (Opus, sans cadence) et cadence. Des tests
+        cachés, écrits à part, jugent le résultat ; un juge relit les deux
+        versions sans savoir laquelle est laquelle. La règle de l'outil en
+        découle : <strong>un mécanisme neuf n'entre dans cadence qu'avec un
+        rapport de banc où il gagne.</strong>
+      </p>
+      <div class="grid gap-3 sm:grid-cols-2">
+        {chiffres.map((c) => (
+          <div data-chiffre={c.id} class="rounded-xl border border-white/10 bg-paper-elevated p-5">
+            <p class="font-mono text-lg text-claude">{c.valeur}</p>
+            <p class="mt-1 font-mono text-xs text-ink-muted">{c.date}</p>
+            <p class="mt-2 text-sm text-ink-muted leading-relaxed">{c.legende}</p>
+            <p class="mt-2 font-mono text-[11px] text-ink-muted [overflow-wrap:anywhere]">
+              Source : <a href={doc(c.source)} target="_blank" rel="noopener">{c.source}</a>
+            </p>
+          </div>
+        ))}
+      </div>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Ce que les mesures ne prouvent pas">
+      <p>
+        Une page qui ne citerait que les chiffres favorables serait une plaquette.
+        Voici ceux qui ne le sont pas, tirés des mêmes rapports :
+      </p>
+      <ul data-limites class="space-y-3 list-none">
+        {limites.map((l) => (
+          <li class="rounded-xl border border-white/10 bg-paper-elevated p-5">
+            <h3 class="text-base font-medium text-ink mb-1.5">{l.titre}</h3>
+            <p class="text-sm text-ink-muted leading-relaxed">{l.corps}</p>
+            <p class="mt-2 font-mono text-[11px] text-ink-muted [overflow-wrap:anywhere]">
+              Source : <a href={doc(l.source)} target="_blank" rel="noopener">{l.source}</a>
+            </p>
+          </li>
+        ))}
+      </ul>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Essayer cadence">
+      <p class={CODE} set:html={inlineCodeHtml("Cadence est libre et publié sur npm sous le nom `@sylad/cadence`. Il faut Node 22.18 ou plus récent, et Claude Code installé et connecté :")} />
+      <pre tabindex="0" role="region" aria-label="Commande d’installation de cadence" class="rounded-xl border border-white/10 bg-paper-elevated p-4 font-mono text-sm text-ink overflow-x-auto"><code>npm install -g @sylad/cadence</code></pre>
+      <p>
+        L'histoire de l'outil, ses premières versions et ses échecs sont dans
+        l'<a href="/case-studies/cadence">étude de cas cadence</a> ; ce qu'il
+        change sur ce site, lot par lot, dans les <a href="/nouveautes/">Nouveautés</a>.
+      </p>
+      <div class="flex flex-wrap gap-3 text-xs">
+        <a href={CADENCE} target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">↗ Dépôt cadence</a>
+        <a href={NPM} target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">↗ Paquet npm @sylad/cadence</a>
+        <a href={doc("docs/v2/banc.md")} target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">↗ Le banc, en détail</a>
+      </div>
+      <p class="text-center text-xs text-ink-muted font-mono rounded-xl border border-white/10 bg-paper-elevated p-4">
+        Chiffres relevés dans le dépôt cadence au 19 novembre 2026.
+      </p>
+    </CaseStudySection>
+  </section>
+</BaseLayout>
