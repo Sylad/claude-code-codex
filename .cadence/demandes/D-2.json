@@ -1,25 +1,25 @@
 {
- "id": "D-2",
- "texte": "fais-en un lot dans claude-code-codex, mais pas sur que claude code codex est plus de lecteur",
- "date": "2026-11-19",
- "origine": "session du lead : échange avec un lecteur extérieur de cadence ; proposition du lead : page « pourquoi cadence » ou billet avec le banc et ses chiffres",
- "etat": "ouverte",
- "lots": [
-  "L73"
- ],
- "preuve": "",
- "runs": [
-  "20261119082246-2977349",
-  "20261119090939-1821257"
- ],
- "precisions": [
-  {
-   "date": "2026-11-19",
-   "texte": "Livré dans le codex ; la publication ailleurs (dev.to, r/ClaudeAI, Show HN, LinkedIn, README de cadence) reste à décider par Sylvain, proposition classée dans le rapport du run L73."
-  },
-  {
-   "date": "2026-11-19",
-   "texte": "Revue du lead non conforme (run 20261119090939-1821257) : remise à « ouverte » ; c'est le lead qui la passe à « livrée » après mise en ligne, avec l'URL publique et le sha."
-  }
- ]
+  "id": "D-2",
+  "texte": "fais-en un lot dans claude-code-codex, mais pas sur que claude code codex est plus de lecteur",
+  "date": "2026-11-19",
+  "origine": "session du lead : échange avec un lecteur extérieur de cadence ; proposition du lead : page « pourquoi cadence » ou billet avec le banc et ses chiffres",
+  "etat": "livrée",
+  "lots": [
+    "L73"
+  ],
+  "preuve": "L73 livré e6e45ff le 19-11 (cadence deliver vérifié) : https://claude-code-codex-25m.pages.dev/case-studies/pourquoi-cadence/ , carte dans l'index /case-studies/",
+  "runs": [
+    "20261119082246-2977349",
+    "20261119090939-1821257"
+  ],
+  "precisions": [
+    {
+      "date": "2026-11-19",
+      "texte": "Livré dans le codex ; la publication ailleurs (dev.to, r/ClaudeAI, Show HN, LinkedIn, README de cadence) reste à décider par Sylvain, proposition classée dans le rapport du run L73."
+    },
+    {
+      "date": "2026-11-19",
+      "texte": "Revue du lead non conforme (run 20261119090939-1821257) : remise à « ouverte » ; c'est le lead qui la passe à « livrée » après mise en ligne, avec l'URL publique et le sha."
+    }
+  ]
 }
