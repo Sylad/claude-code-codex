@@ -3,18 +3,23 @@
  "texte": "fais-en un lot dans claude-code-codex, mais pas sur que claude code codex est plus de lecteur",
  "date": "2026-11-19",
  "origine": "session du lead : échange avec un lecteur extérieur de cadence ; proposition du lead : page « pourquoi cadence » ou billet avec le banc et ses chiffres",
- "etat": "livrée",
+ "etat": "ouverte",
  "lots": [
   "L73"
  ],
- "preuve": "Lot L73, run 20261119082246-2977349 : page /case-studies/pourquoi-cadence/ (frontend/src/pages/case-studies/pourquoi-cadence.astro), test frontend/tests/l73-pourquoi-cadence.e2e.test.mjs vert (12/12 après astro build), Nouveauté 2026-11-19 avec captures 1440 et 390 ; proposition des lieux de publication dans le rapport du run (rien publié hors du codex).",
+ "preuve": "",
  "runs": [
-  "20261119082246-2977349"
+  "20261119082246-2977349",
+  "20261119090939-1821257"
  ],
  "precisions": [
   {
    "date": "2026-11-19",
    "texte": "Livré dans le codex ; la publication ailleurs (dev.to, r/ClaudeAI, Show HN, LinkedIn, README de cadence) reste à décider par Sylvain, proposition classée dans le rapport du run L73."
+  },
+  {
+   "date": "2026-11-19",
+   "texte": "Revue du lead non conforme (run 20261119090939-1821257) : remise à « ouverte » ; c'est le lead qui la passe à « livrée » après mise en ligne, avec l'URL publique et le sha."
   }
  ]
 }

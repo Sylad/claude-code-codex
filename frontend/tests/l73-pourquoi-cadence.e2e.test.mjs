@@ -5,7 +5,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { DIST, setupBrowser } from './lib/e2e-dist.mjs';
 import { PRIVATE_PATTERNS } from '../src/lib/livre-de-bord.ts';
 
@@ -49,15 +50,42 @@ test('R4 — chaque chiffre est daté et sourcé dans le dépôt cadence', () =>
   assert.ok(chiffres.length >= 4, `${chiffres.length} chiffres`);
   for (const [, id, corps] of chiffres) {
     const t = corps.replace(/<[^>]+>/g, ' ');
-    assert.match(t, /\b\d{1,2}(er)? (septembre|octobre|novembre) 2026\b/, `${id} sans date`);
+    assert.match(t, /\b\d{1,2}(er)? (janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre) 20\d\d\b/, `${id} sans date`);
     assert.match(t, /Source :\s+docs\/[\w./-]+\.md/, `${id} sans source`);
   }
 });
 
 test('R5 — les chiffres attendus y sont, tels que le dépôt cadence les écrit', () => {
   const t = text(page());
-  for (const n of ['×3,8', '8 sur 8', '52 min', '199 min', '3 sur 3', '0 sur 3', '+7 %', '2 871 s', '2 878 s', '39 contre 24', '0 contre 2', '2 sur 2', '4 sur 4']) {
+  for (const n of ['×3,8', '8 sur 8', '52 min', '199 min', '304 contre 301', 'Cadence 1.62', '3 sur 3', '0 sur 3', '+7 %',
+    '1 990 s', '2 470 s', '18 contre 12', '0 contre 2', '2 contre 1', '2 sur 2', '4 sur 4']) {
     assert.ok(t.includes(n), `chiffre « ${n} » absent`);
+  }
+  // revue L73, M1 : le cumul de la 2.0.0 (deux bras identiques sur les demandes isolées) n'est plus présenté
+  for (const n of ['2 871 s', '2 878 s', '39 contre 24', 'première version']) assert.ok(!t.includes(n), `« ${n} » ne doit plus figurer`);
+  assert.ok(t.includes('deux bras identiques'), 'les demandes isolées opposaient deux bras identiques : à dire');
+  assert.match(t, /juge[^.]*à l'aveugle[^.]*préféré[^.]*Claude seul/, 'le juge aveugle préfère Claude seul sur la séquence : à dire');
+});
+
+// revue L73, m6 : chaque nombre d'une carte est cherché dans le fichier du dépôt cadence qu'elle cite,
+// quand ce dépôt est à côté (CADENCE_REPO, sinon ../cadence ou ../../cadence depuis la racine du dépôt).
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
+const CADENCE_REPO = [process.env.CADENCE_REPO, join(ROOT, '..', 'cadence'), join(ROOT, '..', '..', 'cadence')]
+  .find((d) => d && existsSync(join(d, 'docs', 'v2')));
+
+test('R12 — chaque nombre d’une carte figure dans le fichier source qu’elle cite', (t) => {
+  if (!CADENCE_REPO) { t.skip('dépôt cadence absent à côté'); return; }
+  const html = page();
+  const cartes = [...html.matchAll(/data-(?:chiffre|limite)="([^"]+)"[^>]*data-nombres="([^"]+)"[^>]*data-source="([^"]+)"/g)];
+  assert.ok(cartes.length >= 8, `${cartes.length} cartes avec nombres et source`);
+  for (const [, id, nombres, source] of cartes) {
+    const f = join(CADENCE_REPO, source);
+    assert.ok(existsSync(f), `${id} : ${source} introuvable dans le dépôt cadence`);
+    const src = readFileSync(f, 'utf8').replace(/(\d)[\s\u202f\u00a0](?=\d{3}\b)/g, '$1');
+    for (const n of nombres.split(' ')) {
+      const re = new RegExp(`(^|[^\\d,.])${n.replace(/[.,]/g, '[.,]')}(?![\\d])`);
+      assert.match(src, re, `${id} : ${n} absent de ${source}`);
+    }
   }
 });
 
@@ -67,6 +95,14 @@ test('R6 — la page dit aussi ce que les mesures ne prouvent pas (honnêteté)'
   const t = text(html);
   assert.ok(t.includes('×1,76'), 'le banc perdu sans référence à lire (×1,76) est dit');
   assert.ok(t.includes('80 contre 88'), 'le critère perdu le 18 novembre est dit');
+  assert.match(t, /garde[^.]*rouge/, 'la 2.0.0 publiée malgré la garde rouge du banc est dite');
+  assert.ok(t.includes('préférence d'), 'la cohérence n’est jugée que par la préférence d’un relecteur');
+});
+
+test('R13 — aucune citation de Sylvain introuvable dans le dépôt cadence ; besoins sourcés', () => {
+  const t = text(page());
+  assert.ok(!t.includes("je n'ai pas fait cadence pour rien"));
+  assert.match(main(page()), /href="https:\/\/github\.com\/Sylad\/cadence\/blob\/main\/docs\/v2\/2026-11-08-banc-sequence-design\.md"/);
 });
 
 test('R7 — liens vers le dépôt et le paquet npm @sylad/cadence', () => {
