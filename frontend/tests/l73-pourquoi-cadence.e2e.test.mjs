@@ -15,6 +15,8 @@ const read = (...p) => readFileSync(join(DIST, ...p), 'utf8');
 const main = (html) => html.slice(html.indexOf('<main'), html.indexOf('</main>'));
 const text = (html) => main(html).replace(/<[^>]+>/g, ' ').replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/\s+/g, ' ');
 const page = () => read('case-studies', 'pourquoi-cadence', 'index.html');
+const RACINE = fileURLToPath(new URL('../../', import.meta.url));
+const NOUVEAUTE = join(RACINE, 'docs/nouveautes/2026-11-19-pourquoi-notre-methode-de-travail-existe-cinq-besoins-et-leurs.md');
 
 test('R1 — la page est construite, titrée « Pourquoi cadence », avec un seul h1', () => {
   assert.ok(existsSync(PAGE), 'page absente : lancer `npx astro build`');
@@ -112,11 +114,20 @@ test('R7 — liens vers le dépôt et le paquet npm @sylad/cadence', () => {
   assert.ok(text(page()).includes('npm install -g @sylad/cadence'));
 });
 
-test('R8 — rien de privé : machines, chemins, compte pro, e-mail, données de finance', () => {
+test('R8 — rien de privé : machines, chemins, compte pro, e-mail, origine de la demande, données de finance', () => {
   const t = text(page());
   const hits = PRIVATE_PATTERNS.filter((re) => re.test(t)).map(String);
   assert.deepEqual(hits, []);
   for (const mot of [/relevés? bancaires?/i, /\bsalaire\b/i, /\bmobi-blue\b/i]) assert.doesNotMatch(t, mot);
+  // Le contexte de la demande (champ `origine` du registre) reste hors de la page : lu au moment du
+  // test, jamais recopié ici (dépôt public). Ni l'un de ses morceaux, ni l'un de ses mots longs.
+  const origine = JSON.parse(readFileSync(join(RACINE, '.cadence/demandes/D-2.json'), 'utf8')).origine || '';
+  assert.ok(origine.length > 0, 'champ origine de D-2 lu');
+  const bas = t.toLowerCase();
+  const morceaux = origine.split(/[;:,]/).map((m) => m.trim().toLowerCase()).filter((m) => m.length >= 12);
+  const mots = [...new Set(origine.toLowerCase().match(/[\p{L}-]{10,}/gu) || [])];
+  const repris = [...morceaux, ...mots].filter((m) => bas.includes(m));
+  assert.equal(repris.length, 0, `${repris.length} morceau(x) du champ origine de D-2 repris sur la page`);
 });
 
 test('R9 — l’étude de cas cadence renvoie vers la page', () => {
@@ -200,4 +211,20 @@ test('R15 — à 390 px, chaque nombre et son unité tiennent sur une seule lign
   assert.ok(vus >= 10, `${vus} nombres avec unité mesurés`);
   assert.deepEqual(coupes, [], 'nombre coupé de son unité en fin de ligne');
   await context.close();
+});
+
+test('R16 — la Nouveauté du 19-11 dit ce que dit la page : séquence 2.0.0 chiffrée, limites, aucun cumul', () => {
+  const corps = readFileSync(NOUVEAUTE, 'utf8').split(/^---$/m).slice(2).join('---').replace(/[\s\u00a0\u202f]+/g, ' ');
+  const t = text(page()).replace(/[\u00a0\u202f]|&nbsp;|&#160;/g, ' ');
+  // la séquence AetherWX, avec ses chiffres favorables ET défavorables, présents aussi sur la page
+  for (const f of ['1 990 s contre 2 470 s', '18 contre 12', '0 contre 2', '2 contre 1']) {
+    assert.ok(corps.includes(f), `Nouveauté : « ${f} » absent`);
+    assert.ok(t.includes(f), `page : « ${f} » absent`);
+  }
+  assert.match(corps, /juge à l'aveugle[^.]*Claude seul/, 'le juge à l’aveugle pour Claude seul est dit');
+  assert.match(corps, /demande différée/);
+  // le cumul retiré de la page (M1 de la r1) ne revient pas par la Nouveauté
+  for (const re of [/même temps/, /×\s?1,00/, /2 ?871/, /39 contre 24/, /glissée/]) assert.doesNotMatch(corps, re);
+  // les cinq limites de la page sont dites
+  for (const re of [/garde rouge/, /sans document à lire/, /coûte la lecture/, /deux fois sur trois/, /relecteur/]) assert.match(corps, re);
 });

@@ -112,3 +112,18 @@ test('R12 — la section « Corrections à faire, par page » liste exactement l
   const attendues = [...sections].filter(([, l]) => l.some((x) => /^- \*\*(faux|dépassé)\*\*/.test(x))).map(([r]) => r).sort();
   assert.deepEqual(listees, attendues);
 });
+
+test('R-L73 — /case-studies/pourquoi-cadence : plus de cumul 2.0.0 certifié, chaque affirmation actuelle de la page relevée et sourcée', () => {
+  const lignes = sections.get('/case-studies/pourquoi-cadence') || [];
+  assert.ok(!lignes.some((l) => /cumul|2 ?871|39 contre 24/.test(l)), 'le cumul 2.0.0 retiré de la page n’est plus relevé');
+  const attendues = [
+    /^- \*\*ok\*\*.*1 990 s contre 2 470 s.*publications\/2\.0\.0\.md/,
+    /^- \*\*ok\*\*.*garde.*rouge.*publications\/2\.0\.0\.md/,
+    /^- \*\*ok\*\*.*1\.62.*304 contre 301.*2026-11-07-cadence-2-design\.md/,
+    /^- \*\*ok\*\*.*×1,76.*publications\/2\.0\.0\.md/,
+    /^- \*\*ok\*\*.*6 957 s contre 4 954 s.*publications\/2\.0\.0\.md/,
+    /^- \*\*ok\*\*.*2 sur 2.*4 sur 4.*publications\/2\.0\.0\.md/,
+    /^- \*\*ok\*\*.*cohérence.*relecteur.*banc\.md/,
+  ];
+  for (const re of attendues) assert.ok(lignes.some((l) => re.test(l)), `ligne manquante : ${re}`);
+});

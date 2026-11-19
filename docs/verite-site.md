@@ -19,7 +19,7 @@ classe et une source, décomptes exacts).
 | faux | 7 |
 | dépassé | 30 |
 | non sourcé | 22 |
-| ok | 46 |
+| ok | 52 |
 
 ## Ce qui a été vérifié, et ce qui ne l'a pas été
 
@@ -176,7 +176,13 @@ classe et une source, décomptes exacts).
 ## `/case-studies/pourquoi-cadence`
 
 - **ok** — essai du 7 novembre 2026 : 52 min contre 199 min (×3,8), Claude seul préféré 8 sur 8 (source : `cadence/docs/v2/2026-11-07-cadence-2-design.md`, §0)
-- **ok** — cumul de la 2.0.0 au 10 novembre 2026 : 2 871 s contre 2 878 s, tests cachés 39 contre 24, défauts 3 contre 5, régressions 0 contre 2, pièces lues 2 sur 2 contre 0 sur 2, séquences AetherWX 4 sur 4 contre 0 sur 4 et ×1,40, banc court sans référence ×1,76 (source : `cadence/docs/v2/publications/2.0.0.md`)
+- **ok** — séquence AetherWX de la 2.0.0, 10 novembre 2026, seule vraie comparaison de la publication : 1 990 s contre 2 470 s, 18 contre 12 tests cachés, 0 contre 2 régressions, mais 2 contre 1 défauts bloquants ou majeurs et juge à l'aveugle pour Claude seul (A) ; les demandes isolées du banc court opposaient deux bras identiques (source : `cadence/docs/v2/publications/2.0.0.md`, l. 27 pour la séquence, l. 6 et 38 pour les bras identiques)
+- **ok** — 2.0.0 publiée le 10 novembre 2026 sur décision de Sylvain alors que la garde du banc était rouge (source : `cadence/docs/v2/publications/2.0.0.md`, l. 5)
+- **ok** — cadence 1.62 contre Claude seul le 7 novembre 2026 : 304 contre 301 tests cachés d'origine réussis, 8 demandes rejouées depuis le même commit (source : `cadence/docs/v2/2026-11-07-cadence-2-design.md`, §0, l. 8 et tableau l. 10-15)
+- **ok** — documents lus en entier : 2 sur 2 contre 0 sur 2 sur la séquence publiée, 4 sur 4 contre 0 sur 4 sur les suites AetherWX des 9 et 10 novembre 2026 (source : `cadence/docs/v2/publications/2.0.0.md`, l. 34 et 49)
+- **ok** — banc court sans référence du 10 novembre 2026 : Claude seul préféré 2 fois sur 3, ×1,76 en temps (source : `cadence/docs/v2/publications/2.0.0.md`, l. 50)
+- **ok** — coût de la lecture sur les suites AetherWX des 9 et 10 novembre 2026 : 6 957 s contre 4 954 s (×1,40) (source : `cadence/docs/v2/publications/2.0.0.md`, l. 49)
+- **ok** — la cohérence d'un écran à l'autre n'est jugée que par la préférence d'un relecteur (juge aveugle, préférence et écran), sans mesure mécanique (source : `cadence/docs/v2/banc.md`, l. 147 et 233)
 - **ok** — registre des demandes : demande différée tenue 3 fois sur 3 contre 0 sur 3, +7 % de temps, micro-banc du 9 novembre 2026 (source : `cadence/docs/v2/2026-11-09-cadence-run.md`, « Mesures qui le fondent »)
 - **ok** — tests d'origine du 18 novembre 2026 : 80 contre 88, 82 contre 84, 83 contre 81 (source : `cadence/docs/v2/banc.md`, L777)
 

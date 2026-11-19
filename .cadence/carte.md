@@ -19,6 +19,10 @@
 - D-2 reste « ouverte » tant que la page n'est pas en ligne : c'est le lead qui la passe à « livrée » (URL + sha).
 - La page n'est pas une carte de l'index des études : l'index compte les apps (test R10 de cadence-case-study).
 - Où publier hors du codex : proposition dans le rapport du run L73 seulement, rien publié sans accord de Sylvain.
+- Revue r2 (19-11) : la Nouveauté du 19-11 dit la même chose que la page (séquence 2.0.0 chiffrée, défauts et juge
+  défavorables, « demande différée », les cinq limites avec leurs chiffres) ; `docs/verite-site.md` relève chaque
+  affirmation actuelle de la page, sourcée (le cumul 2.0.0 n'y est plus). Le contexte d'origine de la demande (champ
+  `origine` de D-2) ne s'écrit nulle part dans le code : R8 le lit au moment du test.
 - Les données Nouveautés (`public/nouveautes-data/`) sont régénérées par `cadence run` avant la porte (L781 de
   cadence) : une session de run ne lance pas `npm run news`.
 
@@ -26,4 +30,6 @@
 
 - `frontend/tests/l73-pourquoi-cadence.e2e.test.mjs` (lit `dist`) : besoins, définition, chiffres datés et sourcés,
   limites, liens, rien de privé, R12 : chaque nombre (`data-nombres`) cherché dans le fichier `data-source` du dépôt
-  cadence quand il est à côté (CADENCE_REPO, ../cadence, ../../cadence ; sinon ignoré), pas de défilement latéral, texte du schéma ≥ 11 px et dans ses cadres à 390 et 1440 px.
+  cadence quand il est à côté (CADENCE_REPO, ../cadence, ../../cadence ; sinon ignoré), pas de défilement latéral, texte du schéma ≥ 11 px et dans ses cadres à 390 et 1440 px. R8 : aucun morceau ni mot
+  long du champ `origine` de `.cadence/demandes/D-2.json` sur la page. R16 : la Nouveauté du 19-11 suit la page.
+- `frontend/tests/verite-site.test.mjs` R-L73 : section `/case-studies/pourquoi-cadence` sans cumul, chaque affirmation relevée.
