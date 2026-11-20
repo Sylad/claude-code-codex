@@ -58,7 +58,10 @@ export async function setupBrowser(t) {
 // lettres), puis texte visible ; les pixels qui changent et sont proches de la couleur
 // du texte sont le cœur des glyphes. Pour chacun : contraste couleur du texte / pixel du fond.
 // Renvoie { worst, glyphs } (ratio minimal, nombre de pixels de glyphes mesurés).
-export async function worstPixelContrast(page, selector) {
+// `ring` (pixels de capture) : chaque pixel de glyphe se compare aussi au fond de son voisinage
+// (carré de côté 2·ring+1) — le fond AUTOUR des lettres, pas seulement dessous ; avec un halo
+// (text-shadow), c'est le bord du halo qui compte, pas son cœur (L74).
+export async function worstPixelContrast(page, selector, { ring = 0 } = {}) {
   const el = page.locator(selector).first();
   const box = await el.boundingBox();
   const clip = { x: Math.floor(box.x), y: Math.floor(box.y), width: Math.ceil(box.width), height: Math.ceil(box.height) };
@@ -67,7 +70,7 @@ export async function worstPixelContrast(page, selector) {
   const bg = await page.screenshot({ clip, animations: 'disabled' });
   await el.evaluate((n) => { n.style.color = n.dataset.prevColor; delete n.dataset.prevColor; });
   const fg = await page.screenshot({ clip, animations: 'disabled' });
-  return page.evaluate(async ({ bg, fg, color }) => {
+  return page.evaluate(async ({ bg, fg, color, ring }) => {
     const load = async (b64) => {
       const img = new Image();
       img.src = `data:image/png;base64,${b64}`;
@@ -76,14 +79,15 @@ export async function worstPixelContrast(page, selector) {
       c.width = img.width; c.height = img.height;
       const ctx = c.getContext('2d');
       ctx.drawImage(img, 0, 0);
-      return ctx.getImageData(0, 0, c.width, c.height).data;
+      return { data: ctx.getImageData(0, 0, c.width, c.height).data, w: c.width, h: c.height };
     };
     // La couleur calculée peut être en oklch : la ramener en sRGB via un canvas.
     const probe = document.createElement('canvas').getContext('2d');
     probe.fillStyle = color;
     probe.fillRect(0, 0, 1, 1);
     const [r, g, bl] = probe.getImageData(0, 0, 1, 1).data;
-    const [a, b] = [await load(bg), await load(fg)];
+    const [A, Bf] = [await load(bg), await load(fg)];
+    const [a, b, W, Hh] = [A.data, Bf.data, A.w, A.h];
     const lin = (c) => { c /= 255; return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; };
     const lum = (R, G, B) => 0.2126 * lin(R) + 0.7152 * lin(G) + 0.0722 * lin(B);
     const L = lum(r, g, bl);
@@ -93,10 +97,18 @@ export async function worstPixelContrast(page, selector) {
       const near = Math.abs(b[i] - r) + Math.abs(b[i + 1] - g) + Math.abs(b[i + 2] - bl) < 60;
       if (diff < 30 || !near) continue;
       glyphs++;
-      const B = lum(a[i], a[i + 1], a[i + 2]);
-      const ratio = (Math.max(L, B) + 0.05) / (Math.min(L, B) + 0.05);
-      if (ratio < worst) worst = ratio;
+      const p = i / 4; const x0 = p % W; const y0 = (p - x0) / W;
+      for (let dy = -ring; dy <= ring; dy++) {
+        for (let dx = -ring; dx <= ring; dx++) {
+          const x = x0 + dx; const y = y0 + dy;
+          if (x < 0 || y < 0 || x >= W || y >= Hh) continue;
+          const j = (y * W + x) * 4;
+          const B = lum(a[j], a[j + 1], a[j + 2]);
+          const ratio = (Math.max(L, B) + 0.05) / (Math.min(L, B) + 0.05);
+          if (ratio < worst) worst = ratio;
+        }
+      }
     }
     return { worst, glyphs };
-  }, { bg: bg.toString('base64'), fg: fg.toString('base64'), color });
+  }, { bg: bg.toString('base64'), fg: fg.toString('base64'), color, ring });
 }

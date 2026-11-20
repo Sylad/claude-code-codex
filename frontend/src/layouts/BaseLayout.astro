@@ -76,8 +76,12 @@ const newsIndex = newsData.entries.map(({ slug, date }) => ({ slug, date }));
         alt=""
         class="absolute inset-0 w-full h-full object-cover object-center opacity-50"
       />
+      {/* L74 — voile du fond fixe : le texte orangé (accent, liens, surtitres de 12 px) passe sur le
+           haut de la fenêtre en défilant ; à 70 % il y reste ≥ 4,5:1 (WCAG 1.4.3), mesuré au pire
+           pixel autour des lettres sur toutes les pages (tests/l74-contraste-accent.e2e.test.mjs).
+           Ne pas l'alléger sans relancer ce test. */}
       <div
-        class="absolute inset-0 bg-gradient-to-b from-paper/15 via-paper/55 to-paper/90"
+        class="absolute inset-0 bg-gradient-to-b from-paper/70 via-paper/75 to-paper/90"
       >
       </div>
     </div>
