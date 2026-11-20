@@ -28,6 +28,7 @@ import {
 } from "./lib/feeds.js";
 import type { FeedEntry, RawEntry, SourceModule } from "./lib/types.js";
 import { summarize } from "./lib/claude.js";
+import { safeHttpUrl } from "../frontend/src/lib/safe-url.mjs";
 
 import anthropicNews from "./sources/anthropic-news.js";
 import simonWillison from "./sources/simon-willison.js";
@@ -87,7 +88,12 @@ async function processSource(
   const raws = await source.fetchEntries();
   console.log(`  fetched ${raws.length} raw entries`);
 
-  const existing = readFeed(source.NAME);
+  // L76 : une entrée déjà écrite dont le lien n'est pas http(s) est retirée du flux.
+  const existing = readFeed(source.NAME).filter((e) => {
+    if (safeHttpUrl(e.url)) return true;
+    console.warn(`  [warn] entrée existante retirée (lien non http(s)) : ${e.title.slice(0, 60)}`);
+    return false;
+  });
   const existingIds = new Set(existing.map((e) => e.id));
   const now = new Date().toISOString();
 
@@ -95,7 +101,13 @@ async function processSource(
   let added = 0;
   for (const raw of raws) {
     if (!raw.url) continue;
-    const id = hashUrl(raw.url);
+    if (!safeHttpUrl(raw.url)) {
+      console.warn(`  [warn] entrée ignorée (lien non http(s)) : ${raw.title.slice(0, 60)}`);
+      continue;
+    }
+    // URL d'origine (sans espaces autour) : l'id reste celui des entrées déjà écrites.
+    const url = raw.url.trim();
+    const id = hashUrl(url);
     if (existingIds.has(id)) continue;
 
     const summary = await summarizeWithFallback(
@@ -111,7 +123,7 @@ async function processSource(
     fresh.push({
       id,
       source: source.NAME,
-      url: raw.url,
+      url,
       title: raw.title,
       summary,
       publishedAt: raw.publishedAt,

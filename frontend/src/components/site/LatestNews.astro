@@ -2,6 +2,7 @@
 import simonWillison from "@/data/feeds/simon-willison.json";
 import humancoders from "@/data/feeds/humancoders.json";
 import anthropicNews from "@/data/feeds/anthropic-news.json";
+import { safeHttpUrl } from "@/lib/safe-url.mjs";
 
 interface FeedItem {
   id: string;
@@ -34,11 +35,15 @@ const SOURCE_META: Record<
   },
 };
 
+// L76 : seuls les liens http(s) sont affichés ; une entrée au lien refusé n'apparaît pas.
 const allItems: FeedItem[] = [
   ...(simonWillison as FeedItem[]),
   ...(humancoders as FeedItem[]),
   ...(anthropicNews as FeedItem[]),
-];
+].flatMap((item) => {
+  const url = safeHttpUrl(item.url);
+  return url ? [{ ...item, url }] : [];
+});
 
 function parsePublishedAt(s?: string): number {
   if (!s) return 0;
