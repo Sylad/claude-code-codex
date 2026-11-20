@@ -701,9 +701,10 @@ lots:
     finished: 2026-11-20
   - id: L77
     title: "CI hebdomadaire (contents: write + ANTHROPIC_API_KEY) : npm install --no-save tsx @anthropic-ai/sdk sans version fixée et actions référencées par tag — instruire le risque de chaîne d'approvisionnement et fixer versions et sha (relevé par L34, non vérifié)"
-    status: todo
+    status: doing
     estimate: 0.25
     created: 2026-11-20
+    started: 2026-11-20
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
