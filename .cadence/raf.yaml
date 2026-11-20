@@ -703,6 +703,7 @@ lots:
     title: "CI hebdomadaire (contents: write + ANTHROPIC_API_KEY) : npm install --no-save tsx @anthropic-ai/sdk sans version fixée et actions référencées par tag — instruire le risque de chaîne d'approvisionnement et fixer versions et sha (relevé par L34, non vérifié)"
     status: done
     estimate: 0.25
+    delivered: { date: 2026-11-20, sha: 440f3b821458c75f7b6cd4602d8721c34890e193 }
     created: 2026-11-20
     started: 2026-11-20
     review: { date: 2026-11-20, verdict: "conforme r2 lead : f828ca0, contrôle du patch (chemins feeds/*.json seulement, binaires, modes, liens, renommages, suppressions refusés, motifs journalisés), 17 cas de test, actionlint et shellcheck propres", commit: f828ca07a683932510c59d9a253898451ec96989 }
