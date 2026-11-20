@@ -688,9 +688,10 @@ lots:
     finished: 2026-11-20
   - id: L76
     title: "Sécurité : les liens du fil d'actualités (flux RSS) ne gardent que http(s) — LatestNews.astro:23/136 et scripts/batch-update.ts:97 ; test sur le site construit : aucun lien de la page ne commence par javascript:, data: ou vbscript: (défaut trouvé par L34, gravité moyenne, non exploité : 111 URL actuelles en https)"
-    status: todo
+    status: doing
     estimate: 0.25
     created: 2026-11-20
+    started: 2026-11-20
   - id: L77
     title: "CI hebdomadaire (contents: write + ANTHROPIC_API_KEY) : npm install --no-save tsx @anthropic-ai/sdk sans version fixée et actions référencées par tag — instruire le risque de chaîne d'approvisionnement et fixer versions et sha (relevé par L34, non vérifié)"
     status: todo
