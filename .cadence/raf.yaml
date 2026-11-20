@@ -721,6 +721,7 @@ lots:
     title: "Suite de L4 (tmp/ux-L4.md) : stripHtml() de LatestNews.astro efface le code cité (« Utilisez ` ` en HTML ») ; cursor-pointer sur les 4 filtres et Réinitialiser ; learning.astro:30 « triables par type et langue » faux ; double bouton Réinitialiser à l'état vide ; lang=\"en\" sur un résumé resté en anglais"
     status: done
     estimate: 0.25
+    delivered: { date: 2026-11-20, sha: fe3cb1409a19c1c893f263705b9260d81e1903ac }
     created: 2026-11-20
     started: 2026-11-20
     review: { date: 2026-11-20, verdict: "conforme (4 remarques mineures, 1 suite) : aucune réinjection HTML (16 entrées piégées + 200 000 aléatoires), mutation tuée — tmp/revue-L78.md", commit: ac7f3bc27fcec3fcf436e0f732c35163c0159f77 }
