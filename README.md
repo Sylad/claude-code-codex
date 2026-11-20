@@ -98,6 +98,18 @@ afficher les 10 articles les plus récents sur `/learning`.
 Secrets requis dans le repo GitHub : `ANTHROPIC_API_KEY`, `YOUTUBE_API_KEY`
 (optionnel, pour `/videos`).
 
+Le workflow a deux jobs : `refresh` lance le batch (clés, jeton en lecture
+seule) et passe le diff de `frontend/src/data/` en artefact ; `commit`
+l'applique et pousse (écriture, sans clé ni installation npm). Les outils du
+batch (`tsx`, `@anthropic-ai/sdk`) ont une version exacte dans `package.json`
+et `package-lock.json` à la racine ; les actions sont épinglées par sha, tag en
+commentaire. En local :
+
+```bash
+npm ci                                   # à la racine
+npx tsx scripts/batch-update.ts --dry-run --no-summarize
+```
+
 ## Crédits IA
 
 - **Code** — pair-programming avec [Claude Code](https://claude.com/claude-code)

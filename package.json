@@ -10,5 +10,9 @@
     "batch": "tsx scripts/batch-update.ts",
     "batch:dry": "tsx scripts/batch-update.ts --dry-run --no-summarize"
   },
-  "description": "Batch update scripts for the claude-code-codex weekly content refresh. The site itself lives under frontend/."
+  "description": "Batch update scripts for the claude-code-codex weekly content refresh. The site itself lives under frontend/.",
+  "devDependencies": {
+    "@anthropic-ai/sdk": "1.8.0",
+    "tsx": "4.23.15"
+  }
 }
