@@ -665,6 +665,7 @@ lots:
     status: done
     estimate: 1
     visible: true
+    delivered: { date: 2026-11-20, sha: 0bae7d2ad97851dcde7f5f3d29aa06b461d145ec }
     created: 2026-11-19
     started: 2026-11-20
     review: { date: 2026-11-20, verdict: "conforme (r2, revue-L74-r2 : voile gardé, accents opaques mesurés ≥ 4,5:1 sur tout le site ; mineurs : Nouveauté l.14 annonce les numéros de cartes sans test, rose-400/80 et amber-400/90 mesurés par l'e2e)", commit: 858d835b1f1e7330d682c1ce29d0be0b5d7c9d68 }
