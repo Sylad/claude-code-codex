@@ -18,17 +18,10 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 
-import {
-  FEEDS_DIR,
-  ROOT,
-  dedupeByUrl,
-  hashUrl,
-  readFeed,
-  writeFeed,
-} from "./lib/feeds.js";
-import type { FeedEntry, RawEntry, SourceModule } from "./lib/types.js";
+import { FEEDS_DIR, ROOT, readFeed, writeFeed } from "./lib/feeds.js";
+import type { RawEntry, SourceModule } from "./lib/types.js";
 import { summarize } from "./lib/claude.js";
-import { safeHttpUrl } from "../frontend/src/lib/safe-url.mjs";
+import { processSource, type ProcessDeps } from "./lib/process-source.js";
 
 import anthropicNews from "./sources/anthropic-news.js";
 import simonWillison from "./sources/simon-willison.js";
@@ -80,77 +73,26 @@ async function summarizeWithFallback(
   }
 }
 
-async function processSource(
-  source: SourceModule,
-  opts: Options,
-): Promise<{ source: string; added: number; total: number }> {
-  console.log(`\n[${source.NAME}] fetching…`);
-  const raws = await source.fetchEntries();
-  console.log(`  fetched ${raws.length} raw entries`);
-
-  // L76 : une entrée déjà écrite dont le lien n'est pas http(s) est retirée du flux.
-  const existing = readFeed(source.NAME).filter((e) => {
-    if (safeHttpUrl(e.url)) return true;
-    console.warn(`  [warn] entrée existante retirée (lien non http(s)) : ${e.title.slice(0, 60)}`);
-    return false;
-  });
-  const existingIds = new Set(existing.map((e) => e.id));
-  const now = new Date().toISOString();
-
-  const fresh: FeedEntry[] = [];
-  let added = 0;
-  for (const raw of raws) {
-    if (!raw.url) continue;
-    if (!safeHttpUrl(raw.url)) {
-      console.warn(`  [warn] entrée ignorée (lien non http(s)) : ${raw.title.slice(0, 60)}`);
-      continue;
-    }
-    // URL d'origine (sans espaces autour) : l'id reste celui des entrées déjà écrites.
-    const url = raw.url.trim();
-    const id = hashUrl(url);
-    if (existingIds.has(id)) continue;
-
-    const summary = await summarizeWithFallback(
-      raw,
-      source.NAME,
-      opts.noSummarize,
-    );
-    if (summary === "[off-topic]") {
-      console.log(`  skip (off-topic): ${raw.title.slice(0, 60)}`);
-      continue;
-    }
-
-    fresh.push({
-      id,
-      source: source.NAME,
-      url,
-      title: raw.title,
-      summary,
-      publishedAt: raw.publishedAt,
-      fetchedAt: now,
-    });
-    added++;
-    console.log(`  + ${raw.title.slice(0, 60)}`);
-  }
-
-  const merged = dedupeByUrl(existing, fresh, 50);
-
-  if (opts.dryRun) {
-    const previewDir = "/tmp/codex-feeds";
-    mkdirSync(previewDir, { recursive: true });
-    writeFileSync(
-      resolve(previewDir, `${source.NAME}.json`),
-      JSON.stringify(merged, null, 2) + "\n",
-    );
-    console.log(
-      `  [dry-run] wrote preview to ${previewDir}/${source.NAME}.json`,
-    );
-  } else {
-    writeFeed(source.NAME, merged);
-    console.log(`  wrote ${merged.length} entries to feeds/${source.NAME}.json`);
-  }
-
-  return { source: source.NAME, added, total: merged.length };
+function depsFor(opts: Options): ProcessDeps {
+  return {
+    readFeed,
+    summarize: (raw, source) =>
+      summarizeWithFallback(raw, source, opts.noSummarize),
+    writeFeed: (source, entries) => {
+      if (opts.dryRun) {
+        const previewDir = "/tmp/codex-feeds";
+        mkdirSync(previewDir, { recursive: true });
+        writeFileSync(
+          resolve(previewDir, `${source}.json`),
+          JSON.stringify(entries, null, 2) + "\n",
+        );
+        console.log(`  [dry-run] wrote preview to ${previewDir}/${source}.json`);
+      } else {
+        writeFeed(source, entries);
+        console.log(`  wrote ${entries.length} entries to feeds/${source}.json`);
+      }
+    },
+  };
 }
 
 async function main() {
@@ -184,7 +126,7 @@ async function main() {
   const results: { source: string; added: number; total: number }[] = [];
   for (const source of sourcesToRun) {
     try {
-      results.push(await processSource(source, opts));
+      results.push(await processSource(source, depsFor(opts)));
     } catch (err) {
       console.error(
         `[batch-update] source ${source.NAME} failed:`,
