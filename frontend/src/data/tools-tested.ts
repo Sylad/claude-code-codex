@@ -408,4 +408,18 @@ export const testedTools: TestedTool[] = [
     license: "unlicensed",
     status: "tested",
   },
+  {
+    id: "kodza",
+    name: "Kodza",
+    author: "kodza-dev",
+    category: "mcp",
+    description:
+      "Bibliothèque de 271 composants d'interface en HTML, CSS et JavaScript sans dépendance (boutons, accordéons, frise, sélecteur de date…), servis par un serveur MCP gratuit, hébergé (kodza.dev/api/mcp) ou local (`npx kodza-mcp`) : deux outils, `search_components` et `get_component`, et trois prompts. Testé 2026-11-20 sans rien ajouter à Claude Code : serveur hébergé interrogé en JSON-RPC à la main, serveur local lancé dans un dossier jetable, ~/.claude intact (aucune trace de kodza). Ça marche : réponses en 0,1 à 0,9 s, l'accordéon récupéré tourne dans une page locale aux couleurs de notre charte sombre par ses variables `--kz-*`, au clavier (focus visible, Entrée ouvre), avec le mouvement réduit respecté, sans débordement à 390 px ni appel réseau. Mais : recherche en anglais seulement (« bouton qui se remplit au survol » ne trouve rien), classement moyen (« timeline changelog » sort d'abord un temps relatif et un pied de page), consignes du serveur d'environ 5,4 k caractères chargées à chaque session et poussant l'agent à prendre un composant Kodza pour chaque section sans en changer la structure, un composant coûte 10 à 44 k caractères de contexte. Licence maison (usage libre, revente et redistribution interdites), projet d'un seul développeur créé en octobre 2026. Les mots des recherches faites sur le serveur hébergé sont comptés (documenté) ; le serveur local garde les recherches sur la machine. Verdict : reject + watchlist, rien à installer ; pour un composant précis, sa page Markdown (kodza.dev/components/<slug>.md) ou ses fichiers suffisent, sans MCP. À revoir si la recherche accepte d'autres langues et si le projet tient dans la durée.",
+    tags: ["claude-code", "mcp", "ui-components", "html-css", "vanilla-js", "tested"],
+    url: "https://github.com/kodza-dev/kodza",
+    stars: 11,
+    lastPush: "2026-11-20",
+    license: "proprietary",
+    status: "tested",
+  },
 ];
