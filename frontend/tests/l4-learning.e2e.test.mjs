@@ -26,7 +26,7 @@ test('L4 — articles des sources anglophones marqués lang="en" (WCAG 3.1.2)', 
   for (const c of cartes) {
     const fr = /uppercase tracking-wider text-ink-muted[^>]*>\s*FR\s*</.test(c);
     assert.equal(/<h3[^>]*lang="en"/.test(c), !fr, c.slice(0, 300));
-    assert.doesNotMatch(c, /<p[^>]*lang="en"/, 'le résumé traduit en français ne porte pas lang="en"');
+    // La langue du résumé (traduit ou resté en anglais) est vérifiée par L78 (l78-learning.e2e.test.mjs).
   }
 });
 

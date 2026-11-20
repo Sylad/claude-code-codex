@@ -3,6 +3,8 @@ import simonWillison from "@/data/feeds/simon-willison.json";
 import humancoders from "@/data/feeds/humancoders.json";
 import anthropicNews from "@/data/feeds/anthropic-news.json";
 import { safeHttpUrl } from "@/lib/safe-url.mjs";
+import { stripHtml, guessLang } from "@/lib/feed-text.mjs";
+import { inlineCodeHtml } from "@/lib/inline-code.mjs";
 
 interface FeedItem {
   id: string;
@@ -49,19 +51,6 @@ function parsePublishedAt(s?: string): number {
   if (!s) return 0;
   const t = Date.parse(s);
   return isNaN(t) ? 0 : t;
-}
-
-function stripHtml(s: string): string {
-  return s
-    .replace(/<[^>]+>/g, " ")
-    .replace(/&nbsp;/g, " ")
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/\s+/g, " ")
-    .trim();
 }
 
 function truncate(s: string, n = 220): string {
@@ -118,9 +107,10 @@ const totalItems = allItems.length;
           isFr: false,
         };
         const cleanSummary = truncate(stripHtml(item.summary));
-        // WCAG 3.1.2 : le TITRE d'un article d'une source anglophone connue est lu avec la voix anglaise
-        // (le résumé, traduit par le batch hebdo, reste en français).
+        // WCAG 3.1.2 : le TITRE d'un article d'une source anglophone connue est lu avec la voix anglaise ;
+        // le résumé, traduit par le batch hebdo, reste en français, sauf s'il est resté en anglais (L78).
         const lang = SOURCE_META[item.source] && !meta.isFr ? "en" : undefined;
+        const summaryLang = guessLang(cleanSummary) === "en" ? "en" : undefined;
         const date = formatDate(item.publishedAt);
         return (
           <li class="rounded-xl border border-white/10 bg-paper-elevated p-5 transition-colors hover:border-claude/30 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-claude/10 transition-[colors,transform,box-shadow] duration-200">
@@ -149,9 +139,11 @@ const totalItems = allItems.length;
                 {item.title}
               </a>
             </h3>
-            <p class="text-sm text-ink-muted leading-relaxed">
-              {cleanSummary}
-            </p>
+            <p
+              class="text-sm text-ink-muted leading-relaxed [overflow-wrap:anywhere]"
+              lang={summaryLang}
+              set:html={inlineCodeHtml(cleanSummary)}
+            />
           </li>
         );
       })}

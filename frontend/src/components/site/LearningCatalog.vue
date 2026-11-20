@@ -84,7 +84,7 @@ function clearFilters() {
           type="button"
           :aria-pressed="selectedKinds.has(k)"
           :class="[
-            'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm border transition-colors motion-safe:active:scale-95',
+            'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm border cursor-pointer transition-colors motion-safe:active:scale-95',
             selectedKinds.has(k)
               ? 'bg-claude text-paper border-claude'
               : 'border-white/10 text-ink-muted hover:border-claude/40 hover:text-ink',
@@ -98,7 +98,7 @@ function clearFilters() {
         <button
           v-if="selectedKinds.size > 0 || searchQuery.trim() !== ''"
           type="button"
-          class="py-1 text-sm text-ink-muted hover:text-claude underline underline-offset-4 ml-auto"
+          class="py-1 text-sm text-ink-muted hover:text-claude underline underline-offset-4 ml-auto cursor-pointer"
           @click="clearFilters"
         >
           Réinitialiser
@@ -114,14 +114,11 @@ function clearFilters() {
       v-if="filteredEntries.length === 0"
       class="text-center py-12 text-ink-muted"
     >
+      <!-- L78 : un seul bouton pour remettre à zéro, « Réinitialiser » au-dessus (toujours affiché avec un filtre actif). -->
       <p>Aucune source ne correspond à ces filtres.</p>
-      <button
-        type="button"
-        class="mt-3 text-claude hover:text-claude-soft underline underline-offset-4"
-        @click="clearFilters"
-      >
-        Réinitialiser les filtres
-      </button>
+      <p class="mt-2 text-sm">
+        « Réinitialiser », au-dessus, affiche de nouveau toutes les sources.
+      </p>
     </div>
 
     <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
