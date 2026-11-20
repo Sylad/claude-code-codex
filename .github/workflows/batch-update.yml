@@ -40,17 +40,21 @@ jobs:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
         run: npx --no-install tsx scripts/batch-update.ts
 
+      # Exporte TOUT ce qui a changé dans le dépôt (pas seulement feeds/) : un fichier
+      # écrit ailleurs n'est pas perdu en silence, le job commit le refuse et le journalise.
       - name: Export changes
+        env:
+          PATCH: ${{ runner.temp }}/batch.patch
         run: |
-          git add --intent-to-add frontend/src/data/
-          git diff --binary -- frontend/src/data/ > batch.patch
-          wc -c batch.patch
+          git add --all
+          git diff --cached --binary > "$PATCH"
+          wc -c "$PATCH"
 
       - name: Upload changes
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: batch-patch
-          path: batch.patch
+          path: ${{ runner.temp }}/batch.patch
           retention-days: 7
 
   # Pousse le résultat : écriture sur le dépôt, sans clé ni installation npm.
@@ -77,10 +81,13 @@ jobs:
             echo "No changes to commit."
             exit 0
           fi
-          git apply --include='frontend/src/data/*' "$PATCH"
+          # Refuse le patch entier (échec du job, motifs journalisés) s'il touche autre
+          # chose que frontend/src/data/feeds/*.json en fichiers texte ordinaires.
+          bash .github/scripts/controle-patch.sh "$PATCH"
+          git apply "$PATCH"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add frontend/src/data/
+          git add frontend/src/data/feeds/
           if git diff --cached --quiet; then
             echo "No changes to commit."
             exit 0

@@ -99,8 +99,11 @@ Secrets requis dans le repo GitHub : `ANTHROPIC_API_KEY`, `YOUTUBE_API_KEY`
 (optionnel, pour `/videos`).
 
 Le workflow a deux jobs : `refresh` lance le batch (clés, jeton en lecture
-seule) et passe le diff de `frontend/src/data/` en artefact ; `commit`
-l'applique et pousse (écriture, sans clé ni installation npm). Les outils du
+seule) et passe en artefact tout ce qu'il a changé dans le dépôt ; `commit`
+n'applique ce diff que s'il ne touche que `frontend/src/data/feeds/*.json` en
+fichiers texte ordinaires (`.github/scripts/controle-patch.sh`, sinon le job
+échoue en listant chaque motif ; test `frontend/tests/l77-controle-patch.test.mjs`),
+puis pousse (écriture, sans clé ni installation npm). Les outils du
 batch (`tsx`, `@anthropic-ai/sdk`) ont une version exacte dans `package.json`
 et `package-lock.json` à la racine ; les actions sont épinglées par sha, tag en
 commentaire. En local :
