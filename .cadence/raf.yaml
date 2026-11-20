@@ -692,6 +692,7 @@ lots:
     estimate: 0.25
     created: 2026-11-20
     started: 2026-11-20
+    review: { date: 2026-11-20, verdict: "non-conforme 20-11 r1 (906bbc6) : filtre safe-url.mjs solide (contrôle, Unicode, entités, https:javascript: refusés) ; majeur : aucun test ne prouve que LatestNews.astro:43-46 et batch-update.ts:92-96/104-107 appellent le filtre (flux réels sans URL piégée) — tmp/revue-L76.md", commit: 906bbc687b997ad5d6daba2979e9ab7a5a499b56 }
   - id: L77
     title: "CI hebdomadaire (contents: write + ANTHROPIC_API_KEY) : npm install --no-save tsx @anthropic-ai/sdk sans version fixée et actions référencées par tag — instruire le risque de chaîne d'approvisionnement et fixer versions et sha (relevé par L34, non vérifié)"
     status: todo
