@@ -662,14 +662,16 @@ lots:
     finished: 2026-11-19
   - id: L74
     title: "Contraste : le texte en couleur accent (rgb 235,122,82 — surtitres h2 12 px et liens) posé directement sur l'image de fond fixe descend à 2,11–2,37:1 en haut de la fenêtre (seuil 4,5, WCAG 1.4.3) ; tout le site, mesuré sur /case-studies/cadence et /case-studies/pourquoi-cadence (revue UX de L73, 19-11)"
-    status: doing
+    status: done
     estimate: 1
     visible: true
     created: 2026-11-19
     started: 2026-11-20
-    review: { date: 2026-11-20, verdict: "non conforme : 1 majeur — le texte semi-transparent (text-claude/70, /80) n'est pas mesuré (0 glyphe détecté, ignoré) et reste sous 4,5:1 (3,03–3,46 sur aetherwx-encyclopedia, 3,86–4,51 sur superclaude) (revue r1 du 20-11)", commit: c35961d87b1ab3b88320f14296ee4d20e370734f }
+    review: { date: 2026-11-20, verdict: "conforme (r2, revue-L74-r2 : voile gardé, accents opaques mesurés ≥ 4,5:1 sur tout le site ; mineurs : Nouveauté l.14 annonce les numéros de cartes sans test, rose-400/80 et amber-400/90 mesurés par l'e2e)", commit: 858d835b1f1e7330d682c1ce29d0be0b5d7c9d68 }
     notes:
       - { date: 2026-11-20, text: "20-11 : choix visuel en attente de Sylvain — voile sombre sur tout le fond (c35961d, image presque invisible en haut) ou seulement derrière le texte ; la correction de la revue r1 partira avec sa réponse" }
+    ux: { date: 2026-11-20, verdict: "conforme (lead, captures 1440 et 390 de la Nouveauté : surtitres orangés lisibles sur le voile, image de fond visible, aucune régression de mise en page)" }
+    finished: 2026-11-20
   - id: L75
     title: Tester Kodza (https://kodza.dev, 240 composants d'interface HTML/CSS/JS servis par MCP ; veille S47) avec /test-tool et verser le verdict au catalogue des outils testés
     status: todo
