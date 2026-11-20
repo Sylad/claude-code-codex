@@ -422,4 +422,18 @@ export const testedTools: TestedTool[] = [
     license: "proprietary",
     status: "tested",
   },
+  {
+    id: "cloudflare-security-audit",
+    name: "security-audit (Cloudflare)",
+    author: "cloudflare",
+    category: "skill",
+    description:
+      "Skill d'audit de sécurité d'un dépôt, publié par Cloudflare : mode « guidance » par défaut (questions, revue ciblée, sans fichier écrit) et mode audit complet en six phases (reconnaissance, chasse par unités de couverture, validation de chaque candidat par un agent neuf qui cherche à le réfuter, `findings.json` contrôlé par deux validateurs Node sans dépendance, re-vérification, rapport). Environ 5 300 lignes en tout. Testé 2026-11-20 sans rien ajouter à Claude Code : `npx skills add` dans un dépôt jetable avec un HOME factice copie le skill dans `./.claude/skills/` et écrit un `skills-lock.json`, rien d'autre ; le CLI détecte qu'un agent le lance et installe sans question, et envoie de la télémétrie à skills.sh sauf `DO_NOT_TRACK=1`. Les 65 tests des validateurs passent (Node 22) et un `findings.json` invalide sort en code 1. Usage minimal en mode guidance sur ce site : un chasseur (729 lignes du skill lues) a écarté six usages en apparence inquiétants (`set:html`, `innerHTML`, `location.hash`) parce que seul le propriétaire du dépôt écrit leurs données, puis, en remontant d'où viennent les données du build, a trouvé une piste qu'un vérificateur neuf a confirmée : un défaut latent réel, de gravité moyenne, signalé pour correction. Deux agents, environ 210 k jetons. Ce que Cloudflare affirme dans son billet du 18 juin 2026 (80 bugs distincts sur un dépôt de 30 k lignes, rejet à la validation passé de 40 % à 11 %, une seule passe trouve à peu près la moitié des bugs) vient de son harness interne, non publié, sans CVE ni données : invérifiable chez nous. Limites : l'audit complet lance au moins quatre agents de reconnaissance, un chasseur par unité de couverture, des critiques et un ou deux vérificateurs par candidat, et écrit par défaut hors du dépôt (`~/security-audit-skill/<dépôt>/run-<N>`) ; environ 40 % du texte (budgets, registre de couverture, copie des preuves) ne sert pas en mode guidance. Licence MIT. Verdict : adopt, en mode guidance, installé par projet et sur demande, pour auditer une surface précise ; ce qu'il apporte en plus de nos revues de diff, c'est la question « qui peut écrire cette donnée ? » et le vérificateur qui cherche à réfuter.",
+    tags: ["claude-code", "skill", "security", "audit", "multi-agent", "tested"],
+    url: "https://github.com/cloudflare/security-audit-skill",
+    stars: 76058,
+    lastPush: "2026-09-14",
+    license: "MIT",
+    status: "tested",
+  },
 ];

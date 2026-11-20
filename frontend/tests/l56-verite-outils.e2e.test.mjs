@@ -21,7 +21,7 @@ const RELEVE = {
   'ui-ux-pro-max-skill': [143594, '2026-11-01'],
   'design-for-ai': [324, '2026-07-02'], 'claude-design-styles': [37, '2026-07-30'],
   'apple-design-skill': [2641, '2026-10-28'], 'emilkowalski-apple-design': [52926, '2026-11-02'],
-  kodza: [11, '2026-11-20'],
+  kodza: [11, '2026-11-20'], 'cloudflare-security-audit': [76058, '2026-09-14'],
 };
 const page = (p) => readFileSync(join(DIST, p, 'index.html'), 'utf8');
 const texte = (p) => page(p).replace(/<[^>]+>/g, ' ').replace(/&nbsp;| /g, ' ').replace(/\s+/g, ' ');
