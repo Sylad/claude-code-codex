@@ -115,11 +115,14 @@ lots:
     finished: 2026-11-17
   - id: L34
     title: Tester https://github.com/cloudflare/security-audit-skill avec le protocole /test-tool (instantané, installation en bac à sable, pollution, usage minimal sur un de nos dépôts, verdict, nettoyage) ; verdict au catalogue Tools tested — demande Sylvain 24-10, après cadence
-    status: todo
+    status: done
     estimate: 0.25
     created: 2026-10-24
     notes:
       - { date: 2026-10-24, text: "24-10 (Sylvain) — ajouter : lire ce que Cloudflare en dit (README du dépôt, article de blog ou doc associée s'il y en a) ; séparer l'affirmé du vérifiable, comparer à nos pratiques de revue de sécurité (code-reviewer, skill security-review), et ne proposer de lot que pour une idée qui se mesure chez nous." }
+    started: 2026-11-20
+    review: { date: 2026-11-20, verdict: "conforme 20-11 lead : fiche tools-tested seule (+1 relevé de test), verdict adopt guidance ; défaut latent non décrit publiquement ; mémoire/watchlist hors dépôt non écrites (adopt n'en demande pas)", commit: 30b5938f366b9be1726b81ae272b56901725ef4b }
+    finished: 2026-11-20
   - id: L36
     title: "Étude : https://www.maketime.fr/articles/meilleurs-skills-claude-2026 — lister les skills cités, séparer l'affirmé du vérifiable (dépôt, doc officielle), confronter à notre catalogue /ecosystem et à Tools tested ; candidats au protocole /test-tool seulement s'ils couvrent un besoin mesuré chez nous ; livrable : note courte dans tmp/ + lots proposés (méthode de l'étude cadence L254) — demande Sylvain 24-10"
     status: done
@@ -683,6 +686,16 @@ lots:
     started: 2026-11-20
     review: { date: 2026-11-20, verdict: "conforme (lead, diff de données relu : fiche kodza complète, verdict sourcé, relevé ajouté au test R2 ; 352/353 tests au run)", commit: 62b9f32a9d1c647787fd4aa8083554b7f8cd980a }
     finished: 2026-11-20
+  - id: L76
+    title: "Sécurité : les liens du fil d'actualités (flux RSS) ne gardent que http(s) — LatestNews.astro:23/136 et scripts/batch-update.ts:97 ; test sur le site construit : aucun lien de la page ne commence par javascript:, data: ou vbscript: (défaut trouvé par L34, gravité moyenne, non exploité : 111 URL actuelles en https)"
+    status: todo
+    estimate: 0.25
+    created: 2026-11-20
+  - id: L77
+    title: "CI hebdomadaire (contents: write + ANTHROPIC_API_KEY) : npm install --no-save tsx @anthropic-ai/sdk sans version fixée et actions référencées par tag — instruire le risque de chaîne d'approvisionnement et fixer versions et sha (relevé par L34, non vérifié)"
+    status: todo
+    estimate: 0.25
+    created: 2026-11-20
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
