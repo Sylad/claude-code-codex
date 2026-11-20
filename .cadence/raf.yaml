@@ -117,6 +117,7 @@ lots:
     title: Tester https://github.com/cloudflare/security-audit-skill avec le protocole /test-tool (instantané, installation en bac à sable, pollution, usage minimal sur un de nos dépôts, verdict, nettoyage) ; verdict au catalogue Tools tested — demande Sylvain 24-10, après cadence
     status: done
     estimate: 0.25
+    delivered: { date: 2026-11-20, sha: 0d07a9a15756acaa01b9433af5590bf9ac3b8b43 }
     created: 2026-10-24
     notes:
       - { date: 2026-10-24, text: "24-10 (Sylvain) — ajouter : lire ce que Cloudflare en dit (README du dépôt, article de blog ou doc associée s'il y en a) ; séparer l'affirmé du vérifiable, comparer à nos pratiques de revue de sécurité (code-reviewer, skill security-review), et ne proposer de lot que pour une idée qui se mesure chez nous." }
@@ -690,6 +691,7 @@ lots:
     title: "Sécurité : les liens du fil d'actualités (flux RSS) ne gardent que http(s) — LatestNews.astro:23/136 et scripts/batch-update.ts:97 ; test sur le site construit : aucun lien de la page ne commence par javascript:, data: ou vbscript: (défaut trouvé par L34, gravité moyenne, non exploité : 111 URL actuelles en https)"
     status: done
     estimate: 0.25
+    delivered: { date: 2026-11-20, sha: 0d07a9a15756acaa01b9433af5590bf9ac3b8b43 }
     created: 2026-11-20
     started: 2026-11-20
     review: { date: 2026-11-20, verdict: "conforme r2 tmp/revue-L76-r2.md : 3 mutations détectées ; note : vite importé par tests/lib/vite-ssr.mjs sans être déclaré (remonté par astro)", commit: 9d0f14d5b320ce9e3fd19512290f31f31eda2ff8 }
