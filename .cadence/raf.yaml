@@ -697,6 +697,7 @@ lots:
     review: { date: 2026-11-20, verdict: "conforme r2 tmp/revue-L76-r2.md : 3 mutations détectées ; note : vite importé par tests/lib/vite-ssr.mjs sans être déclaré (remonté par astro)", commit: 9d0f14d5b320ce9e3fd19512290f31f31eda2ff8 }
     notes:
       - { date: 2026-11-20, text: "suite : déclarer vite en devDependency du frontend (tests/lib/vite-ssr.mjs:4)" }
+      - { date: 2026-11-20, text: "QA prod lead 20-11 (0d07a9a) : accueil 200, 0 lien javascript:/data:/vbscript:, version servie 0d07a9a" }
     finished: 2026-11-20
   - id: L77
     title: "CI hebdomadaire (contents: write + ANTHROPIC_API_KEY) : npm install --no-save tsx @anthropic-ai/sdk sans version fixée et actions référencées par tag — instruire le risque de chaîne d'approvisionnement et fixer versions et sha (relevé par L34, non vérifié)"
