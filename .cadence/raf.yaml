@@ -145,6 +145,7 @@ lots:
     status: done
     visible: true
     estimate: 0.25
+    delivered: { date: 2026-11-20, sha: 2bd079a470b97417dbf534a43026ddca9005e65e }
     created: 2026-09-28
     started: 2026-11-20
     review: { date: 2026-11-20, verdict: compliant (tmp/revue-L4.md), commit: 64a8f16734062b126ec18caae37775edef3859df }
