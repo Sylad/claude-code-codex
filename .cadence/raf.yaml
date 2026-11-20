@@ -671,6 +671,7 @@ lots:
     review: { date: 2026-11-20, verdict: "conforme (r2, revue-L74-r2 : voile gardé, accents opaques mesurés ≥ 4,5:1 sur tout le site ; mineurs : Nouveauté l.14 annonce les numéros de cartes sans test, rose-400/80 et amber-400/90 mesurés par l'e2e)", commit: 858d835b1f1e7330d682c1ce29d0be0b5d7c9d68 }
     notes:
       - { date: 2026-11-20, text: "20-11 : choix visuel en attente de Sylvain — voile sombre sur tout le fond (c35961d, image presque invisible en haut) ou seulement derrière le texte ; la correction de la revue r1 partira avec sa réponse" }
+      - { date: 2026-11-20, text: "QA prod 20-11 conforme : 5 pages × 2 largeurs, alpha 1 partout, 0 erreur console (qa-L74.md)" }
     ux: { date: 2026-11-20, verdict: "conforme (lead, captures 1440 et 390 de la Nouveauté : surtitres orangés lisibles sur le voile, image de fond visible, aucune régression de mise en page)" }
     finished: 2026-11-20
   - id: L75
