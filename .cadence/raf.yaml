@@ -678,6 +678,7 @@ lots:
     title: Tester Kodza (https://kodza.dev, 240 composants d'interface HTML/CSS/JS servis par MCP ; veille S47) avec /test-tool et verser le verdict au catalogue des outils testés
     status: done
     estimate: 0.25
+    delivered: { date: 2026-11-20, sha: 20ecc63115f056e3ac78d3411f6ebc0b97dbf685 }
     created: 2026-11-20
     started: 2026-11-20
     review: { date: 2026-11-20, verdict: "conforme (lead, diff de données relu : fiche kodza complète, verdict sourcé, relevé ajouté au test R2 ; 352/353 tests au run)", commit: 62b9f32a9d1c647787fd4aa8083554b7f8cd980a }
