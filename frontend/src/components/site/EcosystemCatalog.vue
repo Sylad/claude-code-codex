@@ -205,7 +205,7 @@ async function copyInstall(entry: EcosystemEntry) {
             :title="'Copier la commande'"
             @click="copyInstall(entry)"
           >
-            <span class="text-claude/70 shrink-0">$</span>
+            <span class="text-claude shrink-0">$</span>
             <span class="truncate flex-1">{{ entry.install }}</span>
             <span
               :class="[

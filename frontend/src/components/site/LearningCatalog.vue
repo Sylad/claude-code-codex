@@ -169,7 +169,7 @@ function clearFilters() {
               :href="entry.feed"
               target="_blank"
               rel="noopener"
-              class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono text-claude/80 bg-claude/10 hover:bg-claude/20 transition-colors"
+              class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono text-claude bg-claude/10 hover:bg-claude/20 transition-colors"
               :title="'Flux RSS'"
             >
               <Rss :size="10" />

@@ -164,7 +164,7 @@ const limites = [
       <ol class="space-y-3 list-none">
         {besoins.map((b, i) => (
           <li data-besoin={i + 1} class="rounded-xl border border-white/10 bg-paper-elevated p-5">
-            <p class="font-mono text-xs text-claude/80 mb-2">Besoin {i + 1}</p>
+            <p class="font-mono text-xs text-claude mb-2">Besoin {i + 1}</p>
             <h3 class="text-base font-medium text-ink mb-1.5">{b.nom}</h3>
             <p class="text-sm text-ink-muted leading-relaxed">{insecable(b.corps)}</p>
           </li>
@@ -221,7 +221,7 @@ const limites = [
       <ul class="space-y-3 list-none">
         {reponses.map((r) => (
           <li class="rounded-xl border border-white/10 bg-paper-elevated p-5">
-            <p class="font-mono text-xs text-claude/80 mb-2">Besoin {r.besoin}</p>
+            <p class="font-mono text-xs text-claude mb-2">Besoin {r.besoin}</p>
             <h3 class="text-base font-medium text-ink mb-1.5">{r.mecanisme}</h3>
             <p class="text-sm text-ink-muted leading-relaxed">{insecable(r.detail)}</p>
           </li>

@@ -55,6 +55,7 @@ test('L74 — texte orangé sur le fond fixe ≥ 4,5:1 au pire pixel, toutes les
   assert.ok(routes.length >= 30, `${routes.length} pages dans dist : lancer astro build`);
   const failures = [];
   const mesures = { total: 0 };
+  let pire = { worst: Infinity };
   for (const width of [1440, 390]) {
     const H = width > 1000 ? 900 : 844;
     const context = await env.browser.newContext({ viewport: { width, height: H }, deviceScaleFactor: 2 });
@@ -76,8 +77,15 @@ test('L74 — texte orangé sur le fond fixe ≥ 4,5:1 au pire pixel, toutes les
           // Sous la barre fixe (64 px), hors fenêtre, ou trop grand pour une capture : rien à mesurer ici.
           if (!box || box.y < 64 || box.height > 400 || box.y + box.height > H) continue;
           const { worst, glyphs } = await worstPixelContrast(page, sel, { ring: 2 });
-          if (glyphs < 10) continue;
+          // Un texte orangé marqué dont aucun glyphe n'est reconnu n'est pas un succès (revue L74 r1 :
+          // le texte semi-transparent passait ainsi sans être mesuré). Un seul caractère court (puce « · »)
+          // ne donne que quelques pixels de glyphe : ils comptent comme une mesure.
+          if (glyphs === 0) {
+            failures.push(`${route} @${width}px à ${off} px du haut : ${nom} non mesuré (${glyphs} pixels de glyphe)`);
+            continue;
+          }
           mesures.total++;
+          if (worst < pire.worst) pire = { worst, ou: `${route} @${width}px à ${off} px : ${nom}` };
           mesures[route] = (mesures[route] ?? 0) + 1;
           if (worst < 4.5) failures.push(`${route} @${width}px à ${off} px du haut : ${nom} ${worst.toFixed(2)}:1`);
         }
@@ -85,11 +93,47 @@ test('L74 — texte orangé sur le fond fixe ≥ 4,5:1 au pire pixel, toutes les
     }
     await context.close();
   }
-  t.diagnostic(`${mesures.total} mesures sur ${routes.length} pages`);
+  t.diagnostic(`${mesures.total} mesures sur ${routes.length} pages, pire ${pire.worst.toFixed(2)}:1 (${pire.ou})`);
   // Les deux pages du constat doivent avoir été réellement mesurées (un sélecteur muet n'est pas un succès).
   for (const r of ['/case-studies/cadence/', '/case-studies/pourquoi-cadence/']) {
     assert.ok((mesures[r] ?? 0) >= 12, `${r} : ${mesures[r] ?? 0} mesures seulement`);
   }
   assert.ok(mesures.total > 500, `${mesures.total} mesures seulement`);
+  assert.deepEqual(failures, []);
+});
+
+// Revue L74 r1 : « → Case study » (liens orangés des cartes de /case-studies/, surface opaque
+// bg-paper-elevated, donc hors du test ci-dessus) mesurait 4,31:1 en text-claude/80.
+test('L74 — liens « Case study » des cartes de /case-studies/ ≥ 4,5:1 au pire pixel, 1440 et 390 px', { timeout: 300_000 }, async (t) => {
+  const env = await setupBrowser(t);
+  if (!env) return;
+  const failures = [];
+  let mesures = 0;
+  let pire = Infinity;
+  for (const width of [1440, 390]) {
+    const context = await env.browser.newContext({ viewport: { width, height: 900 }, deviceScaleFactor: 2 });
+    const page = await context.newPage();
+    await page.goto(`${env.base}/case-studies/`, { waitUntil: 'load' });
+    await page.evaluate(() => document.fonts.ready);
+    const n = await page.evaluate(() => {
+      let i = 0;
+      for (const a of document.querySelectorAll('main a')) {
+        if (/case study/i.test(a.textContent) && a.getClientRects().length) a.dataset.l74cs = String(i++);
+      }
+      return i;
+    });
+    assert.ok(n >= 5, `${n} liens « Case study » trouvés à ${width} px`);
+    for (let k = 0; k < n; k++) {
+      const sel = `[data-l74cs="${k}"]`;
+      await page.locator(sel).scrollIntoViewIfNeeded();
+      const { worst, glyphs } = await worstPixelContrast(page, sel);
+      if (glyphs === 0) { failures.push(`@${width}px lien ${k} non mesuré (${glyphs} pixels de glyphe)`); continue; }
+      mesures++;
+      pire = Math.min(pire, worst);
+      if (worst < 4.5) failures.push(`@${width}px lien ${k} : ${worst.toFixed(2)}:1`);
+    }
+    await context.close();
+  }
+  t.diagnostic(`${mesures} mesures, pire ${pire.toFixed(2)}:1`);
   assert.deepEqual(failures, []);
 });

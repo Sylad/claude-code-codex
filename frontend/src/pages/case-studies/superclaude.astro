@@ -146,7 +146,7 @@ const lessons = [
         <ol class="grid gap-3 sm:grid-cols-2">
           {lessons.map((l, i) => (
             <li class="rounded-xl border border-white/10 bg-paper-elevated p-5">
-              <p class="font-mono text-xs text-claude/80 mb-2">
+              <p class="font-mono text-xs text-claude mb-2">
                 {String(i + 1).padStart(2, "0")}
               </p>
               <h3 class="text-base font-medium text-ink mb-1.5">{l.title}</h3>
@@ -165,9 +165,9 @@ const lessons = [
           <table class="w-full text-sm">
             <thead>
               <tr class="border-b border-white/10">
-                <th class="text-left p-3 font-mono text-xs uppercase tracking-wider text-claude/80">Commande SuperClaude</th>
-                <th class="text-left p-3 font-mono text-xs uppercase tracking-wider text-claude/80">Notre alternative</th>
-                <th class="text-left p-3 font-mono text-xs uppercase tracking-wider text-claude/80">Action</th>
+                <th class="text-left p-3 font-mono text-xs uppercase tracking-wider text-claude">Commande SuperClaude</th>
+                <th class="text-left p-3 font-mono text-xs uppercase tracking-wider text-claude">Notre alternative</th>
+                <th class="text-left p-3 font-mono text-xs uppercase tracking-wider text-claude">Action</th>
               </tr>
             </thead>
             <tbody class="text-ink-muted">

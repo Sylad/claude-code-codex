@@ -30,6 +30,12 @@
 - Les données Nouveautés (`public/nouveautes-data/`) sont régénérées par `cadence run` avant la porte (L781 de
   cadence) : une session de run ne lance pas `npm run news`.
 
+- L74 (contraste de l'accent, revue r1 du 20-11) : le voile du fond fixe reste celui de L74 (décision de Sylvain) ;
+  c'est le texte qui change. Plus aucun texte accent semi-transparent (`text-claude/60|70|80`) : intertitres du
+  tableau de l'encyclopédie AetherWX, en-têtes du tableau SuperClaude, liens « Case study » / « Deep dive » et
+  numéros des cartes, badge RSS, invite `$` passent en `text-claude` plein ; les liens de cartes de
+  `/case-studies/` gardent un retour au survol par `hover:underline`.
+
 ## Tests
 
 - `frontend/tests/l73-pourquoi-cadence.e2e.test.mjs` (lit `dist`) : besoins, définition, chiffres datés et sourcés,
@@ -39,3 +45,7 @@
 - R17 : l'index lie la page par le titre d'une carte voisine de la carte cadence ; R18 : marge droite ≥ marge gauche
   de chaque libellé du schéma à 320, 390 et 1440 px.
 - `frontend/tests/verite-site.test.mjs` R-L73 : section `/case-studies/pourquoi-cadence` sans cumul, chaque affirmation relevée.
+- `frontend/tests/l74-contraste-accent.e2e.test.mjs` (lit `dist`, ~2 min) : `worstPixelContrast` compose la couleur du
+  texte avec son alpha (et l'opacité des ancêtres) sur le pixel du fond ; un texte orangé marqué sans aucun pixel de
+  glyphe reconnu fait échouer le test. Second test : liens « Case study » de `/case-studies/` (surface opaque) ≥ 4,5:1.
+- `frontend/tests/l74-accent-opaque.test.mjs` : garde statique, aucune classe `text-claude/NN` (hors `hover:`/`focus:`).
