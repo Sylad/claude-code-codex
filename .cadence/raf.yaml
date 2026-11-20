@@ -147,6 +147,7 @@ lots:
     estimate: 0.25
     created: 2026-09-28
     started: 2026-11-20
+    review: { date: 2026-11-20, verdict: compliant (tmp/revue-L4.md), commit: 64a8f16734062b126ec18caae37775edef3859df }
   - id: L5
     title: Revue UX — Theory
     status: todo
