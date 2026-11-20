@@ -151,6 +151,8 @@ lots:
     review: { date: 2026-11-20, verdict: compliant (tmp/revue-L4.md), commit: 64a8f16734062b126ec18caae37775edef3859df }
     ux: { date: 2026-11-20, verdict: conforme (tmp/ux-L4.md) ; mineurs reportés au lot de suite }
     finished: 2026-11-20
+    notes:
+      - { date: 2026-11-20, text: "QA prod 20-11 : /learning/ sert 2bd079a, champ « Rechercher une source » présent, titres anglais en lang=en" }
   - id: L5
     title: Revue UX — Theory
     status: todo
