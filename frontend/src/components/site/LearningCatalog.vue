@@ -71,8 +71,9 @@ function clearFilters() {
         <input
           v-model="searchQuery"
           type="search"
+          aria-label="Rechercher une source"
           placeholder="Rechercher (auteur, sujet, tag)..."
-          class="w-full pl-10 pr-4 py-2.5 rounded-lg bg-paper-elevated border border-white/10 text-ink placeholder:text-ink-muted focus:outline-none focus:border-claude/50 focus:ring-1 focus:ring-claude/30 transition-colors"
+          class="w-full pl-10 pr-4 py-2.5 rounded-lg bg-paper-elevated border border-white/10 text-ink placeholder:text-ink-muted focus:outline-none focus:border-claude focus-visible:ring-2 focus-visible:ring-claude transition-colors"
         />
       </div>
 
@@ -80,6 +81,8 @@ function clearFilters() {
         <button
           v-for="k in kinds"
           :key="k"
+          type="button"
+          :aria-pressed="selectedKinds.has(k)"
           :class="[
             'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm border transition-colors motion-safe:active:scale-95',
             selectedKinds.has(k)
@@ -94,14 +97,15 @@ function clearFilters() {
 
         <button
           v-if="selectedKinds.size > 0 || searchQuery.trim() !== ''"
-          class="text-sm text-ink-muted hover:text-claude underline underline-offset-4 ml-auto"
+          type="button"
+          class="py-1 text-sm text-ink-muted hover:text-claude underline underline-offset-4 ml-auto"
           @click="clearFilters"
         >
           Réinitialiser
         </button>
       </div>
 
-      <p class="font-mono text-xs text-ink-muted">
+      <p class="font-mono text-xs text-ink-muted" role="status">
         {{ filteredEntries.length }} / {{ entries.length }} sources
       </p>
     </div>
@@ -110,8 +114,9 @@ function clearFilters() {
       v-if="filteredEntries.length === 0"
       class="text-center py-12 text-ink-muted"
     >
-      <p>Aucune source ne match ces filtres.</p>
+      <p>Aucune source ne correspond à ces filtres.</p>
       <button
+        type="button"
         class="mt-3 text-claude hover:text-claude-soft underline underline-offset-4"
         @click="clearFilters"
       >

@@ -604,7 +604,8 @@ test('visionneuse au bureau (1440×900) : capture haute à sa largeur naturelle,
   const all = DATA.entries.flatMap((e) => e.captures);
   // Échelle « tout à l'écran » : (1440 - 48) × (900 - 104) px disponibles.
   const fit = (c) => { const [w, h] = size(c); return Math.min(1, 1390 / w, 796 / h); };
-  const tall = all.find((c) => fit(c) < 0.8);
+  // « Haute » : réduite par sa HAUTEUR (une capture large, réduite par sa largeur, tient à l'écran sans défiler — L4).
+  const tall = all.find((c) => { const [w, h] = size(c); return fit(c) < 0.8 && 796 / h <= 1390 / w; });
   const small = all.find((c) => fit(c) >= 0.8);
   assert.ok(tall, 'aucune capture haute à tester');
   const context = await env.browser.newContext({ viewport: { width: 1440, height: 900 } });

@@ -3,6 +3,25 @@
   "generated": "2026-11-20 10:49",
   "entries": [
     {
+      "slug": "2026-11-20-page-learning-recherche-et-filtres-plus-faciles-a-suivre",
+      "title": "Page Learning : recherche et filtres plus faciles à suivre",
+      "date": "2026-11-20",
+      "lots": [
+        "L4"
+      ],
+      "captures": [
+        "captures/L4-learning-filtres-avant-390.png",
+        "captures/L4-learning-filtres-apres-390.png",
+        "captures/L4-learning-filtres-apres-1440.png"
+      ],
+      "alts": [
+        "Avant, au téléphone : le champ de recherche de la page Learning a le focus du clavier, mais son contour orangé pâle se distingue à peine du fond sombre ; le filtre Blog est actif",
+        "Après, au téléphone : le même champ de recherche au focus du clavier, entouré d'un anneau orangé plein bien visible ; le filtre Blog est actif, 7 sources sur 12 affichées",
+        "Après, au bureau : le champ de recherche du catalogue des sources avec son anneau orangé plein, les quatre filtres par type en dessous et le compteur 7 sur 12 sources"
+      ],
+      "html": "<p>La page <a href=\"/learning/\">Learning</a> a été passée en revue au bureau et au téléphone, avec les règles d'accessibilité du Web. Rien ne déborde sur le côté et tous ses liens répondent ; six défauts ont été corrigés.</p>\n<ul><li><strong>Dates et nombre d'articles</strong> du fil d'actualités : ce petit texte gris passait à 4,3 contre 1, sous le minimum de 4,5 contre 1. Il est maintenant à 8 contre 1.</li><li><strong>Champ de recherche</strong> : au clavier, son contour de focus n'était qu'à 1,6 contre 1 sur le fond. Il porte désormais un anneau orangé plein, à 7 contre 1. Il est aussi nommé « Rechercher une source » pour les lecteurs d'écran, au lieu de compter sur le texte d'exemple qu'il affiche.</li><li><strong>Filtres par type</strong> (Blog, Newsletter…) : un lecteur d'écran dit maintenant si chacun est actif ou non, et annonce le nombre de sources affichées quand il change.</li><li><strong>Bouton « Réinitialiser »</strong> : sa zone cliquable passe de 20 à 28 pixels de haut, au-dessus du minimum de 24.</li><li><strong>Titres des articles en anglais</strong> : ils sont signalés comme tels, et un lecteur d'écran les prononce avec la voix anglaise. Les résumés, traduits, restent en français.</li><li><strong>Aucun résultat</strong> : le message dit maintenant « Aucune source ne correspond à ces filtres ».</li></ul>\n<p>Un test refait ces mesures sur la page construite, au bureau et au téléphone ; il échouait sur l'ancienne version.</p>"
+    },
+    {
       "slug": "2026-11-20-les-textes-oranges-restent-lisibles-sur-l-image-de-fond",
       "title": "Les textes orangés restent lisibles sur l'image de fond",
       "date": "2026-11-20",

@@ -105,7 +105,7 @@ const totalItems = allItems.length;
           MCP). Mis à jour chaque lundi via le batch hebdo.
         </p>
       </div>
-      <p class="font-mono text-[10px] uppercase tracking-wider text-ink/50 shrink-0">
+      <p class="font-mono text-[10px] uppercase tracking-wider text-ink-muted shrink-0">
         {totalItems} entrées
       </p>
     </div>
@@ -118,6 +118,9 @@ const totalItems = allItems.length;
           isFr: false,
         };
         const cleanSummary = truncate(stripHtml(item.summary));
+        // WCAG 3.1.2 : le TITRE d'un article d'une source anglophone connue est lu avec la voix anglaise
+        // (le résumé, traduit par le batch hebdo, reste en français).
+        const lang = SOURCE_META[item.source] && !meta.isFr ? "en" : undefined;
         const date = formatDate(item.publishedAt);
         return (
           <li class="rounded-xl border border-white/10 bg-paper-elevated p-5 transition-colors hover:border-claude/30 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-claude/10 transition-[colors,transform,box-shadow] duration-200">
@@ -132,11 +135,11 @@ const totalItems = allItems.length;
                   FR
                 </span>
               )}
-              <span class="ml-auto font-mono text-[10px] text-ink/50">
+              <span class="ml-auto font-mono text-[10px] text-ink-muted">
                 {date}
               </span>
             </div>
-            <h3 class="text-base font-medium text-ink leading-tight mb-2">
+            <h3 class="text-base font-medium text-ink leading-tight mb-2" lang={lang}>
               <a
                 href={item.url}
                 target="_blank"
