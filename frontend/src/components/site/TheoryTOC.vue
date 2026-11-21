@@ -47,6 +47,7 @@ onUnmounted(() => {
       <li v-for="entry in entries" :key="entry.id">
         <a
           :href="`#${entry.id}`"
+          :aria-current="activeId === entry.id ? 'true' : undefined"
           :class="[
             '-ml-px block pl-4 py-1.5 text-sm border-l transition-colors',
             activeId === entry.id
@@ -54,7 +55,7 @@ onUnmounted(() => {
               : 'border-transparent text-ink-muted hover:text-ink hover:border-white/30',
           ]"
         >
-          <span class="font-mono text-[11px] text-ink/50 mr-1.5">{{
+          <span class="font-mono text-[11px] text-ink/60 mr-1.5">{{
             entry.number
           }}</span>
           <span>{{ entry.title }}</span>

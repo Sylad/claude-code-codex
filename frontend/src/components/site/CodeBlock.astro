@@ -25,5 +25,5 @@ const { language, filename, code, wrap = false } = Astro.props;
     tabindex={wrap ? undefined : "0"}
     role={wrap ? undefined : "region"}
     aria-label={wrap ? undefined : `Code : ${filename ?? language}`}
-    class:list={["px-4 py-3 text-sm leading-relaxed font-mono text-ink/90", wrap ? "whitespace-pre-wrap break-words" : "overflow-x-auto"]}><code>{code}</code></pre>
+    class:list={["px-4 py-3 text-sm leading-relaxed font-mono text-ink/90 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-claude", wrap ? "whitespace-pre-wrap break-words" : "overflow-x-auto"]}><code>{code}</code></pre>
 </figure>
