@@ -165,7 +165,7 @@ lots:
     review: { date: 2026-11-21, verdict: "conforme (l5-theory-ux 3/3, page-hero 2/2 en 190 s au plafond inchangé de 600 s, 1 890 mesures gardées ; notes : public: absent, chiffre 108/113 de la Nouveauté, cadre de focus valable pour les 5 pages CodeBlock — tmp/revue-L5.md)", commit: 3d4f9ac470480a6e1c928bd8b5c635715edb0d80 }
     ux: { date: 2026-11-21, verdict: "conforme (verdict du lead d'après tmp/ux-L5.md : contraste 5,88:1, focus 2 px des blocs de code 320–1440, sommaire <details> 44 px sans décalage, aria-current juste, aucun défilement horizontal, aucune régression sur /argocd-k8s-pour-les-nuls ; mineurs : lignes 80–84 car. avec Inter, chevron qui tourne en mouvement réduit, deux styles de focus dans le sommaire)" }
     tasks:
-      - { id: t1, title: "Théorie : introductions encore à 80–84 caractères par ligne avec Inter au bureau (test L5 vert seulement sans Inter) ; chevron du sommaire qui tourne malgré prefers-reduced-motion ; un seul style de focus dans le sommaire (tmp/ux-L5.md)", status: todo }
+      - { id: t1, title: "Théorie : introductions encore à 80–84 caractères par ligne avec Inter au bureau (test L5 vert seulement sans Inter) ; chevron du sommaire qui tourne malgré prefers-reduced-motion ; un seul style de focus dans le sommaire (tmp/ux-L5.md)", status: doing }
     finished: 2026-11-21
   - id: L6
     title: Revue UX — Ecosystem
