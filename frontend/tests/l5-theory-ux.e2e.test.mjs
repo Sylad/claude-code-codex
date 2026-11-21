@@ -26,6 +26,32 @@ const CPL = `(el) => { const r = document.createRange(); const lines = {};
     const b = r.getClientRects()[0]; if (b) { const k = Math.round(b.top); lines[k] = (lines[k] || 0) + 1; } }
   return Math.max(0, ...Object.values(lines)); }`;
 
+// Contour de l'élément qui a le focus (style, épaisseur, couleur calculée), lu une fois ses
+// transitions finies (`transition-colors` anime aussi outline-color sur les liens du sommaire).
+const focusStyle = (page) => page.evaluate(async () => { const e = document.activeElement;
+  await Promise.all(e.getAnimations().map((a) => a.finished.catch(() => {})));
+  const cs = getComputedStyle(e);
+  return { tag: e.tagName, style: cs.outlineStyle, width: parseFloat(cs.outlineWidth), color: cs.outlineColor }; });
+
+// Plus longue ligne (caractères) des introductions et des puces de /theory, polices web
+// chargées (`web`) ou bloquées (police de repli). Avec `web`, Inter doit être réellement chargée :
+// avant L5/t1, la mesure se faisait avant son arrivée (display=swap) et passait à 79 sur la police
+// de repli quand Inter, la police que voit le visiteur, donnait 80 à 84 (revue UX L5).
+async function plusLongueLigne(browser, base, { web }) {
+  const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  if (!web) await context.route(/fonts\.(googleapis|gstatic)\.com/, (r) => r.abort());
+  const page = await context.newPage();
+  await page.goto(`${base}/theory/`, { waitUntil: 'networkidle' });
+  const inter = await page.evaluate(async () => {
+    await document.fonts.ready;
+    return [...document.fonts].some((f) => /Inter/.test(f.family) && f.weight === '400' && f.status === 'loaded');
+  });
+  const longest = await page.evaluate(`(() => { const cpl = ${CPL};
+    return Math.max(...[...document.querySelectorAll('main section[id] > p, main section[id] li span.flex-1')].map(cpl)); })()`);
+  await context.close();
+  return { inter, longest };
+}
+
 test('L5 — le sommaire du téléphone liste toutes les sections, dans l’ordre', () => {
   const h = html();
   const bloc = h.match(/<details[^>]*data-sommaire-mobile[\s\S]*?<\/details>/)?.[0];
@@ -35,7 +61,7 @@ test('L5 — le sommaire du téléphone liste toutes les sections, dans l’ordr
   assert.ok(liens.length >= 8, `${liens.length} sections`);
 });
 
-test('L5 — /theory au bureau : contraste du sommaire, focus des blocs de code, longueur des lignes, aria-current', { timeout: 180_000 }, async (t) => {
+test('L5 — /theory au bureau : contraste du sommaire, focus des blocs de code et des liens du sommaire, aria-current', { timeout: 180_000 }, async (t) => {
   const env = await setupBrowser(t);
   if (!env) return;
   const failures = [];
@@ -66,12 +92,15 @@ test('L5 — /theory au bureau : contraste du sommaire, focus des blocs de code,
   if (ring.tag !== 'PRE') failures.push(`focus sur ${ring.tag}, pas sur le bloc de code`);
   if (ring.style !== 'solid' || ring.width < 2) failures.push(`anneau du bloc de code : ${ring.style} ${ring.width}px`);
   if (ring.ratio < 3) failures.push(`anneau du bloc de code ${ring.ratio.toFixed(2)}:1 < 3`);
+  const fCode = (await focusStyle(page)).color;
 
-  // Lisibilité des longs textes (WCAG 1.4.8, 80 caractères) : introductions et puces.
-  const longest = await page.evaluate(`(() => { const cpl = ${CPL};
-    return Math.max(...[...document.querySelectorAll('main section[id] > p, main section[id] li span.flex-1')].map(cpl)); })()`);
-  if (longest > 80) failures.push(`ligne de ${longest} caractères > 80`);
-
+  // Focus des liens du sommaire du bureau : même contour plein claude que le reste (L5/t1, Nielsen 4).
+  const lienToc = page.locator('nav[aria-label="Table des matières"] a').nth(1);
+  await page.locator('nav[aria-label="Table des matières"] a').first().focus();
+  await page.keyboard.press('Tab');
+  const fToc = await focusStyle(page);
+  if (fToc.tag !== 'A' || (await lienToc.evaluate((a) => a !== document.activeElement))) failures.push('Tab ne mène pas au 2e lien du sommaire');
+  else if (fToc.style !== 'solid' || fToc.width < 2 || fToc.color !== fCode) failures.push(`focus d'un lien du sommaire : ${fToc.style} ${fToc.width}px ${fToc.color} ≠ contour des blocs de code (${fCode})`);
   // 4.1.2 / 1.4.1 — l'entrée active du sommaire est exposée (aria-current), pas seulement colorée.
   const cible = ids()[2];
   await page.locator(`#${cible}`).evaluate((e) => e.scrollIntoView({ block: 'start' }));
@@ -83,12 +112,25 @@ test('L5 — /theory au bureau : contraste du sommaire, focus des blocs de code,
   assert.deepEqual(failures, []);
 });
 
+test('L5/t1 — /theory au bureau : lignes ≤ 80 caractères avec Inter et avec la police de repli (WCAG 1.4.8)', { timeout: 180_000 }, async (t) => {
+  const env = await setupBrowser(t);
+  if (!env) return;
+  const failures = [];
+  const repli = await plusLongueLigne(env.browser, env.base, { web: false });
+  if (repli.inter) failures.push('polices web bloquées mais Inter chargée : mesure de repli faussée');
+  if (repli.longest > 80) failures.push(`police de repli : ligne de ${repli.longest} caractères > 80`);
+  const vue = await plusLongueLigne(env.browser, env.base, { web: true });
+  if (!vue.inter) t.diagnostic('Inter non chargée (pas de réseau vers Google Fonts) : longueur des lignes avec Inter NON mesurée');
+  else if (vue.longest > 80) failures.push(`Inter : ligne de ${vue.longest} caractères > 80`);
+  assert.deepEqual(failures, []);
+});
+
 test('L5 — /theory au téléphone : sommaire repliable, cibles, aucun défilement latéral', { timeout: 180_000 }, async (t) => {
   const env = await setupBrowser(t);
   if (!env) return;
   const failures = [];
   for (const width of [320, 390, 840]) {
-    const context = await env.browser.newContext({ viewport: { width, height: 844 } });
+    const context = await env.browser.newContext({ viewport: { width, height: 844 }, reducedMotion: 'reduce' });
     const page = await context.newPage();
     await page.goto(`${env.base}/theory/`, { waitUntil: 'networkidle' });
     const at = `@${width}px`;
@@ -98,7 +140,23 @@ test('L5 — /theory au téléphone : sommaire repliable, cibles, aucun défilem
     const sb = await summary.boundingBox();
     if (sb.height < 44) failures.push(`${at} bouton Sommaire ${Math.round(sb.height)} px < 44`);
     await summary.click();
+    // WCAG 2.3.3 / mouvement réduit : le chevron tourne sans animation (L5/t1).
+    const anims = await page.locator('[data-sommaire-mobile] summary span').evaluate((e) => e.getAnimations().length);
+    if (anims) failures.push(`${at} chevron animé (${anims}) malgré prefers-reduced-motion: reduce`);
     const liens = page.locator('[data-sommaire-mobile] a');
+    // Un seul style de focus dans le sommaire : liens au contour du résumé (L5/t1).
+    // Au clavier (focus-visible) : premier lien, retour au résumé, puis de nouveau le lien.
+    await liens.first().focus();
+    await page.keyboard.press('Shift+Tab');
+    const fSummary = await focusStyle(page);
+    await page.keyboard.press('Tab');
+    const fLien = await focusStyle(page);
+    if (fSummary.tag !== 'SUMMARY') failures.push(`${at} Maj+Tab depuis le 1er lien mène à ${fSummary.tag}`);
+    if (fLien.tag !== 'A') failures.push(`${at} Tab depuis Sommaire mène à ${fLien.tag}`);
+    else if (fLien.style !== 'solid' || fLien.width < 2) failures.push(`${at} focus d'un lien du sommaire : ${fLien.style} ${fLien.width}px`);
+    else if (fLien.style !== fSummary.style || fLien.width !== fSummary.width || fLien.color !== fSummary.color) {
+      failures.push(`${at} focus d'un lien du sommaire ${fLien.style} ${fLien.width}px ${fLien.color} ≠ résumé ${fSummary.style} ${fSummary.width}px ${fSummary.color}`);
+    }
     for (const b of await liens.evaluateAll((l) => l.map((a) => a.getBoundingClientRect().height))) {
       if (b < 44) failures.push(`${at} lien du sommaire ${Math.round(b)} px < 44`);
     }

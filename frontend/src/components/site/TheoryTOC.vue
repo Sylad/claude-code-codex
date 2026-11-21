@@ -49,7 +49,7 @@ onUnmounted(() => {
           :href="`#${entry.id}`"
           :aria-current="activeId === entry.id ? 'true' : undefined"
           :class="[
-            '-ml-px block pl-4 py-1.5 text-sm border-l transition-colors',
+            '-ml-px block pl-4 py-1.5 text-sm border-l transition-colors focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-claude',
             activeId === entry.id
               ? 'border-claude text-claude'
               : 'border-transparent text-ink-muted hover:text-ink hover:border-white/30',
