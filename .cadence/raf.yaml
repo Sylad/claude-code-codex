@@ -171,7 +171,7 @@ lots:
       - { date: 2026-11-21, text: "L5/t1 (21-11) : revue et UX conformes par le lead — max-w 56ch (≤ 76 car. avec Inter à 1440), chevron sans rotation en mouvement réduit, focus orangé unique dans le sommaire (capture 390)" }
   - id: L6
     title: Revue UX — Ecosystem
-    status: todo
+    status: doing
     visible: true
     estimate: 0.25
     created: 2026-09-28
@@ -185,6 +185,7 @@ lots:
       - { id: t6, title: "Ecosystem : focus de la recherche à 3:1 au moins (mesuré 2,6:1) et libellé visible ou aria-label", status: todo }
       - { id: t7, title: "Ecosystem : la case « Anthropic-officiel uniquement » ne vide plus la section community, recherches nommées par section", status: todo }
       - { id: t8, title: "Ecosystem : aucun défilement latéral à 390 px police 200 % (lien modelcontextprotocol/servers)", status: todo }
+    started: 2026-11-21
   - id: L7
     title: Revue UX — Atelier IA
     status: todo
