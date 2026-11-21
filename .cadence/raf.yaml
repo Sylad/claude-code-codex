@@ -728,7 +728,9 @@ lots:
     ux: { date: 2026-11-20, verdict: "conforme (verdict du lead sur les captures du run à 1440 et 390) : code cité lisible en police de code, un seul Réinitialiser à l'état vide avec renvoi, texte du catalogue juste" }
     finished: 2026-11-20
     tasks:
-      - { id: t1, title: "Fil d'actualités : un accent grave servant d'apostrophe (We`re … it`s) ne doit pas ouvrir un code cité (feed-text.mjs:24) ; test e2e lang non circulaire (l78-learning.e2e.test.mjs:119) ; test de rendu de LatestNews sur un résumé hostile — tmp/revue-L78.md", status: todo }
+      - { id: t1, title: "Fil d'actualités : un accent grave servant d'apostrophe (We`re … it`s) ne doit pas ouvrir un code cité (feed-text.mjs:24) ; test e2e lang non circulaire (l78-learning.e2e.test.mjs:119) ; test de rendu de LatestNews sur un résumé hostile — tmp/revue-L78.md", status: done }
+    notes:
+      - { date: 2026-11-21, text: "21-11 : t1 faite (f738e17) — règle CODE_CITE unique (apostrophe en accent grave = texte), test e2e de langue non circulaire, résumé hostile rendu sans injection ; relue par le lead (diff 5 fichiers, regex et échappement vérifiés), aucun écran changé" }
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
