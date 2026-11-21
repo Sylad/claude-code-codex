@@ -10,13 +10,13 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
   description="Deep dive — tracker finances perso avec analyse PDF par Claude, construit en pair-programming avec Claude Code (0 ligne de code humaine)."
 >
   <PageHero
-    eyebrow="Case study · mise à jour 31 octobre 2026"
+    eyebrow="Case study · mise à jour 21 novembre 2026"
     title="Analyse de relevés bancaires PDF en two-phase tool_use"
     intro="Une app perso qui ingère des relevés PDF, les fait catégoriser par Claude, calcule un score de santé financière, et propose une démo publique verrouillée pour montrer sans rien fuiter. Stack : React 18 + NestJS 11 + Anthropic SDK, code 100% écrit avec Claude Code."
   />
 
   <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12 space-y-12">
-    <p class="font-mono text-xs text-ink-muted"><span data-testid="date-maj">Mise à jour 31 octobre 2026</span> · <span data-testid="depots-decrits">dépôt décrit : <a class="text-claude hover:underline" href="https://github.com/Sylad/finance-tracker" target="_blank" rel="noopener">github.com/Sylad/finance-tracker</a></span> · état relu d'après son README, ses 90 Nouveautés et son plan.</p>
+    <p class="font-mono text-xs text-ink-muted"><span data-testid="date-maj">Mise à jour 21 novembre 2026</span> · <span data-testid="depots-decrits">dépôt décrit : <a class="text-claude hover:underline" href="https://github.com/Sylad/finance-tracker" target="_blank" rel="noopener">github.com/Sylad/finance-tracker</a></span> · état relu d'après son README, ses 97 Nouveautés et son plan.</p>
     <CaseStudySection eyebrow="Aperçu visuel">
       <p>
         Captures prises en <strong>mode démo</strong> (persona "Alex Démo",
@@ -178,7 +178,8 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         et score du mois ; en auto-catégorisation, la règle proposée suit la catégorie choisie ;
         le focus clavier est gardé après masquage d'un abonnement.
         Le modèle d'analyse est <code>claude-sonnet-5-5</code> ; le backend compte 24 modules, et le
-        projet environ 1 620 cas de test au 31 octobre 2026 (recherche de <code>it(</code>/<code>test(</code>).
+        projet environ 1 780 cas de test au 21 novembre 2026 (recherche de <code>it(</code>/<code>test(</code>
+        dans les fichiers de test).
       </p>
       <figure class="my-6">
         <img src="/case-studies/finance-tracker/05-credits-actions.png" alt="Crédits — actions nommées sur chaque carte de crédit, en mode démo" class="rounded-lg border border-white/10" loading="lazy" />
@@ -188,6 +189,54 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         <img src="/case-studies/finance-tracker/06-abonnements.png" alt="Abonnements — suggestions à trier : Enregistrer, Connu masquer, Faux positif" class="rounded-lg border border-white/10" loading="lazy" />
         <figcaption class="text-xs text-ink-muted mt-2 font-mono">Abonnements — suggestions à trier (mode démo). Capture du 23 octobre 2026.</figcaption>
       </figure>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Novembre 2026 · un tableau d'amortissement qui ne devine plus">
+      <p>
+        Mi-novembre, le graphique d'amortissement d'un crédit (page Crédits) a été repris en quatre
+        livraisons, avec un même principe : <strong>la courbe « Réel (estimé) » ne montre une valeur
+        que pour un mois où un prélèvement a vraiment eu lieu</strong>. Le calcul vit dans une fonction
+        pure, <code>buildAmortizationSeries</code>, à côté de la courbe « Prévu » tirée du tableau
+        d'amortissement.
+      </p>
+      <ul class="space-y-2.5 leading-relaxed">
+        <li class="flex gap-3">
+          <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+          <span><strong>La courbe s'arrête au dernier prélèvement connu</strong>, marqué d'un point.
+          Avant, elle restait plate jusqu'à la fin du crédit, comme si le capital ne baissait plus.
+          Une ligne sous le graphique dit jusqu'à quel mois la courbe réelle est connue.</span>
+        </li>
+        <li class="flex gap-3">
+          <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+          <span><strong>Un mois sans prélèvement se voit</strong> : entre deux mois prélevés, la
+          courbe s'interrompt au lieu de traverser le trou, l'infobulle dit « aucun prélèvement trouvé
+          ce mois-là » et la phrase sous le graphique cite les mois interrompus. Un prélèvement tombé un
+          mois sans échéance au tableau a son propre point.</span>
+        </li>
+        <li class="flex gap-3">
+          <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+          <span><strong>Chaque prélèvement compte une fois</strong>, même si sa date glisse d'un mois :
+          une mensualité prélevée le 1er du mois suivant est rattachée à l'échéance du mois voisin, à
+          condition que ce mois n'ait aucun autre prélèvement. Un prélèvement en trop (doublon,
+          régularisation) reste à part, n'est pas compté dans le capital et la phrase le signale.</span>
+        </li>
+        <li class="flex gap-3">
+          <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
+          <span><strong>Mois et montants écrits pareil partout</strong> sur la page Crédits : un mois
+          s'écrit en entier (« juillet 2026 ») dans tout ce qui se lit — infobulles, phrases, tableau
+          lu par les lecteurs d'écran — et en court (« Juil 26 ») seulement sur l'axe des graphiques.
+          Deux fonctions, <code>monthLabel</code> et <code>monthAxisLabel</code>, portent ces deux
+          formes, et un test vérifie qu'aucun écran de la page n'en écrit une troisième. Les montants
+          de l'infobulle sont en euros entiers, comme la courbe, et l'axe affiche « 6 000 € » au lieu
+          de « 6k ».</span>
+        </li>
+      </ul>
+      <p>
+        Deux retouches de navigation le même mois : au téléphone, sur la page « Page introuvable »,
+        aucun onglet de la barre du bas ne s'allume plus (« Plus » prétendait être l'endroit où l'on
+        se trouve) ; et l'onglet du navigateur nomme le relevé ouvert, par exemple « Octobre 2026 —
+        Historique — Finance Tracker », ou « Relevé introuvable » quand l'adresse ne mène à aucun relevé.
+      </p>
     </CaseStudySection>
 
     <CaseStudySection eyebrow="Le process avec Claude Code">

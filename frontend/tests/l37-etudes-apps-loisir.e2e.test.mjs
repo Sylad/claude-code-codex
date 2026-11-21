@@ -11,10 +11,13 @@ const texte = (p) => readFileSync(join(DIST, p, 'index.html'), 'utf8')
 const html = (p) => readFileSync(join(DIST, p, 'index.html'), 'utf8');
 const PAGES = ['ol-companion', 'warhammer40k', 'finance-tracker'];
 
-test('R1 — chaque étude est datée du 31 octobre 2026 en tête et porte le dépôt qu\'elle décrit', () => {
+// Date de la dernière mise à jour de chaque étude (finance-tracker rafraîchie par L176 le 21 novembre 2026).
+const DATES = { 'ol-companion': '31 octobre 2026', warhammer40k: '31 octobre 2026', 'finance-tracker': '21 novembre 2026' };
+
+test('R1 — chaque étude est datée en tête de sa dernière mise à jour et porte le dépôt qu\'elle décrit', () => {
   for (const p of PAGES) {
     const t = texte(`case-studies/${p}`);
-    assert.match(t, /Mise à jour 31 octobre 2026/, p);
+    assert.match(t, new RegExp(`Mise à jour ${DATES[p]}`), p);
     assert.match(t, new RegExp(`github\\.com/Sylad/${p}`), p);
   }
 });
