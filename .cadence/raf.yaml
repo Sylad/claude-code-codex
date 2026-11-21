@@ -171,23 +171,25 @@ lots:
       - { date: 2026-11-21, text: "L5/t1 (21-11) : revue et UX conformes par le lead — max-w 56ch (≤ 76 car. avec Inter à 1440), chevron sans rotation en mouvement réduit, focus orangé unique dans le sommaire (capture 390)" }
   - id: L6
     title: Revue UX — Ecosystem
-    status: doing
+    status: done
     visible: true
     estimate: 0.25
     created: 2026-09-28
-    ux: { date: 2026-11-21, verdict: "non conforme r2 (tmp/ux-codex-L6-r2.md) : les 9 bloquants/majeurs de r1 corrigés, 15 commandes npx degit et 12 /plugin install vérifiées exactes ; B1 consigne fable-mode fausse (pas de dossier fable-mode, fable-haiku retiré ; README : git clone … && ./install.sh) ; M1 police 200 % à 390/768 : commande à 1 caractère par ligne (« $ » et « COPIER » ne rétrécissent pas), régression du correctif r1" }
+    ux: { date: 2026-11-21, verdict: "conforme r3 conforme : fable-mode = README, police 200 % lisible, plus de $ devant /plugin et uses: (tmp/ux-codex-L6-r3.md)" }
     tasks:
-      - { id: t1, title: "Ecosystem : aria-pressed sur les filtres de catégorie (WCAG 4.1.2)", status: todo }
-      - { id: t2, title: "Ecosystem : libellé « copier » à 4,5:1 au moins (mesuré 2,88:1)", status: todo }
-      - { id: t3, title: "Ecosystem : compteur « n / 41 entrées » et « copié » annoncés (role=status)", status: todo }
-      - { id: t4, title: "Ecosystem : les 15 « commandes » qui sont des phrases ne se copient plus comme des commandes", status: todo }
-      - { id: t5, title: "Ecosystem : la commande entière lisible avant la copie (41/42 tronquées)", status: todo }
-      - { id: t6, title: "Ecosystem : focus de la recherche à 3:1 au moins (mesuré 2,6:1) et libellé visible ou aria-label", status: todo }
-      - { id: t7, title: "Ecosystem : la case « Anthropic-officiel uniquement » ne vide plus la section community, recherches nommées par section", status: todo }
-      - { id: t8, title: "Ecosystem : aucun défilement latéral à 390 px police 200 % (lien modelcontextprotocol/servers)", status: todo }
-      - { id: t9, title: "Ecosystem : consigne d'installation de fable-mode exacte (README du dépôt) et description à jour", status: todo }
-      - { id: t10, title: "Ecosystem : à police 200 % (390 et 768), la commande garde une largeur lisible (« $ » et « COPIER » passent dessous ou rétrécissent)", status: todo }
+      - { id: t1, title: "Ecosystem : aria-pressed sur les filtres de catégorie (WCAG 4.1.2)", status: done }
+      - { id: t2, title: "Ecosystem : libellé « copier » à 4,5:1 au moins (mesuré 2,88:1)", status: done }
+      - { id: t3, title: "Ecosystem : compteur « n / 41 entrées » et « copié » annoncés (role=status)", status: done }
+      - { id: t4, title: "Ecosystem : les 15 « commandes » qui sont des phrases ne se copient plus comme des commandes", status: done }
+      - { id: t5, title: "Ecosystem : la commande entière lisible avant la copie (41/42 tronquées)", status: done }
+      - { id: t6, title: "Ecosystem : focus de la recherche à 3:1 au moins (mesuré 2,6:1) et libellé visible ou aria-label", status: done }
+      - { id: t7, title: "Ecosystem : la case « Anthropic-officiel uniquement » ne vide plus la section community, recherches nommées par section", status: done }
+      - { id: t8, title: "Ecosystem : aucun défilement latéral à 390 px police 200 % (lien modelcontextprotocol/servers)", status: done }
+      - { id: t9, title: "Ecosystem : consigne d'installation de fable-mode exacte (README du dépôt) et description à jour", status: done }
+      - { id: t10, title: "Ecosystem : à police 200 % (390 et 768), la commande garde une largeur lisible (« $ » et « COPIER » passent dessous ou rétrécissent)", status: done }
     started: 2026-11-21
+    review: { date: 2026-11-21, verdict: "conforme t1-t10 relus par le lead sur le rapport du run et la revue UX r3, tests e2e L6 verts (411)", commit: 1b9d51ff794b77d15895d76a78a830ab0311c2ab }
+    finished: 2026-11-21
   - id: L7
     title: Revue UX — Atelier IA
     status: todo
