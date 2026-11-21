@@ -724,7 +724,7 @@ lots:
     delivered: { date: 2026-11-20, sha: fe3cb1409a19c1c893f263705b9260d81e1903ac }
     created: 2026-11-20
     started: 2026-11-20
-    review: { date: 2026-11-20, verdict: "conforme (4 remarques mineures, 1 suite) : aucune réinjection HTML (16 entrées piégées + 200 000 aléatoires), mutation tuée — tmp/revue-L78.md", commit: ac7f3bc27fcec3fcf436e0f732c35163c0159f77 }
+    review: { date: 2026-11-21, verdict: "conforme (t1, f738e17, relu par le lead le 21-11) : CODE_CITE unique (lookbehind/lookahead \\p{L}, contenu non vide sans espace aux bornes), échappement conservé dans inlineCodeHtml, mutations jouées par l'auteur (ancien code, guessLang constant, échappement retiré) ; aucun écran changé", commit: f738e1784aaa360ac53db4d60f910826faabb526 }
     ux: { date: 2026-11-20, verdict: "conforme (verdict du lead sur les captures du run à 1440 et 390) : code cité lisible en police de code, un seul Réinitialiser à l'état vide avec renvoi, texte du catalogue juste" }
     finished: 2026-11-20
     tasks:
