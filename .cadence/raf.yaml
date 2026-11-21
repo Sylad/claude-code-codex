@@ -159,6 +159,7 @@ lots:
     status: done
     visible: true
     estimate: 0.25
+    delivered: { date: 2026-11-21, sha: 258091eb231ce9a74b862447bbebd35945264479 }
     created: 2026-09-28
     started: 2026-11-21
     review: { date: 2026-11-21, verdict: "conforme (l5-theory-ux 3/3, page-hero 2/2 en 190 s au plafond inchangé de 600 s, 1 890 mesures gardées ; notes : public: absent, chiffre 108/113 de la Nouveauté, cadre de focus valable pour les 5 pages CodeBlock — tmp/revue-L5.md)", commit: 3d4f9ac470480a6e1c928bd8b5c635715edb0d80 }
