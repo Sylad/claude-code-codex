@@ -24,7 +24,11 @@ test('PageHero : sur-titre, titre et chapeau ≥ 4,5:1 au pire pixel (6 largeurs
   const env = await setupBrowser(t);
   if (!env) return;
   const failures = [];
-  for (const width of [320, 390, 768, 1024, 1440, 1920]) {
+  // Les six largeurs en parallèle, chacune dans son contexte (L5 : en série, 1 890 mesures prenaient
+  // ~520 s sur un plafond de 600 s, dépassé sous la charge de la porte). Mêmes pages, mêmes défilements,
+  // mêmes textes, même mesure : seul l'ordre d'exécution change. La capture coûte en proportion de sa
+  // surface (encodage PNG) : regrouper les textes d'une page n'y gagnait rien (mesuré).
+  await Promise.all([320, 390, 768, 1024, 1440, 1920].map(async (width) => {
     const context = await env.browser.newContext({ viewport: { width, height: width > 1000 ? 900 : 844 }, deviceScaleFactor: 2 });
     const page = await context.newPage();
     for (const route of routes) {
@@ -44,6 +48,7 @@ test('PageHero : sur-titre, titre et chapeau ≥ 4,5:1 au pire pixel (6 largeurs
       }
     }
     await context.close();
-  }
+  }));
+  failures.sort();
   assert.deepEqual(failures, []);
 });
