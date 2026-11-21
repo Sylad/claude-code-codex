@@ -64,7 +64,7 @@ export const ecosystemEntries: EcosystemEntry[] = [
     description:
       "Le protocole ouvert qui standardise comment les applis exposent contexte, tools et resources aux LLM.",
     tags: ["protocol", "spec", "core"],
-    install: "Voir les SDKs sur modelcontextprotocol.io/docs",
+    guide: "Pas de commande unique : choisis le SDK de ton langage sur modelcontextprotocol.io/docs.",
     source: "https://modelcontextprotocol.io",
   },
   {
@@ -172,7 +172,7 @@ export const ecosystemEntries: EcosystemEntry[] = [
       "Slash command pour review de code structurée sur une PR ou des changements locaux.",
     tags: ["coding", "review", "git"],
     install:
-      "/plugin marketplace add anthropics/claude-plugins-official && /plugin install code-review@claude-plugins-official",
+      "/plugin install code-review@claude-plugins-official",
     source:
       "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/code-review",
   },
@@ -317,7 +317,7 @@ export const ecosystemEntries: EcosystemEntry[] = [
       "Lit, remplit, édite et crée des PDFs — formulaires, extraction, génération.",
     tags: ["documents", "pdf"],
     install:
-      "/plugin marketplace add anthropics/skills (browse document-skills)",
+      "npx degit anthropics/skills/skills/pdf ~/.claude/skills/pdf",
     source: "https://github.com/anthropics/skills/tree/main/skills/pdf",
   },
   {
@@ -328,7 +328,8 @@ export const ecosystemEntries: EcosystemEntry[] = [
     description:
       "Crée et manipule des Excel — formules, formatting, charts.",
     tags: ["documents", "spreadsheet"],
-    install: "Disponible via anthropics/skills ou skills Claude.ai",
+    install:
+      "npx degit anthropics/skills/skills/xlsx ~/.claude/skills/xlsx",
     source: "https://github.com/anthropics/skills/tree/main/skills/xlsx",
   },
   {
@@ -340,7 +341,7 @@ export const ecosystemEntries: EcosystemEntry[] = [
       "Skill guidé pour construire de nouveaux serveurs MCP from scratch.",
     tags: ["mcp", "authoring"],
     install:
-      "Clone anthropics/skills/skills/mcp-builder dans ton dossier skills",
+      "npx degit anthropics/skills/skills/mcp-builder ~/.claude/skills/mcp-builder",
     source:
       "https://github.com/anthropics/skills/tree/main/skills/mcp-builder",
   },
@@ -353,7 +354,7 @@ export const ecosystemEntries: EcosystemEntry[] = [
       "Tests browser-based d'apps web via flows d'automatisation Playwright-style.",
     tags: ["testing", "browser", "playwright"],
     install:
-      "Clone anthropics/skills/skills/webapp-testing dans ton dossier skills",
+      "npx degit anthropics/skills/skills/webapp-testing ~/.claude/skills/webapp-testing",
     source:
       "https://github.com/anthropics/skills/tree/main/skills/webapp-testing",
   },
@@ -365,7 +366,8 @@ export const ecosystemEntries: EcosystemEntry[] = [
     description:
       "Créer, lire, éditer, manipuler des documents Word (.docx). Complète pdf + xlsx pour la suite Office.",
     tags: ["office", "docx", "document"],
-    install: "Clone anthropics/skills/skills/docx dans ton dossier skills",
+    install:
+      "npx degit anthropics/skills/skills/docx ~/.claude/skills/docx",
     source: "https://github.com/anthropics/skills/tree/main/skills/docx",
   },
   {
@@ -376,7 +378,8 @@ export const ecosystemEntries: EcosystemEntry[] = [
     description:
       "Créer/lire/éditer des présentations PowerPoint (.pptx) — slide decks, pitch decks, templates.",
     tags: ["office", "pptx", "slides"],
-    install: "Clone anthropics/skills/skills/pptx dans ton dossier skills",
+    install:
+      "npx degit anthropics/skills/skills/pptx ~/.claude/skills/pptx",
     source: "https://github.com/anthropics/skills/tree/main/skills/pptx",
   },
   {
@@ -387,7 +390,8 @@ export const ecosystemEntries: EcosystemEntry[] = [
     description:
       "Build/debug/optimize des apps Claude API & SDK Anthropic, avec prompt caching par défaut. Gère aussi les migrations entre versions de modèles.",
     tags: ["api", "sdk", "caching", "dev"],
-    install: "Clone anthropics/skills/skills/claude-api dans ton dossier skills",
+    install:
+      "npx degit anthropics/skills/skills/claude-api ~/.claude/skills/claude-api",
     source: "https://github.com/anthropics/skills/tree/main/skills/claude-api",
   },
   {
@@ -398,7 +402,8 @@ export const ecosystemEntries: EcosystemEntry[] = [
     description:
       "Crée de l'art visuel (.png / .pdf) selon une philosophie de design — posters, visuels, affiches.",
     tags: ["design", "art", "visual"],
-    install: "Clone anthropics/skills/skills/canvas-design dans ton dossier skills",
+    install:
+      "npx degit anthropics/skills/skills/canvas-design ~/.claude/skills/canvas-design",
     source: "https://github.com/anthropics/skills/tree/main/skills/canvas-design",
   },
   {
@@ -409,7 +414,8 @@ export const ecosystemEntries: EcosystemEntry[] = [
     description:
       "Toolkit pour styliser des artefacts (slides, docs, landing HTML…) avec 10 thèmes pré-définis (couleurs/fonts) ou un thème custom.",
     tags: ["design", "theme", "styling"],
-    install: "Clone anthropics/skills/skills/theme-factory dans ton dossier skills",
+    install:
+      "npx degit anthropics/skills/skills/theme-factory ~/.claude/skills/theme-factory",
     source: "https://github.com/anthropics/skills/tree/main/skills/theme-factory",
   },
   {
@@ -420,7 +426,8 @@ export const ecosystemEntries: EcosystemEntry[] = [
     description:
       "Suite d'outils pour des artefacts claude.ai HTML multi-composants élaborés (React, Tailwind, shadcn/ui).",
     tags: ["artifacts", "react", "tailwind", "shadcn"],
-    install: "Clone anthropics/skills/skills/web-artifacts-builder dans ton dossier skills",
+    install:
+      "npx degit anthropics/skills/skills/web-artifacts-builder ~/.claude/skills/web-artifacts-builder",
     source: "https://github.com/anthropics/skills/tree/main/skills/web-artifacts-builder",
   },
   {
@@ -431,7 +438,8 @@ export const ecosystemEntries: EcosystemEntry[] = [
     description:
       "Workflow structuré de co-rédaction de docs : documentation, proposals, specs techniques, decision docs.",
     tags: ["docs", "writing", "specs"],
-    install: "Clone anthropics/skills/skills/doc-coauthoring dans ton dossier skills",
+    install:
+      "npx degit anthropics/skills/skills/doc-coauthoring ~/.claude/skills/doc-coauthoring",
     source: "https://github.com/anthropics/skills/tree/main/skills/doc-coauthoring",
   },
   {
@@ -442,7 +450,8 @@ export const ecosystemEntries: EcosystemEntry[] = [
     description:
       "Art algorithmique en p5.js avec randomness seedée + exploration interactive de paramètres.",
     tags: ["art", "p5js", "generative"],
-    install: "Clone anthropics/skills/skills/algorithmic-art dans ton dossier skills",
+    install:
+      "npx degit anthropics/skills/skills/algorithmic-art ~/.claude/skills/algorithmic-art",
     source: "https://github.com/anthropics/skills/tree/main/skills/algorithmic-art",
   },
   {
@@ -453,7 +462,8 @@ export const ecosystemEntries: EcosystemEntry[] = [
     description:
       "Applique les couleurs + typographie officielles de la marque Anthropic à tout artefact qui bénéficie de ce look.",
     tags: ["brand", "design", "anthropic"],
-    install: "Clone anthropics/skills/skills/brand-guidelines dans ton dossier skills",
+    install:
+      "npx degit anthropics/skills/skills/brand-guidelines ~/.claude/skills/brand-guidelines",
     source: "https://github.com/anthropics/skills/tree/main/skills/brand-guidelines",
   },
   {
@@ -464,7 +474,8 @@ export const ecosystemEntries: EcosystemEntry[] = [
     description:
       "Ressources pour rédiger toutes sortes de communications internes dans les formats appréciés par l'entreprise.",
     tags: ["writing", "comms", "knowledge-work"],
-    install: "Clone anthropics/skills/skills/internal-comms dans ton dossier skills",
+    install:
+      "npx degit anthropics/skills/skills/internal-comms ~/.claude/skills/internal-comms",
     source: "https://github.com/anthropics/skills/tree/main/skills/internal-comms",
   },
   {
@@ -475,7 +486,8 @@ export const ecosystemEntries: EcosystemEntry[] = [
     description:
       "Crée des GIFs animés optimisés pour Slack — contraintes, outils de validation, concepts d'animation.",
     tags: ["gif", "slack", "animation"],
-    install: "Clone anthropics/skills/skills/slack-gif-creator dans ton dossier skills",
+    install:
+      "npx degit anthropics/skills/skills/slack-gif-creator ~/.claude/skills/slack-gif-creator",
     source: "https://github.com/anthropics/skills/tree/main/skills/slack-gif-creator",
   },
   // ─── Community testés ─────────────────────────────────────────────
@@ -489,7 +501,8 @@ export const ecosystemEntries: EcosystemEntry[] = [
     description:
       "Skill (+ variantes fable-sonnet / fable-haiku) qui codifie un loop de discipline 4-étapes : stage map → délégation conditionnelle → failable verification check → self-critique sceptique. Variantes pinnées par tier modèle (Opus inline / Sonnet via Agent / Haiku via Agent) pour router workload par coût/qualité. Install = cp -r dans ~/.claude/skills/, 0 pollution.",
     tags: ["skill", "discipline", "verification", "community"],
-    install: "Clone mrtooher/fable-mode et copie fable-mode/ fable-sonnet/ fable-haiku/ dans ~/.claude/skills/",
+    guide:
+      "Clone le dépôt mrtooher/fable-mode, puis copie ses dossiers fable-mode, fable-sonnet et fable-haiku dans ~/.claude/skills/.",
     source: "https://github.com/mrtooher/fable-mode",
   },
 ];

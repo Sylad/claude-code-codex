@@ -1,7 +1,32 @@
 {
   "project": "claude-code-codex",
-  "generated": "2026-11-20 10:49",
+  "generated": "2026-11-21 16:27",
   "entries": [
+    {
+      "slug": "2026-11-21-page-ecosysteme-des-commandes-lisibles-et-vraiment-executables",
+      "title": "Page Écosystème : des commandes lisibles et vraiment exécutables",
+      "date": "2026-11-21",
+      "lots": [
+        "L6"
+      ],
+      "captures": [
+        "captures/L6-ecosystem-commande-avant-1440.png",
+        "captures/L6-ecosystem-commande-apres-1440.png",
+        "captures/L6-ecosystem-consigne-apres-1440.png",
+        "captures/L6-ecosystem-community-avant-1440.png",
+        "captures/L6-ecosystem-community-apres-1440.png",
+        "captures/L6-ecosystem-filtre-copie-apres-390.png"
+      ],
+      "alts": [
+        "Avant : la carte mcp-builder affiche « $ Clone anthropics/skills/skills… », une phrase coupée présentée comme une commande à copier",
+        "Après : la même carte affiche en entier, sur trois lignes, la commande npx degit qui copie la skill dans le dossier des skills",
+        "Après : la carte Model Context Protocol présente une consigne encadrée en pointillés, sans signe dollar ni bouton copier",
+        "Avant : la section community, après avoir coché « Anthropic-officiel uniquement », affiche 0 / 1 entrées et un message vide",
+        "Après : la section community montre directement sa carte fable-mode, sans barre de filtres",
+        "Après, au téléphone : le filtre Skill actif, 15 / 41 entrées, et la commande de la skill pdf lisible en entier, marquée « copié »"
+      ],
+      "html": "<p>La page <a href=\"/ecosystem/\">Écosystème</a> a été passée en revue au bureau et au téléphone, avec les règles d'accessibilité du Web. Huit défauts ont été corrigés.</p>\n<ul><li><strong>Des commandes qui marchent</strong> : quinze cartes affichaient une phrase (« Clone … dans ton dossier skills », « Voir les SDKs sur … ») derrière un signe « $ » et un bouton copier ; collée dans un terminal, elle échouait. Les skills officielles ont maintenant une vraie commande, qui copie le dossier de la skill dans <code>~/.claude/skills/</code>. Quand il n'existe pas de commande unique (le protocole MCP, fable-mode), la carte affiche une consigne, sans « $ » ni bouton.</li><li><strong>La commande se lit avant d'être copiée</strong> : 41 commandes sur 42 étaient coupées par des points de suspension. Elles passent maintenant à la ligne et se lisent en entier, au bureau comme au téléphone.</li><li><strong>Le mot « copier » se lit</strong> : il était à 2,9 contre 1, sous le minimum de 4,5 contre 1.</li><li><strong>Filtres et lecteurs d'écran</strong> : un lecteur d'écran annonce désormais quels filtres de catégorie sont actifs, le nombre d'entrées affichées quand il change, et la copie d'une commande.</li><li><strong>Recherche</strong> : chaque champ porte un nom propre à sa section, et un cadre orangé plein le signale quand il a le focus (il était presque invisible).</li><li><strong>Section community</strong> : la case « Anthropic-officiel uniquement » ne pouvait que vider cette section ; elle disparaît des deux sections, déjà séparées. Avec une seule entrée, la section community n'a plus de barre de filtres.</li><li><strong>Texte agrandi</strong> : avec la police du navigateur à 200 %, un long lien de l'encart « Critères du catalogue » faisait défiler la page sur le côté au téléphone ; il passe maintenant à la ligne.</li><li><strong>Finitions</strong> : libellés « Serveur MCP » et « Outil / SDK », petits textes qui suivent la taille de police choisie, pointeur de clic sur les boutons, et l'encart « Critères » ne dit plus que le catalogue n'a que des entrées officielles.</li></ul>\n<p>Un test par défaut refait ces mesures sur la page construite ; chacun échouait sur l'ancienne version.</p>"
+    },
     {
       "slug": "2026-11-21-page-theorie-un-sommaire-au-telephone-et-des-lignes-plus-courtes",
       "title": "Page Théorie : un sommaire au téléphone et des lignes plus courtes",

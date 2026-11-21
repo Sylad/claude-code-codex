@@ -10,27 +10,31 @@ const communityEntries = ecosystemEntries.filter((e) => !e.official);
 
 <BaseLayout
   title="Écosystème"
-  description="Catalogue triable de plugins, MCP servers, skills et SDKs Claude Code — officiel Anthropic + community testés."
+  description="Catalogue filtrable des plugins, serveurs MCP, skills et SDK de Claude Code — officiels Anthropic et composants community testés."
 >
   <PageHero
     eyebrow="02 · Écosystème"
     title="Plugins, MCP, skills, SDKs"
-    intro="Catalogue des composants officiels (Anthropic + protocole MCP) que tu peux installer pour étendre Claude Code. Filtre par catégorie, recherche, et copie la commande d'install d'un clic."
+    intro="Catalogue des composants officiels (Anthropic + protocole MCP) que tu peux installer pour étendre Claude Code. Filtre par catégorie, cherche, et copie la commande d'installation d'un clic."
   />
 
   <section class="mx-auto max-w-6xl px-5 sm:px-8 py-12">
-    <EcosystemCatalog entries={officialEntries} client:load />
+    <EcosystemCatalog
+      entries={officialEntries}
+      searchLabel="Rechercher dans le catalogue officiel"
+      client:load
+    />
 
     <div
-      class="mt-12 rounded-xl border border-claude/20 bg-claude/5 p-6 sm:p-8"
+      class="mt-12 rounded-xl border border-claude/20 bg-claude/5 p-6 sm:p-8 [overflow-wrap:anywhere]"
     >
       <p class="font-mono text-xs uppercase tracking-wider text-claude mb-3">
         Critères du catalogue
       </p>
       <p class="text-ink leading-relaxed mb-3">
-        Pour rester sourcé propre, ce catalogue ne liste pour l'instant
-        que des entrées <strong class="text-ink">officielles Anthropic</strong>
-        — plugins de la marketplace
+        Ce catalogue liste les entrées
+        <strong class="text-ink">officielles Anthropic</strong>, chacune avec
+        sa source : plugins de la marketplace
         <a
           href="https://github.com/anthropics/claude-plugins-official"
           target="_blank"
@@ -51,7 +55,9 @@ const communityEntries = ecosystemEntries.filter((e) => !e.official);
           rel="noopener"
           class="text-claude hover:text-claude-soft underline underline-offset-4"
           >modelcontextprotocol/servers</a
-        >, SDK officiels Anthropic, et le protocole MCP lui-même.
+        >, SDK officiels Anthropic, et le protocole MCP lui-même. Les
+        composants community, testés un par un, ont leur propre section
+        plus bas.
       </p>
       <p class="text-ink-muted leading-relaxed text-sm">
         Le batch hebdo enrichira progressivement avec d'autres composants
@@ -73,29 +79,31 @@ const communityEntries = ecosystemEntries.filter((e) => !e.official);
       <section class="mx-auto max-w-6xl px-5 sm:px-8 pb-16">
         <div class="mb-8 border-t border-white/10 pt-12">
           <p class="font-mono text-xs uppercase tracking-wider text-claude mb-3">
-            Section community · soumise au test-tool protocol
+            Section community · passée au banc d'essai
           </p>
           <h2 class="text-2xl font-medium text-ink mb-3">
-            Skills / plugins community testés
+            Skills et plugins community testés
           </h2>
           <p class="text-ink-muted leading-relaxed max-w-3xl">
             Composants <strong class="text-ink">non-officiels</strong>{" "}
-            que j'ai passés par mon protocole `/test-tool` (snapshot{" "}
-            → install sandbox → diff pollution → smoke test → verdict){" "}
-            et pour lesquels la valeur unique vs les skills existantes
-            justifie la place. Chaque entrée vient avec son verdict
+            que j'ai passés par mon banc d'essai{" "}
+            <code class="font-mono text-sm text-ink">/test-tool</code>{" "}
+            (instantané → installation en bac à sable → fichiers laissés
+            derrière → essai → verdict) et dont l'apport, face aux skills
+            existantes, justifie la place. Chaque entrée a son verdict
             détaillé sur la page{" "}
             <a
               href="/case-studies"
               class="text-claude hover:text-claude-soft underline underline-offset-4"
-            >
-              Tools tested
-            </a>
-            .
+            >Tools tested</a>.
           </p>
         </div>
 
-        <EcosystemCatalog entries={communityEntries} client:load />
+        <EcosystemCatalog
+          entries={communityEntries}
+          searchLabel="Rechercher dans la section community"
+          client:load
+        />
       </section>
     )
   }

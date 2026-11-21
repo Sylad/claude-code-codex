@@ -7,15 +7,18 @@ export interface EcosystemEntry {
   official: boolean;
   description: string;
   tags: string[];
-  install: string;
+  /** Commande exécutable telle quelle (terminal, Claude Code ou workflow), copiable d'un clic. */
+  install?: string;
+  /** Consigne à lire quand il n'existe pas de commande unique : affichée en texte, sans « $ » ni copie. */
+  guide?: string;
   source: string;
 }
 
 export const CATEGORY_LABELS: Record<EcosystemCategory, string> = {
   plugin: "Plugin",
-  mcp: "MCP server",
+  mcp: "Serveur MCP",
   skill: "Skill",
-  tool: "Tool / SDK",
+  tool: "Outil / SDK",
 };
 
 export const CATEGORY_ACCENTS: Record<EcosystemCategory, string> = {

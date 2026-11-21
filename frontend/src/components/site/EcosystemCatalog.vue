@@ -10,13 +10,24 @@ import {
   CATEGORY_ACCENTS,
 } from "@/data/ecosystem-types";
 
-const props = defineProps<{ entries: EcosystemEntry[] }>();
+const props = withDefaults(
+  defineProps<{
+    entries: EcosystemEntry[];
+    /** Nom accessible de la recherche, propre à la section (deux catalogues sur la page). */
+    searchLabel: string;
+    /** Sous ce nombre d'entrées, ni recherche ni filtres : la liste se lit d'un coup d'œil. */
+    filtersFrom?: number;
+  }>(),
+  { filtersFrom: 6 },
+);
+
+const showFilters = computed(() => props.entries.length >= props.filtersFrom);
 
 const categories: EcosystemCategory[] = ["plugin", "mcp", "skill", "tool"];
 const selectedCategories = ref<Set<EcosystemCategory>>(new Set());
-const onlyOfficial = ref(false);
 const searchQuery = ref("");
 const copiedId = ref<string | null>(null);
+const copiedMessage = ref("");
 
 const counts = computed(() => {
   const map: Record<EcosystemCategory, number> = {
@@ -40,7 +51,6 @@ const filteredEntries = computed(() => {
     ) {
       return false;
     }
-    if (onlyOfficial.value && !entry.official) return false;
     if (query) {
       const haystack = [
         entry.name,
@@ -64,26 +74,32 @@ function toggleCategory(c: EcosystemCategory) {
 
 function clearFilters() {
   selectedCategories.value = new Set();
-  onlyOfficial.value = false;
   searchQuery.value = "";
 }
 
 async function copyInstall(entry: EcosystemEntry) {
+  if (!entry.install) return;
   try {
     await navigator.clipboard.writeText(entry.install);
     copiedId.value = entry.id;
+    copiedMessage.value = `Commande de ${entry.name} copiée.`;
     setTimeout(() => {
-      if (copiedId.value === entry.id) copiedId.value = null;
+      if (copiedId.value === entry.id) {
+        copiedId.value = null;
+        copiedMessage.value = "";
+      }
     }, 1500);
   } catch {
-    // ignore
+    copiedMessage.value = `Copie impossible : sélectionne la commande de ${entry.name} à la main.`;
   }
 }
 </script>
 
 <template>
   <div>
-    <div class="flex flex-col gap-4 mb-8">
+    <p role="status" class="sr-only">{{ copiedMessage }}</p>
+
+    <div v-if="showFilters" class="flex flex-col gap-4 mb-8">
       <div class="relative">
         <Search
           :size="16"
@@ -92,8 +108,9 @@ async function copyInstall(entry: EcosystemEntry) {
         <input
           v-model="searchQuery"
           type="search"
-          placeholder="Rechercher dans le catalogue..."
-          class="w-full pl-10 pr-4 py-2.5 rounded-lg bg-paper-elevated border border-white/10 text-ink placeholder:text-ink-muted focus:outline-none focus:border-claude/50 focus:ring-1 focus:ring-claude/30 transition-colors"
+          :aria-label="searchLabel"
+          placeholder="Nom, description, étiquette…"
+          class="w-full pl-10 pr-4 py-2.5 rounded-lg bg-paper-elevated border border-white/10 text-ink placeholder:text-ink-muted focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-claude transition-colors"
         />
       </div>
 
@@ -101,8 +118,10 @@ async function copyInstall(entry: EcosystemEntry) {
         <button
           v-for="c in categories"
           :key="c"
+          type="button"
+          :aria-pressed="selectedCategories.has(c)"
           :class="[
-            'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm border transition-colors motion-safe:active:scale-95',
+            'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm border cursor-pointer transition-colors motion-safe:active:scale-95',
             selectedCategories.has(c)
               ? 'bg-claude text-paper border-claude'
               : 'border-white/10 text-ink-muted hover:border-claude/40 hover:text-ink',
@@ -114,33 +133,17 @@ async function copyInstall(entry: EcosystemEntry) {
           <span class="font-mono text-xs opacity-70">{{ counts[c] }}</span>
         </button>
 
-        <span class="w-px h-5 bg-white/10 mx-1"></span>
-
-        <label
-          class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm border border-white/10 text-ink-muted cursor-pointer hover:text-ink hover:border-claude/40 transition-colors"
-        >
-          <input
-            v-model="onlyOfficial"
-            type="checkbox"
-            class="accent-claude"
-          />
-          Anthropic-officiel uniquement
-        </label>
-
         <button
-          v-if="
-            selectedCategories.size > 0 ||
-            onlyOfficial ||
-            searchQuery.trim() !== ''
-          "
-          class="text-sm text-ink-muted hover:text-claude underline underline-offset-4 ml-auto"
+          v-if="selectedCategories.size > 0 || searchQuery.trim() !== ''"
+          type="button"
+          class="text-sm text-ink-muted hover:text-claude underline underline-offset-4 ml-auto cursor-pointer"
           @click="clearFilters"
         >
           Réinitialiser
         </button>
       </div>
 
-      <p class="font-mono text-xs text-ink-muted">
+      <p role="status" class="font-mono text-xs text-ink-muted">
         {{ filteredEntries.length }} / {{ entries.length }} entrées
       </p>
     </div>
@@ -149,9 +152,10 @@ async function copyInstall(entry: EcosystemEntry) {
       v-if="filteredEntries.length === 0"
       class="text-center py-12 text-ink-muted"
     >
-      <p>Aucune entrée ne match ces filtres.</p>
+      <p>Aucune entrée ne correspond à ces filtres.</p>
       <button
-        class="mt-3 text-claude hover:text-claude-soft underline underline-offset-4"
+        type="button"
+        class="cursor-pointer mt-3 text-claude hover:text-claude-soft underline underline-offset-4"
         @click="clearFilters"
       >
         Réinitialiser les filtres
@@ -174,7 +178,7 @@ async function copyInstall(entry: EcosystemEntry) {
           <div class="flex items-start justify-between gap-2">
             <div>
               <p
-                class="font-mono text-[10px] uppercase tracking-wider text-claude"
+                class="font-mono text-xs uppercase tracking-wider text-claude"
               >
                 {{ CATEGORY_LABELS[entry.category] }}
                 <span v-if="entry.official" class="text-claude-soft">
@@ -201,21 +205,31 @@ async function copyInstall(entry: EcosystemEntry) {
           </p>
 
           <button
-            class="group/install relative flex items-center gap-2 text-left rounded-md border border-white/10 bg-paper px-3 py-2 font-mono text-xs text-ink-muted hover:border-claude/30 hover:text-ink transition-colors"
-            :title="'Copier la commande'"
+            v-if="entry.install"
+            type="button"
+            class="group/install relative flex items-start gap-2 text-left rounded-md border border-white/10 bg-paper px-3 py-2 font-mono text-xs text-ink-muted cursor-pointer hover:border-claude/30 hover:text-ink transition-colors"
             @click="copyInstall(entry)"
           >
-            <span class="text-claude shrink-0">$</span>
-            <span class="truncate flex-1">{{ entry.install }}</span>
+            <span class="text-claude shrink-0" aria-hidden="true">$</span>
+            <span class="flex-1 min-w-0 whitespace-pre-wrap [overflow-wrap:anywhere]">{{
+              entry.install
+            }}</span>
             <span
               :class="[
-                'shrink-0 text-[10px] uppercase tracking-wider transition-opacity',
-                copiedId === entry.id ? 'text-claude' : 'opacity-50',
+                'shrink-0 uppercase tracking-wider',
+                copiedId === entry.id ? 'text-claude' : 'text-ink-muted',
               ]"
             >
               {{ copiedId === entry.id ? "copié" : "copier" }}
             </span>
           </button>
+          <p
+            v-else-if="entry.guide"
+            class="rounded-md border border-dashed border-white/10 px-3 py-2 text-xs text-ink-muted leading-relaxed [overflow-wrap:anywhere]"
+          >
+            <span class="font-mono uppercase tracking-wider text-claude">Installation</span>
+            · {{ entry.guide }}
+          </p>
 
           <ul
             v-if="entry.tags.length > 0"
@@ -223,7 +237,7 @@ async function copyInstall(entry: EcosystemEntry) {
           >
             <li v-for="tag in entry.tags" :key="tag">
               <span
-                class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono text-ink-muted bg-white/5"
+                class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-mono text-ink-muted bg-white/5"
               >
                 <Tag :size="10" />
                 {{ tag }}
