@@ -65,6 +65,10 @@ const filteredEntries = computed(() => {
   });
 });
 
+function isShellCommand(command: string): boolean {
+  return !command.startsWith("/") && !command.startsWith("uses:");
+}
+
 function toggleCategory(c: EcosystemCategory) {
   const next = new Set(selectedCategories.value);
   if (next.has(c)) next.delete(c);
@@ -204,25 +208,37 @@ async function copyInstall(entry: EcosystemEntry) {
             {{ entry.description }}
           </p>
 
-          <button
-            v-if="entry.install"
-            type="button"
-            class="group/install relative flex items-start gap-2 text-left rounded-md border border-white/10 bg-paper px-3 py-2 font-mono text-xs text-ink-muted cursor-pointer hover:border-claude/30 hover:text-ink transition-colors"
-            @click="copyInstall(entry)"
-          >
-            <span class="text-claude shrink-0" aria-hidden="true">$</span>
-            <span class="flex-1 min-w-0 whitespace-pre-wrap [overflow-wrap:anywhere]">{{
-              entry.install
-            }}</span>
-            <span
-              :class="[
-                'shrink-0 uppercase tracking-wider',
-                copiedId === entry.id ? 'text-claude' : 'text-ink-muted',
-              ]"
+          <!-- Conteneur de requête : « copier » quitte la ligne de la commande quand le bloc fait
+               moins de 16rem (police agrandie, carte étroite) ; la commande garde toute la largeur. -->
+          <div v-if="entry.install" class="@container">
+            <button
+              type="button"
+              class="w-full flex flex-wrap items-start gap-x-2 gap-y-1 text-left rounded-md border border-white/10 bg-paper px-3 py-2 font-mono text-xs text-ink-muted cursor-pointer hover:border-claude/30 hover:text-ink transition-colors"
+              @click="copyInstall(entry)"
             >
-              {{ copiedId === entry.id ? "copié" : "copier" }}
-            </span>
-          </button>
+              <span class="flex gap-2 min-w-0 basis-full @[16rem]:basis-0 @[16rem]:flex-1">
+                <!-- « $ » seulement devant une commande du terminal : « /plugin … » se tape dans
+                     Claude Code, « uses: … » est une ligne de workflow. -->
+                <span
+                  v-if="isShellCommand(entry.install)"
+                  class="text-claude shrink-0"
+                  aria-hidden="true"
+                  >$</span
+                >
+                <span class="flex-1 min-w-0 whitespace-pre-wrap [overflow-wrap:anywhere]">{{
+                  entry.install
+                }}</span>
+              </span>
+              <span
+                :class="[
+                  'ml-auto shrink-0 uppercase tracking-wider',
+                  copiedId === entry.id ? 'text-claude' : 'text-ink-muted',
+                ]"
+              >
+                {{ copiedId === entry.id ? "copié" : "copier" }}
+              </span>
+            </button>
+          </div>
           <p
             v-else-if="entry.guide"
             class="rounded-md border border-dashed border-white/10 px-3 py-2 text-xs text-ink-muted leading-relaxed [overflow-wrap:anywhere]"

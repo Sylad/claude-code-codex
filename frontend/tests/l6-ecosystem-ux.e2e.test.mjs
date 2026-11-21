@@ -15,8 +15,9 @@ const LUM = `(c, sous = '#000') => { const x = document.createElement('canvas').
   const d = x.getImageData(0, 0, 1, 1).data; const l = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; };
   return 0.2126 * l(d[0]) + 0.7152 * l(d[1]) + 0.0722 * l(d[2]); }`;
 
-// Boutons de copie d'une commande : ceux qui commencent par l'invite « $ ».
-const INSTALL = 'main li button:has(> span:first-child:text-is("$"))';
+// Boutons de copie d'une commande : les seuls boutons des cartes (r2 : l'invite « $ » ne précède
+// plus que les commandes du terminal, elle ne peut donc plus servir à les repérer).
+const INSTALL = 'main li button';
 const CATEGORY_BUTTONS = 'main button:has(> span.font-mono)';
 
 async function open(env, { width = 1440, height = 900, fontSize } = {}) {
@@ -82,7 +83,7 @@ test('L6/t4 — chaque « $ » porte une vraie commande ; une consigne n’a ni 
   const env = await setupBrowser(t);
   if (!env) return;
   const { context, page } = await open(env);
-  const commandes = await page.locator(`${INSTALL} > span:nth-child(2)`).allTextContents();
+  const commandes = await page.locator(`${INSTALL} span.whitespace-pre-wrap`).allTextContents();
   assert.ok(commandes.length >= 25, `${commandes.length} commandes`);
   // Premier mot d'une commande exécutable : un programme du terminal, une commande de Claude Code
   // (« /plugin ») ou une ligne de workflow GitHub (« uses: »).
@@ -92,6 +93,13 @@ test('L6/t4 — chaque « $ » porte une vraie commande ; une consigne n’a ni 
     return !PROGRAMMES.has(premier) || /\b(dans|ton|Voir|Disponible|ou|browse|et copie)\b/.test(c) || /\(/.test(c);
   });
   assert.deepEqual(fausses, [], 'phrases présentées comme des commandes');
+  // L'invite « $ » ne précède qu'une commande du terminal (r2, m1).
+  const invites = await page.locator(INSTALL).evaluateAll((bs) => bs.map((b) => ({
+    cmd: b.querySelector('span.whitespace-pre-wrap').textContent.trim(),
+    dollar: [...b.querySelectorAll('span')].some((s) => s.textContent.trim() === '$'),
+  })));
+  const mal = invites.filter((i) => i.dollar === (i.cmd.startsWith('/') || i.cmd.startsWith('uses:'))).map((i) => i.cmd);
+  assert.deepEqual(mal, [], '« $ » absent devant une commande du terminal, ou présent devant /plugin ou uses:');
   // Le protocole MCP n'a pas de commande d'installation : sa consigne est affichée, sans bouton.
   const carte = page.locator('main li', { has: page.locator('h3', { hasText: /^Model Context Protocol$/ }) });
   assert.equal(await carte.locator('button').count(), 0, 'consigne du protocole MCP dans un bouton copier');
@@ -104,7 +112,7 @@ test('L6/t5 — chaque commande se lit en entier avant la copie, à 1440 et 390 
   if (!env) return;
   for (const width of [1440, 390]) {
     const { context, page } = await open(env, { width, height: 900 });
-    const coupees = await page.locator(`${INSTALL} > span:nth-child(2)`).evaluateAll((spans) => spans
+    const coupees = await page.locator(`${INSTALL} span.whitespace-pre-wrap`).evaluateAll((spans) => spans
       .filter((s) => s.scrollWidth > s.clientWidth + 1 || getComputedStyle(s).textOverflow === 'ellipsis')
       .map((s) => s.textContent.trim()));
     assert.deepEqual(coupees, [], `${width} px : ${coupees.length} commandes tronquées`);
@@ -159,5 +167,67 @@ test('L6/t8 — aucun défilement latéral à 390 px, police du navigateur à 20
   }));
   assert.equal(fs, '32px');
   assert.ok(sw <= cw, `scrollWidth ${sw} > ${cw}`);
+  await context.close();
+});
+
+// Revue r2 (2026-11-21). t9 : la consigne de fable-mode était fausse (pas de dossier fable-mode,
+// fable-haiku retirée) ; la commande du README du dépôt mrtooher/fable-mode, relue le 21-11, est
+// celle-ci. t10 : police à 200 %, « $ » et « copier » ne rétrécissaient pas et laissaient 23 px à
+// la commande (un caractère par ligne) à 390 et 768 px.
+const FABLE_INSTALL = 'git clone https://github.com/mrtooher/fable-mode.git && cd fable-mode && ./install.sh';
+const COMMANDE = `${INSTALL} span.whitespace-pre-wrap`;
+
+test('L6/t9 — fable-mode : la commande du README du dépôt, copiable, sans skill retirée', { timeout: 120_000 }, async (t) => {
+  const env = await setupBrowser(t);
+  if (!env) return;
+  const { context, page } = await open(env);
+  const carte = page.locator('main li', { has: page.locator('h3', { hasText: /^fable-mode$/ }) });
+  const bouton = carte.locator('button');
+  assert.equal(await bouton.count(), 1, 'fable-mode sans bouton copier');
+  assert.equal((await bouton.locator('span.whitespace-pre-wrap').textContent()).trim(), FABLE_INSTALL);
+  await bouton.click();
+  assert.equal(await page.evaluate(() => navigator.clipboard.readText()), FABLE_INSTALL);
+  const texte = await carte.textContent();
+  assert.doesNotMatch(texte, /fable-haiku|cp -r/, 'skill retirée ou ancienne installation encore citée');
+  for (const skill of ['fable-opus', 'fable-sonnet', 'double-check', 'execution-guardrails']) {
+    assert.match(texte, new RegExp(skill), `${skill} (jeu v6) absente de la description`);
+  }
+  await context.close();
+});
+
+test('L6/t10 — police à 200 % : la commande garde la largeur du bloc, « copier » passe dessous', { timeout: 180_000 }, async (t) => {
+  const env = await setupBrowser(t);
+  if (!env) return;
+  for (const width of [390, 768]) {
+    const { context, page } = await open(env, { width, height: 900, fontSize: '200%' });
+    const mesures = await page.locator(COMMANDE).evaluateAll((spans) => spans.map((s) => {
+      const b = s.closest('button');
+      const cs = getComputedStyle(b);
+      const interieur = b.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+      return { cmd: s.textContent.trim(), part: s.getBoundingClientRect().width / interieur };
+    }));
+    assert.ok(mesures.length >= 25, `${width} px : ${mesures.length} commandes`);
+    const etroites = mesures.filter((m) => m.part < 0.7).map((m) => `${m.cmd.slice(0, 30)}… ${(m.part * 100).toFixed(0)} %`);
+    assert.deepEqual(etroites, [], `${width} px + 200 % : commande à moins de 70 % du bloc`);
+    // « copier » reste dans le bouton, visible, sans chevaucher la commande.
+    const chevauche = await page.locator('main li button').evaluateAll((bs) => bs.filter((b) => {
+      const c = b.querySelector('span.whitespace-pre-wrap').getBoundingClientRect();
+      const l = [...b.querySelectorAll('span')].at(-1).getBoundingClientRect();
+      const r = b.getBoundingClientRect();
+      const dedans = l.left >= r.left && l.right <= r.right + 0.5 && l.bottom <= r.bottom + 0.5;
+      const croise = !(l.top >= c.bottom - 0.5 || l.bottom <= c.top + 0.5 || l.left >= c.right - 0.5 || l.right <= c.left + 0.5);
+      return !dedans || croise || l.width === 0;
+    }).length);
+    assert.equal(chevauche, 0, `${width} px + 200 % : « copier » hors du bouton ou sur la commande`);
+    await context.close();
+  }
+  // Police normale, 1440 px : « copier » reste sur la ligne de la commande (pas de bloc qui s'allonge).
+  const { context, page } = await open(env);
+  const decales = await page.locator('main li button').evaluateAll((bs) => bs.filter((b) => {
+    const c = b.querySelector('span.whitespace-pre-wrap').getBoundingClientRect();
+    const l = [...b.querySelectorAll('span')].at(-1).getBoundingClientRect();
+    return Math.abs(l.top - c.top) > 2;
+  }).length);
+  assert.equal(decales, 0, '1440 px : « copier » sorti de la ligne de la commande');
   await context.close();
 });

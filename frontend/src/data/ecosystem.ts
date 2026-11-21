@@ -499,10 +499,10 @@ export const ecosystemEntries: EcosystemEntry[] = [
     category: "skill",
     official: false,
     description:
-      "Skill (+ variantes fable-sonnet / fable-haiku) qui codifie un loop de discipline 4-étapes : stage map → délégation conditionnelle → failable verification check → self-critique sceptique. Variantes pinnées par tier modèle (Opus inline / Sonnet via Agent / Haiku via Agent) pour router workload par coût/qualité. Install = cp -r dans ~/.claude/skills/, 0 pollution.",
+      "Famille de skills (v6) qui impose une discipline d'exécution sur les grosses tâches : plan par étapes écrit, délégation à des agents nommés, à chaque étape une vérification qui peut échouer, autocritique, puis contre-vérification à froid avant de livrer. fable-mode s'adapte au modèle ; fable-opus et fable-sonnet sont réglés pour leur modèle ; double-check (porte de livraison) et execution-guardrails l'accompagnent. Le script d'installation copie ces cinq skills dans ~/.claude/skills/ et ne supprime rien.",
     tags: ["skill", "discipline", "verification", "community"],
-    guide:
-      "Clone le dépôt mrtooher/fable-mode, puis copie ses dossiers fable-mode, fable-sonnet et fable-haiku dans ~/.claude/skills/.",
+    install:
+      "git clone https://github.com/mrtooher/fable-mode.git && cd fable-mode && ./install.sh",
     source: "https://github.com/mrtooher/fable-mode",
   },
 ];
