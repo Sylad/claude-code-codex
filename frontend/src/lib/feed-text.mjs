@@ -1,6 +1,9 @@
 // L78 — texte des résumés du fil d'actualités (/learning, LatestNews.astro).
 // Les résumés mêlent du HTML brut de flux RSS (`<p>`, `<a>`…) et du texte traduit qui CITE du code
 // entre accents graves (« Utilisez `<details><summary>` en HTML ») : seul le premier doit disparaître.
+// Ce qui est code cité est défini une fois, dans inline-code.mjs (CODE_CITE), pour le rendu comme ici.
+
+import { CODE_CITE, splitCode } from './inline-code.mjs';
 
 const ENTITES = { nbsp: ' ', amp: '&', lt: '<', gt: '>', quot: '"', '#39': "'", apos: "'" };
 const decode = (s) => s.replace(/&(nbsp|amp|lt|gt|quot|#39|apos);/g, (_, e) => ENTITES[e]);
@@ -16,13 +19,16 @@ const BALISE_COUPEE = /<\/?(?:[A-Za-z][\w-]*(?:\s[^<>]*)?)?$/;
  * un <code>…</code> du HTML devient du code entre accents graves.
  */
 export function stripHtml(s) {
-  const avecCode = String(s ?? '').replace(/<code(?:\s[^<>]*)?>([\s\S]*?)<\/code>/gi, (m, inner) => {
-    const texte = inner.replace(BALISE, '');
-    return texte.includes('`') || !texte.trim() ? ` ${texte} ` : `\`${texte}\``;
+  const avecCode = String(s ?? '').replace(/<code(?:\s[^<>]*)?>([\s\S]*?)<\/code>/gi, (m, inner, at, src) => {
+    const texte = inner.replace(BALISE, '').trim();
+    if (texte.includes('`') || !texte) return ` ${texte} `;
+    // Une lettre collée au <code> empêcherait la paire d'accents d'être lue comme code cité : on l'écarte d'une espace.
+    const avant = /\p{L}/u.test(src[at - 1] ?? '') ? ' ' : '';
+    const apres = /\p{L}/u.test(src[at + m.length] ?? '') ? ' ' : '';
+    return `${avant}\`${texte}\`${apres}`;
   });
-  return avecCode
-    .split(/(`[^`]+`)/)
-    .map((part) => (/^`[^`]+`$/.test(part) ? decode(part) : decode(part.replace(BALISE, ' ').replace(BALISE_COUPEE, ' '))))
+  return splitCode(avecCode)
+    .map((part, k) => (k % 2 ? decode(part) : decode(part.replace(BALISE, ' ').replace(BALISE_COUPEE, ' '))))
     .join('')
     .replace(/\s+/g, ' ')
     .trim();
@@ -41,7 +47,7 @@ const MOTS_FR = new Set(
  */
 export function guessLang(text) {
   const mots = String(text ?? '')
-    .replace(/`[^`]+`/g, ' ')
+    .replace(CODE_CITE, ' ')
     .toLowerCase()
     .match(/[a-zàâçéèêëîïôûùüÿœ']+/g) ?? [];
   let en = 0;
