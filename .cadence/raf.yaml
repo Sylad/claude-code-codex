@@ -175,6 +175,16 @@ lots:
     visible: true
     estimate: 0.25
     created: 2026-09-28
+    ux: { date: 2026-11-21, verdict: "non conforme (tmp/ux-codex-L6.md, prod 21-11) : 3 bloquants — filtres sans aria-pressed (4.1.2), « copier » à 2,88:1 (1.4.3), compteur et « copié » non annoncés (4.1.3) ; 6 majeurs — 15 commandes copiées sont des phrases, 41/42 tronquées sans voir la commande, focus de la recherche 2,6:1 (1.4.11), case officiel qui vide la section community, recherche sans libellé (3.3.2), débordement latéral à 390 police 200 % (1.4.10) ; 6 mineurs en rapport" }
+    tasks:
+      - { id: t1, title: "Ecosystem : aria-pressed sur les filtres de catégorie (WCAG 4.1.2)", status: todo }
+      - { id: t2, title: "Ecosystem : libellé « copier » à 4,5:1 au moins (mesuré 2,88:1)", status: todo }
+      - { id: t3, title: "Ecosystem : compteur « n / 41 entrées » et « copié » annoncés (role=status)", status: todo }
+      - { id: t4, title: "Ecosystem : les 15 « commandes » qui sont des phrases ne se copient plus comme des commandes", status: todo }
+      - { id: t5, title: "Ecosystem : la commande entière lisible avant la copie (41/42 tronquées)", status: todo }
+      - { id: t6, title: "Ecosystem : focus de la recherche à 3:1 au moins (mesuré 2,6:1) et libellé visible ou aria-label", status: todo }
+      - { id: t7, title: "Ecosystem : la case « Anthropic-officiel uniquement » ne vide plus la section community, recherches nommées par section", status: todo }
+      - { id: t8, title: "Ecosystem : aucun défilement latéral à 390 px police 200 % (lien modelcontextprotocol/servers)", status: todo }
   - id: L7
     title: Revue UX — Atelier IA
     status: todo
