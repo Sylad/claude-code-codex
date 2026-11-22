@@ -43,3 +43,42 @@ test('R5 — pile à jour : Vite 8, Vitest 5, @nestjs/schedule 12, node:22-alpin
   assert.match(texte, /node:22-alpine/);
   assert.doesNotMatch(texte, /node:20-alpine|Vite 5|Vitest 2|schedule v5/);
 });
+
+// Revue r0 de L222 : chaque affirmation clé est gardée, pour qu'aucune ne disparaisse ni ne redevienne fausse en silence.
+test('R6 — pile Frontend alignée sur frontend/package.json d\'ol-companion (TanStack, Recharts)', () => {
+  assert.match(texte, /TanStack Router 1\.170 · TanStack Query 5\.107/);
+  assert.match(texte, /Recharts 2\.15/);
+  assert.doesNotMatch(texte, /Router 1\.78|Query 5\.59|Recharts 2\.13/);
+});
+
+test('R7 — carte L1 : 15 clubs écartés, l\'OL ne bouge jamais, motifs exacts (la victoire est un aplat)', () => {
+  assert.match(texte, /Les 15 clubs trop proches/);
+  assert.match(texte, /l'OL ne bouge jamais/);
+  assert.match(texte, /victoire en aplat/);
+  assert.match(texte, /pas encore joué/);
+  assert.doesNotMatch(texte, /chacune avec son motif/);
+});
+
+test('R8 — signature SSE : les tirs en font partie', () => {
+  assert.match(texte, /\[statusGroup, scores, gameTime, events\.length, shots\.length\]\.join\('\|'\)/);
+});
+
+test('R9 — .ics : football-data seul, 503 plutôt qu\'un calendrier vide', () => {
+  assert.match(texte, /ne contient que la Ligue 1, et ne vient que de football-data\.org/);
+  assert.match(texte, /répond 503, jamais un calendrier vide/);
+});
+
+test('R10 — écussons du CDN 365scores : classement, calendrier, dernier résultat et carte', () => {
+  assert.match(texte, /pour le classement, le calendrier, le dernier résultat et les popups de la carte L1/);
+  assert.match(texte, /dépassait la limite de débit/);
+});
+
+test('R11 — nombre de tests recompté, méthode écrite', () => {
+  assert.match(texte, /≈ 1 950 cas de test au 22 novembre 2026 : 1 947 lignes/);
+  assert.match(texte, /257 fichiers/);
+  assert.doesNotMatch(texte, /1 970/);
+});
+
+test("R12 — rien n'est dit publiquement d'un accord écrit avec 365scores", () => {
+  assert.doesNotMatch(texte, /accord écrit/);
+});

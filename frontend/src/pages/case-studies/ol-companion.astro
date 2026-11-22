@@ -141,8 +141,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
           Mesuré ce jour-là, les six familles d'appels de 365scores répondent 200 sans ces en-têtes ; si
           la source refusait un jour ce client honnête, l'app afficherait son erreur et l'on changerait de
           source. Un test refuse le retour d'un <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">Referer</code>
-          ou d'un User-Agent imité. L'étude des conditions d'utilisation, versée au dépôt, note aussi que
-          l'usage public de ces données n'est pas couvert sans accord écrit de 365scores.
+          ou d'un User-Agent imité.
         </p>
         <p>
           IDs critiques : <strong>Ligue 1</strong> = compétition <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">35</code>,
@@ -194,7 +193,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         <p>
           Conséquence concrète : sur le PositionTracker (Recharts), la ligne d'évolution est
           <strong>bleu OL</strong> (pas vert), et le dot du point courant est <strong>rouge OL</strong>.
-          Sur la carte Ligue 1, OL est rouge plein ; les moitiés des autres marqueurs disent le résultat de l'OL (bleu OL éclairci = victoire, gris = nul, rouge = défaite), chacune avec son motif.
+          Sur la carte Ligue 1, OL est rouge plein ; les moitiés des autres marqueurs disent le résultat de l'OL (bleu OL éclairci = victoire en aplat, gris à barre horizontale = nul, rouge à barre oblique = défaite, gris sombre avec un point = pas encore joué).
           Seule exception : le thème <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">/fcnoobz</code>
           (Football Manager save perso) active <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">body.theme-fcnoobz</code>
           qui override en lime + bleu électrique cyberpunk.
@@ -287,7 +286,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         <p>
           <strong>Sources citées</strong>. La mention qu'exige football-data.org (« Football data provided
           by the Football-Data.org API ») s'affiche là où ses données apparaissent : accueil, calendrier,
-          carte, page d'un match de Ligue 1 à venir et À propos. Le bloc « Joueurs en vue » écrit enfin ce
+          carte, page d'un match de Ligue 1 (à venir, ou terminé sous « Ce que ça change ») et À propos. Le bloc « Joueurs en vue » écrit enfin ce
           que compte chaque chiffre de 365scores (« Tacles gagnés par match : 0,1 » au lieu de « Tacles :
           0,1 ») et n'affiche plus un chiffre dont le sens n'est pas établi.
         </p>
@@ -324,14 +323,14 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
           </p>
           <ul class="text-sm text-ink-muted space-y-1.5 mb-5">
             <li>
-              <strong class="text-ink">Frontend</strong> · React 18 · Vite 8 · Vitest 5 · Playwright 1.65 · TanStack Router 1.78
-              · TanStack Query 5.59 · Tailwind 3.4 · Recharts 2.13 · Leaflet + react-leaflet ·
+              <strong class="text-ink">Frontend</strong> · React 18 · Vite 8 · Vitest 5 · Playwright 1.65 · TanStack Router 1.170
+              · TanStack Query 5.107 · Tailwind 3.4 · Recharts 2.15 · Leaflet + react-leaflet ·
               Lucide.
             </li>
             <li>
               <strong class="text-ink">Backend</strong> · NestJS 11 · @nestjs/schedule 12 · TypeScript 6 · RxJS
               (SSE via <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">@Sse()</code>) ·
-              Jest côté back, Vitest côté front (≈ 1 970 cas de test au 22 novembre 2026, relevés par recherche de <code>it(</code>/<code>test(</code> dans les fichiers de test) · stockage JSON local · SDK Anthropic retiré le 1er octobre 2026.
+              Jest côté back, Vitest côté front (≈ 1 950 cas de test au 22 novembre 2026 : 1 947 lignes qui commencent par <code>it(</code> ou <code>test(</code>, variantes <code>.each</code>/<code>.skip</code> comprises, dans les 257 fichiers <code>*.spec.*</code>/<code>*.test.*</code> suivis par git) · stockage JSON local · SDK Anthropic retiré le 1er octobre 2026.
             </li>
             <li>
               <strong class="text-ink">Sources</strong> · 365scores (classement, forme, calendrier de la saison, brackets,
