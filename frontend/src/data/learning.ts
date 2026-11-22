@@ -125,4 +125,15 @@ export const learningEntries: LearningEntry[] = [
     tags: ["fundamentals", "transformer", "illustrated"],
     url: "https://jalammar.github.io/",
   },
+  {
+    id: "the-bearded-bear",
+    name: "The Bearded Bear",
+    kind: "blog",
+    author: "Flavien Métivier",
+    description:
+      "Blog francophone d'un développeur qui écrit sur Claude Code en pratique : coût des sous-agents en quota, harness planificateur / générateur / évaluateur, pipelines RTK. Ajouté à la revue du 22 novembre 2026.",
+    tags: ["claude-code", "sous-agents", "quota", "fr"],
+    url: "https://the-bearded-bear.com/blog",
+    feed: "https://the-bearded-bear.com/rss.xml",
+  },
 ];
