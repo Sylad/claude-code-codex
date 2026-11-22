@@ -61,18 +61,23 @@ test('L7 r1/2 — une zone de schéma qui défile est une région nommée, à l\
   for (const path of ['/atelier-ia/', '/cloudflare-pour-les-nuls/']) {
     const { context, page } = await open(env, path, 390, 844);
     await drawn(page);
-    await page.waitForFunction(() => document.querySelector('[data-mermaid-inline]').getAttribute('role') === 'region', null, { timeout: 5000 }).catch(() => {});
-    const r = await page.evaluate(() => {
-      const c = document.querySelector('[data-mermaid-inline]');
+    // L9 : depuis que le premier schéma de Cloudflare tient à 390 px, on prend le premier schéma qui DÉFILE
+    // (celui de l'atelier, le diagramme de séquence de Cloudflare). Tous les schémas sont amenés à l'écran.
+    for (const f of await page.locator(FIG).all()) await f.scrollIntoViewIfNeeded();
+    await page.waitForFunction(() => [...document.querySelectorAll('[data-mermaid-inline]')].filter((c) => c.querySelector('svg')).length === document.querySelectorAll('[data-mermaid-inline]').length, null, { timeout: 20_000 });
+    const index = await page.evaluate(() => [...document.querySelectorAll('[data-mermaid-inline]')].findIndex((c) => c.scrollWidth > c.clientWidth));
+    assert.ok(index >= 0, `${path} : aucun schéma ne défile à 390 px, test sans objet`);
+    await page.waitForFunction((i) => document.querySelectorAll('[data-mermaid-inline]')[i].getAttribute('role') === 'region', index, { timeout: 5000 }).catch(() => {});
+    const r = await page.evaluate((i) => {
+      const c = document.querySelectorAll('[data-mermaid-inline]')[i];
       const caption = c.closest('figure').querySelector('figcaption')?.textContent.trim() ?? '';
-      return { defile: c.scrollWidth > c.clientWidth, role: c.getAttribute('role'), label: c.getAttribute('aria-label') ?? '', tab: c.tabIndex, caption };
-    });
-    assert.ok(r.defile, `${path} : le schéma ne défile pas à 390 px, test sans objet`);
+      return { role: c.getAttribute('role'), label: c.getAttribute('aria-label') ?? '', tab: c.tabIndex, caption };
+    }, index);
     assert.equal(r.role, 'region', `${path} : zone de défilement sans role=region`);
     assert.ok(r.label.includes(r.caption.slice(0, 30)), `${path} : nom « ${r.label} » sans le titre du schéma`);
     assert.equal(r.tab, 0, `${path} : zone de défilement hors de l'ordre de tabulation`);
     // Focus clavier : « Agrandir » puis la zone ; l'anneau est tracé en retrait (non rogné par la figure).
-    await page.locator(FIG).first().getByRole('button', { name: /Agrandir/ }).focus();
+    await page.locator(FIG).nth(index).getByRole('button', { name: /Agrandir/ }).focus();
     await page.keyboard.press('Tab');
     const f = await page.evaluate(() => {
       const a = document.activeElement;

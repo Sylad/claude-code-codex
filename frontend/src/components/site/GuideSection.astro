@@ -1,0 +1,35 @@
+---
+/**
+ * L9 — section d'un guide long : un <section id> (ancre partageable, suivi par le sommaire),
+ * un h2 plus grand que le texte qu'il annonce, le numéro gardé en petit surtitre mono,
+ * et sous 80em (sans colonne de sommaire) un lien de retour au sommaire.
+ */
+import type { GuideSectionInfo } from "@/data/guides";
+
+interface Props {
+  section: GuideSectionInfo;
+}
+
+const { section } = Astro.props;
+---
+
+<section id={section.id} class="scroll-mt-24 pt-12 first-of-type:pt-10" data-guide-section>
+  <header class="mb-5">
+    {section.number && (
+      <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">{section.number}</p>
+    )}
+    <h2 class="mt-1.5 text-2xl sm:text-[1.75rem] leading-tight font-semibold tracking-tight text-ink">
+      {section.title}
+    </h2>
+  </header>
+  <div class="guide-prose text-ink leading-relaxed space-y-4 [&>p]:leading-relaxed [&_strong]:text-ink [&_a]:text-claude [&_a:hover]:text-claude-soft [&_a]:underline [&_a]:underline-offset-4">
+    <slot />
+  </div>
+  <p class="xl:hidden mt-6">
+    <a
+      href="#sommaire"
+      class="inline-flex min-h-11 items-center gap-1.5 rounded px-1 font-mono text-xs uppercase tracking-wider text-ink-muted hover:text-claude focus-visible:outline-2 focus-visible:outline-claude"
+      data-retour-sommaire
+    ><span aria-hidden="true">↑</span> Revenir au sommaire</a>
+  </p>
+</section>

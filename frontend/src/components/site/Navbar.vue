@@ -218,7 +218,7 @@ const panelId = (label: string) => `panneau-${label.toLowerCase()}`;
             <button
               type="button"
               :class="[
-                'flex items-center gap-1 pointer-coarse:min-h-11 whitespace-nowrap px-2 xl:px-2.5 py-2 text-sm rounded-md transition-colors motion-safe:active:scale-95',
+                'flex items-center gap-1 cursor-pointer pointer-coarse:min-h-11 whitespace-nowrap px-2 xl:px-2.5 py-2 text-sm rounded-md transition-colors motion-safe:active:scale-95',
                 isGroupActive(link.children, props.pathname)
                   ? 'text-claude bg-claude/10'
                   : 'text-ink-muted hover:text-ink hover:bg-white/5',

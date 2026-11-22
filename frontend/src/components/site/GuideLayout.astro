@@ -1,0 +1,126 @@
+---
+/**
+ * L9 — mise en page commune des trois guides longs (revue UX r0, Nielsen 6 et 7) :
+ *  - date « Mis à jour le … » sous le héros (même bloc que les études depuis L8, format-date.mjs) ;
+ *  - sommaire : colonne fixe à gauche dès 80em (section en cours surlignée, TheoryTOC de /theory),
+ *    bloc repliable en tête d'article en dessous ;
+ *  - « Les autres guides » en bas de page.
+ * Les sections sont des GuideSection, dans l'ordre de `sections`.
+ */
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import EtudeFraicheur from "@/components/site/EtudeFraicheur.astro";
+import SommaireDetails from "@/components/site/SommaireDetails.astro";
+import TheoryTOC from "@/components/site/TheoryTOC.vue";
+import { GUIDES, type GuideSectionInfo } from "@/data/guides";
+
+type Depot = string | { nom: string; href: string };
+
+interface Props {
+  /** Titre de l'onglet (le même que le h1). */
+  title: string;
+  description: string;
+  eyebrow: string;
+  intro: string;
+  sections: GuideSectionInfo[];
+  /** Jour de la dernière mise à jour du guide (« YYYY-MM-DD »). */
+  date: string;
+  depots: Depot[];
+}
+
+const { title, description, eyebrow, intro, sections, date, depots } = Astro.props;
+// Au sommaire, seuls les numéros (« 01 ») précèdent l'intitulé ; « Avant-propos », « Conclusion » restent dans la page.
+const entries = sections.map((s) => ({ id: s.id, number: /^\d+$/.test(s.number ?? "") ? s.number! : "", title: s.title }));
+const ici = Astro.url.pathname.replace(/\/?$/, "/");
+const autres = GUIDES.filter((g) => g.href !== ici);
+---
+
+<BaseLayout title={title} description={description}>
+  <PageHero eyebrow={eyebrow} title={title} intro={intro} />
+
+  <div class="mx-auto max-w-6xl px-5 sm:px-8 py-10 xl:grid xl:grid-cols-[220px_minmax(0,44rem)] xl:justify-center xl:gap-12">
+    <aside class="hidden xl:block">
+      <TheoryTOC entries={entries} client:load />
+    </aside>
+
+    <article class="mx-auto max-w-[44rem] min-w-0 xl:mx-0" data-guide>
+      <div id="sommaire" class="scroll-mt-24 space-y-4">
+        {Astro.slots.has("fraicheur") ? (
+          <EtudeFraicheur depots={depots} date={date}><slot name="fraicheur" /></EtudeFraicheur>
+        ) : (
+          <EtudeFraicheur depots={depots} date={date} />
+        )}
+        <SommaireDetails entries={entries} masque="xl" />
+      </div>
+
+      <slot />
+
+      <nav aria-labelledby="autres-guides" class="mt-16 rounded-xl border border-white/10 bg-paper p-6">
+        <h2 id="autres-guides" class="text-xl font-semibold tracking-tight text-ink">Les autres guides</h2>
+        <ul class="mt-4 space-y-3">
+          {autres.map((g) => (
+            <li>
+              <a href={g.href} class="font-medium text-claude underline underline-offset-4 hover:text-claude-soft">{g.titre}</a>
+              <p class="text-sm text-ink-muted">{g.resume}</p>
+            </li>
+          ))}
+          <li>
+            <a href="/case-studies/aetherwx-encyclopedia/" class="font-medium text-claude underline underline-offset-4 hover:text-claude-soft">L'encyclopédie AetherWX</a>
+            <p class="text-sm text-ink-muted">Ces concepts appliqués à un vrai projet : architecture, flux GitOps et leçons.</p>
+          </li>
+        </ul>
+      </nav>
+    </article>
+  </div>
+</BaseLayout>
+
+<style is:global>
+  /* L9 (mineur m2, WCAG 1.4.8) : lignes de texte courant de 80 caractères au plus ; les blocs de code,
+     schémas et tableaux gardent la largeur de la colonne. */
+  .guide-prose > p,
+  .guide-prose > ul,
+  .guide-prose > ol {
+    max-width: 37rem;
+  }
+  /* Encadrés en petit texte (14 px) : plus de caractères par rem, colonne plus étroite. */
+  .guide-prose > p.text-sm {
+    max-width: 33rem;
+  }
+</style>
+
+<script>
+  // L9 (mineur m3) : dans un guide, un bloc de code, un schéma ASCII ou un tableau qui tient dans son cadre
+  // n'est plus un arrêt de tabulation (7 arrêts inutiles sur argocd à 1440 px) ; dès qu'il défile, il
+  // redevient une région nommée atteignable au clavier (WCAG 2.1.1), comme les schémas Mermaid (L32).
+  // Sans JavaScript, le HTML garde tabindex/role/aria-label : le bloc reste atteignable.
+  const SELECTEUR = '[data-guide] pre[role="region"], [data-guide] [data-defile]';
+  let observateur: ResizeObserver | null = null;
+
+  function regler(el: HTMLElement) {
+    if (!el.dataset.nom) el.dataset.nom = el.getAttribute("aria-label") ?? "";
+    const defile = el.scrollWidth > el.clientWidth + 1 || el.scrollHeight > el.clientHeight + 1;
+    if (defile) {
+      el.tabIndex = 0;
+      el.setAttribute("role", "region");
+      el.setAttribute("aria-label", el.dataset.nom);
+    } else {
+      el.removeAttribute("tabindex");
+      el.removeAttribute("role");
+      el.removeAttribute("aria-label");
+    }
+  }
+
+  function brancher() {
+    observateur?.disconnect();
+    const blocs = [...document.querySelectorAll<HTMLElement>(SELECTEUR)];
+    if (!blocs.length) return;
+    observateur = new ResizeObserver((entrees) => entrees.forEach((e) => regler(e.target as HTMLElement)));
+    blocs.forEach((el) => {
+      el.dataset.defile = "";
+      regler(el);
+      observateur!.observe(el);
+    });
+  }
+
+  document.addEventListener("astro:page-load", brancher);
+</script>

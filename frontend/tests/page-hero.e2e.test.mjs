@@ -12,7 +12,8 @@ import { DIST, setupBrowser, worstPixelContrast } from './lib/e2e-dist.mjs';
 const PAGES = fileURLToPath(new URL('../src/pages/', import.meta.url));
 const walk = (d) => readdirSync(d, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(join(d, e.name)) : [join(d, e.name)]));
 const routes = walk(PAGES)
-  .filter((f) => f.endsWith('.astro') && readFileSync(f, 'utf8').includes('<PageHero'))
+  // GuideLayout (L9) pose lui-même le PageHero des guides longs : ses pages en font partie.
+  .filter((f) => f.endsWith('.astro') && /<(PageHero|GuideLayout)\b/.test(readFileSync(f, 'utf8')))
   .map((f) => `/${relative(PAGES, f).split(sep).join('/').replace(/\.astro$/, '').replace(/index$/, '')}/`.replace('//', '/'));
 
 test('PageHero est utilisé par plusieurs pages (le test les trouve)', () => {

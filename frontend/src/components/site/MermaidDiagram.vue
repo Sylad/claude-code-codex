@@ -5,6 +5,9 @@ import { Maximize2, X } from "lucide-vue-next";
 const props = defineProps<{
   definition: string;
   caption?: string;
+  /** L9 : dans la page, le schéma ne dépasse pas sa taille naturelle (texte à 13 px) au lieu d'être
+   *  agrandi à la largeur du cadre (un schéma vertical étroit faisait sinon 1 300 px de haut à 1440 px). */
+  tailleNaturelle?: boolean;
 }>();
 
 const inlineContainer = ref<HTMLDivElement | null>(null);
@@ -33,6 +36,18 @@ const regionLabel = `Schéma : ${props.caption ?? "architecture"}`;
 // Taille rendue minimale du texte d'un schéma (px). En dessous, le schéma garde sa largeur
 // et défile dans son cadre plutôt que d'être réduit à la largeur de l'écran (QA 31-10 : 1,6 px).
 const MIN_TEXT_PX = 11;
+
+const FONT_FAMILY = "'JetBrains Mono', 'ui-monospace', monospace";
+
+/** Attend la police des schémas (au plus 3 s : une police bloquée ne bloque pas le dessin). */
+async function fontsReady() {
+  if (typeof document === "undefined" || !document.fonts) return;
+  const attente = Promise.all([
+    document.fonts.load("13px 'JetBrains Mono'").catch(() => []),
+    document.fonts.ready,
+  ]);
+  await Promise.race([attente, new Promise((r) => setTimeout(r, 3000))]);
+}
 
 const escapeHtml = (v: string) =>
   v.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -72,6 +87,10 @@ function injectInto(el: HTMLDivElement | null, mode: "inline" | "fullscreen" = "
       .map((n) => parseFloat(getComputedStyle(n).fontSize))
       .filter((px) => px > 0);
     const { width: viewBoxWidth, height: viewBoxHeight } = svg.viewBox.baseVal;
+    if (mode === "inline" && props.tailleNaturelle && viewBoxWidth) {
+      svg.style.maxWidth = `${Math.ceil(viewBoxWidth)}px`;
+      svg.style.marginInline = "auto";
+    }
     if (sizes.length && viewBoxWidth) {
       const ratio = MIN_TEXT_PX / Math.min(...sizes);
       svg.style.minWidth = `${Math.ceil(viewBoxWidth * ratio)}px`;
@@ -88,6 +107,10 @@ onMounted(async () => {
   const id = `mermaid-${Math.random().toString(36).slice(2, 9)}`;
   try {
     const { default: mermaid } = await import("mermaid");
+    // Revue L9 r0 (B1) : mermaid mesure chaque libellé pour dimensionner sa boîte. Mesuré avant que la
+    // police web soit chargée, le texte (rendu ensuite en JetBrains Mono) débordait de sa note de 9 px
+    // de chaque côté, glyphes hors cadre à ~1,5:1. On dessine une fois la police prête (ou abandonnée).
+    await fontsReady();
     mermaid.initialize({
       startOnLoad: false,
       securityLevel: "loose",
@@ -96,8 +119,13 @@ onMounted(async () => {
       layout: "dagre",
       look: "classic",
       theme: "base",
+      // Le diagramme de séquence relit la police et la taille au niveau racine de la configuration
+      // (setConf(getConfig()) de mermaid 12) : elles écrasent celles de `sequence`. Sans elles, ses libellés
+      // étaient dessinés en 16 px alors que leurs boîtes étaient mesurées en 13 px (B1 de la revue L9 r0).
+      fontFamily: FONT_FAMILY,
+      fontSize: 13,
       themeVariables: {
-        fontFamily: "'JetBrains Mono', 'ui-monospace', monospace",
+        fontFamily: FONT_FAMILY,
         fontSize: "13px",
         background: "transparent",
         primaryColor: "rgba(217, 119, 87, 0.12)",
@@ -115,6 +143,35 @@ onMounted(async () => {
         edgeLabelBackground: "rgba(20,20,20,0.85)",
         clusterBkg: "rgba(255,255,255,0.02)",
         clusterBorder: "rgba(217, 119, 87, 0.25)",
+        // Notes du diagramme de séquence aux couleurs du site (le jaune par défaut de mermaid sortait de la charte).
+        noteBkgColor: "#2a201c",
+        noteBorderColor: "#a2604a",
+        noteTextColor: "#e8e6e3",
+        actorBkg: "#241c19",
+        actorBorder: "#a2604a",
+        actorTextColor: "#e8e6e3",
+        signalColor: "#c98a73",
+        signalTextColor: "#e8e6e3",
+        sequenceNumberColor: "#141413",
+      },
+      // Le diagramme de séquence a ses propres polices (« trebuchet ms » par défaut) : la même partout,
+      // sinon les boîtes sont mesurées avec une police et le texte dessiné avec une autre (L9 r0, B1).
+      sequence: {
+        actorFontFamily: FONT_FAMILY,
+        noteFontFamily: FONT_FAMILY,
+        messageFontFamily: FONT_FAMILY,
+        // Même taille aux deux étapes : sans elle, mermaid mesure les libellés à 13 px (fontSize du thème)
+        // et les dessine à 16 px (défaut du diagramme de séquence) — la cause réelle du débord de B1.
+        actorFontSize: 13,
+        noteFontSize: 13,
+        messageFontSize: 13,
+        useMaxWidth: false,
+        wrap: false,
+        // Acteurs plus serrés (défauts : 150 px de large, 50 px d'écart) : le schéma de Cloudflare
+        // (5 acteurs) tient dans la colonne de texte de 702 px sans passer sous MIN_TEXT_PX (L9 r0, M2).
+        width: 110,
+        actorMargin: 24,
+        diagramMarginX: 8,
       },
       flowchart: {
         curve: "basis",
@@ -217,7 +274,7 @@ onBeforeUnmount(() => {
     >
       <span class="inline-block w-2 h-2 rounded-full bg-claude/70"></span>
       <span
-        class="font-mono text-[10px] uppercase tracking-wider text-ink-muted"
+        class="font-mono text-[0.625rem] uppercase tracking-wider text-ink-muted"
       >
         Architecture
       </span>
@@ -226,7 +283,7 @@ onBeforeUnmount(() => {
         ref="openButton"
         type="button"
         aria-haspopup="dialog"
-        class="ml-auto inline-flex items-center gap-1 px-2 py-1 rounded cursor-pointer text-[10px] font-mono uppercase tracking-wider text-ink-muted hover:text-claude hover:bg-white/5 transition-colors motion-safe:active:scale-95"
+        class="ml-auto inline-flex items-center gap-1 px-2 py-1 rounded cursor-pointer whitespace-nowrap text-[0.625rem] font-mono uppercase tracking-wider text-ink-muted hover:text-claude hover:bg-white/5 transition-colors motion-safe:active:scale-95"
         :title="'Afficher en grand'"
         @click="open"
       >

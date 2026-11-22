@@ -4,6 +4,7 @@ import PageHero from "@/components/site/PageHero.astro";
 import RevueContenu from "@/components/site/RevueContenu.astro";
 import TheorySection from "@/components/site/TheorySection.astro";
 import TheoryTOC from "@/components/site/TheoryTOC.vue";
+import SommaireDetails from "@/components/site/SommaireDetails.astro";
 import { sections } from "@/data/theory";
 
 const tocEntries = sections.map((s) => ({
@@ -35,30 +36,7 @@ const tocEntries = sections.map((s) => ({
 
       <article class="min-w-0">
         {/* Sommaire du téléphone et de la tablette : la colonne de gauche n'existe qu'à partir de lg (64em). */}
-        <details
-          class="group lg:hidden rounded-lg border border-white/10 bg-paper"
-          data-sommaire-mobile
-        >
-          <summary
-            class="flex min-h-11 cursor-pointer list-none items-center px-4 [&::-webkit-details-marker]:hidden font-mono text-xs uppercase tracking-[0.2em] text-ink-muted focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-claude"
-          >
-            <span aria-hidden="true" class="mr-2 inline-block text-claude transition-transform motion-reduce:transition-none group-open:rotate-90">▸</span>
-            Sommaire · {tocEntries.length} sections
-          </summary>
-          <ol class="border-t border-white/5 px-2 py-2">
-            {tocEntries.map((entry) => (
-              <li>
-                <a
-                  href={`#${entry.id}`}
-                  class="flex min-h-11 items-center gap-2 rounded px-2 text-sm text-ink-muted hover:text-ink focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-claude"
-                >
-                  <span class="shrink-0 whitespace-nowrap font-mono text-[11px] text-ink/60">{entry.number}</span>
-                  <span>{entry.title}</span>
-                </a>
-              </li>
-            ))}
-          </ol>
-        </details>
+        <SommaireDetails entries={tocEntries} masque="lg" />
 
         {sections.map((section) => (
           <TheorySection section={section} />

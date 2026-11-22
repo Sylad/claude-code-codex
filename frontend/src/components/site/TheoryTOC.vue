@@ -39,7 +39,7 @@ onUnmounted(() => {
     class="sticky top-24 max-h-[calc(100dvh-7rem)] overflow-y-auto pr-2"
   >
     <p
-      class="font-mono text-[10px] uppercase tracking-[0.2em] text-ink/60 mb-3"
+      class="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-ink/60 mb-3"
     >
       Sommaire
     </p>
@@ -55,7 +55,7 @@ onUnmounted(() => {
               : 'border-transparent text-ink-muted hover:text-ink hover:border-white/30',
           ]"
         >
-          <span class="whitespace-nowrap font-mono text-[11px] text-ink/60 mr-1.5">{{
+          <span v-if="entry.number" class="whitespace-nowrap font-mono text-[11px] text-ink/60 mr-1.5">{{
             entry.number
           }}</span>
           <span>{{ entry.title }}</span>

@@ -35,7 +35,7 @@ const globalArchi = `flowchart TB
 
     subgraph GH["🐙 GitHub"]
       REPO1[maritime-atlas · code]
-      REPO2[developpeur-gitops · charts]
+      REPO2[aetherwx-gitops · charts]
       GHCR[GHCR registry<br/>ghcr.io/sylad/*]
       ACTIONS[GH Actions<br/>build + push]
       REPO1 -->|push| ACTIONS
@@ -68,7 +68,7 @@ const gitopsFlow = `sequenceDiagram
     participant CODE as 🟦 maritime-atlas<br/>(repo code)
     participant GHA as 🟪 GH Actions
     participant GHCR as 📦 GHCR
-    participant GOPS as 🟧 developpeur-gitops<br/>(repo charts)
+    participant GOPS as 🟧 aetherwx-gitops<br/>(repo charts)
     participant ARGO as 🚀 ArgoCD
     participant CLU as ☸️ Cluster k3s
 
@@ -560,7 +560,7 @@ const tokenFlow = `flowchart LR
           premiers chars du commit).
         </li>
         <li>
-          <strong class="text-ink">developpeur-gitops</strong> · les charts
+          <strong class="text-ink">aetherwx-gitops</strong> · les charts
           Helm + les <code>values.yaml</code>. Quand tu bumpes un tag dans
           ce repo et que tu push, ArgoCD le voit et synchronise le cluster
           (webhook GitHub en ~2 sec sur le dépôt de code ; polling 30 s sur

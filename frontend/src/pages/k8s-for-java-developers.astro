@@ -1,27 +1,62 @@
 ---
-import BaseLayout from "@/layouts/BaseLayout.astro";
-import PageHero from "@/components/site/PageHero.astro";
-import CaseStudySection from "@/components/site/CaseStudySection.astro";
+import GuideLayout from "@/components/site/GuideLayout.astro";
+import GuideSection from "@/components/site/GuideSection.astro";
+
+import { sectionsParId } from "@/data/guides";
+
+const sections = [
+  { id: "avant-propos", number: "Avant-propos", title: "Pourquoi cette page existe" },
+  { id: "mental-model", number: "01", title: "Le mental model d'ensemble" },
+  { id: "traduction", number: "02", title: "Le tableau de traduction" },
+  { id: "outillage", number: "03", title: "L'outillage : Helm, ArgoCD, kubectl" },
+  { id: "communication", number: "04", title: "Comment ça communique (service mesh light)" },
+  { id: "yaml", number: "05", title: "Le piège du débutant : YAML hell vs nettoyage Spring" },
+  { id: "stockage", number: "06", title: "Le storage : oublie le filesystem du serveur" },
+  { id: "workflow", number: "07", title: "Le workflow quotidien post-setup" },
+  { id: "pieges", number: "08", title: "Les 5 pièges que j'aurais voulu connaître" },
+  { id: "conclusion", number: "Conclusion", title: "Tu peux y arriver" },
+];
+const s = sectionsParId(sections);
+// Dépôts dont le guide décrit l'état (bloc de date, comme les études).
+// Le tableau de traduction (section 02), rendu en tableau dès 40em et en cartes en dessous.
+// `role` est du HTML écrit ici (un <code> au plus), jamais une donnée extérieure.
+const TRADUCTION = [
+  { k8s: "Pod", java: "JVM process", role: "Unité d'exécution minimale (1+ containers Docker partageant network & storage)" },
+  { k8s: "Container", java: ".jar exécutable", role: "L'image Docker = ton binaire packagé avec ses deps" },
+  { k8s: "Deployment", java: "@Service + replication", role: "Déclare \"je veux N pods de ce container\", K8s les maintient" },
+  { k8s: "ReplicaSet", java: "JEE cluster manager", role: "Géré auto par Deployment, garantit N pods identiques running" },
+  { k8s: "Service", java: "DNS + load-balancer Spring Cloud", role: "Adresse stable interne (ClusterIP) qui distribue les requêtes sur les N pods" },
+  { k8s: "Ingress", java: "nginx / Apache reverse-proxy", role: "Reverse-proxy déclaratif : \"host X.example.com → Service Y, path /api → Service Z\"" },
+  { k8s: "ConfigMap", java: "application-prod.yml", role: "Config non-sensible injectée dans les pods en env vars ou fichiers" },
+  { k8s: "Secret", java: ".env / Vault / @PropertySource encrypted", role: "Pareil que ConfigMap mais base64-encoded + RBAC restreint" },
+  { k8s: "PersistentVolumeClaim (PVC)", java: "DataSource JDBC", role: "Demande de stockage persistant ; K8s alloue un PV qui survit aux restarts pod" },
+  { k8s: "StorageClass", java: "JDBC URL pool + driver", role: "\"Comment provisionner le stockage\" (local-path RWO, Longhorn RWX, NFS, AWS EBS, etc.)" },
+  { k8s: "Namespace", java: "Java package + profile", role: "Isolation logique : on met \"maritime\", \"preprod\", \"argocd\" séparés pour gérer accès et quotas" },
+  { k8s: "CRD (Custom Resource)", java: "@Entity + Spring repository", role: "Tu déclares ton propre type de ressource (ex: <code class=\"font-mono\">RabbitmqCluster</code>) avec son operator" },
+  { k8s: "Operator", java: "@PostConstruct + scheduled reconciler", role: "Daemon qui watch les CRD et fait du \"réconciliation continue\" : \"l'état réel correspond-il au YAML ?\"" },
+  { k8s: "Job / CronJob", java: "Quartz Scheduler", role: "Une exécution one-shot (Job) ou récurrente (CronJob) — utile pour batches, migrations DB" },
+  { k8s: "StatefulSet", java: "Cluster JEE stateful (replica DB)", role: "Comme Deployment mais avec identité stable (pod-0, pod-1) et stockage par pod (pour DB, Kafka, etc.)" },
+  { k8s: "ServiceAccount + RBAC", java: "Spring Security + @PreAuthorize", role: "Identité d'un pod + ce qu'il a le droit de faire dans le cluster (lire pods, écrire configs, etc.)" },
+];
+const DEPOTS = ["maritime-atlas", "aetherwx-gitops"];
 ---
 
-<BaseLayout
+<GuideLayout
   title="Kubernetes pour développeurs Java"
-  description="Comprendre l'écosystème Kubernetes (k3s, ArgoCD, Helm, ingress, PVC, secrets) en partant des analogies Java/Spring/Maven. Référence pratique tirée de la migration AetherWX en 14h."
+  description="Comprendre l'écosystème Kubernetes (k3s, ArgoCD, Helm, ingress, PVC, secrets) en partant des analogies Java/Spring/Maven. Référence pratique tirée de la migration AetherWX en 14 h."
+  eyebrow="Tuto · de Java à Kubernetes"
+  intro="Tout ce vocabulaire K8s qui floute (Pod, Deployment, Helm, ArgoCD, Ingress, PVC, ConfigMap...) traduit en concepts familiers à un dev Spring Boot. Écrit en bossant moi-même la migration AetherWX vers k3s en mai 2026 — 21 ans de Java derrière, mais novice K8s. Si t'as l'expérience JEE/Spring/Maven, t'as déjà 80 % du modèle mental, juste un vocabulaire différent."
+  sections={sections}
+  date="2026-11-22"
+  depots={DEPOTS}
 >
-  <PageHero
-    eyebrow="Tutorial · Java → K8s translator"
-    title="Kubernetes pour développeur Java"
-    intro="Tout ce vocabulaire K8s qui floute (Pod, Deployment, Helm, ArgoCD, Ingress, PVC, ConfigMap...) traduit en concepts familiers à un dev Spring Boot. Écrit en bossant moi-même la migration AetherWX vers k3s en mai 2026 — 21 ans de Java derrière, mais novice K8s. Si t'as l'expérience JEE/Spring/Maven, t'as déjà 80% du modèle mental, juste un vocabulaire différent."
-  />
 
-  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12 space-y-12">
-
-    <CaseStudySection eyebrow="Pourquoi cette page existe">
+    <GuideSection section={s["avant-propos"]}>
       <p>
         Je suis dev Java/Web depuis 2005. J'ai migré mon application
         maritime (AetherWX, ~20 microservices Spring-Boot + Python +
         nginx) d'un setup docker-compose mono-serveur vers un cluster
-        Kubernetes en 14 heures. Le code applicatif lui-même n'a quasi
+        Kubernetes en 14 heures (en mai 2026). Le code applicatif lui-même n'a quasi
         pas changé. Ce qui a changé c'est <strong>comment</strong> les
         services sont déclarés, déployés, scalés, networkés, monitorés.
       </p>
@@ -31,9 +66,9 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         partage cette carte de traduction ici — peut-être qu'elle aidera
         un autre dev Java qui débute K8s.
       </p>
-    </CaseStudySection>
+    </GuideSection>
 
-    <CaseStudySection eyebrow="1. Le mental model d'ensemble">
+    <GuideSection section={s["mental-model"]}>
       <p>
         En Java/Spring, ton runtime c'est une <strong>JVM</strong>
         (souvent dans un .jar / .war) qui tourne sur un serveur (Tomcat,
@@ -64,10 +99,26 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         pour y arriver et y rester"). C'est un changement de paradigme
         plus fort que le passage à Spring depuis JEE manuel.
       </p>
-    </CaseStudySection>
+    </GuideSection>
 
-    <CaseStudySection eyebrow="2. Le tableau de traduction">
-      <div tabindex="0" role="region" aria-label="Tableau de traduction Kubernetes et Java/Spring" class="overflow-x-auto -mx-4 sm:mx-0">
+    <GuideSection section={s["traduction"]}>
+      {/* L9 (revue UX r0, M3) : sous 40em, une carte par ligne (le tableau faisait 452 px dans 367 px à 390 px
+           et coupait « Ce qu'il fait vraiment ») ; le tableau à partir de 40em. Mêmes données. */}
+      <ul class="sm:hidden space-y-3" aria-label="Tableau de traduction Kubernetes et Java/Spring" data-traduction-cartes>
+        {TRADUCTION.map((l) => (
+          <li class="rounded-lg border border-white/10 bg-paper p-4">
+            <dl>
+              <dt class="sr-only">Concept K8s</dt>
+              <dd class="font-mono font-medium text-claude">{l.k8s}</dd>
+              <dt class="mt-2 text-xs uppercase tracking-wider text-ink-muted">≈ Java/Spring</dt>
+              <dd class="font-mono text-sm text-ink">{l.java}</dd>
+              <dt class="mt-2 text-xs uppercase tracking-wider text-ink-muted">Ce qu'il fait vraiment</dt>
+              <dd class="text-sm text-ink [&_code]:font-mono" set:html={l.role} />
+            </dl>
+          </li>
+        ))}
+      </ul>
+      <div tabindex="0" role="region" aria-label="Tableau de traduction Kubernetes et Java/Spring" class="hidden sm:block overflow-x-auto" data-defile>
         <table class="w-full text-sm border-collapse">
           <thead>
             <tr class="border-b border-zinc-700">
@@ -77,96 +128,23 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
             </tr>
           </thead>
           <tbody class="text-zinc-300">
-            <tr class="border-b border-zinc-800">
-              <td class="p-2 font-mono">Pod</td>
-              <td class="p-2 font-mono">JVM process</td>
-              <td class="p-2">Unité d'exécution minimale (1+ containers Docker partageant network & storage)</td>
-            </tr>
-            <tr class="border-b border-zinc-800">
-              <td class="p-2 font-mono">Container</td>
-              <td class="p-2 font-mono">.jar exécutable</td>
-              <td class="p-2">L'image Docker = ton binaire packagé avec ses deps</td>
-            </tr>
-            <tr class="border-b border-zinc-800">
-              <td class="p-2 font-mono">Deployment</td>
-              <td class="p-2 font-mono">@Service + replication</td>
-              <td class="p-2">Déclare "je veux N pods de ce container", K8s les maintient</td>
-            </tr>
-            <tr class="border-b border-zinc-800">
-              <td class="p-2 font-mono">ReplicaSet</td>
-              <td class="p-2 font-mono">JEE cluster manager</td>
-              <td class="p-2">Géré auto par Deployment, garantit N pods identiques running</td>
-            </tr>
-            <tr class="border-b border-zinc-800">
-              <td class="p-2 font-mono">Service</td>
-              <td class="p-2 font-mono">DNS + load-balancer Spring Cloud</td>
-              <td class="p-2">Adresse stable interne (ClusterIP) qui distribue les requêtes sur les N pods</td>
-            </tr>
-            <tr class="border-b border-zinc-800">
-              <td class="p-2 font-mono">Ingress</td>
-              <td class="p-2 font-mono">nginx / Apache reverse-proxy</td>
-              <td class="p-2">Reverse-proxy déclaratif : "host X.example.com → Service Y, path /api → Service Z"</td>
-            </tr>
-            <tr class="border-b border-zinc-800">
-              <td class="p-2 font-mono">ConfigMap</td>
-              <td class="p-2 font-mono">application-prod.yml</td>
-              <td class="p-2">Config non-sensible injectée dans les pods en env vars ou fichiers</td>
-            </tr>
-            <tr class="border-b border-zinc-800">
-              <td class="p-2 font-mono">Secret</td>
-              <td class="p-2 font-mono">.env / Vault / @PropertySource encrypted</td>
-              <td class="p-2">Pareil que ConfigMap mais base64-encoded + RBAC restreint</td>
-            </tr>
-            <tr class="border-b border-zinc-800">
-              <td class="p-2 font-mono">PersistentVolumeClaim (PVC)</td>
-              <td class="p-2 font-mono">DataSource JDBC</td>
-              <td class="p-2">Demande de stockage persistant ; K8s alloue un PV qui survit aux restarts pod</td>
-            </tr>
-            <tr class="border-b border-zinc-800">
-              <td class="p-2 font-mono">StorageClass</td>
-              <td class="p-2 font-mono">JDBC URL pool + driver</td>
-              <td class="p-2">"Comment provisionner le stockage" (local-path RWO, Longhorn RWX, NFS, AWS EBS, etc.)</td>
-            </tr>
-            <tr class="border-b border-zinc-800">
-              <td class="p-2 font-mono">Namespace</td>
-              <td class="p-2 font-mono">Java package + profile</td>
-              <td class="p-2">Isolation logique : on met "maritime", "preprod", "argocd" séparés pour gérer accès et quotas</td>
-            </tr>
-            <tr class="border-b border-zinc-800">
-              <td class="p-2 font-mono">CRD (Custom Resource)</td>
-              <td class="p-2 font-mono">@Entity + Spring repository</td>
-              <td class="p-2">Tu déclares ton propre type de ressource (ex: <code class="font-mono text-xs">RabbitmqCluster</code>) avec son operator</td>
-            </tr>
-            <tr class="border-b border-zinc-800">
-              <td class="p-2 font-mono">Operator</td>
-              <td class="p-2 font-mono">@PostConstruct + scheduled reconciler</td>
-              <td class="p-2">Daemon qui watch les CRD et fait du "réconciliation continue" : "l'état réel correspond-il au YAML ?"</td>
-            </tr>
-            <tr class="border-b border-zinc-800">
-              <td class="p-2 font-mono">Job / CronJob</td>
-              <td class="p-2 font-mono">Quartz Scheduler</td>
-              <td class="p-2">Une exécution one-shot (Job) ou récurrente (CronJob) — utile pour batches, migrations DB</td>
-            </tr>
-            <tr class="border-b border-zinc-800">
-              <td class="p-2 font-mono">StatefulSet</td>
-              <td class="p-2 font-mono">Cluster JEE stateful (replica DB)</td>
-              <td class="p-2">Comme Deployment mais avec identité stable (pod-0, pod-1) et stockage par pod (pour DB, Kafka, etc.)</td>
-            </tr>
-            <tr class="border-b border-zinc-800">
-              <td class="p-2 font-mono">ServiceAccount + RBAC</td>
-              <td class="p-2 font-mono">Spring Security + @PreAuthorize</td>
-              <td class="p-2">Identité d'un pod + ce qu'il a le droit de faire dans le cluster (lire pods, écrire configs, etc.)</td>
-            </tr>
+            {TRADUCTION.map((l) => (
+              <tr class="border-b border-zinc-800">
+                <td class="p-2 font-mono">{l.k8s}</td>
+                <td class="p-2 font-mono">{l.java}</td>
+                <td class="p-2 [&_code]:font-mono" set:html={l.role} />
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
-    </CaseStudySection>
+    </GuideSection>
 
-    <CaseStudySection eyebrow="3. L'outillage : Helm, ArgoCD, kubectl">
+    <GuideSection section={s["outillage"]}>
       <p>
         Si t'as fait du Maven / Gradle, tu sais que :
-        <code class="text-xs font-mono">pom.xml</code> déclare ton
-        application. <code class="text-xs font-mono">mvn package</code>
+        <code class="font-mono text-[0.9em]">pom.xml</code> déclare ton
+        application. <code class="font-mono text-[0.9em]">mvn package</code>
         build le .jar. Un repository (Nexus, JFrog, Maven Central)
         stocke les artifacts.
       </p>
@@ -177,10 +155,10 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
       <ul class="list-disc list-inside text-zinc-300 space-y-2 ml-4 mt-2">
         <li>
           <strong>Helm chart</strong> = pom.xml. Un dossier
-          <code class="text-xs font-mono">templates/*.yaml</code> avec
+          <code class="font-mono text-[0.9em]">templates/*.yaml</code> avec
           des placeholders Go template, plus un
-          <code class="text-xs font-mono">values.yaml</code> = ton
-          <code class="text-xs font-mono">application-prod.yml</code>.
+          <code class="font-mono text-[0.9em]">values.yaml</code> = ton
+          <code class="font-mono text-[0.9em]">application-prod.yml</code>.
         </li>
         <li>
           <strong>helm install / upgrade</strong> = mvn deploy. Rend
@@ -195,7 +173,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         <li>
           <strong>kubectl</strong> = la CLI que tu utilises pour
           interroger ou modifier le cluster (lister pods, exec dans un
-          pod, voir les logs, etc.). C'est <code class="text-xs font-mono">jconsole + jstack + jvisualvm</code>
+          pod, voir les logs, etc.). C'est <code class="font-mono text-[0.9em]">jconsole + jstack + jvisualvm</code>
           mais pour K8s.
         </li>
         <li>
@@ -205,25 +183,25 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
           Git. C'est exactement le GitOps : "Git est la source de
           vérité, le cluster doit y converger". Equivalent Java : un
           Jenkins ou GitHub Actions qui ferait
-          <code class="text-xs font-mono">helm upgrade</code> à chaque
+          <code class="font-mono text-[0.9em]">helm upgrade</code> à chaque
           push.
         </li>
       </ul>
-    </CaseStudySection>
+    </GuideSection>
 
-    <CaseStudySection eyebrow="4. Comment ça communique (Service mesh light)">
+    <GuideSection section={s["communication"]}>
       <p>
         En Spring/JEE pour qu'un service appelle un autre tu fais
-        <code class="text-xs font-mono">@Autowired</code> ou
-        <code class="text-xs font-mono">RestTemplate.getForObject("http://internal-host/api", ...)</code>.
+        <code class="font-mono text-[0.9em]">@Autowired</code> ou
+        <code class="font-mono text-[0.9em]">RestTemplate.getForObject("http://internal-host/api", ...)</code>.
         L'URL "internal-host" est résolue par ton DNS d'entreprise.
       </p>
       <p>
         En K8s, le DNS est <strong>natif au cluster</strong>. Chaque
         Service que tu déclares prend automatiquement un nom DNS :
-        <code class="text-xs font-mono">&lt;service-name&gt;.&lt;namespace&gt;.svc.cluster.local</code>.
+        <code class="font-mono text-[0.9em]">&lt;service-name&gt;.&lt;namespace&gt;.svc.cluster.local</code>.
         Donc depuis un pod du namespace "maritime", appeler
-        <code class="text-xs font-mono">http://api:3010/health</code>
+        <code class="font-mono text-[0.9em]">http://api:3010/health</code>
         résout vers le Service "api" du même namespace, qui
         load-balance sur les pods derrière.
       </p>
@@ -234,15 +212,15 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         port 80". Le contrôleur Ingress (généralement nginx en backstage)
         applique la règle et fait le reverse-proxy. Conceptuellement
         identique à un nginx avec des
-        <code class="text-xs font-mono">location /</code> blocks, mais
+        <code class="font-mono text-[0.9em]">location /</code> blocks, mais
         géré par K8s.
       </p>
-    </CaseStudySection>
+    </GuideSection>
 
-    <CaseStudySection eyebrow="5. Le piège du débutant : YAML hell vs nettoyage Spring">
+    <GuideSection section={s["yaml"]}>
       <p>
         En Spring tu as
-        <code class="text-xs font-mono">@SpringBootApplication</code>
+        <code class="font-mono text-[0.9em]">@SpringBootApplication</code>
         qui scanne ton classpath et configure auto. En K8s, <strong>il
         n'y a pas d'auto-config</strong>. Tu dois TOUT déclarer
         explicitement : le Deployment, le Service, l'Ingress, la PVC,
@@ -260,15 +238,15 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         Apprends Helm vite. C'est ce qui transforme K8s de "verbeux et
         pénible" à "maintenable et productif".
       </p>
-    </CaseStudySection>
+    </GuideSection>
 
-    <CaseStudySection eyebrow="6. Le storage : oublie le filesystem du serveur">
+    <GuideSection section={s["stockage"]}>
       <p>
         En Java traditionnel, ton appli écrit dans
-        <code class="text-xs font-mono">/var/lib/myapp/data/</code> et
+        <code class="font-mono text-[0.9em]">/var/lib/myapp/data/</code> et
         tu pries pour que ce répertoire survive aux redémarrages. En
         Docker tu utilises des volumes nommés
-        (<code class="text-xs font-mono">myapp-data:/data</code>). En
+        (<code class="font-mono text-[0.9em]">myapp-data:/data</code>). En
         K8s c'est plus formel : <strong>PVC + PV + StorageClass</strong>.
       </p>
       <ul class="list-disc list-inside text-zinc-300 space-y-2 ml-4">
@@ -285,11 +263,11 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         <li>
           <strong>StorageClass</strong> : la "recette" pour provisionner
           le PV. Ex :
-          <code class="text-xs font-mono">local-path</code> = un
+          <code class="font-mono text-[0.9em]">local-path</code> = un
           répertoire sur le node (rapide, mais RWO seulement).
-          <code class="text-xs font-mono">longhorn</code> = block
+          <code class="font-mono text-[0.9em]">longhorn</code> = block
           storage distribué K8s-natif (RWX OK).
-          <code class="text-xs font-mono">nfs-client</code> = un share
+          <code class="font-mono text-[0.9em]">nfs-client</code> = un share
           NFS partagé.
         </li>
         <li>
@@ -299,22 +277,22 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
       </ul>
       <p>
         Sur AetherWX, weather-fetcher écrit des GeoTIFF dans
-        <code class="text-xs font-mono">/coverage/</code>, GeoServer
+        <code class="font-mono text-[0.9em]">/coverage/</code>, GeoServer
         les lit pour faire du WMS. Donc 2 pods → 1 volume partagé →
         RWX obligatoire. k3s par défaut ne fait que RWO, d'où l'install
         Longhorn pour avoir le RWX.
       </p>
-    </CaseStudySection>
+    </GuideSection>
 
-    <CaseStudySection eyebrow="7. Le workflow quotidien post-setup">
+    <GuideSection section={s["workflow"]}>
       <p>
-        Une fois le cluster bootstrappé (~1h) et le chart Helm écrit
+        Une fois le cluster bootstrappé (~1 h) et le chart Helm écrit
         (~30 min par service complexe), le workflow devient extrêmement
         agréable :
       </p>
       <ol class="list-decimal list-inside text-zinc-300 space-y-2 ml-4">
         <li>Tu modifies du code Java/TypeScript/Python comme d'habitude</li>
-        <li><code class="text-xs font-mono">git commit + git push main</code></li>
+        <li><code class="font-mono text-[0.9em]">git commit + git push main</code></li>
         <li>GitHub Actions build l'image Docker, push sur GHCR (~2-5 min)</li>
         <li>Tu bumps le tag dans values.yaml + commit + push</li>
         <li>ArgoCD détecte le nouveau commit dans le repo gitops</li>
@@ -323,40 +301,40 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
       </ol>
       <p>
         Tu n'as plus jamais à ssh sur un serveur, copier un .jar, faire
-        un <code class="text-xs font-mono">systemctl restart</code>.
+        un <code class="font-mono text-[0.9em]">systemctl restart</code>.
         Tout vit dans Git.
       </p>
-    </CaseStudySection>
+    </GuideSection>
 
-    <CaseStudySection eyebrow="8. Les 5 pièges que j'aurais voulu connaître">
+    <GuideSection section={s["pieges"]}>
       <ol class="list-decimal list-inside text-zinc-300 space-y-3 ml-4">
         <li>
           <strong>Liveness probe trop agressive</strong> = pod en
           crashloop avant même d'avoir fini son boot. Sur AetherWX,
-          GeoServer met 90s pour démarrer Tomcat ; sans
-          <code class="text-xs font-mono">startupProbe</code> avec
-          <code class="text-xs font-mono">failureThreshold: 60</code>,
-          K8s le tue à 30s en plein boot.
+          GeoServer met 90 s pour démarrer Tomcat ; sans
+          <code class="font-mono text-[0.9em]">startupProbe</code> avec
+          <code class="font-mono text-[0.9em]">failureThreshold: 60</code>,
+          K8s le tue à 30 s en plein boot.
         </li>
         <li>
           <strong>Resource limits trop bas</strong> = OOMKilled
           surprises. Une JVM Java sans
-          <code class="text-xs font-mono">-Xmx</code> alignée avec le
+          <code class="font-mono text-[0.9em]">-Xmx</code> alignée avec le
           limit K8s OOMKill bizarrement. Toujours setter
-          <code class="text-xs font-mono">-Xmx=80% du limit</code>.
+          <code class="font-mono text-[0.9em]">-Xmx=80% du limit</code>.
         </li>
         <li>
           <strong>imagePullPolicy par défaut = IfNotPresent</strong> :
           si tu rebuilds une image avec le MÊME tag (genre
-          <code class="text-xs font-mono">:latest</code>), K8s utilisera
+          <code class="font-mono text-[0.9em]">:latest</code>), K8s utilisera
           la version cached. Toujours bumper le tag (
-          <code class="text-xs font-mono">:v1.2.3</code> ou
-          <code class="text-xs font-mono">:sha-abc1234</code>) pour
+          <code class="font-mono text-[0.9em]">:v1.2.3</code> ou
+          <code class="font-mono text-[0.9em]">:sha-abc1234</code>) pour
           forcer le pull.
         </li>
         <li>
           <strong>ArgoCD selfHeal=true réverte tes
-          <code class="text-xs font-mono">kubectl set image</code></strong>
+          <code class="font-mono text-[0.9em]">kubectl set image</code></strong>
           manuels. C'est conçu pour ça : si Git est la source de vérité,
           les modifs out-of-band sont du drift à corriger. Toujours
           passer par Git.
@@ -366,13 +344,13 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
           par défaut de k3s ne supporte que RWO. Si tu as besoin de
           partager un volume entre pods (souvent le cas), installe
           Longhorn ou un NFS provisioner. Sinon tu galères avec des
-          <code class="text-xs font-mono">hostPath</code> en
+          <code class="font-mono text-[0.9em]">hostPath</code> en
           single-node (anti-pattern accepté seulement en home-lab).
         </li>
       </ol>
-    </CaseStudySection>
+    </GuideSection>
 
-    <CaseStudySection eyebrow="Conclusion · Tu peux y arriver">
+    <GuideSection section={s["conclusion"]}>
       <p>
         Si tu as bossé Spring Boot pendant plusieurs années, tu connais
         déjà les bonnes pratiques : <strong>découplage</strong>,
@@ -406,12 +384,11 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         <strong class="text-ink">Pour voir ces concepts appliqués sur
         un projet réel :</strong>
         <a href="/case-studies/aetherwx-encyclopedia">l'encyclopédie
-        AetherWX</a> détaille l'archi dual-cluster, les 17 services,
+        AetherWX</a> détaille l'architecture d'aujourd'hui (un seul cluster k3s,
+        qui porte la prod et la démo), les 17 services,
         les 6 tokens, le flux GitOps complet, et les 5 leçons qui ont
         coûté 6 heures de debug. 4 diagrammes Mermaid. Lecture
         recommandée après cette page.
       </p>
-    </CaseStudySection>
-
-  </section>
-</BaseLayout>
+    </GuideSection>
+</GuideLayout>

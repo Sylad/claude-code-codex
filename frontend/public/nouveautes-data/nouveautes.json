@@ -1,7 +1,30 @@
 {
   "project": "claude-code-codex",
-  "generated": "2026-11-22 15:42",
+  "generated": "2026-11-22 17:26",
   "entries": [
+    {
+      "slug": "2026-11-22-guides-longs-un-sommaire-des-schemas-entiers-et-des-faits-a-jour",
+      "title": "Guides longs : un sommaire, des schémas entiers et des faits à jour",
+      "date": "2026-11-22",
+      "lots": [
+        "L9"
+      ],
+      "captures": [
+        "captures/L9-cloudflare-sequence-avant-1440.png",
+        "captures/L9-cloudflare-sequence-apres-1440.png",
+        "captures/L9-k8s-tableau-avant-390.png",
+        "captures/L9-k8s-tableau-apres-390.png",
+        "captures/L9-argocd-sommaire-1440.png"
+      ],
+      "alts": [
+        "Avant : sur un grand écran, le schéma du chemin d'une requête dans le guide Cloudflare est coupé à droite et sa note jaune déborde de son cadre",
+        "Après : le même schéma tient en entier dans son cadre, ses huit étapes sont numérotées et la note sombre reste dans sa boîte ; le sommaire du guide est à gauche",
+        "Avant : sur un téléphone, le tableau de traduction Kubernetes vers Java est coupé à droite, la troisième colonne illisible",
+        "Après : sur un téléphone, chaque ligne du tableau devient une carte : le concept Kubernetes, son équivalent Java et ce qu'il fait vraiment",
+        "Le guide ArgoCD sur un grand écran, avec son sommaire à gauche qui suit la lecture et des titres de section plus grands que le texte"
+      ],
+      "html": "<p>Les trois guides longs — <a href=\"/k8s-for-java-developers/\">Kubernetes pour développeurs Java</a>, <a href=\"/argocd-k8s-pour-les-nuls/\">ArgoCD + K8s pour les nuls</a> et <a href=\"/cloudflare-pour-les-nuls/\">Cloudflare pour les nuls</a> — se parcourent plus facilement :</p>\n<ul><li>chaque guide a un sommaire : en colonne à gauche sur un grand écran, qui suit la lecture, et repliable en haut de page ailleurs ; chaque section a son lien et un « Revenir au sommaire » ;</li><li>les titres de section sont de vrais titres, plus grands que le texte, et les lignes restent courtes ;</li><li>le schéma du chemin d'une requête du guide Cloudflare tient en entier, ses étapes sont numérotées et sa légende dit qui fait quoi ; sa note ne déborde plus ;</li><li>sur un téléphone, le tableau Kubernetes vers Java devient une liste de cartes au lieu d'être coupé ;</li><li>chaque guide dit quand il a été mis à jour, et pointe vers les deux autres ;</li><li>les faits ont été remis à jour : le dépôt de déploiement d'AetherWX est cité sous son nom actuel, et le guide Kubernetes décrit le cluster unique d'aujourd'hui au lieu de deux clusters.</li></ul>\n<p>Au clavier, un bloc de code ou un tableau ne prend le focus que s'il faut le faire défiler.</p>"
+    },
     {
       "slug": "2026-11-22-etudes-de-cas-un-texte-plus-lisible-date-et-sans-liens-casses",
       "title": "Études de cas : un texte plus lisible, daté et sans liens cassés",

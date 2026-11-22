@@ -1,29 +1,41 @@
 ---
-import BaseLayout from "@/layouts/BaseLayout.astro";
-import PageHero from "@/components/site/PageHero.astro";
-import CaseStudySection from "@/components/site/CaseStudySection.astro";
+import GuideLayout from "@/components/site/GuideLayout.astro";
+import GuideSection from "@/components/site/GuideSection.astro";
 import CodeBlock from "@/components/site/CodeBlock.astro";
 import MermaidDiagram from "@/components/site/MermaidDiagram.vue";
+import { sectionsParId } from "@/data/guides";
+
+const sections = [
+  { id: "probleme", number: "00", title: "Le problème de départ" },
+  { id: "tunnel", number: "01", title: "Le tunnel : une connexion à l'envers" },
+  { id: "objets", number: "02", title: "Les 4 objets du dashboard" },
+  { id: "chemin-requete", number: "03", title: "Le chemin complet d'une requête" },
+  { id: "erreur-1033", number: "04", title: "Erreur 1033 : autopsie d'une panne de 3 semaines" },
+  { id: "access", number: "05", title: "Access : le portier devant l'admin" },
+  { id: "cote-cluster", number: "06", title: "Côté cluster : 40 lignes de YAML, et Git commande" },
+  { id: "pas-couvert", number: "07", title: "Ce qu'on n'a pas couvert (et qui existe)" },
+];
+const s = sectionsParId(sections);
+// Dépôts dont le guide décrit l'état (bloc de date, comme les études).
+const DEPOTS = ["developpeur-gitops"];
 ---
 
-<BaseLayout
+<GuideLayout
   title="Cloudflare pour les nuls"
   description="Tunnel, DNS, Zero Trust, Access : que fait-on vraiment dans le dashboard Cloudflare ? Tour pédagogique pour qui héberge chez soi, raconté à travers une vraie panne de 3 semaines (erreur 1033) et sa résolution."
+  eyebrow="Tuto · pour qui héberge chez soi"
+  intro="Si tu as ouvert cette page, c'est probablement parce que tu as un serveur à la maison, des applis à montrer au monde, et qu'à chaque passage dans le dashboard Cloudflare tu cliques un peu au hasard en espérant que ça marche. Cette page explique ce que sont réellement un tunnel, un hostname publié, un enregistrement DNS et une policy Access — en s'appuyant sur une vraie panne de 3 semaines (la fameuse erreur 1033) et sa résolution sur le homelab qui héberge AetherWX. Lecture ~15 min. Complément naturel de la bible /argocd-k8s-pour-les-nuls côté cluster."
+  sections={sections}
+  date="2026-11-22"
+  depots={DEPOTS}
 >
-  <PageHero
-    eyebrow="Tuto · pour qui héberge chez soi"
-    title="Cloudflare pour les nuls"
-    intro="Si tu as ouvert cette page, c'est probablement parce que tu as un serveur à la maison, des applis à montrer au monde, et qu'à chaque passage dans le dashboard Cloudflare tu cliques un peu au hasard en espérant que ça marche. Cette page explique ce que sont réellement un tunnel, un hostname publié, un enregistrement DNS et une policy Access — en s'appuyant sur une vraie panne de 3 semaines (la fameuse erreur 1033) et sa résolution sur le homelab qui héberge AetherWX. Lecture ~15 min. Complément naturel de la bible /argocd-k8s-pour-les-nuls côté cluster."
-  />
 
-  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12 space-y-12">
-
-    <CaseStudySection eyebrow="0. Le problème de départ">
+    <GuideSection section={s["probleme"]}>
       <p>
         Tu as une appli qui tourne chez toi — sur un NAS, un vieux PC,
         un cluster K8s de salon. Elle marche très bien sur
-        <code class="text-xs font-mono">http://192.168.1.38</code>.
-        Maintenant tu veux que <code class="text-xs font-mono">monapp.mondomaine.dev</code>
+        <code class="font-mono text-[0.9em]">http://192.168.1.38</code>.
+        Maintenant tu veux que <code class="font-mono text-[0.9em]">monapp.mondomaine.dev</code>
         marche depuis n'importe où. Instinctivement, tu penses :
         « j'ouvre le port 443 sur ma box et je redirige vers le serveur ».
       </p>
@@ -52,19 +64,19 @@ import MermaidDiagram from "@/components/site/MermaidDiagram.vue";
         <strong>au lieu de laisser Internet entrer chez toi, c'est chez
         toi qui sort vers Internet</strong>.
       </p>
-    </CaseStudySection>
+    </GuideSection>
 
-    <CaseStudySection eyebrow="1. Le tunnel : une connexion à l'envers">
+    <GuideSection section={s["tunnel"]}>
       <p>
-        Un petit programme, <code class="text-xs font-mono">cloudflared</code>,
+        Un petit programme, <code class="font-mono text-[0.9em]">cloudflared</code>,
         tourne <em>dans</em> ton réseau (chez nous : un pod K8s de 64 Mo).
         Au démarrage, il ouvre 4 connexions <strong>sortantes</strong>
         vers les serveurs Cloudflare les plus proches (à Paris :
-        les datacenters <code class="text-xs font-mono">cdg</code>) et
+        les datacenters <code class="font-mono text-[0.9em]">cdg</code>) et
         les garde ouvertes en permanence.
       </p>
       <p>
-        Quand un visiteur demande <code class="text-xs font-mono">aetherwx.sladoire.dev</code>,
+        Quand un visiteur demande <code class="font-mono text-[0.9em]">aetherwx.sladoire.dev</code>,
         sa requête arrive chez Cloudflare — jamais chez toi directement.
         Cloudflare la pousse dans le tuyau déjà ouvert, cloudflared la
         reçoit et la transmet au service interne. La réponse fait le
@@ -72,8 +84,9 @@ import MermaidDiagram from "@/components/site/MermaidDiagram.vue";
       </p>
       <MermaidDiagram
         client:visible
+        tailleNaturelle
         caption="Aucune flèche n'entre dans la maison : cloudflared a appelé Cloudflare en premier, et la connexion reste ouverte pour faire passer les requêtes à contresens."
-        definition={`flowchart LR
+        definition={`flowchart TB
   subgraph internet["Internet"]
     visiteur["Visiteur\naetherwx.sladoire.dev"]
     cf["Edge Cloudflare\n(TLS, DNS, Access)"]
@@ -97,15 +110,15 @@ import MermaidDiagram from "@/components/site/MermaidDiagram.vue";
       </ul>
       <p class="rounded-lg border border-claude/30 bg-claude/[0.06] p-4 text-sm">
         Le tunnel est identifié par un <strong>token</strong> (le long
-        <code class="text-xs font-mono">eyJhbGci...</code> que le
+        <code class="font-mono text-[0.9em]">eyJhbGci...</code> que le
         dashboard te fait copier à la création). Ce token est la seule
         chose dont cloudflared a besoin pour se présenter : « je suis
         le connecteur du tunnel dark-blue ». Chez nous il vit dans un
         Secret K8s, jamais dans Git.
       </p>
-    </CaseStudySection>
+    </GuideSection>
 
-    <CaseStudySection eyebrow="2. Les 4 objets du dashboard">
+    <GuideSection section={s["objets"]}>
       <p>
         Tout ce qu'on fait dans Cloudflare pour un homelab tient en
         4 objets. Si tu sais lesquels tu touches, tu ne cliques plus
@@ -115,7 +128,7 @@ import MermaidDiagram from "@/components/site/MermaidDiagram.vue";
         <li>
           <strong>Le tunnel</strong> (Zero Trust → Networks → Tunnels) —
           le tuyau lui-même. Un par site physique suffit : le nôtre
-          s'appelle <code class="text-xs font-mono">dark-blue</code>,
+          s'appelle <code class="font-mono text-[0.9em]">dark-blue</code>,
           comme le serveur. Son statut (HEALTHY / DOWN) reflète l'état
           des connecteurs cloudflared.
         </li>
@@ -129,7 +142,7 @@ import MermaidDiagram from "@/components/site/MermaidDiagram.vue";
           <strong>Les enregistrements DNS</strong> (dashboard classique
           → ta zone → DNS) — pour chaque application publiée, Cloudflare
           crée automatiquement un CNAME
-          <code class="text-xs font-mono">monapp → &lt;id-du-tunnel&gt;.cfargotunnel.com</code>.
+          <code class="font-mono text-[0.9em]">monapp → &lt;id-du-tunnel&gt;.cfargotunnel.com</code>.
           Tu n'y touches quasiment jamais… sauf pour faire le ménage
           (on y revient, c'est du vécu).
         </li>
@@ -157,32 +170,32 @@ finance.sladoire.dev         →  (RIEN. Volontairement.)`}
         La dernière ligne est la plus importante de cette page.
         L'appli finance manipule de vraies données bancaires : elle
         n'a <strong>ni route dans le tunnel, ni enregistrement DNS</strong>.
-        Résultat : <code class="text-xs font-mono">finance.sladoire.dev</code>
+        Résultat : <code class="font-mono text-[0.9em]">finance.sladoire.dev</code>
         ne se <em>résout même pas</em>. Ce n'est pas « protégé par un
         mot de passe », c'est <strong>inexistant vu d'Internet</strong> —
         la meilleure sécurité est celle qui n'a rien à défendre.
         L'appli reste accessible en LAN, et son PIN devient un simple
         deuxième rideau.
       </p>
-    </CaseStudySection>
+    </GuideSection>
 
-    <CaseStudySection eyebrow="3. Le chemin complet d'une requête">
+    <GuideSection section={s["chemin-requete"]}>
       <MermaidDiagram
         client:visible
-        caption="Ce qui se passe entre « je tape l'URL » et « la carte s'affiche ». Les étapes 2 et 3 sont chez Cloudflare, tout le reste chez toi."
+        caption="Ce qui se passe entre « je tape l'URL » et « la carte s'affiche ». Les étapes 1 à 3 et 8 se jouent entre le visiteur et Cloudflare, 4 et 7 traversent le tunnel, 5 et 6 restent chez toi, dans le cluster."
         definition={`sequenceDiagram
+  autonumber
   participant V as Visiteur
-  participant DNS as DNS Cloudflare
-  participant E as Edge Cloudflare
-  participant T as cloudflared (pod)
-  participant S as maritime-frontend
+  participant E as Cloudflare<br/>(DNS + edge)
+  participant T as cloudflared<br/>(pod)
+  participant S as maritime-<br/>frontend
 
-  V->>DNS: aetherwx.sladoire.dev ?
-  DNS-->>V: CNAME → tunnel dark-blue (IP Cloudflare)
+  V->>E: aetherwx.sladoire.dev ?
+  E-->>V: CNAME → tunnel<br/>(IP Cloudflare)
   V->>E: HTTPS GET /
-  Note over E: TLS terminé ici.<br/>Access ? (pas sur ce hostname)
-  E->>T: pousse la requête dans le tunnel
-  T->>S: HTTP GET / (réseau interne du cluster)
+  Note over E: TLS terminé ici.<br/>Access ? (pas sur<br/>ce hostname)
+  E->>T: pousse la requête<br/>dans le tunnel
+  T->>S: HTTP GET /<br/>(réseau du cluster)
   S-->>T: la page
   T-->>E: remonte le tunnel
   E-->>V: HTTPS 200`}
@@ -192,16 +205,16 @@ finance.sladoire.dev         →  (RIEN. Volontairement.)`}
         cloudflared et ton service, on est dans le réseau privé du
         cluster, en HTTP simple. C'est pour ça que la colonne
         « Service » d'une application publiée commence par
-        <code class="text-xs font-mono">http://</code> sans que
+        <code class="font-mono text-[0.9em]">http://</code> sans que
         personne ne hurle.
       </p>
-    </CaseStudySection>
+    </GuideSection>
 
-    <CaseStudySection eyebrow="4. Erreur 1033 : autopsie d'une panne de 3 semaines">
+    <GuideSection section={s["erreur-1033"]}>
       <p>
         Maintenant qu'on a le modèle en tête, décodons la panne qui a
         motivé cette page. Pendant 3 semaines,
-        <code class="text-xs font-mono">ol.sladoire.dev</code> affichait :
+        <code class="font-mono text-[0.9em]">ol.sladoire.dev</code> affichait :
       </p>
       <CodeBlock
         language="text"
@@ -244,22 +257,22 @@ Page de login exposée     → il manque le portier       → Zero Trust → Acc
       <p class="rounded-lg border border-claude/30 bg-claude/[0.06] p-4 text-sm">
         <strong>Vécu, épisode 2</strong> : à la création du nouveau
         tunnel, impossible de publier
-        <code class="text-xs font-mono">aetherwx</code> — « A DNS
+        <code class="font-mono text-[0.9em]">aetherwx</code> — « A DNS
         record with this name already exists ». Les CNAME de
         l'<em>ancien</em> tunnel mort étaient encore là. Un tunnel
         supprimé ou remplacé ne nettoie pas ses enregistrements DNS :
         c'est à toi de passer dans la zone et de supprimer les records
-        <code class="text-xs font-mono">*.cfargotunnel.com</code>
+        <code class="font-mono text-[0.9em]">*.cfargotunnel.com</code>
         orphelins. En le faisant, on a même retrouvé un fantôme
         d'avant un renommage de projet, mort depuis des mois.
         Attention en revanche à ne pas emporter les CNAME légitimes —
         chez nous, deux sites statiques sur Cloudflare Pages
-        (<code class="text-xs font-mono">*.pages.dev</code>) vivent
+        (<code class="font-mono text-[0.9em]">*.pages.dev</code>) vivent
         dans la même zone.
       </p>
-    </CaseStudySection>
+    </GuideSection>
 
-    <CaseStudySection eyebrow="5. Access : le portier devant l'admin">
+    <GuideSection section={s["access"]}>
       <p>
         Dernier objet, le plus « Zero Trust » de tous. Certaines URLs
         méritent d'exister publiquement (pratique pour administrer
@@ -296,9 +309,9 @@ location: https://sladoire.cloudflareaccess.com/cdn-cgi/access/login/...
         re-pointée — en 2 minutes. Morale : <strong>teste avec curl,
         pas de mémoire</strong>. Un portier, ça se vérifie.
       </p>
-    </CaseStudySection>
+    </GuideSection>
 
-    <CaseStudySection eyebrow="6. Côté cluster : 40 lignes de YAML, et Git commande">
+    <GuideSection section={s["cote-cluster"]}>
       <p>
         Tout ce qui précède se passe côté Cloudflare. Côté cluster, la
         partie est minuscule — un Deployment d'un container, et un
@@ -307,7 +320,7 @@ location: https://sladoire.cloudflareaccess.com/cdn-cgi/access/login/...
       <CodeBlock
         language="yaml"
         filename="charts/cloudflared/ — l'essentiel du chart"
-        code={`# Le secret (créé à la main, JAMAIS commité — le repo est public) :
+        code={`# Le secret (créé à la main, JAMAIS commité, même dans un dépôt privé) :
 #   kubectl -n infra create secret generic cloudflared-token \\
 #     --from-literal=token='eyJhbGci...'
 
@@ -353,20 +366,20 @@ spec:
         tu es au mauvais endroit. Le plus court chemin vers n'importe
         quel écran : la loupe 🔍 en haut de la barre latérale.
       </p>
-    </CaseStudySection>
+    </GuideSection>
 
-    <CaseStudySection eyebrow="7. Ce qu'on n'a pas couvert (et qui existe)">
+    <GuideSection section={s["pas-couvert"]}>
       <ul class="list-disc list-inside text-zinc-300 space-y-2 ml-4">
         <li>
           <strong>Cloudflare Pages</strong> — l'hébergement statique :
-          les deux CNAME <code class="text-xs font-mono">*.pages.dev</code>
+          les deux CNAME <code class="font-mono text-[0.9em]">*.pages.dev</code>
           épargnés pendant le ménage sont des sites Astro déployés à
           chaque push Git, sans serveur du tout.
         </li>
         <li>
           <strong>Les Cache Rules</strong> — le CDN devant les tuiles
           cartographiques : une règle qui force la mise en cache des
-          <code class="text-xs font-mono">GetMap</code> GeoServer a
+          <code class="font-mono text-[0.9em]">GetMap</code> GeoServer a
           divisé la charge du serveur maison sans dépenser un euro.
         </li>
         <li>
@@ -384,7 +397,5 @@ spec:
         d'être un mystère : c'est juste un tuyau dont personne ne tient
         l'autre bout.
       </p>
-    </CaseStudySection>
-
-  </section>
-</BaseLayout>
+    </GuideSection>
+</GuideLayout>

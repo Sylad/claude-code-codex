@@ -110,7 +110,12 @@ test('R6 — un prompt qui ne défile pas n’est pas un arrêt Tab ; un bloc de
   const c2 = await env.browser.newContext({ viewport: { width: 390, height: 900 } });
   const p2 = await c2.newPage();
   await p2.goto(`${env.base}/argocd-k8s-pour-les-nuls/`, { waitUntil: 'load' });
-  const pres = await p2.evaluate(() => [...document.querySelectorAll('figure pre')].filter((pre) => pre.querySelector(':scope > code')).map((pre) => pre.tabIndex));
-  assert.ok(pres.length > 0 && pres.every((i) => i >= 0), 'les blocs de code défilants doivent rester focalisables');
+  // L9 (m3) : dans un guide, seul un bloc qui défile reste un arrêt Tab ; ceux qui tiennent dans leur cadre n'en sont plus.
+  await p2.waitForFunction(() => document.querySelector('[data-guide] pre[data-defile]'));
+  const pres = await p2.evaluate(() => [...document.querySelectorAll('figure pre')].filter((pre) => pre.querySelector(':scope > code'))
+    .map((pre) => ({ defile: pre.scrollWidth > pre.clientWidth + 1, tab: pre.tabIndex })));
+  const defilants = pres.filter((x) => x.defile);
+  assert.ok(defilants.length > 0 && defilants.every((x) => x.tab >= 0), 'les blocs de code défilants doivent rester focalisables');
+  assert.ok(pres.filter((x) => !x.defile).every((x) => x.tab < 0), 'un bloc de code qui tient dans son cadre n’est pas un arrêt Tab');
   await c2.close();
 });
