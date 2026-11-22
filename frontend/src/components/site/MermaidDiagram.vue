@@ -244,8 +244,10 @@ onBeforeUnmount(() => {
       @click="isReady && open()"
     >
       <!-- Anneau de focus en retrait (outline-offset négatif) : la figure en overflow-hidden ne le rogne pas. -->
+      <!-- v-show : en état d'erreur, le cadre vide (min-h 200 px) ne réserve plus de place au-dessus du message (L7/t1). -->
       <div
         ref="inlineContainer"
+        v-show="!error"
         data-mermaid-inline
         :tabindex="inlineScrolls ? 0 : undefined"
         :role="inlineScrolls ? 'region' : undefined"

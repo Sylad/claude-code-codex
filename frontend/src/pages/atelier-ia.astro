@@ -110,8 +110,10 @@ const tools = [
     <CaseStudySection eyebrow="Architecture mentale">
       <!-- Revue L7 r1 : le schéma (quatre outils côte à côte au même rang) ne tient pas dans la colonne
            de texte (702 px) sans passer sous 11 px de texte ; dès 64em, sa figure déborde de la colonne
-           (4 rem de chaque côté) pour qu'on le voie en entier à 1024 et 1440 px. -->
-      <div class="lg:-mx-16">
+           (4 rem de chaque côté) pour qu'on le voie en entier à 1024 et 1440 px.
+           L7/t1 (revue r2) : débord borné à la place libre jusqu'au bord de l'écran, moins 1 rem — avec le
+           texte à 200 %, 4 rem (128 px) dépassaient la gouttière (64 px) et coupaient le schéma à gauche. -->
+      <div class="schema-deborde">
       <MermaidDiagram
         client:visible
         caption="L'atelier IA perso : chaque outil a un rôle, et les frontières comptent autant que les capacités."
@@ -197,3 +199,13 @@ const tools = [
     </CaseStudySection>
   </section>
 </BaseLayout>
+
+<style>
+  /* (100% − 100vw) / 2 : place entre la colonne (centrée) et le bord de l'écran, comptée négative ;
+     100vw inclut la barre de défilement, d'où la marge de 1 rem (> moitié d'une barre de 15–17 px). */
+  @media (min-width: 64em) {
+    .schema-deborde {
+      margin-inline: max(-4rem, min(0px, calc((100% - 100vw) / 2 + 1rem)));
+    }
+  }
+</style>
