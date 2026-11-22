@@ -1,5 +1,5 @@
 // L56 — corrections de vérité sur les outils testés (docs/verite-site.md, « Corrections à faire, par page »).
-// Valeurs relevées via l'API GitHub / npm le 2026-10-31. Lit dist : `npx astro build` avant.
+// Valeurs relevées via l'API GitHub / npm le 2026-10-31, puis le 2026-11-22 (revue L21). Lit dist : `npx astro build` avant.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -7,21 +7,39 @@ import { join } from 'node:path';
 import { DIST } from './lib/e2e-dist.mjs';
 import { testedTools, TOOLS_SURVEYED_AT } from '../src/data/tools-tested.ts';
 
+// L21 (22-11) : relevé refait par l'API GitHub le 2026-11-22 ; ccusage et ccproxy ont changé de dépôt ; Omnara ajouté.
 const RELEVE = {
-  rtk: [85109, '2026-10-30'], ruflo: [80351, '2026-10-31'], 'claude-mem': [106898, '2026-10-31'],
-  'claude-code-router': [37915, '2026-10-10'], 'vibe-kanban': [28528, '2026-10-29'],
-  'claude-code-templates': [33008, '2026-10-31'], 'claude-hud': [29048, '2026-10-30'], opcode: [22428, '2026-09-18'],
-  'hermes-agent': [259005, '2026-10-31'], 'fable-mode': [881, '2026-10-24'],
-  'superclaude-framework': [23917, '2026-09-27'], ccusage: [19274, '2026-10-31'], ccproxy: [356, '2026-08-10'],
-  'tanstack-start': [15267, '2026-10-30'], convex: [12770, '2026-10-31'], 'code-review-graph': [32516, '2026-10-29'],
-  'alexgreensh-token-optimizer': [2816, '2026-10-31'], 'ooples-token-optimizer-mcp': [563, '2026-10-30'],
-  'claude-context': [12661, '2026-07-14'], 'token-savior': [1199, '2026-10-15'],
-  'nadimtuhin-claude-token-optimizer': [638, '2026-10-28'], 'claude-token-efficient': [6135, '2026-06-16'],
-  archify: [91964, '2026-10-31'],
-  'ui-ux-pro-max-skill': [143594, '2026-11-01'],
-  'design-for-ai': [324, '2026-07-02'], 'claude-design-styles': [37, '2026-07-30'],
-  'apple-design-skill': [2641, '2026-10-28'], 'emilkowalski-apple-design': [52926, '2026-11-02'],
-  kodza: [11, '2026-11-20'], 'cloudflare-security-audit': [76058, '2026-09-14'],
+  rtk: [87450, '2026-11-21'],
+  ruflo: [82249, '2026-11-21'],
+  'claude-mem': [118920, '2026-11-22'],
+  'claude-code-router': [38301, '2026-11-21'],
+  'vibe-kanban': [28778, '2026-11-15'],
+  'claude-code-templates': [34081, '2026-11-22'],
+  'claude-hud': [29283, '2026-11-20'],
+  opcode: [22455, '2026-11-06'],
+  'hermes-agent': [265282, '2026-11-22'],
+  'fable-mode': [889, '2026-11-15'],
+  'superclaude-framework': [23951, '2026-09-27'],
+  ccusage: [19540, '2026-11-22'],
+  ccproxy: [362, '2026-08-10'],
+  'tanstack-start': [15341, '2026-11-22'],
+  convex: [12808, '2026-11-21'],
+  'code-review-graph': [32898, '2026-11-16'],
+  'alexgreensh-token-optimizer': [3043, '2026-11-21'],
+  'ooples-token-optimizer-mcp': [591, '2026-11-18'],
+  'claude-context': [12716, '2026-11-12'],
+  'token-savior': [1228, '2026-10-15'],
+  'nadimtuhin-claude-token-optimizer': [661, '2026-11-16'],
+  'claude-token-efficient': [6199, '2026-06-16'],
+  archify: [98676, '2026-11-22'],
+  'ui-ux-pro-max-skill': [152626, '2026-11-22'],
+  'design-for-ai': [336, '2026-07-02'],
+  'apple-design-skill': [3688, '2026-11-13'],
+  'emilkowalski-apple-design': [58728, '2026-11-15'],
+  'claude-design-styles': [44, '2026-07-30'],
+  kodza: [15, '2026-11-20'],
+  'cloudflare-security-audit': [76841, '2026-09-14'],
+  omnara: [3434, '2026-11-21'],
 };
 const page = (p) => readFileSync(join(DIST, p, 'index.html'), 'utf8');
 const texte = (p) => page(p).replace(/<[^>]+>/g, ' ').replace(/&nbsp;| /g, ' ').replace(/\s+/g, ' ');
@@ -30,7 +48,7 @@ test('R1 — archify : licence Apache-2.0 (et non MIT)', () => {
   assert.equal(testedTools.find((t) => t.id === 'archify').license, 'Apache-2.0');
 });
 
-test('R2 — étoiles et dernier push de chaque outil = relevé du 2026-10-31', () => {
+test('R2 — étoiles et dernier push de chaque outil = dernier relevé (2026-11-22)', () => {
   assert.equal(testedTools.length, Object.keys(RELEVE).length, 'un outil sans relevé (ou l’inverse)');
   for (const t of testedTools) {
     assert.ok(RELEVE[t.id], `relevé manquant pour ${t.id}`);
@@ -45,14 +63,15 @@ test('R3 — TanStack Start : version 1.169.4 (et plus 1.167)', () => {
 });
 
 test('R4 — /case-studies affiche la date du relevé des étoiles et licences', () => {
-  assert.equal(TOOLS_SURVEYED_AT, '2026-10-31');
-  assert.match(texte('case-studies'), /Étoiles, licences et dates de push relevées le 31 octobre 2026/);
+  assert.equal(TOOLS_SURVEYED_AT, '2026-11-22');
+  assert.match(texte('case-studies'), /Étoiles, licences et dates de push relevées le 22 novembre 2026/);
 });
 
-test('R5 — /case-studies : étoile affichée = valeur du relevé (ccproxy 356, pas 400)', () => {
+test('R5 — /case-studies : étoile affichée = valeur du relevé (ccproxy 362, pas 400 ni 356)', () => {
   const t = texte('case-studies');
-  assert.match(t, /★ 85\.1k/);
-  assert.match(t, /★ 356/);
+  assert.match(t, /★ 87\.5k/); // rtk 87 450 au relevé du 22-11
+  assert.match(t, /★ 362/);
+  assert.doesNotMatch(t, /★ 356(?!\d)/);
   assert.doesNotMatch(t, /★ 400(?!\d)/);
 });
 
