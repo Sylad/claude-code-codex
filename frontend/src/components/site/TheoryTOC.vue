@@ -55,7 +55,7 @@ onUnmounted(() => {
               : 'border-transparent text-ink-muted hover:text-ink hover:border-white/30',
           ]"
         >
-          <span class="font-mono text-[11px] text-ink/60 mr-1.5">{{
+          <span class="whitespace-nowrap font-mono text-[11px] text-ink/60 mr-1.5">{{
             entry.number
           }}</span>
           <span>{{ entry.title }}</span>

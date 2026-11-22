@@ -158,7 +158,10 @@
    de flex/grille dont la largeur minimale est celle de son plus long mot (min-width: auto).
    Le contenu coupe ses mots plutôt que de déborder ; les tableaux gardent leurs mots entiers et
    défilent dans leur région ; un enfant de flex/grille peut rétrécir sous la largeur de son contenu.
-   En couche base : une classe utilitaire (whitespace-nowrap, min-w-*) l'emporte toujours. */
+   En couche base : une classe utilitaire (whitespace-nowrap, min-w-*) l'emporte toujours.
+   Revers (revue UX r2) : une étiquette courte à côté d'un texte long (langue d'un bloc de code, numéro,
+   badge) rétrécit avec lui et se coupe au milieu du mot (« TYPESCRI|PT ») : elle porte
+   `shrink-0 whitespace-nowrap`. tests/mots-coupes.e2e.test.mjs le vérifie sur toutes les pages. */
 @layer base {
   main,
   body > footer {

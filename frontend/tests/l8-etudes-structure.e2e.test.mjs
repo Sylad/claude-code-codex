@@ -11,6 +11,7 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { DIST } from './lib/e2e-dist.mjs';
+import { ISO_DATE_ISOLEE } from '../src/lib/format-date.mjs';
 
 const dir = join(DIST, 'case-studies');
 const ETUDES = existsSync(dir)
@@ -114,8 +115,8 @@ test('R3 — aucune date ISO ni « Mise à jour <date> » affichée dans l\'inde
   for (const p of PAGES) {
     const t = texteHorsCode(html(p));
     // Une date ISO dans un nom de fichier ou une option de commande (docs/mesures/x-2026-10-10.md,
-    // --since=2026-09-09) n'est pas une date affichée au lecteur.
-    for (const m of t.matchAll(/(?<![\w/=.-])20\d\d-\d\d-\d\d(?![\w-]|\.\w)/g)) ecarts.push(`${p} : ${t.slice(Math.max(0, m.index - 30), m.index + 12)}`);
+    // --since=2026-09-09) n'est pas une date affichée au lecteur : même exclusion que le formateur.
+    for (const m of t.matchAll(ISO_DATE_ISOLEE)) ecarts.push(`${p} : ${t.slice(Math.max(0, m.index - 30), m.index + 12)}`);
     if (/[Mm]ise à jour \d/.test(t)) ecarts.push(`${p} : « Mise à jour <date> »`);
   }
   assert.deepEqual(ecarts, []);

@@ -44,11 +44,18 @@ export function formatTime(date, timeZone) {
 }
 
 /**
+ * L8 — date ISO « YYYY-MM-DD » isolée, lue comme une date affichée : ni dans un nom de fichier
+ * (`x-2026-10-10.md`), ni dans une option de commande (`--since=2026-09-09`), ni dans un chemin.
+ * Partagée avec le test R3 de l8-etudes-structure, qui cherche les dates ISO restées affichées.
+ */
+export const ISO_DATE_ISOLEE = /(?<![\w/=.-])20\d\d-\d\d-\d\d(?![\w-]|\.\w)/g;
+
+/**
  * L8 — dans un texte libre (description d'outil du catalogue), chaque date ISO « YYYY-MM-DD » isolée
  * devient sa forme longue (« 18 septembre 2026 »). Une date dans un nom de fichier ou une option de
  * commande (`x-2026-10-10.md`, `--since=2026-09-09`) n'est pas touchée.
  * @param {string} text @returns {string}
  */
 export function frenchDatesIn(text) {
-  return text.replace(/(?<![\w/=.-])(20\d\d-\d\d-\d\d)(?![\w-]|\.\w)/g, (iso) => formatDay(iso));
+  return text.replace(ISO_DATE_ISOLEE, (iso) => formatDay(iso));
 }
