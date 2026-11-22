@@ -44,3 +44,6 @@ shows: statut 404 (au 05-10 : 200 + page d'accueil, suivi en L28)
 
 ## Règle transverse — schémas
 Texte SVG ≥ 11 px à 390 px : mesuré rendu (taille de police × largeur rendue du svg ÷ largeur du viewBox), jamais lu dans le source. Tout schéma, Mermaid compris, qui ne tient pas à cette taille défile dans son cadre.
+
+## Règle transverse — schémas Mermaid (L66)
+Toute page qui porte un schéma Mermaid : chaque figure contient son svg une fois le schéma à l'écran (`client:visible`) ; nulle part dans la page (figures, bas de `<body>`, texte des svg compris) « Parse error on line », « Lexical error on line », « Syntax error in text » ni « render failed » ; aucune erreur console `[MermaidDiagram]`. Vécu : QA de L38 (03-11), « Parse error on line 32 » à la place du schéma de /case-studies/jobmail-assistant/. Test : `tests/l66-mermaid-rendu.e2e.test.mjs` (toutes les pages construites).

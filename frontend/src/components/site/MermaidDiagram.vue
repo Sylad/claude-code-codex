@@ -53,6 +53,7 @@ function injectInto(el: HTMLDivElement | null) {
 
 onMounted(async () => {
   mounted.value = true;
+  const id = `mermaid-${Math.random().toString(36).slice(2, 9)}`;
   try {
     const { default: mermaid } = await import("mermaid");
     mermaid.initialize({
@@ -94,12 +95,15 @@ onMounted(async () => {
         wrappingWidth: 200,
       },
     });
-    const id = `mermaid-${Math.random().toString(36).slice(2, 9)}`;
     const { svg } = await mermaid.render(id, props.definition);
     svgString = svg;
     injectInto(inlineContainer.value);
     isReady.value = true;
   } catch (err) {
+    // En échec, mermaid laisse en bas de <body> un svg « Syntax error in text » (QA L66) : on le retire,
+    // l'erreur reste affichée dans la figure.
+    document.getElementById(`d${id}`)?.remove();
+    document.getElementById(id)?.remove();
     error.value = (err as Error).message ?? String(err);
     console.error("[MermaidDiagram] render failed:", err);
   }
