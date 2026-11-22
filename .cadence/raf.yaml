@@ -201,6 +201,7 @@ lots:
     status: done
     visible: true
     estimate: 0.25
+    delivered: { date: 2026-11-22, sha: d32799574a5b5ecb0a9bd6685c385989b4135074 }
     created: 2026-09-28
     ux: { date: 2026-11-22, verdict: "conforme : r2 (tmp/ux-codex-L7r2.md) + t1 vérifié par le lead sur captures (1440/200 : figure 32→1408, schéma entier à 100 %, plus de zone vide en erreur)" }
     tasks:
