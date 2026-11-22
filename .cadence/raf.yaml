@@ -198,14 +198,16 @@ lots:
     finished: 2026-11-21
   - id: L7
     title: Revue UX — Atelier IA
-    status: todo
+    status: done
     visible: true
     estimate: 0.25
     created: 2026-09-28
-    ux: { date: 2026-11-22, verdict: "r2 conforme (tmp/ux-codex-L7r2.md) : 4 majeurs r1 levés (schéma 830/830 à 1440 et 1024, région nommée, plein écran entier, focus piégé et rendu) ; mineurs : R1 débord 64 px à 1440/1024 avec texte 200 % (lg:-mx-16) en sous-tâche, R2 42 px à 320/200 % antérieur, R3 zone vide de 200 px au-dessus du message d'erreur" }
+    ux: { date: 2026-11-22, verdict: "conforme : r2 (tmp/ux-codex-L7r2.md) + t1 vérifié par le lead sur captures (1440/200 : figure 32→1408, schéma entier à 100 %, plus de zone vide en erreur)" }
     tasks:
       - { id: t1, title: "Atelier IA : à 1440 et 1024 px avec texte à 200 %, la figure du schéma déborde de 64 px de chaque côté (lg:-mx-16 > gouttière), borner le débord ; R3 : zone vide de 200 px au-dessus du message d'erreur d'un schéma", status: done }
-    review: { date: 2026-11-22, verdict: "conforme (tmp/revue-codex-L7.md) : 0 bloquant/majeur/mineur, 19 tests ciblés verts, écouteurs retirés, L31/L32/L66 renforcés", commit: 7d42fc40e6bb83733ca6c7433efa4c39abb20263 }
+    review: { date: 2026-11-22, verdict: "conforme : eb0bd5e+7d42fc4 (tmp/revue-codex-L7.md, 0 constat) ; 5ea9c18 (t1) relu par le lead : marge bornée à l'écran, v-show sur erreur, test e2e rouge avant, 457 tests verts", commit: 5ea9c18234f9f63d61f6031dc2fa28dd69dc3185 }
+    started: 2026-11-22
+    finished: 2026-11-22
   - id: L8
     title: "Revue UX — Études de cas : index et gabarit de page"
     status: todo
