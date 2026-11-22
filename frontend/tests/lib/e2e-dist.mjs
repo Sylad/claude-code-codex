@@ -53,6 +53,36 @@ export async function setupBrowser(t) {
   return { browser, base: `http://127.0.0.1:${server.address().port}` };
 }
 
+// L80 — page prête à être mesurée, sur signal et non après un délai (sous la charge de la porte,
+// la mesure partait avant) : îlots `client:load` hydratés (la barre de navigation : son fond change
+// quand on défile), polices chargées, images visibles décodées (dont le fond fixe du site).
+export async function pageReady(page, timeout = 60_000) {
+  await page.waitForFunction(() => !document.querySelector('astro-island[client="load"][ssr]'), null, { timeout });
+  await page.evaluate(async () => {
+    await document.fonts.ready;
+    const visible = (img) => {
+      const r = img.getBoundingClientRect();
+      return r.bottom > 0 && r.right > 0 && r.top < innerHeight && r.left < innerWidth;
+    };
+    // Une image cassée se voit par ailleurs ; ici on n'attend que la fin du décodage.
+    await Promise.all([...document.images].filter(visible).map((img) => img.decode().catch(() => {})));
+  });
+}
+
+// L80 — après un défilement : l'évènement `scroll` n'est émis qu'à l'image suivante, le composant
+// (barre de navigation) se met à jour après, et sa transition de couleur (300 ms) démarre au calcul
+// de style suivant. Attendre deux images puis amener à leur fin les animations finies : la page est
+// dans l'état qu'un visiteur voit une fois le défilement fini, avant la première capture (mesuré
+// sous charge avant L80 : 57 mesures où le fond de la barre changeait entre les deux captures).
+export async function settleAfterScroll(page) {
+  await page.evaluate(async () => {
+    for (let i = 0; i < 2; i++) await new Promise((r) => requestAnimationFrame(r));
+    for (const a of document.getAnimations()) {
+      if (Number.isFinite(a.effect?.getComputedTiming().endTime)) a.finish();
+    }
+  });
+}
+
 // Contraste au PIRE PIXEL d'un texte posé sur un fond non uni (image de fond).
 // Deux captures de la boîte de l'élément : texte transparent (le fond vu derrière les
 // lettres), puis texte visible ; les pixels qui changent et sont proches de la couleur
@@ -70,6 +100,7 @@ export async function worstPixelContrast(page, selector, { ring = 0 } = {}) {
   // L21 : un élément sous le pli (bloc de revue ajouté au-dessus) se mesure une fois amené dans la vue ;
   // la capture découpée ne sait lire que la fenêtre visible.
   await el.scrollIntoViewIfNeeded();
+  await settleAfterScroll(page);
   const box = await el.boundingBox();
   const clip = { x: Math.floor(box.x), y: Math.floor(box.y), width: Math.ceil(box.width), height: Math.ceil(box.height) };
   const { color, opacity } = await el.evaluate((n) => {
@@ -81,6 +112,12 @@ export async function worstPixelContrast(page, selector, { ring = 0 } = {}) {
   const bg = await page.screenshot({ clip, animations: 'disabled' });
   await el.evaluate((n) => { n.style.color = n.dataset.prevColor; delete n.dataset.prevColor; });
   const fg = await page.screenshot({ clip, animations: 'disabled' });
+  // L80 : les deux captures doivent montrer la même mise en page ; sinon la mesure compare un texte
+  // à autre chose que son fond. Le dire plutôt que rendre un ratio faux.
+  const after = await el.boundingBox();
+  if (['x', 'y', 'width', 'height'].some((k) => Math.abs(after[k] - box[k]) > 0.5)) {
+    throw new Error(`${selector} : la boîte a bougé pendant la mesure (${JSON.stringify(box)} → ${JSON.stringify(after)})`);
+  }
   return page.evaluate(async ({ bg, fg, color, opacity, ring }) => {
     const load = async (b64) => {
       const img = new Image();
