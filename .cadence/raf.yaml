@@ -768,9 +768,12 @@ lots:
       - { date: 2026-11-21, text: "21-11 : t1 faite (f738e17) — règle CODE_CITE unique (apostrophe en accent grave = texte), test e2e de langue non circulaire, résumé hostile rendu sans injection ; relue par le lead (diff 5 fichiers, regex et échappement vérifiés), aucun écran changé" }
   - id: L79
     title: "Fiabiliser deux tests instables sous la charge de la porte : hydration.e2e sur /atelier-ia/ (îlot pas encore chargé au comptage) et visionneuse de /nouveautes/ (défilement lu avant d'être rétabli) — vus au run L21 le 22-11, verts seuls"
-    status: todo
+    status: done
     estimate: 1
     created: 2026-11-22
+    started: 2026-11-22
+    review: { date: 2026-11-22, verdict: "conforme (relu par le lead : attentes sur signal réel — attribut ssr des îlots, état rétabli de la visionneuse — au lieu de délais fixes ; 10/10 sous charge modérée et forte ; aucun retry ni code applicatif touché)", commit: fe9651e800d14a223bc5e517cde8eddd1c5e4a29 }
+    finished: 2026-11-22
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
