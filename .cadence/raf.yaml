@@ -226,10 +226,11 @@ lots:
     finished: 2026-11-22
   - id: L9
     title: "Revue UX — Guides longs : Kubernetes pour développeurs Java, ArgoCD/K8s pour les nuls, Cloudflare pour les nuls"
-    status: todo
+    status: doing
     visible: true
     estimate: 0.25
     created: 2026-09-28
+    started: 2026-11-22
   - id: L10
     title: Revue UX — Vidéos
     status: todo
