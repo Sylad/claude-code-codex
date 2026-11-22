@@ -10,7 +10,7 @@ export const videoEntries: VideoEntry[] = [
     description:
       "Chaîne officielle Anthropic. Demos de launch Claude Code, walkthroughs de features (hooks, MCP, skills, plugins), enregistrements de la conférence Code w/ Claude.",
     tags: ["claude-code", "officiel", "anthropic", "mcp", "agent-sdk"],
-    url: "https://www.youtube.com/@AnthropicAI",
+    url: "https://www.youtube.com/@anthropic-ai",
     official: true,
   },
   {
