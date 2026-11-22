@@ -43,8 +43,9 @@
   défavorables, « demande différée », les cinq limites avec leurs chiffres) ; `docs/verite-site.md` relève chaque
   affirmation actuelle de la page, sourcée (le cumul 2.0.0 n'y est plus). Le contexte d'origine de la demande (champ
   `origine` de D-2) ne s'écrit nulle part dans le code : R8 le lit au moment du test.
-- Les données Nouveautés (`public/nouveautes-data/`) sont régénérées par `cadence run` avant la porte (L781 de
-  cadence) : une session de run ne lance pas `npm run news`.
+- Les données Nouveautés (`public/nouveautes-data/`) : toute session qui ajoute ou modifie une entrée lance
+  `cd frontend && npm run news` et commite le JSON et les captures copiées (L21, 22-11 : la porte était rouge, le run
+  ne les avait pas régénérées — `tests/nouveautes.test.mjs` compare au build frais).
 
 - L74 (contraste de l'accent, revue r1 du 20-11) : le voile du fond fixe reste celui de L74 (décision de Sylvain) ;
   c'est le texte qui change. Plus aucun texte accent semi-transparent (`text-claude/60|70|80`) : intertitres du
