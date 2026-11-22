@@ -643,6 +643,7 @@ lots:
     title: "Étude de cas jobmail-assistant : le diagramme d'architecture Mermaid affiche « Parse error on line 32 » en prod (libellé d'arête messages.delete(deletePermanently=false) à mettre entre guillemets) ; ajouter aux attendus QA : schéma Mermaid rendu (svg présent), aucun « render failed » (QA de L38, 03-11)"
     status: done
     estimate: 0.1
+    delivered: { date: 2026-11-22, sha: 80f3fa0176d75c38e622678c2c2c29df342eafac }
     created: 2026-11-03
     started: 2026-11-22
     review: { date: 2026-11-22, verdict: "conforme défaut déjà corrigé par L70 (2911480) ; test l66-mermaid-rendu rouge sans les guillemets, vert avec ; attendus QA ajoutés", commit: 504b60cb4bf3dbbdba9c39d8f2b96b7a0e670dfb }
