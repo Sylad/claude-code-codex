@@ -10,14 +10,14 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
   description="OL Companion — compagnon de saison Olympique Lyonnais. React + TanStack côté front, NestJS + crons côté back, push live via SSE depuis 365scores. 100% codé en pair-programming avec Claude Code."
 >
   <PageHero
-    eyebrow="Case study · mise à jour 31 octobre 2026"
+    eyebrow="Case study · mise à jour 22 novembre 2026"
     title="OL Companion"
-    intro="Compagnon de saison pour l'Olympique Lyonnais : classement Ligue 1, calendrier, brackets de coupe, live-match avec shot map, carte L1 bicolore. React 18 + TanStack côté front, NestJS 11 + crons côté back, push live via SSE depuis 365scores. 100% du code écrit en pair-programming avec Claude Code (zéro ligne tapée à la main)."
+    intro="Compagnon de saison pour l'Olympique Lyonnais : classement Ligue 1, calendrier (avec abonnement d'agenda), brackets de coupe, live-match avec shot map, carte L1 bicolore. React 18 + TanStack côté front, NestJS 11 + crons côté back, push live via SSE depuis 365scores. 100% du code écrit en pair-programming avec Claude Code (zéro ligne tapée à la main)."
   />
 
   <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12">
     <div class="space-y-12">
-      <p class="font-mono text-xs text-ink-muted"><span data-testid="date-maj">Mise à jour 31 octobre 2026</span> · <span data-testid="depots-decrits">dépôt décrit : <a class="text-claude hover:underline" href="https://github.com/Sylad/ol-companion" target="_blank" rel="noopener">github.com/Sylad/ol-companion</a></span> · état relu d'après son README, ses Nouveautés et son plan.</p>
+      <p class="font-mono text-xs text-ink-muted"><span data-testid="date-maj">Mise à jour 22 novembre 2026</span> · <span data-testid="depots-decrits">dépôt décrit : <a class="text-claude hover:underline" href="https://github.com/Sylad/ol-companion" target="_blank" rel="noopener">github.com/Sylad/ol-companion</a></span> · état relu d'après son README, ses Nouveautés et son plan.</p>
 
       <CaseStudySection eyebrow="Pourquoi cette app">
         <p>
@@ -61,8 +61,8 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
   end
 
   subgraph EXT["Sources externes"]
-    s365["365scores (LIGUE1=35, OL=465) — live, form, brackets, shot chart"]
-    fdo["football-data.org (teamId=523, compId=2015) — calendrier officiel"]
+    s365["365scores (LIGUE1=35, OL=465) — classement, saison, live, brackets, shot chart"]
+    fdo["football-data.org (teamId=523, compId=2015) — heures des coups d'envoi, .ics, « Ce que ça change »"]
     wiki["Wikipedia FR"]
   end
 
@@ -97,7 +97,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
           Côté backend, un <strong>EventBusService</strong> global expose un
           <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">Subject&lt;...&gt;</code>
           RxJS. Chaque cron qui poll 365scores diffe sa réponse via une signature courte
-          (<code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">[statusGroup, scores, gameTime, events.length].join('|')</code>)
+          (<code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">[statusGroup, scores, gameTime, events.length, shots.length].join('|')</code>)
           et n'émet sur le bus que si la signature change. Pas de spam, pas de re-render à vide.
         </p>
         <p>
@@ -131,12 +131,18 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
           <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">webws.365scores.com/web/game/</code>,
           <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">/web/games/results/</code>,
           <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">/web/games/fixtures/</code>)
-          ont été inspectés au devtools puis stabilisés derrière
-          <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">SCORES365_HEADERS</code>
-          — sans <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">X-Domain: fr</code>,
-          <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">Referer</code>
-          ligue-1-35 et <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">User-Agent</code>
-          réaliste, c'est HTTP 403.
+          ont été inspectés au devtools. Les premières versions les appelaient en se faisant passer
+          pour le site (<code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">X-Domain</code>,
+          <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">Referer</code>, <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">User-Agent</code>
+          de navigateur). C'est fini depuis le 20 novembre 2026 : tout appel sortant (365scores,
+          football-data, Wikipédia, flux RSS) porte
+          <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">User-Agent: ol-companion/&lt;version&gt; (+https://ol.sladoire.dev)</code>,
+          et rien d'autre qui imite un navigateur (règle de Sylvain : aucun contournement anti-robot).
+          Mesuré ce jour-là, les six familles d'appels de 365scores répondent 200 sans ces en-têtes ; si
+          la source refusait un jour ce client honnête, l'app afficherait son erreur et l'on changerait de
+          source. Un test refuse le retour d'un <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">Referer</code>
+          ou d'un User-Agent imité. L'étude des conditions d'utilisation, versée au dépôt, note aussi que
+          l'usage public de ces données n'est pas couvert sans accord écrit de 365scores.
         </p>
         <p>
           IDs critiques : <strong>Ligue 1</strong> = compétition <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">35</code>,
@@ -153,20 +159,25 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
           local reconstruit depuis football-data : déjà essayé, ne match jamais ligue1.com.
         </p>
         <p>
-          <strong>Round-complete check</strong> sur les snapshots
-          <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">season-rankings.json</code> :
-          la mise à jour ne se fait que si
-          <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">MIN(played) === MAX(played)</code>
-          (journée complète pour toutes les équipes), sinon on capture des positions instables
-          mid-journée.
+          <strong>Évolution du classement, recalculée journée par journée</strong>. Le graphique
+          de l'accueil lisait des photos du classement du moment
+          (<code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">season-rankings.json</code>),
+          prises au fil de l'eau, alors que les clubs n'avaient pas tous joué le même nombre de matchs :
+          une journée pouvait y figurer avec une place fausse (4e à la J7 quand l'OL était 1er à l'issue de cette
+          journée). Depuis novembre 2026, le backend relit tous les résultats de la Ligue 1 jusqu'à la J1
+          et recalcule le classement après chaque journée jouée par l'OL, avec l'ordre officiel de la LFP
+          (points, différence de buts, confrontations directes, buts marqués, victoires, victoires à
+          l'extérieur), testé sur les vrais résultats de la saison.
         </p>
         <p>
           Pour les logos clubs, l'app combine deux sources : Wikipedia FR via
           <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">/api/wiki-image?q=</code>
-          (avec mapping statique ID → full wiki name pour les noms ambigus type "Reims" / "Brest"
+          (avec mapping statique ID → nom complet du club pour les noms ambigus type "Brest"
           qui retournent la ville plutôt que le club), et le CDN 365scores
           (<code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">imagecache.365scores.com/.../Competitors/&lt;id&gt;</code>)
-          pour les popups de la carte L1.
+          pour le classement, le calendrier, le dernier résultat et les popups de la carte L1 : une
+          trentaine d'écussons d'un coup via <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">/api/wiki-image</code>
+          dépassait la limite de débit par visiteur.
         </p>
       </CaseStudySection>
 
@@ -183,7 +194,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         <p>
           Conséquence concrète : sur le PositionTracker (Recharts), la ligne d'évolution est
           <strong>bleu OL</strong> (pas vert), et le dot du point courant est <strong>rouge OL</strong>.
-          Sur la carte Ligue 1, les marqueurs des autres clubs sont bleus, OL est rouge plein.
+          Sur la carte Ligue 1, OL est rouge plein ; les moitiés des autres marqueurs disent le résultat de l'OL (bleu OL éclairci = victoire, gris = nul, rouge = défaite), chacune avec son motif.
           Seule exception : le thème <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">/fcnoobz</code>
           (Football Manager save perso) active <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">body.theme-fcnoobz</code>
           qui override en lime + bleu électrique cyberpunk.
@@ -213,8 +224,10 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
               (<code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">ligue1-clubs-coords.ts</code>).
               Chaque marqueur est un cercle SVG dont la moitié <strong>gauche</strong> représente
               le match aller et la moitié <strong>droite</strong> le retour. Couleur de chaque
-              moitié = résultat OL côté concerné. Source = full-season history 365scores. Collision
-              Paris (PSG + Paris FC) gérée par offset visuel +20px y sur le second.
+              moitié = résultat OL côté concerné. Source = full-season history 365scores. Les 15 clubs
+              trop proches (PSG et Paris FC, Monaco et Nice, Lille et Lens, Rennes et Lorient…) sont écartés de quelques
+              pixels d'écran, jamais de mètres, d'après une table calculée pour que leurs zones
+              cliquables ne se recouvrent à aucun zoom ; l'OL ne bouge jamais.
             </span>
           </li>
         </ul>
@@ -251,6 +264,55 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
       </figure>
       </CaseStudySection>
 
+      <CaseStudySection eyebrow="Novembre 2026 · agenda, classement, sources citées">
+        <p>
+          <strong>S'abonner au calendrier</strong>. Un bouton « S'abonner » de la page Calendrier
+          donne l'adresse <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">/api/calendar.ics</code>
+          (Apple Calendrier, Outlook, Google Agenda ou tout agenda qui accepte une adresse). Le flux ne
+          contient que la Ligue 1, et ne vient que de football-data.org : les conditions de 365scores
+          interdisent de servir ses données à des tiers. Chaque match garde le même identifiant
+          d'événement et voit son numéro de révision augmenter quand la Ligue fixe ou déplace l'horaire :
+          l'agenda change l'heure au lieu de dupliquer le match. Tant que l'horaire n'est pas fixé, le
+          match figure sans heure, sur le week-end prévu. Si la source ne rend aucun match, l'endpoint
+          répond 503, jamais un calendrier vide qui effacerait les matchs de l'agenda.
+        </p>
+        <p>
+          <strong>Ce que ça change</strong>. Après un match de Ligue 1 terminé, la carte « Dernier
+          résultat » de l'accueil et la page du match disent la place de l'OL avant et après la journée,
+          et l'écart avec les places qui comptent (tête, Ligue des champions, Ligue Europa, Ligue
+          Conférence, maintien). Le calcul reprend le départage du graphique d'évolution du classement,
+          sur les résultats de football-data.org ; tant que des matchs de la journée restent à jouer, le
+          bloc est marqué « Provisoire ».
+        </p>
+        <p>
+          <strong>Sources citées</strong>. La mention qu'exige football-data.org (« Football data provided
+          by the Football-Data.org API ») s'affiche là où ses données apparaissent : accueil, calendrier,
+          carte, page d'un match de Ligue 1 à venir et À propos. Le bloc « Joueurs en vue » écrit enfin ce
+          que compte chaque chiffre de 365scores (« Tacles gagnés par match : 0,1 » au lieu de « Tacles :
+          0,1 ») et n'affiche plus un chiffre dont le sens n'est pas établi.
+        </p>
+        <p>
+          <strong>Lisibilité</strong>. Une seule échelle de tailles de texte, en rem, et un plancher de
+          12 px mesuré dans Chromium sur toutes les pages à 390 et 1 440 px ; quand le serveur ne répond
+          plus, l'accueil n'affiche qu'un « Réessayer » qui relance tout ; au téléphone, la barre du bas
+          nomme la page ouverte sous « Plus » et la pastille du direct montre le score et la minute ; les
+          lignes d'une formation tiennent chacune sur une ligne, les noms trop larges se coupant en
+          syllabes en dernier recours.
+        </p>
+      <figure class="my-6">
+        <img src="/case-studies/ol-companion/03-abonnement-calendrier.png" alt="Page Calendrier à 1440 px : panneau S'abonner ouvert avec les liens Apple Calendrier, Outlook et Google Agenda, l'adresse à copier et la mention de football-data.org" class="rounded-lg border border-white/10" loading="lazy" />
+        <figcaption class="text-xs text-ink-muted mt-2 font-mono">
+          Abonnement d'agenda (L264) — Ligue 1 seule, d'après football-data.org. Capture du 20 novembre 2026.
+        </figcaption>
+      </figure>
+      <figure class="my-6">
+        <img src="/case-studies/ol-companion/04-ce-que-ca-change.png" alt="Carte Dernier résultat de l'accueil, Brest 2-0 Olympique Lyonnais : sous le score, Ce que ça change — Lyon passe de 3e à 5e, à 3 points de la 3e place" class="rounded-lg border border-white/10" loading="lazy" />
+        <figcaption class="text-xs text-ink-muted mt-2 font-mono">
+          « Ce que ça change » (L265) dans la carte Dernier résultat de l'accueil. Capture du 20 novembre 2026.
+        </figcaption>
+      </figure>
+      </CaseStudySection>
+
       <article class="space-y-4 pt-2">
         <div
           class="rounded-xl border border-white/10 bg-paper-elevated p-6 sm:p-8"
@@ -262,24 +324,24 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
           </p>
           <ul class="text-sm text-ink-muted space-y-1.5 mb-5">
             <li>
-              <strong class="text-ink">Frontend</strong> · React 18 · Vite 5 · Vitest 2 · Playwright 1.61 · TanStack Router 1.78
+              <strong class="text-ink">Frontend</strong> · React 18 · Vite 8 · Vitest 5 · Playwright 1.65 · TanStack Router 1.78
               · TanStack Query 5.59 · Tailwind 3.4 · Recharts 2.13 · Leaflet + react-leaflet ·
               Lucide.
             </li>
             <li>
-              <strong class="text-ink">Backend</strong> · NestJS 11 · @nestjs/schedule v5 · RxJS
+              <strong class="text-ink">Backend</strong> · NestJS 11 · @nestjs/schedule 12 · TypeScript 6 · RxJS
               (SSE via <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">@Sse()</code>) ·
-              Jest côté back, Vitest côté front (≈ 1 630 cas de test au 31 octobre 2026, relevés par recherche de <code>it(</code>/<code>test(</code> dans les sources) · stockage JSON local · SDK Anthropic retiré le 1er octobre 2026.
+              Jest côté back, Vitest côté front (≈ 1 970 cas de test au 22 novembre 2026, relevés par recherche de <code>it(</code>/<code>test(</code> dans les fichiers de test) · stockage JSON local · SDK Anthropic retiré le 1er octobre 2026.
             </li>
             <li>
-              <strong class="text-ink">Sources</strong> · 365scores (classement, forme, brackets,
-              shot chart) · football-data.org (calendrier officiel) · Wikipedia FR via
+              <strong class="text-ink">Sources</strong> · 365scores (classement, forme, calendrier de la saison, brackets,
+              shot chart) · football-data.org (heures des coups d'envoi, abonnement <code>.ics</code>, « Ce que ça change ») · Wikipedia FR via
               <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">/api/wiki-image</code>
               · CDN 365scores pour logos clubs.
             </li>
             <li>
               <strong class="text-ink">Infra</strong> · Docker multi-stage
-              (<code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">node:20-alpine</code> →
+              (<code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">node:22-alpine</code> →
               <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">nginx:alpine</code>)
               en images GHCR, chart Helm sur le k3s de dark-blue via ArgoCD, exposé par un tunnel Cloudflare (ports 80 / 3002 dans les pods).
             </li>

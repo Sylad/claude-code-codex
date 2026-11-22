@@ -72,6 +72,8 @@ test('R7 — une seule forme de date par page : aucune date numérique aaaa-mm n
   for (const p of PAGES) {
     const t = texte(chemin(p));
     assert.doesNotMatch(t, /\b20\d\d-\d\d(-\d\d)?\b/, `${p} : date numérique affichée`);
-    assert.match(t, p === 'finance-tracker' ? /Mise à jour 21 novembre 2026/ : /Mise à jour 31 octobre 2026/, p);
+    // Dates de la dernière mise à jour : finance-tracker par L176, ol-companion par L222 (plan d'ol-companion).
+    const dates = { 'finance-tracker': /Mise à jour 21 novembre 2026/, 'ol-companion': /Mise à jour 22 novembre 2026/ };
+    assert.match(t, dates[p] ?? /Mise à jour 31 octobre 2026/, p);
   }
 });

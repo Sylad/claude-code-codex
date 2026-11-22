@@ -11,8 +11,8 @@ const texte = (p) => readFileSync(join(DIST, p, 'index.html'), 'utf8')
 const html = (p) => readFileSync(join(DIST, p, 'index.html'), 'utf8');
 const PAGES = ['ol-companion', 'warhammer40k', 'finance-tracker'];
 
-// Date de la dernière mise à jour de chaque étude (finance-tracker rafraîchie par L176 le 21 novembre 2026).
-const DATES = { 'ol-companion': '31 octobre 2026', warhammer40k: '31 octobre 2026', 'finance-tracker': '21 novembre 2026' };
+// Date de la dernière mise à jour de chaque étude (finance-tracker rafraîchie par L176 le 21 novembre 2026, ol-companion par L222 d'ol-companion le 22 novembre 2026).
+const DATES = { 'ol-companion': '22 novembre 2026', warhammer40k: '31 octobre 2026', 'finance-tracker': '21 novembre 2026' };
 
 test('R1 — chaque étude est datée en tête de sa dernière mise à jour et porte le dépôt qu\'elle décrit', () => {
   for (const p of PAGES) {
