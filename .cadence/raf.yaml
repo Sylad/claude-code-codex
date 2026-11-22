@@ -214,6 +214,7 @@ lots:
     status: done
     visible: true
     estimate: 0.25
+    delivered: { date: 2026-11-22, sha: bc662eb6cf3c2eb895dcbc07bb2a69f36bec1769 }
     created: 2026-09-28
     notes:
       - { date: 2026-10-01, text: "contrôle UX L2 01-10 : 63 textes sous 4,5:1 dans le catalogue d'outils testés (dates 10 px ~3,2:1, licences 2,6–3,4:1, étoiles, « Suggestion ? » 3,0:1) — présents avant L2 ; débordements à 320 px sur /theory (355 px) et /learning (343 px)" }
