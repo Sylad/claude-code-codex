@@ -82,8 +82,8 @@ tail -200 app.log | claude -p "Slack me if you see any anomalies"
     intro:
       "Chaque session démarre avec une fenêtre de contexte fraîche, remplie dans un ordre déterministe : system prompt, MEMORY.md, env info, stubs MCP, puis CLAUDE.md depuis la racine. Comme ce bloc d'amorce est réutilisé tour après tour, c'est exactement ce que le prompt cache de l'API Anthropic est fait pour rendre quasi-gratuit. Quand la conversation approche de la limite de la fenêtre, Claude Code compacte l'historique : il résume les vieux tours et re-lit le CLAUDE.md racine depuis le disque. La leçon pratique : garder CLAUDE.md et MEMORY.md légers, éviter d'invalider le préfixe en milieu de session, et préférer les sous-agents à l'exploration inline pour les tâches latérales.",
     bullets: [
-      "TTL du cache : 5 min par défaut, 1h en option (\"ttl\": \"1h\"). Les écritures par défaut coûtent 1.25× le prix base input ; les écritures 1h coûtent 2×. Les lectures coûtent 0.1× pour la plupart des modèles (le fameux discount de 90%), 0.05× pour Opus 5.5 et Sonnet 5.5, 0.025× pour Fable 5.1 et Mythos 5.1.",
-      "Jusqu'à 4 cache breakpoints par requête, fenêtre de lookback de 20 blocks. Longueur minimum cacheable : 2048 tokens pour Opus 4.7, 4096 pour Opus 4.6/4.5 et Haiku 4.5, 1024 pour Sonnet 4.6, 2048 pour Haiku 3.5, 1024 pour les anciens.",
+      "TTL du cache : 5 min par défaut, 1h en option (\"ttl\": \"1h\"). Les écritures par défaut coûtent 1.25× le prix base input ; les écritures 1h coûtent 2×. Les lectures coûtent 0.1× pour la plupart des modèles (le fameux discount de 90%), 0.05× pour Opus 5.5 et Sonnet 5.5, 0.025× pour Fable 5.2, Mythos 5.2, Fable 5.1 et Mythos 5.1.",
+      "Jusqu'à 4 cache breakpoints par requête, fenêtre de lookback de 20 blocks. Longueur minimum cacheable : 512 tokens pour Fable 5.x, Mythos 5.x, Opus 5 et 5.5, Sonnet 5.5 et Haiku 5.5 ; 2048 tokens pour Opus 4.7 ; 4096 pour Opus 4.6/4.5 et Haiku 4.5 ; 1024 pour Opus 4.8, Sonnet 5, Sonnet 4.6 et Sonnet 4.5 (relevé du 22 novembre 2026).",
       "Auto memory : seules les 200 premières lignes ou 25 KB (premier des deux atteint) de ~/.claude/projects/<project>/memory/MEMORY.md sont chargées au démarrage. Les fichiers topiques (debugging.md…) chargent on-demand.",
       "CLAUDE.md walked dans l'arborescence : ancêtres d'abord, working dir en dernier ; CLAUDE.local.md ajouté après chaque CLAUDE.md ; les fichiers en sous-dir chargent quand Claude lit un fichier dedans. claudeMdExcludes pour skipper du bruit en monorepo.",
       "Ce qui survit à /compact : le CLAUDE.md racine est re-lu depuis le disque et re-injecté. Les CLAUDE.md imbriqués NE sont PAS re-injectés (lazy reload). Les instructions données en conversation sont perdues — promote-les dans CLAUDE.md pour persister.",
@@ -93,7 +93,7 @@ tail -200 app.log | claude -p "Slack me if you see any anomalies"
         language: "json",
         filename: "Cache breakpoint 1h sur un system prompt lourd",
         code: `{
-  "model": "claude-opus-4-7",
+  "model": "claude-opus-5-5",
   "system": [
     {
       "type": "text",

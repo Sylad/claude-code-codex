@@ -54,7 +54,8 @@ test('R5 — hermes-agent : la meta description date Sonnet 4.6 (juin 2026)', ()
 });
 
 test('R6 — /theory : la lecture du cache cite aussi Mythos 5.1 à 0.025×', () => {
-  assert.match(texte('theory'), /0\.025× pour Fable 5\.1 et Mythos 5\.1/);
+  // L21 (22-11) : la liste commence désormais par Fable 5.2 et Mythos 5.2 (doc du prompt caching).
+  assert.match(texte('theory'), /0\.025× pour Fable 5\.2, Mythos 5\.2, Fable 5\.1 et Mythos 5\.1/);
 });
 
 test('R7 — skill update-rtk-stats : parle de la page Case studies, plus de la page d’accueil', () => {

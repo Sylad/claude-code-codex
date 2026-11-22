@@ -13,7 +13,7 @@ const texte = (p) => readFileSync(join(DIST, p, 'index.html'), 'utf8')
 test('R1 — /theory : minimums de cache Opus 4.7 = 2048 et Sonnet 4.6 = 1024 (plus 4096 pour Opus 4.7)', () => {
   const t = texte('theory');
   assert.match(t, /2048 tokens pour Opus 4\.7/);
-  assert.match(t, /1024 pour Sonnet 4\.6/);
+  assert.match(t, /1024 pour Opus 4\.8, Sonnet 5, Sonnet 4\.6/); // L21 (22-11) : phrase réécrite d'après la doc
   assert.match(t, /4096 pour Opus 4\.6\/4\.5 et Haiku 4\.5/);
   assert.doesNotMatch(t, /4096 tokens pour Opus 4\.7/);
   assert.doesNotMatch(t, /2048 pour Sonnet 4\.6/);
@@ -44,7 +44,7 @@ test('R2 — /theory : pas de défilement latéral de la page à 320 et 390 px (
 test('R3 — /theory : lecture de cache 0.05× (Opus 5.5, Sonnet 5.5) et 0.025× (Fable 5.1), plus de « SDK ≥ v0.2.111 »', () => {
   const t = texte('theory');
   assert.match(t, /0\.05× pour Opus 5\.5 et Sonnet 5\.5/);
-  assert.match(t, /0\.025× pour Fable 5\.1/);
+  assert.match(t, /0\.025× pour Fable 5\.2, Mythos 5\.2, Fable 5\.1/); // L21 (22-11) : Fable 5.2 et Mythos 5.2 ajoutés
   assert.doesNotMatch(t, /0\.2\.111/);
 });
 
