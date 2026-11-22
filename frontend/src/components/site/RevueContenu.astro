@@ -80,7 +80,10 @@ const idDetails = `revue-${page}-details`;
 
 <script>
   // Révèle « en retard » si la date de la prochaine revue est passée depuis le build.
-  const aujourdhui = new Date().toISOString().slice(0, 10);
+  // Jour de Paris, comme la garde du build (src/lib/revue-contenu.mjs, jourParis).
+  const aujourdhui = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Europe/Paris", year: "numeric", month: "2-digit", day: "2-digit",
+  }).format(new Date());
   for (const el of document.querySelectorAll<HTMLElement>("[data-revue]")) {
     const prochaine = el.dataset.revueProchaine;
     const retard = el.querySelector<HTMLElement>("[data-revue-retard]");

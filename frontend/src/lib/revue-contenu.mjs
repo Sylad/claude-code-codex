@@ -25,6 +25,17 @@ function jourValide(day) {
 /** Jour calendaire UTC d'un instant, « YYYY-MM-DD ». @param {Date} d */
 const jourDe = (d) => d.toISOString().slice(0, 10);
 
+const FORMAT_JOUR_PARIS = new Intl.DateTimeFormat('en-CA', {
+  timeZone: 'Europe/Paris', year: 'numeric', month: '2-digit', day: '2-digit',
+});
+
+/**
+ * Jour calendaire à Paris d'un instant, YYYY-MM-DD. Les dates de revue et d'actualité sont des
+ * jours de Paris : un build à 0 h 30 heure de Paris le jour de la revue doit les accepter.
+ * @param {Date} d
+ */
+export const jourParis = (d) => FORMAT_JOUR_PARIS.format(d);
+
 /**
  * @typedef {{ label: string, href: string }} Source
  * @typedef {{ texte: string, source: Source, releve: string }} Perime
@@ -98,13 +109,13 @@ export function prochaineRevue(derniere) {
 }
 
 /**
- * État de revue d'une page à un instant donné (le jour UTC de `maintenant`).
+ * État de revue d'une page à un instant donné (le jour de Paris de `maintenant`).
  * @param {string} derniere « YYYY-MM-DD »
  * @param {Date} maintenant
  */
 export function etatRevue(derniere, maintenant) {
   const prochaine = prochaineRevue(derniere);
-  const jour = jourValide(jourDe(maintenant));
+  const jour = jourValide(jourParis(maintenant));
   const joursDeRetard = Math.round((jour.getTime() - jourValide(prochaine).getTime()) / JOUR_MS);
   return {
     derniere,
@@ -117,11 +128,11 @@ export function etatRevue(derniere, maintenant) {
 }
 
 /**
- * Garde du build : chaque page a une date valide qui n'est pas dans le futur.
+ * Garde du build : chaque page a une date valide qui n'est pas dans le futur (jour de Paris).
  * @param {Date} maintenant
  */
 export function verifierRevues(maintenant) {
-  const aujourdhui = jourDe(maintenant);
+  const aujourdhui = jourParis(maintenant);
   for (const [cle, p] of Object.entries(PAGES_REVUES)) {
     jourValide(p.derniereRevue);
     if (p.derniereRevue > aujourdhui) throw new Error(`revue ${cle} : date dans le futur (${p.derniereRevue} > ${aujourdhui})`);

@@ -1,5 +1,5 @@
 ---
-title: "Chaque page de contenu dit quand elle a été revue"
+title: "Cinq pages du site disent quand leur contenu a été revu"
 date: 2026-11-22
 created: 2026-11-22T11:10+01:00
 lots: [L21]
@@ -8,7 +8,7 @@ captures:
   - { file: captures/L21-actualites-ecosysteme-1440.png, alt: "La section Actualités de l'écosystème : huit cartes datées, des versions 2.1.327 à 2.1.330 de Claude Code à Fable 5.2, Omnara et deux articles de The Bearded Bear, chacune avec sa source" }
   - { file: captures/L21-revue-videos-390.png, alt: "Au téléphone, le bloc de revue de la page Vidéos : l'adresse de la chaîne Anthropic, qui ne répondait plus, a été remplacée" }
 ---
-Les pages [Écosystème](/ecosystem/), [Théorie](/theory/), [Learning](/learning/), [Vidéos](/videos/) et les outils testés de [Case studies](/case-studies/) affichent maintenant la date de leur dernière revue, leur rythme (tous les 30 jours) et la date de la prochaine. Si la date passe sans nouvelle revue, la page le signale d'elle-même : « des informations de cette page peuvent être périmées ». Un lien déplie ce que la revue a mis à jour, ce qui est signalé périmé et ce qui n'a pas été revérifié.
+Les pages [Écosystème](/ecosystem/), [Théorie](/theory/), [Learning](/learning/), [Vidéos](/videos/) et les outils testés de [Case studies](/case-studies/) affichent maintenant la date de leur dernière revue, leur rythme (tous les 30 jours) et la date de la prochaine. La page Démarrer et les guides n'ont pas encore ce bloc. Si la date passe sans nouvelle revue, la page le signale d'elle-même : « des informations de cette page peuvent être périmées ». Un lien déplie ce que la revue a mis à jour, ce qui est signalé périmé et ce qui n'a pas été revérifié.
 
 Première revue, le 22 novembre 2026, chaque fait vérifié sur sa source en ligne :
 

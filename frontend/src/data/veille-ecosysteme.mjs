@@ -6,6 +6,7 @@
  * Point de départ : résumé de veille 2026-S47 (Human Coders, Korben, GeoServer), notes de version
  * de Claude Code (API GitHub releases), documentation Anthropic.
  */
+import { jourParis } from '../lib/revue-contenu.mjs';
 
 /**
  * @typedef {{ date: string, nature: 'publie' | 'releve', titre: string, texte: string,
@@ -29,7 +30,8 @@ export const actualites = [
     texte: 'API sous licence Apache 2.0 pour déployer et faire tourner des agents en production, présentée comme l’alternative open source à Claude Managed Agents. Signalée par Human Coders le 12 novembre 2026 ; pas encore testée.',
     source: { label: 'GitHub — omnara-ai/omnara', href: 'https://github.com/omnara-ai/omnara' },
     page: 'outils',
-  },  {
+  },
+  {
     date: '2026-11-20',
     nature: 'publie',
     titre: 'Claude Code 2.1.330 : graphiques easel et /loop sur 30 jours',
@@ -80,9 +82,9 @@ export const actualites = [
 
 ];
 
-/** Garde du build : dates valides, aucune dans le futur, ordre décroissant. @param {Date} maintenant */
+/** Garde du build : dates valides, aucune dans le futur (jour de Paris), ordre décroissant. @param {Date} maintenant */
 export function verifierActualites(maintenant) {
-  const aujourdhui = maintenant.toISOString().slice(0, 10);
+  const aujourdhui = jourParis(maintenant);
   let avant = '9999-12-31';
   for (const a of actualites) {
     const ok = /^\d{4}-\d{2}-\d{2}$/.test(a.date) && new Date(`${a.date}T12:00:00Z`).toISOString().slice(0, 10) === a.date;

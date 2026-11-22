@@ -20,15 +20,15 @@ officielle avec Anthropic.
 | Page | Sujet |
 |------|-------|
 | `/start` | **Démarrer** — Claude Code pour les vrais débutants. Pas de jargon, 7 sections progressives, exemples copy-pastable. La porte d'entrée du site. |
-| `/theory` | Comment Claude Code fonctionne sous le capot — architecture agentique, context window, sessions, hooks, slash commands, MCP, skills, agents SDK |
-| `/ecosystem` | Catalogue triable des plugins, MCP servers, skills officiels Anthropic et SDKs |
-| `/case-studies` | 7 deep-dives d'apps perso construites en pair-programming + récits transverses (K8s migration overnight, AetherWX encyclopedia, **Cadence** — la méthode de travail, ses chiffres mesurés et ses échecs, illustrée par trois schémas SVG (plan relié aux commits, parcours d'un lot, chaîne du livreur ; les schémas Mermaid, comme ceux de l'étude AetherWX, gardent un texte rendu à 11 px ou plus à 360–390 px et défilent dans leur cadre quand ils sont plus larges que l'écran) lisibles en thème clair et sombre — composants `Schema`, `StepChain` (description accessible du svg composée des étapes : titre, détail, qui), `Callout` —, `/case-studies/cadence`, et **Pourquoi cadence** — les cinq besoins qui l'ont fait naître, sa définition en une phrase, les preuves chiffrées du banc A/B, chacune datée et sourcée dans le dépôt cadence, et ce que les mesures ne prouvent pas, `/case-studies/pourquoi-cadence`) + section **Tools tested** (RTK adopté, Ruflo rejeté+8 leçons, code-review-graph adopt-conditional) |
+| `/theory` | Comment Claude Code fonctionne sous le capot — architecture agentique, context window, sessions, hooks, slash commands, MCP, skills, agents SDK · bloc de revue du contenu |
+| `/ecosystem` | Catalogue triable des plugins, MCP servers, skills officiels Anthropic et SDKs, puis **Actualités de l'écosystème** : nouveautés retenues par la veille, la plus récente en tête, chacune datée (publication ou relevé) et sourcée (`frontend/src/data/veille-ecosysteme.mjs`). Porte le bloc de revue du contenu (voir [Revue du contenu](#revue-du-contenu)) |
+| `/case-studies` | 7 deep-dives d'apps perso construites en pair-programming + récits transverses (K8s migration overnight, AetherWX encyclopedia, **Cadence** — la méthode de travail, ses chiffres mesurés et ses échecs, illustrée par trois schémas SVG (plan relié aux commits, parcours d'un lot, chaîne du livreur ; les schémas Mermaid, comme ceux de l'étude AetherWX, gardent un texte rendu à 11 px ou plus à 360–390 px et défilent dans leur cadre quand ils sont plus larges que l'écran) lisibles en thème clair et sombre — composants `Schema`, `StepChain` (description accessible du svg composée des étapes : titre, détail, qui), `Callout` —, `/case-studies/cadence`, et **Pourquoi cadence** — les cinq besoins qui l'ont fait naître, sa définition en une phrase, les preuves chiffrées du banc A/B, chacune datée et sourcée dans le dépôt cadence, et ce que les mesures ne prouvent pas, `/case-studies/pourquoi-cadence`) + section **Tools tested** (RTK adopté, Ruflo rejeté+8 leçons, code-review-graph adopt-conditional) ; la liste des outils testés porte le bloc de revue du contenu |
 | `/atelier-ia` | L'atelier IA perso — quels outils (Claude Code, Codex…), quels rôles, quelles frontières |
 | `/k8s-for-java-developers` | **Guide** — introduction Kubernetes pour dev Java, du jar au pod |
 | `/argocd-k8s-pour-les-nuls` | **Guide** — bible ArgoCD + K8s : pourquoi tant de YAML, GitOps, incidents vécus maritime-atlas |
 | `/cloudflare-pour-les-nuls` | **Guide** — tunnel, DNS, Zero Trust Access pour homelab, raconté via la panne 1033 vécue (3 semaines) |
-| `/learning` | **Preview RSS live** (Simon Willison, Anthropic, Human Coders FR filtré sur Claude/MCP) + catalogue curé de blogs et podcasts |
-| `/videos` | Chaînes YouTube EN/FR spécifiques Claude Code, filtrables par langue/officiel |
+| `/learning` | **Preview RSS live** (Simon Willison, Anthropic, Human Coders FR filtré sur Claude/MCP) + catalogue curé de blogs et podcasts · bloc de revue du contenu |
+| `/videos` | Chaînes YouTube EN/FR spécifiques Claude Code, filtrables par langue/officiel · bloc de revue du contenu |
 | `/about` | Genèse du site, stack technique, crédits IA (Claude Code + openart.ai) |
 | `/nouveautes` | Journal des évolutions visibles du site, la plus récente en premier (pastille sur le lien quand il y a du neuf) |
 | `/plan-de-travail` | Ce qui est en cours, prévu et récemment livré — titres publics du plan `.cadence/raf.yaml`, générés au build ; le titre de la Nouveauté d'un lot visible (≤ 80 caractères, aucun nom de technique) est vérifié dès la vague par `frontend/tests/l62-titres-publics.test.mjs`, non plus seulement au build après `raf done` |
@@ -74,6 +74,36 @@ La relecture de vérité du site (affirmations datées ou chiffrées classées f
 **Règle durable (L39) : chaque étude de cas d'une app porte en tête sa date de mise à jour et la liste des dépôts qu'elle décrit**, pour savoir quelle page suit quel dépôt : composant `EtudeFraicheur` (`depots`, et `date` « AAAA-MM-JJ » propre à l'étude — sans `date`, la date `DATE_MAJ` des études AetherWX et jobmail-assistant de `frontend/src/lib/etude-fraicheur.mjs`), ou, pour ol-companion, warhammer40k et finance-tracker, une ligne dont la date et les dépôts portent `data-testid="date-maj"` et `data-testid="depots-decrits"`. Toute app ajoutée à `frontend/src/data/apps.ts` doit en avoir un, sinon `frontend/tests/l39-etudes-datees.e2e.test.mjs` échoue ; à chaque relecture d'une étude, corriger sa date. Les études avatar-pandora, evatosorus et claude-code-codex ont été relues le 17-11-2026. Tout chiffre repris de l'état réel est écrit par `chiffreDate` — valeur, date du relevé et source dans la même phrase ; une valeur absente donne « … non relevé au <date> : <pourquoi> » (un entier ≥ 0 seul est un relevé, jamais de valeur devinée). Toute capture passe par le composant `Capture` : légende « Capture du <date> [(carte 2D, avant le globe)] — <description> », cadre au rapport du fichier réservé avant chargement (il grandit avec le message de chargement ou d'erreur au lieu de le rogner, à 320 px comme à police 200 %), message de chargement puis, si le fichier échoue, message d'erreur nommant la capture (sans renvoi vers un dépôt). Le test R3 balaie aussi la prose des quatre études : effectif de pods, scripts, taille de `globe.component.ts` ou « quatre mois de prod » sans date de relevé dans la phrase font échouer le build de tests. Tests : `frontend/tests/l38-etude-fraicheur.test.mjs` et `l38-etudes-aetherwx.e2e.test.mjs` (lit `dist`).
 
 Les étoiles, licences et dates de push des outils testés (`frontend/src/data/tools-tested.ts`) sont relevées à une date affichée sur `/case-studies` (constante `TOOLS_SURVEYED_AT`) ; la corriger avec les valeurs, test : `frontend/tests/l56-verite-outils.e2e.test.mjs`.
+
+## Revue du contenu
+
+Cinq pages de contenu disent quand elles ont été revues : `/ecosystem`, `/theory`,
+`/learning`, `/videos` et les outils testés de `/case-studies` (pas encore
+`/start` ni les guides). Le bloc (`frontend/src/components/site/RevueContenu.astro`)
+affiche la dernière revue, le rythme (tous les 30 jours) et la prochaine ; un
+dépliant dit ce que la revue a mis à jour, ce qui est signalé périmé (avec sa
+source et sa date de relevé) et ce qui n'a pas été revérifié. Si la date de la
+prochaine revue passe sans nouvelle revue, la page affiche « Revue en retard » :
+rendu au build, et révélé par un petit script dans le navigateur sans nouveau
+build.
+
+- **Source unique** : `PAGES_REVUES` dans `frontend/src/lib/revue-contenu.mjs`,
+  une clé par page (`derniereRevue`, `corrige`, `perimes`, `nonVerifie`). Les
+  pages ne passent que `page="…"` au composant ; aucune date n'est recopiée
+  ailleurs. Les actualités de `/ecosystem` vivent dans
+  `frontend/src/data/veille-ecosysteme.mjs` (`date`, `nature` `publie` ou
+  `releve`, `source`, `page` = clé de `PAGES_REVUES`), la plus récente en tête.
+- **Faire une revue** : partir des résumés hebdomadaires de la veille, vérifier
+  chaque fait de la page sur sa source en ligne (notes de version, documentation
+  Anthropic, API GitHub pour étoiles, licences et dates, contrôle des liens),
+  corriger la page, puis mettre à jour sa fiche dans `PAGES_REVUES` (date du
+  jour, ce qui a changé, ce qui est périmé, ce qui n'a pas été revérifié) et
+  ajouter les actualités sourcées ; un commit par page.
+- **Gardes du build** : une date invalide, une date dans le futur (comparée au
+  jour de Paris, pas au jour UTC), un élément périmé ou une actualité sans
+  source, ou des actualités dans le désordre font échouer le build. Tests :
+  `frontend/tests/l21-revue-contenu.test.mjs` et
+  `frontend/tests/l21-revue-contenu.e2e.test.mjs`.
 
 ## Mise à jour hebdo
 

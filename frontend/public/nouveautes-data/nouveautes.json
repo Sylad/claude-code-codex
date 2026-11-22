@@ -1,10 +1,10 @@
 {
   "project": "claude-code-codex",
-  "generated": "2026-11-22 11:23",
+  "generated": "2026-11-22 11:46",
   "entries": [
     {
       "slug": "2026-11-22-chaque-page-de-contenu-dit-quand-elle-a-ete-revue",
-      "title": "Chaque page de contenu dit quand elle a été revue",
+      "title": "Cinq pages du site disent quand leur contenu a été revu",
       "date": "2026-11-22",
       "lots": [
         "L21"
@@ -19,7 +19,7 @@
         "La section Actualités de l'écosystème : huit cartes datées, des versions 2.1.327 à 2.1.330 de Claude Code à Fable 5.2, Omnara et deux articles de The Bearded Bear, chacune avec sa source",
         "Au téléphone, le bloc de revue de la page Vidéos : l'adresse de la chaîne Anthropic, qui ne répondait plus, a été remplacée"
       ],
-      "html": "<p>Les pages <a href=\"/ecosystem/\">Écosystème</a>, <a href=\"/theory/\">Théorie</a>, <a href=\"/learning/\">Learning</a>, <a href=\"/videos/\">Vidéos</a> et les outils testés de <a href=\"/case-studies/\">Case studies</a> affichent maintenant la date de leur dernière revue, leur rythme (tous les 30 jours) et la date de la prochaine. Si la date passe sans nouvelle revue, la page le signale d'elle-même : « des informations de cette page peuvent être périmées ». Un lien déplie ce que la revue a mis à jour, ce qui est signalé périmé et ce qui n'a pas été revérifié.</p>\n<p>Première revue, le 22 novembre 2026, chaque fait vérifié sur sa source en ligne :</p>\n<ul><li><strong>Actualités de l'écosystème</strong> : une nouvelle section de la page Écosystème liste les nouveautés retenues par la veille, chacune avec sa date et sa source (versions 2.1.327 à 2.1.330 de Claude Code, modèle Fable 5.2, deux articles en français sur les sous-agents).</li><li><strong>Théorie</strong> : les longueurs minimales du cache et les tarifs de lecture suivent la documentation actuelle d'Anthropic, et l'exemple de requête utilise le modèle qu'elle conseille par défaut.</li><li><strong>Vidéos</strong> : le lien de la chaîne Anthropic menait à une page introuvable ; il est remplacé par celui que donne le site d'Anthropic.</li><li><strong>Learning</strong> : une nouvelle source francophone, le blog The Bearded Bear.</li><li><strong>Outils testés</strong> : étoiles, licences et dates de mise à jour relevées à nouveau pour les 31 outils, deux liens de dépôts déplacés corrigés, et Omnara ajouté sur le radar.</li></ul>"
+      "html": "<p>Les pages <a href=\"/ecosystem/\">Écosystème</a>, <a href=\"/theory/\">Théorie</a>, <a href=\"/learning/\">Learning</a>, <a href=\"/videos/\">Vidéos</a> et les outils testés de <a href=\"/case-studies/\">Case studies</a> affichent maintenant la date de leur dernière revue, leur rythme (tous les 30 jours) et la date de la prochaine. La page Démarrer et les guides n'ont pas encore ce bloc. Si la date passe sans nouvelle revue, la page le signale d'elle-même : « des informations de cette page peuvent être périmées ». Un lien déplie ce que la revue a mis à jour, ce qui est signalé périmé et ce qui n'a pas été revérifié.</p>\n<p>Première revue, le 22 novembre 2026, chaque fait vérifié sur sa source en ligne :</p>\n<ul><li><strong>Actualités de l'écosystème</strong> : une nouvelle section de la page Écosystème liste les nouveautés retenues par la veille, chacune avec sa date et sa source (versions 2.1.327 à 2.1.330 de Claude Code, modèle Fable 5.2, deux articles en français sur les sous-agents).</li><li><strong>Théorie</strong> : les longueurs minimales du cache et les tarifs de lecture suivent la documentation actuelle d'Anthropic, et l'exemple de requête utilise le modèle qu'elle conseille par défaut.</li><li><strong>Vidéos</strong> : le lien de la chaîne Anthropic menait à une page introuvable ; il est remplacé par celui que donne le site d'Anthropic.</li><li><strong>Learning</strong> : une nouvelle source francophone, le blog The Bearded Bear.</li><li><strong>Outils testés</strong> : étoiles, licences et dates de mise à jour relevées à nouveau pour les 31 outils, deux liens de dépôts déplacés corrigés, et Omnara ajouté sur le radar.</li></ul>"
     },
     {
       "slug": "2026-11-21-page-ecosysteme-des-commandes-lisibles-et-vraiment-executables",

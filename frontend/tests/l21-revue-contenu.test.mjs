@@ -4,7 +4,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  PAGES_REVUES, RYTHME_JOURS, etatRevue, prochaineRevue, verifierRevues,
+  PAGES_REVUES, RYTHME_JOURS, etatRevue, jourParis, prochaineRevue, verifierRevues,
 } from '../src/lib/revue-contenu.mjs';
 import { actualites, verifierActualites } from '../src/data/veille-ecosysteme.mjs';
 
@@ -59,4 +59,21 @@ test('L21 — chaque actualité de la veille est datée, sourcée et rattachée 
   assert.deepEqual(dates, [...dates].sort().reverse());
   assert.doesNotThrow(() => verifierActualites(new Date('2026-11-22T12:00:00Z')));
   assert.throws(() => verifierActualites(new Date('2026-11-01T12:00:00Z')), /futur/);
+});
+
+test('L21 — les gardes de date comparent au jour de Paris, pas au jour UTC', () => {
+  // 0 h 30 à Paris le 22-11 = 23 h 30 UTC le 21-11 : une revue datée du 22 est acceptée.
+  const minuitTrenteParis = new Date('2026-11-22T00:30:00+01:00');
+  assert.equal(jourParis(minuitTrenteParis), '2026-11-22');
+  assert.doesNotThrow(() => verifierRevues(minuitTrenteParis));
+  assert.doesNotThrow(() => verifierActualites(minuitTrenteParis));
+  // Heure d'été : 1 h 30 à Paris le 15-07 = 23 h 30 UTC le 14-07.
+  assert.equal(jourParis(new Date('2027-07-15T01:30:00+02:00')), '2027-07-15');
+  // 23 h 30 à Paris le 21-11 : le 22 est encore dans le futur.
+  const veille = new Date('2026-11-21T23:30:00+01:00');
+  assert.equal(jourParis(veille), '2026-11-21');
+  assert.throws(() => verifierRevues(veille), /futur/);
+  assert.throws(() => verifierActualites(veille), /futur/);
+  // Le retard compte aussi en jours de Paris.
+  assert.equal(etatRevue('2026-11-22', new Date('2026-12-23T00:30:00+01:00')).joursDeRetard, 1);
 });
