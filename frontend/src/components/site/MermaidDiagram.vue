@@ -187,7 +187,7 @@ onBeforeUnmount(() => {
       v-if="!isReady && !error"
       class="px-4 py-3 text-xs font-mono text-ink-muted border-t border-white/5"
     >
-      Loading diagram…
+      Chargement du schéma…
     </div>
 
     <div
