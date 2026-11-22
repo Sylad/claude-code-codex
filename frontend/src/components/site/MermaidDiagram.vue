@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, onMounted, onBeforeUnmount } from "vue";
+import { ref, watch, nextTick, onMounted, onBeforeUnmount } from "vue";
 import { Maximize2, X } from "lucide-vue-next";
 
 const props = defineProps<{
@@ -9,13 +9,26 @@ const props = defineProps<{
 
 const inlineContainer = ref<HTMLDivElement | null>(null);
 const fullscreenContainer = ref<HTMLDivElement | null>(null);
+const fullscreenScroller = ref<HTMLDivElement | null>(null);
+const dialog = ref<HTMLDivElement | null>(null);
+const openButton = ref<HTMLButtonElement | null>(null);
+const closeButton = ref<HTMLButtonElement | null>(null);
 const error = ref<string>("");
 const isReady = ref(false);
 const isFullscreen = ref(false);
+// Une zone qui défile se parcourt au clavier : elle devient alors un arrêt de tabulation NOMMÉ
+// (role=region + aria-label, WCAG 4.1.2 — revue L7 r1). Tant qu'elle tient dans son cadre,
+// le diagramme garde un seul arrêt, le bouton « Agrandir » (L32).
+const inlineScrolls = ref(false);
+const fullscreenScrolls = ref(false);
 // Le fullscreen est téléporté dans <body> : rendu seulement une fois monté, le serveur
 // ne peut pas produire ce que Teleport + Transition attendent à l'hydratation.
 const mounted = ref(false);
 let svgString = "";
+let resizeObserver: ResizeObserver | null = null;
+
+// Nom des zones qui défilent : le titre du schéma (sa légende), sinon un nom générique.
+const regionLabel = `Schéma : ${props.caption ?? "architecture"}`;
 
 // Taille rendue minimale du texte d'un schéma (px). En dessous, le schéma garde sa largeur
 // et défile dans son cadre plutôt que d'être réduit à la largeur de l'écran (QA 31-10 : 1,6 px).
@@ -23,32 +36,51 @@ const MIN_TEXT_PX = 11;
 
 const escapeHtml = (v: string) =>
   v.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-const noscriptHtml = `<pre tabindex="0" role="region" aria-label="Diagramme (source)" class="px-4 py-4 overflow-x-auto text-xs leading-snug font-mono text-ink/80 whitespace-pre">${escapeHtml(props.definition)}</pre>`;
+const sourcePre = (label: string) =>
+  `<pre tabindex="0" role="region" aria-label="${label}" class="px-4 py-4 overflow-x-auto text-xs leading-snug font-mono text-ink/80 whitespace-pre">${escapeHtml(props.definition)}</pre>`;
+const noscriptHtml = sourcePre("Diagramme (source)");
+const errorSourceHtml = sourcePre("Source du schéma");
 
-function injectInto(el: HTMLDivElement | null) {
+const scrolls = (el: HTMLElement | null) =>
+  !!el && (el.scrollWidth > el.clientWidth + 1 || el.scrollHeight > el.clientHeight + 1);
+
+function measureScroll() {
+  inlineScrolls.value = scrolls(inlineContainer.value);
+  fullscreenScrolls.value = scrolls(fullscreenScroller.value);
+}
+
+// inline : le svg prend la largeur du cadre (hauteur libre).
+// fullscreen : il s'ajuste à la largeur ET à la hauteur de la fenêtre (revue L7 r1 : à 1440×900,
+// 74 % de la hauteur seulement était visible), sans passer sous MIN_TEXT_PX : au-delà, la zone défile.
+function injectInto(el: HTMLDivElement | null, mode: "inline" | "fullscreen" = "inline") {
   if (!el || !svgString) return;
   el.innerHTML = svgString;
-  // Force the SVG to scale to its container width.
   const svg = el.querySelector("svg");
   if (svg) {
     svg.removeAttribute("width");
     svg.removeAttribute("height");
     svg.setAttribute(
       "style",
-      "width: 100%; height: auto; display: block; max-width: 100%;",
+      mode === "inline"
+        ? "width: 100%; height: auto; display: block; max-width: 100%;"
+        : "width: 100%; height: 100%; display: block;",
     );
     svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
-    // Plus petit texte en unités du viewBox : la largeur plancher du svg en découle.
+    // Plus petit texte en unités du viewBox : la taille plancher du svg en découle.
     const sizes = [...svg.querySelectorAll("text, foreignObject *")]
       .filter((n) => [...n.childNodes].some((c) => c.nodeType === 3 && c.textContent?.trim()))
       .map((n) => parseFloat(getComputedStyle(n).fontSize))
       .filter((px) => px > 0);
-    const viewBoxWidth = svg.viewBox.baseVal.width;
+    const { width: viewBoxWidth, height: viewBoxHeight } = svg.viewBox.baseVal;
     if (sizes.length && viewBoxWidth) {
-      const floor = Math.ceil((viewBoxWidth * MIN_TEXT_PX) / Math.min(...sizes));
-      svg.style.minWidth = `${floor}px`;
+      const ratio = MIN_TEXT_PX / Math.min(...sizes);
+      svg.style.minWidth = `${Math.ceil(viewBoxWidth * ratio)}px`;
+      if (mode === "fullscreen" && viewBoxHeight) {
+        svg.style.minHeight = `${Math.ceil(viewBoxHeight * ratio)}px`;
+      }
     }
   }
+  measureScroll();
 }
 
 onMounted(async () => {
@@ -99,6 +131,10 @@ onMounted(async () => {
     svgString = svg;
     injectInto(inlineContainer.value);
     isReady.value = true;
+    if (typeof ResizeObserver !== "undefined" && inlineContainer.value) {
+      resizeObserver = new ResizeObserver(measureScroll);
+      resizeObserver.observe(inlineContainer.value);
+    }
   } catch (err) {
     // En échec, mermaid laisse en bas de <body> un svg « Syntax error in text » (QA L66) : on le retire,
     // l'erreur reste affichée dans la figure.
@@ -111,11 +147,13 @@ onMounted(async () => {
   window.addEventListener("keydown", onKeydown);
 });
 
-// When fullscreen toggles on, inject into the modal container after it mounts.
-watch(isFullscreen, (open) => {
-  if (open) {
-    requestAnimationFrame(() => injectInto(fullscreenContainer.value));
-  }
+// À l'ouverture : schéma injecté dans la fenêtre, focus déplacé dedans (WCAG 2.4.3).
+watch(isFullscreen, async (open) => {
+  if (!open) return;
+  await nextTick();
+  injectInto(fullscreenContainer.value, "fullscreen");
+  resizeObserver?.observe(fullscreenScroller.value as Element);
+  closeButton.value?.focus();
 });
 
 function open() {
@@ -124,17 +162,48 @@ function open() {
   document.body.style.overflow = "hidden";
 }
 
+// À la fermeture, le focus revient à « Agrandir » (WCAG 2.4.3), même si la fenêtre a été
+// ouverte d'un clic sur le schéma.
 function close() {
+  if (fullscreenScroller.value) resizeObserver?.unobserve(fullscreenScroller.value);
   isFullscreen.value = false;
+  fullscreenScrolls.value = false;
   document.body.style.overflow = "";
+  openButton.value?.focus();
 }
 
+const TABBABLE = 'button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+
 function onKeydown(e: KeyboardEvent) {
-  if (e.key === "Escape" && isFullscreen.value) close();
+  if (!isFullscreen.value) return;
+  if (e.key === "Escape") {
+    e.preventDefault();
+    close();
+    return;
+  }
+  // Le focus reste dans la fenêtre modale : Tab et Maj+Tab bouclent sur ses éléments (WCAG 2.4.3, 2.4.11).
+  if (e.key === "Tab" && dialog.value) {
+    const items = [...dialog.value.querySelectorAll<HTMLElement>(TABBABLE)].filter(
+      (n) => n.tabIndex >= 0 && n.offsetParent !== null,
+    );
+    if (!items.length) return;
+    const first = items[0];
+    const last = items[items.length - 1];
+    const active = document.activeElement as HTMLElement | null;
+    const inside = !!active && dialog.value.contains(active);
+    if (e.shiftKey && (!inside || active === first)) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && (!inside || active === last)) {
+      e.preventDefault();
+      first.focus();
+    }
+  }
 }
 
 onBeforeUnmount(() => {
   window.removeEventListener("keydown", onKeydown);
+  resizeObserver?.disconnect();
   document.body.style.overflow = "";
 });
 </script>
@@ -154,8 +223,10 @@ onBeforeUnmount(() => {
       </span>
       <button
         v-if="isReady"
+        ref="openButton"
         type="button"
-        class="ml-auto inline-flex items-center gap-1 px-2 py-1 rounded text-[10px] font-mono uppercase tracking-wider text-ink-muted hover:text-claude hover:bg-white/5 transition-colors motion-safe:active:scale-95"
+        aria-haspopup="dialog"
+        class="ml-auto inline-flex items-center gap-1 px-2 py-1 rounded cursor-pointer text-[10px] font-mono uppercase tracking-wider text-ink-muted hover:text-claude hover:bg-white/5 transition-colors motion-safe:active:scale-95"
         :title="'Afficher en grand'"
         @click="open"
       >
@@ -172,10 +243,14 @@ onBeforeUnmount(() => {
       :title="isReady ? 'Cliquer pour agrandir' : undefined"
       @click="isReady && open()"
     >
+      <!-- Anneau de focus en retrait (outline-offset négatif) : la figure en overflow-hidden ne le rogne pas. -->
       <div
         ref="inlineContainer"
         data-mermaid-inline
-        class="px-4 py-6 overflow-x-auto min-h-[200px]"
+        :tabindex="inlineScrolls ? 0 : undefined"
+        :role="inlineScrolls ? 'region' : undefined"
+        :aria-label="inlineScrolls ? regionLabel : undefined"
+        class="px-4 py-6 overflow-x-auto min-h-[200px] rounded-b-lg focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-claude"
       ></div>
     </div>
 
@@ -192,10 +267,19 @@ onBeforeUnmount(() => {
 
     <div
       v-if="error"
-      class="px-4 py-3 text-xs font-mono text-rose-400 border-t border-white/5"
+      role="alert"
+      class="px-4 py-3 text-sm text-rose-300 border-t border-white/5 space-y-2"
     >
-      Mermaid render failed: {{ error }}
+      <p>
+        Le schéma n'a pas pu s'afficher. Rechargez la page pour réessayer ;
+        en attendant, sa source ci-dessous décrit les mêmes liens.
+      </p>
+      <p class="font-mono text-xs text-ink-muted">Détail technique : {{ error }}</p>
     </div>
+    <details v-if="error" class="border-t border-white/5">
+      <summary class="px-4 py-2 text-xs font-mono text-ink-muted cursor-pointer">Voir la source du schéma</summary>
+      <div v-html="errorSourceHtml"></div>
+    </details>
 
     <figcaption
       v-if="caption"
@@ -216,10 +300,11 @@ onBeforeUnmount(() => {
     >
       <div
         v-if="isFullscreen"
+        ref="dialog"
         class="fixed inset-0 z-50 bg-paper/95 backdrop-blur-md flex flex-col"
         role="dialog"
         aria-modal="true"
-        :aria-label="caption ?? 'Diagramme architecture'"
+        :aria-label="caption ?? 'Schéma d\'architecture'"
       >
         <div
           class="shrink-0 flex items-center justify-between px-5 py-3 border-b border-white/5 bg-white/[0.02]"
@@ -233,8 +318,9 @@ onBeforeUnmount(() => {
             </span>
           </div>
           <button
+            ref="closeButton"
             type="button"
-            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-mono uppercase tracking-wider text-ink-muted hover:text-claude hover:bg-white/5 transition-colors motion-safe:active:scale-95"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded cursor-pointer text-xs font-mono uppercase tracking-wider text-ink-muted hover:text-claude hover:bg-white/5 transition-colors motion-safe:active:scale-95"
             :title="'Fermer (Esc)'"
             @click="close"
           >
@@ -243,13 +329,18 @@ onBeforeUnmount(() => {
           </button>
         </div>
 
+        <!-- min-h-0 : la zone prend la hauteur restante de la fenêtre, le svg s'y ajuste (largeur et hauteur). -->
         <div
-          class="flex-1 overflow-auto p-4 sm:p-8"
+          ref="fullscreenScroller"
+          :tabindex="fullscreenScrolls ? 0 : undefined"
+          :role="fullscreenScrolls ? 'region' : undefined"
+          :aria-label="fullscreenScrolls ? regionLabel : undefined"
+          class="flex-1 min-h-0 flex overflow-auto p-4 sm:p-8 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-claude"
           @click.self="close"
         >
           <div
             ref="fullscreenContainer"
-            class="w-full max-w-[1600px] mx-auto"
+            class="flex-1 min-w-0 min-h-0 max-w-[1600px] mx-auto"
           ></div>
         </div>
 

@@ -53,7 +53,7 @@ test('L7/t1 — chaque carte d\'outil a un titre qui nomme l\'outil et son rôle
   await context.close();
 });
 
-test('L7/t2 — le schéma de l\'atelier se lit à 75 % au moins sans défiler, à 1440 px', { timeout: 120_000 }, async (t) => {
+test('L7/t2 — le schéma de l\'atelier se lit à 75 % au moins sans défiler, à 1440 px (entier depuis r1 : l7-r1)', { timeout: 120_000 }, async (t) => {
   const env = await setupBrowser(t);
   if (!env) return;
   const { context, page } = await open(env, 1440);

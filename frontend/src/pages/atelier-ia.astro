@@ -108,14 +108,18 @@ const tools = [
     </CaseStudySection>
 
     <CaseStudySection eyebrow="Architecture mentale">
+      <!-- Revue L7 r1 : le schéma (quatre outils côte à côte au même rang) ne tient pas dans la colonne
+           de texte (702 px) sans passer sous 11 px de texte ; dès 64em, sa figure déborde de la colonne
+           (4 rem de chaque côté) pour qu'on le voie en entier à 1024 et 1440 px. -->
+      <div class="lg:-mx-16">
       <MermaidDiagram
         client:visible
         caption="L'atelier IA perso : chaque outil a un rôle, et les frontières comptent autant que les capacités."
         definition={`flowchart TB
-  user["Sylvain : intention, arbitrage, tests réels"]
+  user["Sylvain<br/>intention, arbitrage,<br/>tests réels"]
   repo["Repos WSL + GitHub"]
-  deploy["Cloudflare / K8s dark-blue<br/>NAS : médias et sauvegardes"]
-  data["Données sensibles locales"]
+  deploy["Cloudflare, K8s dark-blue<br/>NAS : médias et sauvegardes"]
+  data["Données<br/>sensibles locales"]
   assets["Images / vidéos"]
 
   claude["Claude Code"]
@@ -138,9 +142,10 @@ const tools = [
   assets --> repo
   kombai -. "essais d'interface" .-> repo
 
-  codex -->|"relecture, docs, pont local"| claude
+  codex -->|"relecture, docs,<br/>pont local"| claude
   claude -->|"chantiers longs"| codex`}
       />
+      </div>
     </CaseStudySection>
 
     <CaseStudySection eyebrow="Règles perso qui émergent">
@@ -182,11 +187,12 @@ const tools = [
 
     <CaseStudySection eyebrow="Prochaine étape">
       <p>
-        Cette section va devenir le carnet de bord des usages réels : coûts,
-        limites de tokens, modèles testés, prompts utiles, échecs, outils
-        adoptés ou rejetés. Le but n'est pas de vendre du rêve IA, mais de
-        garder une trace honnête de ce qui aide vraiment un développeur solo à
-        construire, maintenir et livrer.
+        Le carnet des usages réels existe désormais : le
+        <a href="/livre-de-bord/">livre de bord</a> raconte, semaine après
+        semaine, ce qui a été appris, fabriqué et testé avec ces outils, échecs
+        compris. Le but n'est pas de vendre du rêve
+        IA, mais de garder une trace honnête de ce qui aide vraiment un
+        développeur solo à construire, maintenir et livrer.
       </p>
     </CaseStudySection>
   </section>

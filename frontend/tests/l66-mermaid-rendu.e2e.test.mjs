@@ -13,7 +13,7 @@ import { DIST, setupBrowser } from './lib/e2e-dist.mjs';
 
 const SRC = fileURLToPath(new URL('../src/', import.meta.url));
 // Messages exacts de mermaid et du composant (« syntax error at or near » de Postgres, cité en prose, n'en est pas un).
-const ERREURS = /Parse error on line|Lexical error on line|Syntax error in text|render failed/;
+const ERREURS = /Parse error on line|Lexical error on line|Syntax error in text|render failed|n'a pas pu s'afficher/;
 
 function walk(dir, keep, out = []) {
   if (!existsSync(dir)) return out;
@@ -61,7 +61,7 @@ test('toutes les pages construites : chaque schéma Mermaid a son svg, aucune er
       for (let i = 0; i < n; i++) await figs.nth(i).scrollIntoViewIfNeeded();
       await page.waitForFunction((count) => {
         const f = [...document.querySelectorAll('figure')].filter((x) => x.querySelector('[data-mermaid-inline]'));
-        const settled = f.filter((x) => x.querySelector('[data-mermaid-inline] svg') || x.textContent.includes('render failed'));
+        const settled = f.filter((x) => x.querySelector('[data-mermaid-inline] svg') || /render failed|n'a pas pu s'afficher/.test(x.textContent));
         return f.length === count && settled.length === count;
       }, n, { timeout: 20000 }).catch(() => {});
     }

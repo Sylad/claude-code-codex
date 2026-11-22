@@ -3,8 +3,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { setupBrowser } from './lib/e2e-dist.mjs';
 
-// (1) un diagramme = un seul arrêt Tab (le bouton « Agrandir »), rien d'interactif ni de région sur le conteneur du diagramme
-test('diagramme Mermaid : un seul arrêt Tab par diagramme, pas de région imbriquée', async (t) => {
+// (1) un diagramme = un seul arrêt Tab (le bouton « Agrandir ») tant qu'il tient dans son cadre ; s'il défile,
+//     un second arrêt : son conteneur, région nommée (revue L7 r1, WCAG 4.1.2), jamais un arrêt sans nom.
+test('diagramme Mermaid : « Agrandir », plus la zone du schéma seulement si elle défile, et alors nommée', async (t) => {
   const env = await setupBrowser(t);
   if (!env) return;
   const ctx = await env.browser.newContext({ viewport: { width: 1440, height: 900 } });
@@ -23,12 +24,16 @@ test('diagramme Mermaid : un seul arrêt Tab par diagramme, pas de région imbri
     const figs = [...document.querySelectorAll('figure')].filter((f) => f.querySelector('[data-mermaid-inline]'));
     return figs.map((f) => {
       const stops = [...f.querySelectorAll('button, a[href], input, select, textarea, [tabindex]')].filter((n) => n.tabIndex >= 0 && !n.closest('noscript'));
-      const nested = f.querySelector('[data-mermaid-inline][tabindex], [data-mermaid-inline][role], [data-mermaid-inline][aria-label], [role="button"] [tabindex], [role="button"] [role="region"], [role="button"] [aria-label]');
-      return { stops: stops.length, nested: !!nested };
+      const c = f.querySelector('[data-mermaid-inline]');
+      const defile = c.scrollWidth > c.clientWidth + 1;
+      const nested = !!f.querySelector('[role="button"] [tabindex], [role="button"] [role="region"], [role="button"] [aria-label]');
+      const nommee = c.getAttribute('role') === 'region' && !!c.getAttribute('aria-label')?.trim() && c.tabIndex === 0;
+      const muette = !c.hasAttribute('role') && !c.hasAttribute('aria-label') && !c.hasAttribute('tabindex');
+      return { stops: stops.length, attendu: defile ? 2 : 1, nested, ok: defile ? nommee : muette };
     });
   });
   assert.ok(r.length > 0, 'aucun diagramme trouvé');
-  for (const x of r) assert.deepEqual(x, { stops: 1, nested: false });
+  for (const x of r) assert.deepEqual(x, { stops: x.attendu, attendu: x.attendu, nested: false, ok: true });
   await ctx.close();
 });
 

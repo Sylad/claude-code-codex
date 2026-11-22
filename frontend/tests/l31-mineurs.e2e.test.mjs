@@ -39,12 +39,17 @@ test('blocs défilants (pre, overflow-x-auto) : tabindex=0, role=region, aria-la
   assert.deepEqual(fautifs, []);
 });
 
-// le conteneur du diagramme est DANS un role=button : pas d'interactif imbriqué (nested-interactive)
-test('diagramme Mermaid : le conteneur inline n’est pas un second arrêt de tabulation', () => {
+// Le conteneur du diagramme n'est un arrêt de tabulation que s'il défile, et alors comme région NOMMÉE
+// (revue L7 r1, WCAG 4.1.2 : Chrome rend focalisable toute zone qui défile, elle était sans rôle ni nom).
+// Les attributs sont liés à l'état « défile » (:tabindex, :role, :aria-label), jamais posés en dur.
+test('diagramme Mermaid : le conteneur inline ne devient une région focalisable que lorsqu’il défile', () => {
   const src = readFileSync(new URL('../src/components/site/MermaidDiagram.vue', import.meta.url), 'utf8');
   const m = src.match(/<div\s+ref="inlineContainer"[^>]*>/);
   assert.ok(m, 'conteneur inline introuvable');
-  assert.ok(!/tabindex|role=|aria-label/.test(m[0]), m[0]);
+  assert.ok(!/\s(tabindex|role|aria-label)=/.test(m[0]), `attribut posé en dur : ${m[0]}`);
+  for (const a of ['tabindex', 'role', 'aria-label']) {
+    assert.match(m[0], new RegExp(`:${a}="inlineScrolls \\?`), `${a} non lié à inlineScrolls`);
+  }
 });
 
 // (3) cadre ou ombre de bord sur les tableaux qui défilent
