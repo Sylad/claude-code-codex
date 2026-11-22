@@ -10,9 +10,9 @@ import { apps } from '../src/data/apps.ts';
 const texte = (p) => readFileSync(join(DIST, p, 'index.html'), 'utf8')
   .replace(/<[^>]+>/g, ' ').replace(/&nbsp;| | /g, ' ').replace(/\s+/g, ' ');
 
-test('R1 — evatosorus : nombre de pages relevé et daté (1 533 au 17-11-2026, L39), plus 1527', () => {
+test('R1 — evatosorus : nombre de pages relevé et daté (1 536 au 22-11-2026, L41 ; 1 533 au 17-11 par L39), plus 1527', () => {
   const t = texte('case-studies/evatosorus');
-  assert.match(t, /1533 pages HTML au 17 novembre 2026/);
+  assert.match(t, /1536 pages HTML au 22 novembre 2026/);
   assert.doesNotMatch(t, /1527/);
 });
 

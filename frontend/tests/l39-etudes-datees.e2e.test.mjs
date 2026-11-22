@@ -52,10 +52,12 @@ test('R2 — toute étude datée cite aussi ses dépôts, et inversement', () =>
   }
 });
 
-test('R3 — les trois études relues le 17 novembre 2026 portent cette date', () => {
-  for (const p of ['avatar-pandora', 'evatosorus', 'claude-code-codex']) {
+test('R3 — les études relues le 17 novembre 2026 portent leur date de dernière mise à jour', () => {
+  // evatosorus rafraîchie le 22 novembre 2026 par L41 (plan d'evatosorus).
+  const DATES = { 'avatar-pandora': '17 novembre 2026', evatosorus: '22 novembre 2026', 'claude-code-codex': '17 novembre 2026' };
+  for (const [p, jour] of Object.entries(DATES)) {
     const d = parTestId(html(`case-studies/${p}`), 'date-maj');
-    assert.equal(d.texte, 'Mis à jour le 17 novembre 2026', p);
+    assert.equal(d.texte, `Mis à jour le ${jour}`, p);
   }
 });
 
@@ -74,7 +76,7 @@ test('R5 — evatosorus : Astro 7, 1 500 espèces enrichies en local, pages dat�
   const t = texte('case-studies/evatosorus');
   assert.match(t, /Astro 7/);
   assert.doesNotMatch(t, /astro@6|vite@7|Astro 6 \+/);
-  assert.match(t, /1533 pages HTML au 17 novembre 2026/);
+  assert.match(t, /1536 pages HTML au 22 novembre 2026/); // relevé de L41
   assert.match(t, /llama 3\.1/);
   assert.match(t, /1 422 fiches enrichies/);
   assert.doesNotMatch(t, /GBIF|CARTO/);

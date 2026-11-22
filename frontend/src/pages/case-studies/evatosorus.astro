@@ -6,16 +6,18 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
 import EtudeFraicheur from "@/components/site/EtudeFraicheur.astro";
 import ChiffreDate from "@/components/site/ChiffreDate.astro";
 
-// L39 — état relu le 17 novembre 2026 dans le dépôt evatosorus : README, CLAUDE.md, HOW-IT-WORKS.md,
-// historique git, frontend/package.json, src/data/generated/species.generated.json (count = 1500).
-const DATE_ETUDE = "2026-11-17";
-// Relevé : nombre de fichiers HTML de frontend/dist après le build du 17-11-2026.
-const nbPages: number | undefined = 1533;
+// L39 — état relu le 17 novembre 2026 ; L41 (plan d'evatosorus) — relu le 22 novembre 2026 dans le dépôt
+// evatosorus : CLAUDE.md, README, HOW-IT-WORKS.md, docs/veille/README.md, Nouveautés du 17 au 22-11,
+// historique git, frontend/package.json (astro 7.4.12, vite 8.3.8), species.seed.ts (26 espèces),
+// species.generated.json (count = 1500), src/data/veille.mjs, src/pages/carte.astro, PaleoMap.tsx.
+const DATE_ETUDE = "2026-11-22";
+// Relevé : nombre de fichiers HTML de frontend/dist après le build du 22-11-2026 (dont 1 513 fiches d'espèces).
+const nbPages: number | undefined = 1536;
 ---
 
 <BaseLayout
   title="Case study · Evatosorus"
-  description="Codex paléontologique offert à une proche, suite d'Eywa : 1 500 espèces du Mésozoïque importées de PaleoBioDB et enrichies hors ligne, carte des fossiles, films, vidéos openart.ai. Astro 7 statique sur Cloudflare Pages."
+  description="Codex paléontologique offert à une proche, suite d'Eywa : 1 500 espèces du Mésozoïque importées de PaleoBioDB et enrichies hors ligne, carte des fossiles, films, vidéos openart.ai, veille trimestrielle sourcée. Astro 7 statique sur Cloudflare Pages."
 >
   <PageHero
     eyebrow="Case study · evatosorus"
@@ -80,13 +82,14 @@ const nbPages: number | undefined = 1533;
   end
 
   subgraph REPO["Dépôt evatosorus (committé)"]
-    seed["species.seed.ts — 24 espèces curées, prioritaires"]
+    seed["species.seed.ts — 26 espèces curées, prioritaires"]
+    veille["veille.mjs — découvertes et corrections datées, sourcées"]
     gen["species.generated.json + images locales"]
     mp4["Vidéos openart.ai (chacune sous 25 MB)"]
   end
 
   subgraph FE["Astro 7 (statique pur)"]
-    pages["Accueil, codex, périodes, fiches, films, carte, vitrines, comprendre, vidéos"]
+    pages["Accueil, codex, périodes, fiches, films, carte, vitrines, comprendre, vidéos, découvertes"]
     islands["Îlots React 19 — CodexBrowser, PaleoMap (Leaflet)"]
   end
 
@@ -100,6 +103,7 @@ const nbPages: number | undefined = 1533;
   enr --> gen
   seed --> pages
   gen --> pages
+  veille --> pages
   mp4 --> pages
   pages --> islands
   pages -->|push main, build auto| CF`}
@@ -115,9 +119,11 @@ const nbPages: number | undefined = 1533;
           > — gratuite, taxonomie exhaustive avec occurrences fossiles datées.
           <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">import-paleobiodb.mjs</code>
           écrit un JSON de 1 500 espèces, fusionné au build avec un
-          <strong>seed manuel</strong> de 24 espèces stars (T-Rex,
-          Vélociraptor, Brachiosaurus, Spinosaurus…). Le seed reste la source
-          de vérité : toute régénération fusionne, n'écrase jamais.
+          <strong>seed manuel</strong> de 26 espèces (24 stars — T-Rex,
+          Vélociraptor, Brachiosaurus, Spinosaurus… — et deux espèces décrites
+          en 2026, entrées par la veille). Le seed reste la source de vérité :
+          toute régénération fusionne, n'écrase jamais. Les doublons fusionnés,
+          le codex compte 1 513 fiches d'espèces au 22 novembre 2026.
         </p>
         <p>
           Importer 1 500 espèces donnait des fiches creuses. Fin mai 2026,
@@ -132,11 +138,55 @@ const nbPages: number | undefined = 1533;
         </p>
         <p>
           La carte des fossiles (Leaflet avec regroupement des points, fond
-          Esri World Dark Gray Base) place les occurrences PaleoBioDB, colorées
-          par période. C'est un îlot React monté en
+          Esri World Dark Gray Base) place les sites de fouille des espèces du
+          seed, sur le globe actuel, colorés par période : 26 espèces au
+          22 novembre 2026 (3 du Trias, 6 du Jurassique, 17 du Crétacé). Depuis
+          le 18 novembre, chaque chiffre compte des <strong>espèces
+          distinctes</strong> : le T. rex, trouvé aux États-Unis et au Canada,
+          ne compte qu'une fois, et la légende dit « espèces », plus « sites ».
+          Chaque repère s'annonce au clavier. Si le fond de carte ne charge
+          pas, un bandeau le dit avec un bouton Réessayer, au lieu d'une carte
+          noire muette ; sous la carte, une liste des sites par pays, rendue au
+          build, sert aussi sans JavaScript. C'est un îlot React monté en
           <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">client:only="react"</code>
           — Leaflet ne survit pas au rendu serveur.
         </p>
+        <figure class="my-6">
+          <img src="/case-studies/evatosorus/02-carte-especes.png" alt="La carte paléo-monde sur ordinateur : légende en espèces avec une pastille de couleur par période, et sur le planisphère sombre des regroupements chiffrés et deux sites isolés" class="rounded-lg border border-white/10" loading="lazy" />
+          <figcaption class="text-xs text-ink-muted mt-2 font-mono">
+            Carte comptée en espèces (L10). Capture du 18 novembre 2026, avant l'entrée des deux espèces de 2026.
+          </figcaption>
+        </figure>
+      </CaseStudySection>
+
+      <CaseStudySection eyebrow="Veille du contenu — fiches revues et sourcées">
+        <p>
+          Un codex de paléontologie vieillit : des espèces sont nommées chaque
+          année, d'autres sont réinterprétées. Depuis le 22 novembre 2026, le
+          site a une page <strong>Découvertes</strong> et une revue
+          <strong>tous les trois mois</strong> (prochaine en février 2027). Une
+          seule source dans le code,
+          <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">veille.mjs</code>,
+          tient les découvertes et les corrections ; chaque fait porte une source
+          en ligne datée, et un test refuse celui qui n'en a pas.
+        </p>
+        <p>
+          Première passe : deux espèces décrites en 2026 entrent dans le codex,
+          Spinosaurus mirabilis (Niger) et Nagatitan (Thaïlande), et cinq fiches
+          sont corrigées — Tyrannosaure, Spinosaure, les deux Nanotyrannus,
+          Aberratiodontus. Chaque fiche revue affiche la date, ce qui a changé
+          et ses sources. Le texte d'Aberratiodontus était faux : il venait de
+          l'enrichissement par l'IA locale, et d'autres le sont probablement.
+          La méthode de la veille prévoit donc d'en relire un échantillon à
+          chaque passe. Aucune image n'entre par la veille sans validation
+          humaine ; les fiches sans illustration le disent en toutes lettres.
+        </p>
+        <figure class="my-6">
+          <img src="/case-studies/evatosorus/01-fiche-revue-tyrannosaure.png" alt="Bas de la fiche du Tyrannosaure : un encadré renvoie à l'actualité sur Nanotyrannus, puis un encadré « Fiche revue le 22 novembre 2026 » explique la correction et liste deux sources datées" class="rounded-lg border border-white/10" loading="lazy" />
+          <figcaption class="text-xs text-ink-muted mt-2 font-mono">
+            Fiche du Tyrannosaure revue par la veille (L29). Capture du 22 novembre 2026.
+          </figcaption>
+        </figure>
       </CaseStudySection>
 
       <CaseStudySection eyebrow="Les films comme porte d'entrée">
@@ -152,8 +202,9 @@ const nbPages: number | undefined = 1533;
           Depuis, d'autres portes se sont ajoutées : une page
           <strong>Vitrines</strong> (« Le musée vivant commence ici ») pour
           les espèces stars, une page <strong>Comprendre</strong> qui explique
-          ce qu'est un dinosaure, une frise des périodes et une page de chaînes
-          vidéo. Le codex complet reste filtrable et paginé par 60.
+          ce qu'est un dinosaure, une frise des périodes, une page de chaînes
+          vidéo et, depuis le 22 novembre 2026, la page Découvertes. Le codex
+          complet reste filtrable et paginé par 60.
         </p>
       </CaseStudySection>
 
@@ -198,6 +249,14 @@ const nbPages: number | undefined = 1533;
           Tailwind 4 + bundler a déjà cassé le build une fois, et le
           <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">CLAUDE.md</code>
           du projet interdit de les monter à l'aveugle.
+        </p>
+        <p>
+          La semaine suivante a été une passe de lisibilité : chaque capture
+          de la page Nouveautés porte une description lue par les lecteurs
+          d'écran ; les vignettes de la frise prennent la couleur de leur
+          période, définie à un seul endroit du code ; la page À propos se lit
+          sur un voile sombre ; les petits textes ne descendent plus sous
+          12 px et le site suit la taille de texte choisie dans le navigateur.
         </p>
 
         <div class="grid gap-4 sm:grid-cols-2 not-prose pt-2">
