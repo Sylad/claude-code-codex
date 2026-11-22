@@ -46,7 +46,9 @@ test('R5 — pile alignée sur frontend/package.json d\'evatosorus : Astro 7.4, 
   assert.doesNotMatch(texte, /Astro 6 statique|Vite 7/);
 });
 
-test('R6 — passe de lisibilité (L26, L32, L11, L52)', () => {
+test('R6 — passe de lisibilité (L26, L32, L11, L52), du 17 au 20 novembre : la même semaine qu\'Astro 7.4', () => {
+  assert.match(texte, /La même semaine, du 17 au 20 novembre, a été une passe de lisibilité/);
+  assert.doesNotMatch(texte, /semaine suivante a été une passe de lisibilité/);
   assert.match(texte, /description lue par les lecteurs d'écran/);
   assert.match(texte, /couleur de leur période/);
   assert.match(texte, /ne descendent plus sous 12 px/);
