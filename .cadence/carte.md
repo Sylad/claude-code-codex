@@ -8,6 +8,22 @@
   source `docs/…` du dépôt cadence, lien GitHub), « Ce que les mesures ne prouvent pas » (`data-limites`), puis
   l'installation npm et les liens dépôt / paquet. Lien depuis « Pour aller plus loin » de `/case-studies/cadence/`.
 
+- Bloc de revue (L21, `components/site/RevueContenu.astro`, `data-revue`) sous le PageHero de `/ecosystem/`,
+  `/theory/`, `/learning/`, `/videos/`, et avant la liste des outils de `/case-studies/` : dernière revue, rythme
+  (30 jours), prochaine revue ; `<details>` « Ce que cette revue a vérifié » (mis à jour, signalé périmé, pas
+  revérifié). « Revue en retard » rendu au build et révélé par un script si la date passe sans nouveau build.
+- `/ecosystem/` : section « Actualités de l'écosystème » (`VeilleEcosysteme.astro`, `data-veille`) APRÈS le catalogue
+  officiel (le catalogue reste au-dessus du pli, test L6/t2), avant la section community.
+
+## Workflow de revue du contenu (L21)
+
+- Source unique : `src/lib/revue-contenu.mjs` (`PAGES_REVUES` : `derniereRevue`, `corrige`, `perimes` avec source et
+  date de relevé, `nonVerifie`) et `src/data/veille-ecosysteme.mjs` (actualités datées `publie`/`releve`, sourcées,
+  plus récente en tête, rattachées à une page). Le build échoue sur une date invalide ou future.
+- À chaque revue : partir des résumés `veille/AAAA-Sww.md` du dossier parent, vérifier chaque fait sur sa source en
+  ligne (notes de version GitHub, doc Anthropic, API GitHub pour étoiles/licences/push, contrôle des liens), mettre à
+  jour la page puis sa fiche de revue ; un commit par page.
+
 ## Décisions
 
 - Un chiffre de cadence n'entre sur le site qu'avec sa date et le fichier du dépôt cadence qui le porte ; les chiffres
@@ -36,6 +52,12 @@
   numéros des cartes, badge RSS, invite `$` passent en `text-claude` plein ; les liens de cartes de
   `/case-studies/` gardent un retour au survol par `hover:underline`.
 
+- L21 (22-11) : rythme de revue 30 jours pour les cinq pages (la veille est hebdomadaire). Seul le résumé S47 existait
+  dans `veille/` (S45, S46 absents). Le renommage Task → Agent (v2.1.63) n'a pas été revérifié : dit sur la page.
+  Une actualité sans date de publication porte la date du relevé, marquée « Relevé le ».
+- `tests/lib/e2e-dist.mjs` `worstPixelContrast` amène l'élément dans la vue avant de le capturer (L21 : le bloc de
+  revue pousse le premier bouton « copier » de `/ecosystem/` sous le pli de 900 px).
+
 ## Tests
 
 - `frontend/tests/l73-pourquoi-cadence.e2e.test.mjs` (lit `dist`) : besoins, définition, chiffres datés et sourcés,
@@ -49,3 +71,7 @@
   texte avec son alpha (et l'opacité des ancêtres) sur le pixel du fond ; un texte orangé marqué sans aucun pixel de
   glyphe reconnu fait échouer le test. Second test : liens « Case study » de `/case-studies/` (surface opaque) ≥ 4,5:1.
 - `frontend/tests/l74-accent-opaque.test.mjs` : garde statique, aucune classe `text-claude/NN` (hors `hover:`/`focus:`).
+- `frontend/tests/l21-revue-contenu.test.mjs` (module pur : rythme, retard, dates futures refusées, actualités
+  datées et sourcées) et `l21-revue-contenu.e2e.test.mjs` (lit `dist` : bloc de revue de chaque page, actualités,
+  contenus mis à jour, pas de débordement à 320/390, avertissement de retard dans le navigateur avec date simulée).
+- L56/L58/L59 suivent le relevé du 22-11 (étoiles, minimums de cache, Fable 5.2).
