@@ -221,6 +221,24 @@ test('bureau 1440 px, au clavier : Tab atteint « Nouveautés » dans la barre, 
 // ── Visionneuse ─────────────────────────────────────────────────────────────
 const viewerOpen = (page) => page.evaluate(() => !!document.querySelector('dialog.news-viewer')?.open);
 
+// L79 — `dialog.open` passe à faux dès la fermeture, mais la page rétablit son état
+// (défilement rendu au corps, zone vidée, focus rendu à la capture) dans le gestionnaire
+// de l'événement `close`, que le navigateur émet dans une tâche suivante. Sous charge,
+// lire l'état juste après `open === false` tombait avant ce gestionnaire. On attend donc
+// l'état rétabli lui-même (sans délai fixe) ; s'il ne vient pas, les assertions disent quoi.
+async function waitViewerClosed(page) {
+  await page
+    .waitForFunction(() => {
+      const d = document.querySelector('dialog.news-viewer');
+      return !d.open && document.body.style.overflow === '' && !d.querySelector('.news-viewer-zone')?.childElementCount;
+    }, null, { timeout: 5000 })
+    .catch(() => {});
+  return page.evaluate(() => {
+    const d = document.querySelector('dialog.news-viewer');
+    return { open: d.open, overflow: document.body.style.overflow, zoneChildren: d.querySelector('.news-viewer-zone')?.childElementCount ?? 0 };
+  });
+}
+
 test('visionneuse : Entrée sur une capture l’ouvre (pas le PNG brut), Échap la ferme et rend le focus', { timeout: 60_000 }, async (t) => {
   const env = await setupBrowser(t);
   if (!env) return;
@@ -230,9 +248,11 @@ test('visionneuse : Entrée sur une capture l’ouvre (pas le PNG brut), Échap 
   const first = page.locator('.news-capture').first();
   await first.focus();
   await page.keyboard.press('Enter');
-  await page.waitForTimeout(200);
+  const opened = await page
+    .waitForFunction(() => !!document.querySelector('dialog.news-viewer')?.open, null, { timeout: 5000 })
+    .then(() => true, () => false);
   assert.ok(new URL(page.url()).pathname.startsWith('/nouveautes'), 'Entrée a ouvert le PNG brut');
-  assert.ok(await viewerOpen(page), 'visionneuse fermée après Entrée');
+  assert.ok(opened, 'visionneuse fermée après Entrée');
   const shown = await page.evaluate(() => {
     const img = document.querySelector('dialog.news-viewer img');
     const r = img.getBoundingClientRect();
@@ -244,9 +264,10 @@ test('visionneuse : Entrée sur une capture l’ouvre (pas le PNG brut), Échap 
   assert.ok(shown.bottom <= 900 && shown.right <= 1440, `capture hors écran (${shown.right}×${shown.bottom})`);
   assert.equal(await page.evaluate(() => document.body.style.overflow), 'hidden', 'la page derrière défile encore');
   await page.keyboard.press('Escape');
-  await page.waitForFunction(() => !document.querySelector('dialog.news-viewer').open);
+  const closed = await waitViewerClosed(page);
+  assert.equal(closed.open, false, 'Échap ne ferme pas');
+  assert.equal(closed.overflow, '', 'la page derrière ne redéfile pas après la fermeture');
   assert.ok(await first.evaluate((el) => el === document.activeElement), 'focus non rendu à la capture');
-  assert.equal(await page.evaluate(() => document.body.style.overflow), '');
 
   // Clic souris : visionneuse aussi ; bouton « Fermer » la referme.
   await page.locator('.news-capture img').first().click();
@@ -631,7 +652,9 @@ test('visionneuse au bureau (1440×900) : capture haute à sa largeur naturelle,
       };
     });
     await page.keyboard.press('Escape');
-    await page.waitForFunction(() => !document.querySelector('dialog.news-viewer').open);
+    // Attendre l'état rétabli : sinon le `close` encore en file vide la zone de la capture suivante.
+    const closed = await waitViewerClosed(page);
+    assert.deepEqual(closed, { open: false, overflow: '', zoneChildren: 0 }, `${c} : état non rétabli après Échap`);
     return r;
   };
   const r = await measure(tall);
