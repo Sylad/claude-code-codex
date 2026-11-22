@@ -141,7 +141,7 @@ lots:
     visible: true
     created: 2026-10-02
     started: 2026-11-22
-    review: { date: 2026-11-22, verdict: "non conforme r0 (tmp/revue-codex-L21.md) : majeur README sans Actualités ni bloc de revue ; mineurs dates comparées en UTC (build refusé à 0 h 30 Paris), Nouveauté dit « chaque page » alors que /start/ et guides n'ont pas de bloc", commit: 6af66a9c48397133e707b01b6304e67c81dfce4a }
+    review: { date: 2026-11-22, verdict: "conforme r1 (relu par le lead : README l. 23-31 étendu, jourParis Europe/Paris avec test minuit et heure d'été, Nouveauté nomme les pages couvertes) ; revue r0 dans tmp/revue-codex-L21.md", commit: 4785b5461db278baf0a77a3ff7811a1346b0de31 }
   - id: L4
     title: Revue UX — Learning
     status: done
