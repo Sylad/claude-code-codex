@@ -1,6 +1,9 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
+import RetourEtudes from "@/components/site/RetourEtudes.astro";
+import CodeEnLigne from "@/components/site/CodeEnLigne.astro";
+import EtudeFraicheur from "@/components/site/EtudeFraicheur.astro";
 
 const lessons = [
   {
@@ -43,16 +46,18 @@ const lessons = [
   description="Test live de Hermes Agent (NousResearch) — install propre malgré curl|bash, gateway Telegram pour piloter ma stack K8s prod depuis le téléphone via Anthropic Sonnet 4.6 (juin 2026). Verdict adopt-conditional, 8 leçons à reprendre."
 >
   <PageHero
-    eyebrow="Test bench · 2026-06-18"
+    eyebrow="Test bench"
     title="Hermes Agent (NousResearch)"
-    intro="Agent self-improving + messaging gateway multi-plateforme + hub 85 722 skills + MCP first-class. 196 852 ⭐ MIT au 18 juin 2026 (259 005 au 31 octobre). Testé en sandbox 100 % contenu, puis branché en live sur Anthropic Sonnet 4.6 (juin 2026 ; le modèle actuel est Sonnet 5.5) pour piloter maritime-atlas depuis Telegram."
+    intro="Agent self-improving + messaging gateway multi-plateforme + hub 85 722 skills + MCP first-class. 196 852 étoiles GitHub, licence MIT, au 18 juin 2026 (259 005 au 31 octobre). Testé en sandbox 100 % contenu, puis branché en live sur Anthropic Sonnet 4.6 (juin 2026 ; le modèle actuel est Sonnet 5.5) pour piloter maritime-atlas depuis Telegram."
   />
 
   <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12">
     <div class="space-y-12">
+      <EtudeFraicheur depots={[{ nom: "NousResearch/hermes-agent", href: "https://github.com/NousResearch/hermes-agent" }]} date="2026-10-31" nature="testé" />
+
 
       <article class="space-y-4">
-        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">Pourquoi le tester</p>
+        <h2 class="font-mono text-xs font-normal uppercase tracking-[0.2em] text-claude">Pourquoi le tester</h2>
         <p class="text-ink leading-relaxed text-base sm:text-lg">
           Le repo
           <a href="https://github.com/NousResearch/hermes-agent" target="_blank" rel="noopener" class="text-claude hover:text-claude-soft underline underline-offset-4">NousResearch/hermes-agent</a>
@@ -64,7 +69,7 @@ const lessons = [
       </article>
 
       <article class="space-y-4">
-        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">Ce qu'on a testé</p>
+        <h2 class="font-mono text-xs font-normal uppercase tracking-[0.2em] text-claude">Ce qu'on a testé</h2>
         <ul class="space-y-2.5 text-ink leading-relaxed">
           <li class="flex gap-3">
             <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
@@ -102,30 +107,30 @@ const lessons = [
       </article>
 
       <article class="space-y-4">
-        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">Verdict</p>
+        <h2 class="font-mono text-xs font-normal uppercase tracking-[0.2em] text-claude">Verdict</h2>
 
         <div class="grid gap-4 sm:grid-cols-2">
           <div class="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-5">
             <p class="font-mono text-xs uppercase tracking-wider text-emerald-400 mb-2">Ce qui fonctionne</p>
             <ul class="text-sm text-ink-muted leading-relaxed space-y-1.5">
-              <li>• Install <code class="font-mono text-emerald-300/80 text-[0.9em]">curl|bash</code> mais respecte rigoureusement <code class="font-mono text-emerald-300/80 text-[0.9em]">--hermes-home</code> → sandbox propre</li>
-              <li>• <code class="font-mono text-emerald-300/80 text-[0.9em]">uninstall.py</code> 39 KB de vraie logique (issue #46359 ouvre un mode <code class="font-mono text-emerald-300/80 text-[0.9em]">--dry-run</code>)</li>
-              <li>• 16 providers LLM supportés, switch en 4 lignes <code class="font-mono text-emerald-300/80 text-[0.9em]">hermes config set</code></li>
+              <li>• Install <code class="font-mono text-positive text-[0.9em]">curl|bash</code> mais respecte rigoureusement <code class="font-mono text-positive text-[0.9em]">--hermes-home</code> → sandbox propre</li>
+              <li>• <code class="font-mono text-positive text-[0.9em]">uninstall.py</code> 39 KB de vraie logique (issue #46359 ouvre un mode <code class="font-mono text-positive text-[0.9em]">--dry-run</code>)</li>
+              <li>• 16 providers LLM supportés, switch en 4 lignes <code class="font-mono text-positive text-[0.9em]">hermes config set</code></li>
               <li>• Round-trip Telegram → Big-Blue → Anthropic → Sonnet 4.6 → réponse Claude en ~3 s</li>
-              <li>• Hub 85 722 skills + 100 official Nous browsable via <code class="font-mono text-emerald-300/80 text-[0.9em]">hermes skills browse</code></li>
-              <li>• Allowlist <code class="font-mono text-emerald-300/80 text-[0.9em]">TELEGRAM_ALLOWED_USERS</code> bloque tout user_id inconnu</li>
+              <li>• Hub 85 722 skills + 100 official Nous browsable via <code class="font-mono text-positive text-[0.9em]">hermes skills browse</code></li>
+              <li>• Allowlist <code class="font-mono text-positive text-[0.9em]">TELEGRAM_ALLOWED_USERS</code> bloque tout user_id inconnu</li>
               <li>• Prompt caching activé par défaut (cache TTL 5 min) → coût réel bien sous le théorique</li>
             </ul>
           </div>
           <div class="rounded-xl border border-rose-500/20 bg-rose-500/5 p-5">
             <p class="font-mono text-xs uppercase tracking-wider text-rose-400 mb-2">Ce qui pète</p>
             <ul class="text-sm text-ink-muted leading-relaxed space-y-1.5">
-              <li>• Footprint sandbox <strong>1,8 GB</strong> même avec <code class="font-mono text-rose-300/80 text-[0.9em]">--skip-browser --no-skills</code></li>
-              <li>• Compat agentskills.io <strong>partielle</strong> : frontmatter Claude Code n'est pas auto-importé, conversion mécanique nécessaire (<code class="font-mono text-rose-300/80 text-[0.9em]">version</code> / <code class="font-mono text-rose-300/80 text-[0.9em]">author</code> / <code class="font-mono text-rose-300/80 text-[0.9em]">license</code> / <code class="font-mono text-rose-300/80 text-[0.9em]">platforms</code> à ajouter)</li>
-              <li>• <code class="font-mono text-rose-300/80 text-[0.9em]">~/.local/bin/hermes</code> launcher 165 B reste après <code class="font-mono text-rose-300/80 text-[0.9em]">hermes uninstall --full</code> (mineur)</li>
-              <li>• <code class="font-mono text-rose-300/80 text-[0.9em]">hermes config set agent.model</code> ≠ <code class="font-mono text-rose-300/80 text-[0.9em]">model.default</code> — la première forme passe sans erreur mais ne fait rien</li>
-              <li>• Pas de <code class="font-mono text-rose-300/80 text-[0.9em]">--dry-run</code> sur l'installer (red flag <code class="font-mono text-rose-300/80 text-[0.9em]">curl|bash</code> partiel)</li>
-              <li>• Setup wizard pousse OAuth Nous Portal — skippable via <code class="font-mono text-rose-300/80 text-[0.9em]">--skip-setup</code> mais à savoir</li>
+              <li>• Footprint sandbox <strong>1,8 GB</strong> même avec <code class="font-mono text-negative text-[0.9em]">--skip-browser --no-skills</code></li>
+              <li>• Compat agentskills.io <strong>partielle</strong> : frontmatter Claude Code n'est pas auto-importé, conversion mécanique nécessaire (<code class="font-mono text-negative text-[0.9em]">version</code> / <code class="font-mono text-negative text-[0.9em]">author</code> / <code class="font-mono text-negative text-[0.9em]">license</code> / <code class="font-mono text-negative text-[0.9em]">platforms</code> à ajouter)</li>
+              <li>• <code class="font-mono text-negative text-[0.9em]">~/.local/bin/hermes</code> launcher 165 B reste après <code class="font-mono text-negative text-[0.9em]">hermes uninstall --full</code> (mineur)</li>
+              <li>• <code class="font-mono text-negative text-[0.9em]">hermes config set agent.model</code> ≠ <code class="font-mono text-negative text-[0.9em]">model.default</code> — la première forme passe sans erreur mais ne fait rien</li>
+              <li>• Pas de <code class="font-mono text-negative text-[0.9em]">--dry-run</code> sur l'installer (red flag <code class="font-mono text-negative text-[0.9em]">curl|bash</code> partiel)</li>
+              <li>• Setup wizard pousse OAuth Nous Portal — skippable via <code class="font-mono text-negative text-[0.9em]">--skip-setup</code> mais à savoir</li>
             </ul>
           </div>
         </div>
@@ -142,7 +147,7 @@ const lessons = [
       </article>
 
       <article class="space-y-4">
-        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">Le use case unique : Claude Code mobile sans Anthropic vendor lock</p>
+        <h2 class="font-mono text-xs font-normal uppercase tracking-[0.2em] text-claude">Le use case unique : Claude Code mobile sans Anthropic vendor lock</h2>
         <p class="text-ink leading-relaxed">
           Le pattern résume bien la différence entre <strong>Claude Code Remote</strong> (cloud Anthropic, sandbox géré, pas d'accès à ta stack locale) et <strong>Hermes self-hosted</strong>
           (tourne sur Big-Blue, accès <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">kubectl --context mini-blue</code> /
@@ -198,7 +203,7 @@ const lessons = [
       </article>
 
       <article class="space-y-4">
-        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">Leçons à reprendre (8)</p>
+        <h2 class="font-mono text-xs font-normal uppercase tracking-[0.2em] text-claude">Leçons à reprendre (8)</h2>
         <p class="text-ink-muted leading-relaxed">
           Hermes adopté ne ferme aucune des leçons — au contraire, le patterns d'install propre, de provider switch, et de bot security sont à reprendre dans nos propres tools.
         </p>
@@ -207,8 +212,8 @@ const lessons = [
           {lessons.map((l, i) => (
             <li class="rounded-xl border border-white/10 bg-paper-elevated p-5">
               <p class="font-mono text-xs text-claude mb-2">{String(i + 1).padStart(2, "0")}</p>
-              <h3 class="text-base font-medium text-ink mb-1.5">{l.title}</h3>
-              <p class="text-sm text-ink-muted leading-relaxed">{l.body}</p>
+              <h3 class="text-base font-medium text-ink mb-1.5"><CodeEnLigne texte={l.title} /></h3>
+              <p class="text-sm text-ink-muted leading-relaxed"><CodeEnLigne texte={l.body} /></p>
             </li>
           ))}
         </ol>
@@ -233,8 +238,8 @@ const lessons = [
             <a href="https://hermes-agent.nousresearch.com/docs/" target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">
               ↗ Docs
             </a>
-            <a href="/tools-tested" class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">
-              ← Tous les tools tested
+            <a href="/case-studies/#outils-testes" class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">
+              ← Tous les outils testés
             </a>
           </div>
         </div>
@@ -242,4 +247,5 @@ const lessons = [
 
     </div>
   </section>
+  <RetourEtudes />
 </BaseLayout>

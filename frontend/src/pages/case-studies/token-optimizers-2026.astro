@@ -1,6 +1,9 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
+import RetourEtudes from "@/components/site/RetourEtudes.astro";
+import CodeEnLigne from "@/components/site/CodeEnLigne.astro";
+import EtudeFraicheur from "@/components/site/EtudeFraicheur.astro";
 
 type Verdict = "adopt" | "adopt-conditional" | "browsed" | "to-test" | "skip";
 
@@ -23,7 +26,7 @@ const tools: Array<{
     verdict: "adopt",
     verdictLabel: "Adopt",
     reason: "Construit maison, intercepte Bash via hook PreToolUse, filtre les outputs git/ls/grep/find. Mesuré, observable via `rtk gain`.",
-    repoHref: "/case-studies/rtk",
+    repoHref: "https://github.com/rtk-ai/rtk",
   },
   {
     name: "code-review-graph",
@@ -64,7 +67,7 @@ const tools: Array<{
     claim: "97.9% tsbench à -80% tokens sur Opus 4.7",
     verdict: "adopt-conditional",
     verdictLabel: "Adopt-conditional",
-    reason: "Testé 2026-05-20 en venv. Zéro pollution ~/.claude/, index maritime-atlas 196 files / 31363 lignes en 0.22s. `ts init --dry-run` truthful. Adopt-conditional : venv-only + profile `optimized` + `ts init` à appliquer manuellement après inspection diff (Self-Modification hook). Complémentaire à RTK + code-review-graph.",
+    reason: "Testé le 20 mai 2026 en venv. Zéro pollution ~/.claude/, index maritime-atlas 196 files / 31363 lignes en 0.22s. `ts init --dry-run` truthful. Adopt-conditional : venv-only + profile `optimized` + `ts init` à appliquer manuellement après inspection diff (Self-Modification hook). Complémentaire à RTK + code-review-graph.",
     caseStudyHref: "/case-studies/token-savior",
     repoHref: "https://github.com/Mibayy/token-savior",
   },
@@ -75,7 +78,7 @@ const tools: Array<{
     claim: "Analytics usage par jour/semaine/mois/session",
     verdict: "adopt",
     verdictLabel: "Adopt (le plus propre)",
-    reason: "Testé 2026-05-29 via `npx ccusage@latest`. ZÉRO pollution (md5 CLAUDE.md + settings.json inchangés, aucun marketplace, rien dans ~/.config|~/.cache). Pur read-only, MIT, 19.3k⭐ (au 2026-10-31), v20 pushé le jour même, multi-agent (Claude/Codex/Gemini/Copilot). N'est PAS un optimizer mais le complément : RTK/token-savior réduisent les tokens, ccusage les mesure. Caveat : coût = pricing API public × tokens, donc proxy de volume (sur-estime sous abonnement Max/Team).",
+    reason: "Testé le 29 mai 2026 via `npx ccusage@latest`. ZÉRO pollution (md5 CLAUDE.md + settings.json inchangés, aucun marketplace, rien dans ~/.config|~/.cache). Pur read-only, MIT, 19.3k étoiles (au 31 octobre 2026), v20 pushé le jour même, multi-agent (Claude/Codex/Gemini/Copilot). N'est PAS un optimizer mais le complément : RTK/token-savior réduisent les tokens, ccusage les mesure. Caveat : coût = pricing API public × tokens, donc proxy de volume (sur-estime sous abonnement Max/Team).",
     repoHref: "https://github.com/ryoppippi/ccusage",
   },
   {
@@ -112,10 +115,10 @@ const tools: Array<{
 
 const verdictStyle: Record<Verdict, string> = {
   "adopt": "border-emerald-500/30 bg-emerald-500/10 text-emerald-300",
-  "adopt-conditional": "border-emerald-500/20 bg-emerald-500/5 text-emerald-300/80",
-  "browsed": "border-amber-500/20 bg-amber-500/5 text-amber-300/80",
+  "adopt-conditional": "border-emerald-500/20 bg-emerald-500/5 text-positive",
+  "browsed": "border-amber-500/20 bg-amber-500/5 text-caution",
   "to-test": "border-claude/20 bg-claude/5 text-claude",
-  "skip": "border-rose-500/20 bg-rose-500/5 text-rose-300/80",
+  "skip": "border-rose-500/20 bg-rose-500/5 text-negative",
 };
 
 const lessons = [
@@ -147,18 +150,20 @@ const lessons = [
   description="Bench de 9 outils token-optimizers (+ ccusage analytics) Claude Code (RTK adopté, code-review-graph adopt-conditional, drona23 + nadimtuhin piqués, alexgreensh/ooples/zilliz/Mibayy écartés). Méta-leçons sur le screening écosystème."
 >
   <PageHero
-    eyebrow="Test bench · 2026-05-20"
+    eyebrow="Test bench"
     title="Token-optimizers landscape 2026"
     intro="L'écosystème Claude Code a explosé en outils d'optimisation tokens : MCP servers, plugins marketplace, fichiers CLAUDE.md, daemons, CLI wrappers. Bench de 9 candidats (mai 2026) — qui marche, qui est gadget, et les 5 méta-leçons sur le screening."
   />
 
   <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12">
     <div class="space-y-12">
+      <EtudeFraicheur depots={tools.map((t) => ({ nom: t.repoHref.replace("https://github.com/", ""), href: t.repoHref }))} date="2026-10-31" nature="testé" />
+
 
       <article class="space-y-4">
-        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+        <h2 class="font-mono text-xs font-normal uppercase tracking-[0.2em] text-claude">
           La grille
-        </p>
+        </h2>
         <p class="text-ink-muted leading-relaxed">
           Tri par verdict : <em>adopt</em> en haut, <em>skip</em> en bas. Lien
           repo + lien case study quand on a fait un deep-dive dédié.
@@ -176,14 +181,14 @@ const lessons = [
               </div>
               <p class="text-sm text-ink-muted leading-relaxed mb-2">
                 <span class="font-mono text-xs uppercase tracking-wider text-claude mr-1.5">Approche</span>
-                {t.approach}
+                <CodeEnLigne texte={t.approach} />
               </p>
               <p class="text-sm text-ink-muted leading-relaxed mb-2">
                 <span class="font-mono text-xs uppercase tracking-wider text-claude mr-1.5">Claim</span>
                 {t.claim}
               </p>
               <p class="text-sm text-ink leading-relaxed">
-                {t.reason}
+                <CodeEnLigne texte={t.reason} />
               </p>
               <div class="mt-3 flex flex-wrap gap-2 text-xs">
                 {t.caseStudyHref && (
@@ -205,9 +210,9 @@ const lessons = [
       </article>
 
       <article class="space-y-4">
-        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+        <h2 class="font-mono text-xs font-normal uppercase tracking-[0.2em] text-claude">
           Méta-leçons ({lessons.length})
-        </p>
+        </h2>
         <p class="text-ink-muted leading-relaxed">
           Patterns qui émergent du bench global, transférables à toute nouvelle
           évaluation d'outil écosystème Claude :
@@ -218,8 +223,8 @@ const lessons = [
               <p class="font-mono text-xs text-claude mb-2">
                 {String(i + 1).padStart(2, "0")}
               </p>
-              <h3 class="text-base font-medium text-ink mb-1.5">{l.title}</h3>
-              <p class="text-sm text-ink-muted leading-relaxed">{l.body}</p>
+              <h3 class="text-base font-medium text-ink mb-1.5"><CodeEnLigne texte={l.title} /></h3>
+              <p class="text-sm text-ink-muted leading-relaxed"><CodeEnLigne texte={l.body} /></p>
             </li>
           ))}
         </ol>
@@ -243,7 +248,7 @@ const lessons = [
             ou créé du double-up avec RTK.
           </p>
           <p class="text-ink leading-relaxed mt-3 text-sm">
-            <strong>Leçon ccusage (2026-05-29)</strong> : ne pas confondre
+            <strong>Leçon ccusage (29 mai 2026)</strong> : ne pas confondre
             <em>réduire</em> et <em>mesurer</em>. RTK/token-savior optimisent la
             conso ; ccusage la quantifie (read-only, npx, zéro footprint — le
             test-tool le plus propre du lot). Les deux familles cohabitent : on
@@ -252,9 +257,10 @@ const lessons = [
         </div>
       </article>
 
-      <p class="text-center text-xs text-ink/50 font-mono pt-4">
-        Bench mené 2026-05-20 (+ ccusage 2026-05-29) · 9 candidats · 4 adoptés / 2 piqués / 3 écartés.
+      <p class="text-center text-xs text-ink-muted font-mono pt-4">
+        Banc mené le 20 mai 2026 (ccusage le 29 mai 2026) · 9 candidats · 4 adoptés / 2 piqués / 3 écartés.
       </p>
     </div>
   </section>
+  <RetourEtudes />
 </BaseLayout>

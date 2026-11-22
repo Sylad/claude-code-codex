@@ -1,6 +1,8 @@
 // L27 — Aucune étude de cas ne fait défiler la page latéralement à 320 et 390 px
 // (QA prod 05-10 : maritime-atlas, scrollWidth 600 pour clientWidth 390). Les pages sont
 // trouvées dans dist/case-studies, pas listées à la main. Lit le site CONSTRUIT : `npx astro build` avant.
+// L8 (revue UX, WCAG 1.4.4) : aussi avec le texte à 200 % (html { font-size: 200% }), et l'index des
+// études — la revue mesurait 119 px (finance-tracker), 174 px (hermes-agent), 15 px (index) à 390 px.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readdirSync, existsSync } from 'node:fs';
@@ -17,15 +19,16 @@ test('les études de cas sont trouvées', () => {
   assert.ok(routes.includes('/case-studies/maritime-atlas/'));
 });
 
-test('étude de cas : pas de défilement latéral de la page à 320 et 390 px', { timeout: 300_000 }, async (t) => {
+test('étude de cas : pas de défilement latéral de la page à 320 et 390 px, texte à 100 et 200 %', { timeout: 600_000 }, async (t) => {
   const env = await setupBrowser(t);
   if (!env) return;
   const failures = [];
   for (const width of [320, 390]) {
     const context = await env.browser.newContext({ viewport: { width, height: 844 } });
     const page = await context.newPage();
-    for (const route of routes) {
+    for (const [route, taille] of ['/case-studies/', ...routes].flatMap((r) => [[r, 100], [r, 200]])) {
       await page.goto(`${env.base}${route}`, { waitUntil: 'load' });
+      if (taille !== 100) await page.addStyleTag({ content: `html { font-size: ${taille}% !important; }` });
       await page.evaluate(() => document.fonts.ready);
       const m = await page.evaluate(() => {
         const cw = document.documentElement.clientWidth;
@@ -34,7 +37,7 @@ test('étude de cas : pas de défilement latéral de la page à 320 et 390 px', 
           .slice(0, 3).map((el) => `${el.tagName.toLowerCase()}.${String(el.className).slice(0, 40)}`);
         return { sw: document.documentElement.scrollWidth, cw, culprits };
       });
-      if (m.sw > m.cw) failures.push(`${route} @${width}px : scrollWidth ${m.sw} > clientWidth ${m.cw} (${m.culprits.join(' | ')})`);
+      if (m.sw > m.cw) failures.push(`${route} @${width}px texte ${taille} % : scrollWidth ${m.sw} > clientWidth ${m.cw} (${m.culprits.join(' | ')})`);
     }
     await context.close();
   }

@@ -1,6 +1,8 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
+import RetourEtudes from "@/components/site/RetourEtudes.astro";
+import EtudeFraicheur from "@/components/site/EtudeFraicheur.astro";
 import MermaidDiagram from "@/components/site/MermaidDiagram.vue";
 import CaseStudySection from "@/components/site/CaseStudySection.astro";
 ---
@@ -10,14 +12,14 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
   description="OL Companion — compagnon de saison Olympique Lyonnais. React + TanStack côté front, NestJS + crons côté back, push live via SSE depuis 365scores. 100% codé en pair-programming avec Claude Code."
 >
   <PageHero
-    eyebrow="Case study · mise à jour 22 novembre 2026"
+    eyebrow="Case study · ol-companion"
     title="OL Companion"
     intro="Compagnon de saison pour l'Olympique Lyonnais : classement Ligue 1, calendrier (avec abonnement d'agenda), brackets de coupe, live-match avec shot map, carte L1 bicolore. React 18 + TanStack côté front, NestJS 11 + crons côté back, push live via SSE depuis 365scores. 100% du code écrit en pair-programming avec Claude Code (zéro ligne tapée à la main)."
   />
 
   <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12">
     <div class="space-y-12">
-      <p class="font-mono text-xs text-ink-muted"><span data-testid="date-maj">Mise à jour 22 novembre 2026</span> · <span data-testid="depots-decrits">dépôt décrit : <a class="text-claude hover:underline" href="https://github.com/Sylad/ol-companion" target="_blank" rel="noopener">github.com/Sylad/ol-companion</a></span> · état relu d'après son README, ses Nouveautés et son plan.</p>
+      <EtudeFraicheur depots={[{ nom: "Sylad/ol-companion", href: "https://github.com/Sylad/ol-companion" }]} date="2026-11-22">État relu d'après son README, ses Nouveautés et son plan.</EtudeFraicheur>
 
       <CaseStudySection eyebrow="Pourquoi cette app">
         <p>
@@ -184,8 +186,8 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
         <p>
           La règle palette est verrouillée par le <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">CLAUDE.md</code>
           du projet pour ne pas dériver entre deux sessions. Les couleurs identité OL
-          (<span class="text-rose-400">rouge</span> <code class="font-mono text-rose-300/80 text-[0.9em]">#dc2626</code> /
-          <span class="text-blue-400">bleu marine</span> <code class="font-mono text-blue-300/80 text-[0.9em]">#1e3a8a</code>)
+          (<span class="text-rose-400">rouge</span> <code class="font-mono text-negative text-[0.9em]">#dc2626</code> /
+          <span class="text-blue-400">bleu marine</span> <code class="font-mono text-blue-300 text-[0.9em]">#1e3a8a</code>)
           structurent toute la décoration ; le vert n'apparaît que pour les usages sémantiques
           universels — forme W (vert) / N (jaune) / L (rouge), goal-difference positif, badge
           "Victoire", positions 1-3 LdC dans le tableau.
@@ -374,4 +376,5 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
 
     </div>
   </section>
+  <RetourEtudes />
 </BaseLayout>

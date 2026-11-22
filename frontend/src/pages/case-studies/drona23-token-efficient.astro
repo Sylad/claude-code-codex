@@ -1,6 +1,8 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
+import RetourEtudes from "@/components/site/RetourEtudes.astro";
+import EtudeFraicheur from "@/components/site/EtudeFraicheur.astro";
 
 const rules = [
   {
@@ -74,18 +76,20 @@ const variants = [
   description="Retour d'expérience sur drona23/claude-token-efficient — fichier CLAUDE.md de règles anti-verbosity, 6.1k★. Browsed sans install, on a piqué les 7 règles."
 >
   <PageHero
-    eyebrow="Test bench · 2026-05-20"
+    eyebrow="Test bench"
     title="drona23/claude-token-efficient"
     intro="Pas un binaire à installer, pas une commande à exécuter. Juste un CLAUDE.md à copier-coller, qui code en 7 règles l'anti-verbosity attendue de Claude Code. 6.1k★ pour 7 lignes de texte. On l'a pas adopté en l'état mais on a piqué l'ensemble — et ajouté nos variantes maison."
   />
 
   <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12">
     <div class="space-y-12">
+      <EtudeFraicheur depots={[{ nom: "drona23/claude-token-efficient", href: "https://github.com/drona23/claude-token-efficient" }]} date="2026-10-31" nature="testé" />
+
 
       <article class="space-y-4">
-        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+        <h2 class="font-mono text-xs font-normal uppercase tracking-[0.2em] text-claude">
           Pourquoi le browser
-        </p>
+        </h2>
         <p class="text-ink leading-relaxed text-base sm:text-lg">
           Le repo
           <a href="https://github.com/drona23/claude-token-efficient"
@@ -103,9 +107,9 @@ const variants = [
       </article>
 
       <article class="space-y-4">
-        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+        <h2 class="font-mono text-xs font-normal uppercase tracking-[0.2em] text-claude">
           Les 7 règles (v8)
-        </p>
+        </h2>
         <p class="text-ink-muted leading-relaxed">
           Format anti-pattern → fix. Court par design (la verbosity du tableau lui-même est un anti-pattern).
         </p>
@@ -115,12 +119,12 @@ const variants = [
               <p class="font-mono text-xs text-claude mb-2">
                 {String(r.n).padStart(2, "0")}
               </p>
-              <p class="text-sm text-rose-300/80 leading-relaxed mb-2">
-                <span class="font-mono text-xs uppercase tracking-wider text-rose-400/70 mr-1.5">Anti</span>
+              <p class="text-sm text-negative leading-relaxed mb-2">
+                <span class="font-mono text-xs uppercase tracking-wider text-negative mr-1.5">Anti</span>
                 {r.anti}
               </p>
-              <p class="text-sm text-emerald-300/80 leading-relaxed">
-                <span class="font-mono text-xs uppercase tracking-wider text-emerald-400/70 mr-1.5">Fix</span>
+              <p class="text-sm text-positive leading-relaxed">
+                <span class="font-mono text-xs uppercase tracking-wider text-positive mr-1.5">Fix</span>
                 {r.fix}
               </p>
             </li>
@@ -129,16 +133,16 @@ const variants = [
       </article>
 
       <article class="space-y-4">
-        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+        <h2 class="font-mono text-xs font-normal uppercase tracking-[0.2em] text-claude">
           Verdict
-        </p>
+        </h2>
         <div class="grid gap-4 sm:grid-cols-2">
           <div class="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-5">
             <p class="font-mono text-xs uppercase tracking-wider text-emerald-400 mb-2">
               Ce qui marche
             </p>
             <ul class="text-sm text-ink-muted leading-relaxed space-y-1.5">
-              <li>• <strong>Zéro install</strong> : un copy-paste dans <code class="font-mono text-emerald-300/80 text-[0.9em]">CLAUDE.md</code>, fini</li>
+              <li>• <strong>Zéro install</strong> : un copy-paste dans <code class="font-mono text-positive text-[0.9em]">CLAUDE.md</code>, fini</li>
               <li>• <strong>Format anti-pattern → fix</strong>, hyper-actionnable</li>
               <li>• Règle 8 (<em>user override</em>) explicite — pas de "rules absolues" qui frustrent</li>
               <li>• 17% cost reduction mesuré (bench Sonnet)</li>
@@ -173,9 +177,9 @@ const variants = [
       </article>
 
       <article class="space-y-4">
-        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+        <h2 class="font-mono text-xs font-normal uppercase tracking-[0.2em] text-claude">
           Variantes maison ({variants.length})
-        </p>
+        </h2>
         <p class="text-ink-muted leading-relaxed">
           Règles spécifiques à notre workflow, extraites de feedbacks explicites
           de Sylvain au fil des sessions. Empilées sur les 7 règles drona23.
@@ -217,9 +221,10 @@ const variants = [
         </div>
       </article>
 
-      <p class="text-center text-xs text-ink/50 font-mono pt-4">
-        Browse mené 2026-05-20 · version v8 · règles consolidées dans memo feedback_terse_responses_pattern.
+      <p class="text-center text-xs text-ink-muted font-mono pt-4">
+        Lecture menée le 20 mai 2026 · version v8 · règles consolidées dans memo feedback_terse_responses_pattern.
       </p>
     </div>
   </section>
+  <RetourEtudes />
 </BaseLayout>

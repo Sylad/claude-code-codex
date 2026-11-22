@@ -1,6 +1,9 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
+import RetourEtudes from "@/components/site/RetourEtudes.astro";
+import CodeEnLigne from "@/components/site/CodeEnLigne.astro";
+import EtudeFraicheur from "@/components/site/EtudeFraicheur.astro";
 import MermaidDiagram from "@/components/site/MermaidDiagram.vue";
 import CaseStudySection from "@/components/site/CaseStudySection.astro";
 
@@ -79,7 +82,7 @@ const lessons = [
   },
   {
     title: "Le dual-DB pattern n'est pas optionnel",
-    body: "Quand on a 2 workloads PostgreSQL incompatibles (catalog GeoServer tiny+read-mostly vs hypertables maritime append-only high-volume), 2 clusters CNPG distincts (pg-catalog + pg-data) = 2 WAL isolés. Le crash overnight 2026-05-13 où l'ais-decoder saturait le WAL et empêchait GeoServer de lire 175 rows de catalog était évitable avec ce pattern.",
+    body: "Quand on a 2 workloads PostgreSQL incompatibles (catalog GeoServer tiny+read-mostly vs hypertables maritime append-only high-volume), 2 clusters CNPG distincts (pg-catalog + pg-data) = 2 WAL isolés. Le crash overnight du 13 mai 2026 où l'ais-decoder saturait le WAL et empêchait GeoServer de lire 175 rows de catalog était évitable avec ce pattern.",
   },
   {
     title: "GitOps + selfHeal = source of truth = Git",
@@ -107,9 +110,11 @@ const lessons = [
   />
 
   <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12 space-y-12">
+    <EtudeFraicheur depots={["developpeur-gitops"]} date="2026-10-31" />
+
 
     <div class="rounded-lg border border-amber-500/25 bg-amber-500/[0.05] p-5">
-      <p class="font-mono text-xs uppercase tracking-wider text-amber-400/90 mb-2">
+      <p class="font-mono text-xs uppercase tracking-wider text-caution mb-2">
         Récit daté · 13-14 mai 2026
       </p>
       <p class="text-sm text-ink-muted leading-relaxed">
@@ -162,7 +167,7 @@ const lessons = [
             {before_after.before.map((item) => (
               <li class="flex items-start gap-2">
                 <span class="text-rose-400 mt-0.5">·</span>
-                <span>{item}</span>
+                <span class="min-w-0"><CodeEnLigne texte={item} /></span>
               </li>
             ))}
           </ul>
@@ -173,7 +178,7 @@ const lessons = [
             {before_after.after.map((item) => (
               <li class="flex items-start gap-2">
                 <span class="text-emerald-400 mt-0.5">·</span>
-                <span>{item}</span>
+                <span class="min-w-0"><CodeEnLigne texte={item} /></span>
               </li>
             ))}
           </ul>
@@ -266,7 +271,7 @@ const lessons = [
 
       <div class="space-y-4 my-6">
         <div class="border-l-2 border-emerald-500/40 pl-4">
-          <h4 class="text-sm font-mono uppercase text-emerald-400">Sprint 0 — Bootstrap cluster · 22h00 → 22h45</h4>
+          <h3 class="text-sm font-mono uppercase text-emerald-400">Sprint 0 — Bootstrap cluster · 22h00 → 22h45</h3>
           <p class="text-sm mt-1">
             k3s install + helm + mkcert. Création 3 namespaces (preprod,
             argocd, infra). Install ingress-nginx
@@ -280,7 +285,7 @@ const lessons = [
         </div>
 
         <div class="border-l-2 border-emerald-500/40 pl-4">
-          <h4 class="text-sm font-mono uppercase text-emerald-400">Sprint 1 — ol-companion · 22h45 → 23h15</h4>
+          <h3 class="text-sm font-mono uppercase text-emerald-400">Sprint 1 — ol-companion · 22h45 → 23h15</h3>
           <p class="text-sm mt-1">
             La plus simple des apps personnelles. Premier Helm chart
             générique (backend NestJS + frontend nginx + Ingress + PVC).
@@ -292,7 +297,7 @@ const lessons = [
         </div>
 
         <div class="border-l-2 border-emerald-500/40 pl-4">
-          <h4 class="text-sm font-mono uppercase text-emerald-400">Sprint 2 — finance + warhammer · 23h15 → 23h45</h4>
+          <h3 class="text-sm font-mono uppercase text-emerald-400">Sprint 2 — finance + warhammer · 23h15 → 23h45</h3>
           <p class="text-sm mt-1">
             Cherry-pick du chart ol-companion. Build des 4 images en
             parallèle (2 backends + 2 frontends). Sed pour ajuster
@@ -304,7 +309,7 @@ const lessons = [
         </div>
 
         <div class="border-l-2 border-cyan-500/40 pl-4">
-          <h4 class="text-sm font-mono uppercase text-cyan-400">Maritime stateful · 23h45 → 00h05</h4>
+          <h3 class="text-sm font-mono uppercase text-cyan-400">Maritime stateful · 23h45 → 00h05</h3>
           <p class="text-sm mt-1">
             Install 3 operators : CloudNativePG (Postgres HA), RabbitMQ
             Cluster Operator, KEDA (event-driven autoscaling, remplace
@@ -317,7 +322,7 @@ const lessons = [
         </div>
 
         <div class="border-l-2 border-cyan-500/40 pl-4">
-          <h4 class="text-sm font-mono uppercase text-cyan-400">Maritime stateless · 00h05 → 00h20</h4>
+          <h3 class="text-sm font-mono uppercase text-cyan-400">Maritime stateless · 00h05 → 00h20</h3>
           <p class="text-sm mt-1">
             Build des 5 images stateless (api, ais-decoder, alerts-engine,
             track-builder, frontend Angular). Helm chart umbrella avec
@@ -333,7 +338,7 @@ const lessons = [
         </div>
 
         <div class="border-l-2 border-amber-500/40 pl-4">
-          <h4 class="text-sm font-mono uppercase text-amber-400">GeoServer · 00h20 → 00h35</h4>
+          <h3 class="text-sm font-mono uppercase text-amber-400">GeoServer · 00h20 → 00h35</h3>
           <p class="text-sm mt-1">
             Le plus tordu. Build image custom GeoServer 2.28.3 + plugins
             (WPS, control-flow, JDBCConfig, JDBCStore, gwc-s3) + JAR
@@ -351,7 +356,7 @@ const lessons = [
         </div>
 
         <div class="border-l-2 border-violet-500/40 pl-4">
-          <h4 class="text-sm font-mono uppercase text-violet-400">GitOps closure · 00h35</h4>
+          <h3 class="text-sm font-mono uppercase text-violet-400">GitOps closure · 00h35</h3>
           <p class="text-sm mt-1">
             <code class="text-xs font-mono">gh repo create developpeur-gitops --public</code> +
             push initial du chart ol-companion. Création de 5 ArgoCD
@@ -376,11 +381,11 @@ const lessons = [
           <div class="border border-white/10 rounded-lg p-5 bg-gradient-to-br from-amber-500/5 to-transparent [overflow-wrap:anywhere]">
             <div class="flex items-start gap-3 mb-3">
               <span class="text-2xl font-mono text-amber-400 leading-none">{p.n}.</span>
-              <h4 class="text-lg font-semibold">{p.title}</h4>
+              <h3 class="text-lg font-semibold"><CodeEnLigne texte={p.title} /></h3>
             </div>
             <div class="ml-8 space-y-2 text-sm">
-              <p><span class="font-mono text-rose-300">Cause :</span> {p.cause}</p>
-              <p><span class="font-mono text-emerald-300">Fix :</span> {p.fix}</p>
+              <p><span class="font-mono text-rose-300">Cause :</span> <CodeEnLigne texte={p.cause} /></p>
+              <p><span class="font-mono text-emerald-300">Fix :</span> <CodeEnLigne texte={p.fix} /></p>
             </div>
           </div>
         ))}
@@ -425,7 +430,7 @@ const lessons = [
 
       <div tabindex="0" role="region" aria-label="Sortie : applications ArgoCD" class="my-4 rounded-lg border border-white/10 bg-black/40 p-4 font-mono text-xs overflow-x-auto">
         <p class="text-emerald-300 mb-1">$ kubectl get app -n argocd -o custom-columns='NAME:.metadata.name,SYNC:.status.sync.status,HEALTH:.status.health.status'</p>
-        <pre class="text-ink/90 whitespace-pre">NAME                SYNC     HEALTH
+        <pre class="text-ink whitespace-pre">NAME                SYNC     HEALTH
 finance-tracker     Synced   Healthy
 maritime            Synced   Healthy
 maritime-stateful   Synced   Healthy
@@ -435,7 +440,7 @@ warhammer40k        Synced   Healthy</pre>
 
       <div tabindex="0" role="region" aria-label="Sortie : pods du namespace" class="my-4 rounded-lg border border-white/10 bg-black/40 p-4 font-mono text-xs overflow-x-auto">
         <p class="text-emerald-300 mb-1">$ kubectl get pods -n maritime</p>
-        <pre class="text-ink/90 whitespace-pre">NAME                                READY   STATUS    RESTARTS   AGE
+        <pre class="text-ink whitespace-pre">NAME                                READY   STATUS    RESTARTS   AGE
 ais-decoder-6549dc648c-j7p56        1/1     Running   0          51m
 alerts-engine-b94cb44f9-zlwwf       1/1     Running   0          20m
 geoserver-69c645c55d-rh7tn          1/1     Running   0          5m
@@ -449,13 +454,13 @@ track-builder-856676fd85-l9gl6      1/1     Running   0          20m</pre>
 
       <div tabindex="0" role="region" aria-label="Sortie : réponses HTTP" class="my-4 rounded-lg border border-white/10 bg-black/40 p-4 font-mono text-xs overflow-x-auto">
         <p class="text-emerald-300 mb-1">$ for u in ol finance warhammer maritime argocd ; do curl -sI -L "https://$u.dev.local" | head -1 ; done</p>
-        <pre class="text-ink/90 whitespace-pre">HTTP/2 200
+        <pre class="text-ink whitespace-pre">HTTP/2 200
 HTTP/2 200
 HTTP/2 200
 HTTP/2 200
 HTTP/2 200</pre>
         <p class="text-emerald-300 mb-1 mt-2">$ curl -sI -L https://geoserver.dev.local/geoserver/index.html | head -1</p>
-        <pre class="text-ink/90 whitespace-pre">HTTP/2 200</pre>
+        <pre class="text-ink whitespace-pre">HTTP/2 200</pre>
       </div>
 
       <p class="text-sm text-ink-muted mt-4">
@@ -496,8 +501,8 @@ HTTP/2 200</pre>
       <div class="space-y-4 my-6">
         {lessons.map((l, i) => (
           <div class="border-l-2 border-cyan-500/40 pl-4">
-            <h4 class="text-sm font-mono uppercase text-cyan-400">{i + 1}. {l.title}</h4>
-            <p class="text-sm mt-1">{l.body}</p>
+            <h3 class="text-sm font-mono uppercase text-cyan-400">{i + 1}. <CodeEnLigne texte={l.title} /></h3>
+            <p class="text-sm mt-1"><CodeEnLigne texte={l.body} /></p>
           </div>
         ))}
       </div>
@@ -521,7 +526,7 @@ HTTP/2 200</pre>
           <tbody class="divide-y divide-white/5">
             <tr>
               <td class="py-2 align-top">pg-data sans Timescale réel<br/><span class="font-mono text-xs text-ink-muted">(stubs SQL no-op)</span></td>
-              <td class="py-2 align-top text-xs">L'image custom maritime-pg-ts:16.0.0 (UID 26 + Timescale apt) plante en CNPG (`could not access file timescaledb`) alors qu'elle marche en standalone. Piège CNPG-specific à debugger.</td>
+              <td class="py-2 align-top text-xs">L'image custom maritime-pg-ts:16.0.0 (UID 26 + Timescale apt) plante en CNPG (<code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">could not access file timescaledb</code>) alors qu'elle marche en standalone. Piège CNPG-specific à debugger.</td>
               <td class="py-2 align-top text-xs">Phase 6 weekend</td>
             </tr>
             <tr>
@@ -799,4 +804,5 @@ HTTP/2 200</pre>
     </CaseStudySection>
 
   </section>
+  <RetourEtudes />
 </BaseLayout>

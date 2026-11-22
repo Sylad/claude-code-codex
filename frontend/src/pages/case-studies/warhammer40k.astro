@@ -1,6 +1,8 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
+import RetourEtudes from "@/components/site/RetourEtudes.astro";
+import EtudeFraicheur from "@/components/site/EtudeFraicheur.astro";
 import MermaidDiagram from "@/components/site/MermaidDiagram.vue";
 import CaseStudySection from "@/components/site/CaseStudySection.astro";
 ---
@@ -10,13 +12,13 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
   description="Deep dive — codex narratif Warhammer 40K, construit en pair-programming avec Claude Code (0 ligne de code humaine)."
 >
   <PageHero
-    eyebrow="Case study · mise à jour 31 octobre 2026"
+    eyebrow="Case study · warhammer40k"
     title="Warhammer 40K Codex"
     intro="Codex numérique fan, lore-first et image-dominant. Angular 19 custom gothique, NestJS 11, stockage JSON, Anthropic SDK pour quelques générations narratives. 100% du code écrit en pair-programming avec Claude Code."
   />
 
   <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12 space-y-12">
-    <p class="font-mono text-xs text-ink-muted"><span data-testid="date-maj">Mise à jour 31 octobre 2026</span> · <span data-testid="depots-decrits">dépôt décrit : <a class="text-claude hover:underline" href="https://github.com/Sylad/warhammer40k" target="_blank" rel="noopener">github.com/Sylad/warhammer40k</a></span> · état relu d'après son README, ses 104 Nouveautés et son plan.</p>
+    <EtudeFraicheur depots={[{ nom: "Sylad/warhammer40k", href: "https://github.com/Sylad/warhammer40k" }]} date="2026-10-31">État relu d'après son README, ses 104 Nouveautés et son plan.</EtudeFraicheur>
     <CaseStudySection eyebrow="Pourquoi ce projet">
       <p>
         Une encyclopédie Warhammer 40K il en existe déjà des dizaines —
@@ -251,4 +253,5 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
       </a>
     </div>
   </section>
+  <RetourEtudes />
 </BaseLayout>

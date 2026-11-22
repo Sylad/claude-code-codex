@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
+import RetourEtudes from "@/components/site/RetourEtudes.astro";
 import MermaidDiagram from "@/components/site/MermaidDiagram.vue";
 import CaseStudySection from "@/components/site/CaseStudySection.astro";
 import EtudeFraicheur from "@/components/site/EtudeFraicheur.astro";
@@ -292,4 +293,5 @@ const NB_ETUDES = Object.keys(import.meta.glob("./*.astro")).length + 1;
       </a>
     </div>
   </section>
+  <RetourEtudes />
 </BaseLayout>

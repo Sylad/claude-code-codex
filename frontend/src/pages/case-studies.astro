@@ -5,7 +5,7 @@ import RevueContenu from "@/components/site/RevueContenu.astro";
 import { apps, APP_COUNT } from "@/data/apps";
 import RtkStats from "@/components/site/RtkStats.astro";
 import { testedTools, TOOLS_SURVEYED_AT } from "@/data/tools-tested";
-import { formatDay } from "@/lib/format-date.mjs";
+import { formatDay, frenchDatesIn } from "@/lib/format-date.mjs";
 import { inlineCodeHtml } from "@/lib/inline-code.mjs";
 import {
   STATUS_LABELS,
@@ -52,15 +52,8 @@ function formatStars(n?: number): string {
           >
           </div>
           <div class="relative">
-            <div class="flex items-center justify-between mb-3">
+            <div class="mb-3">
               <p class="font-mono text-sm text-claude">{app.name}</p>
-              <a
-                href={app.href}
-                aria-label={`Deep dive ${app.name}`}
-                class="text-ink-muted hover:text-claude motion-safe:hover:translate-x-1 transition-all"
-              >
-                →
-              </a>
             </div>
             <h2 class="text-xl font-medium text-ink mb-2">
               <a
@@ -73,15 +66,15 @@ function formatStars(n?: number): string {
             <p class="text-sm text-ink-muted mb-4 leading-relaxed">
               {app.role}
             </p>
-            <p class="font-mono text-xs text-ink/60 pt-3 border-t border-white/5 mb-3">
+            <p class="font-mono text-xs text-ink-muted pt-3 border-t border-white/5 mb-3">
               {app.stack}
             </p>
             <div class="flex flex-wrap items-center gap-2">
               <a
                 href={app.href}
-                class="font-mono text-[10px] uppercase tracking-wider text-claude hover:underline underline-offset-4"
+                class="font-mono text-xs text-claude hover:underline underline-offset-4"
               >
-                Deep dive →
+                Lire l'étude →
               </a>
               {app.repo && (
                 <a
@@ -129,7 +122,7 @@ function formatStars(n?: number): string {
               5 leçons, 1 repo public. <strong>Récit daté</strong> : la prod
               a depuis quitté WSL2 pour un serveur bare-metal.
             </p>
-            <p class="font-mono text-xs text-ink/60 pt-3 border-t border-white/5 mb-3">
+            <p class="font-mono text-xs text-ink-muted pt-3 border-t border-white/5 mb-3">
               k3s · Helm · ArgoCD · CloudNativePG · RabbitMQ Operator · KEDA · cert-manager · GeoServer cluster
             </p>
             <div class="flex flex-wrap items-center gap-2">
@@ -159,7 +152,7 @@ function formatStars(n?: number): string {
               Mermaid, table de traduction Spring Boot ↔ K8s. Mise à jour
               septembre 2026.
             </p>
-            <p class="font-mono text-xs text-ink/60 pt-3 border-t border-white/5 mb-3">
+            <p class="font-mono text-xs text-ink-muted pt-3 border-t border-white/5 mb-3">
               k3s bare-metal · GHCR · GH Actions · ArgoCD · Longhorn · CloudNativePG · Cloudflare Tunnel
             </p>
             <div class="flex flex-wrap items-center gap-2">
@@ -190,7 +183,7 @@ function formatStars(n?: number): string {
               .claudeignore), 3 écartés (license PolyForm, deps externes,
               double-up). 5 méta-leçons sur le screening écosystème.
             </p>
-            <p class="font-mono text-xs text-ink/60 pt-3 border-t border-white/5 mb-3">
+            <p class="font-mono text-xs text-ink-muted pt-3 border-t border-white/5 mb-3">
               RTK · code-review-graph · drona23 · nadimtuhin · ooples · zilliz · Mibayy · alexgreensh
             </p>
             <div class="flex flex-wrap items-center gap-2">
@@ -222,7 +215,7 @@ function formatStars(n?: number): string {
               sources du frontend et rejouée toutes les 6h par un CronJob
               canary in-cluster.
             </p>
-            <p class="font-mono text-xs text-ink/60 pt-3 border-t border-white/5 mb-3">
+            <p class="font-mono text-xs text-ink-muted pt-3 border-t border-white/5 mb-3">
               Node.js · Playwright · MapLibre · Angular 19 · GeoServer WMS · CronJob canary · TypeScript
             </p>
             <div class="flex flex-wrap items-center gap-2">
@@ -253,7 +246,7 @@ function formatStars(n?: number): string {
               136 bugs de code dont 96 cas limites) et <strong>5 échecs</strong>
               avec ce qu'ils ont changé.
             </p>
-            <p class="font-mono text-xs text-ink/60 pt-3 border-t border-white/5 mb-3">
+            <p class="font-mono text-xs text-ink-muted pt-3 border-t border-white/5 mb-3">
               TypeScript · Node · Claude Code · git · YAML
             </p>
             <div class="flex flex-wrap items-center gap-2">
@@ -283,7 +276,7 @@ function formatStars(n?: number): string {
               les preuves du banc qui l'oppose à Claude seul, datées et
               sourcées, et <strong>ce que les mesures ne prouvent pas</strong>.
             </p>
-            <p class="font-mono text-xs text-ink/60 pt-3 border-t border-white/5 mb-3">
+            <p class="font-mono text-xs text-ink-muted pt-3 border-t border-white/5 mb-3">
               Banc A/B · registre des demandes · porte de tests · revue
             </p>
             <div class="flex flex-wrap items-center gap-2">
@@ -299,7 +292,7 @@ function formatStars(n?: number): string {
       </div>
     </div>
 
-    <div class="mt-16">
+    <div id="outils-testes" class="mt-16 scroll-mt-20">
       <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude mb-2">
         Tools tested · {totalTools} entrées
       </p>
@@ -363,7 +356,7 @@ function formatStars(n?: number): string {
                           <p class="mt-0.5 text-xs text-ink-muted">
                             {tool.author}
                             {tool.license && (
-                              <span class="text-ink/50"> · {tool.license}</span>
+                              <span class="text-ink-muted"> · {tool.license}</span>
                             )}
                           </p>
                         </div>
@@ -371,7 +364,7 @@ function formatStars(n?: number): string {
 
                       <p
                         class="text-sm text-ink-muted leading-relaxed flex-1 [&_code]:font-mono [overflow-wrap:anywhere] [&_[data-opt]]:inline-block [&_[data-opt]]:max-w-[calc(100%-0.5rem)] [&_code]:text-claude-soft [&_code]:text-[0.9em] [&_code]:px-1 [&_code]:rounded [&_code]:bg-white/5"
-                        set:html={inlineCodeHtml(tool.description)}
+                        set:html={inlineCodeHtml(frenchDatesIn(tool.description))}
                       />
 
                       <div class="flex flex-wrap items-center gap-2 pt-1">
@@ -382,9 +375,9 @@ function formatStars(n?: number): string {
                           >
                             → Case study
                           </a>
-                        ) : (
-                          <span class="font-mono text-[10px] uppercase tracking-wider text-ink/40">
-                            {tool.lastPush}
+                        ) : tool.lastPush && (
+                          <span class="font-mono text-xs text-ink-muted">
+                            Dernier push le {formatDay(tool.lastPush)}
                           </span>
                         )}
                         <a
@@ -408,7 +401,7 @@ function formatStars(n?: number): string {
       <div
         class="rounded-xl border border-white/5 border-dashed bg-paper-elevated/50 p-5 text-center"
       >
-        <p class="font-mono text-xs uppercase tracking-wider text-ink/40 mb-1">
+        <p class="font-mono text-xs uppercase tracking-wider text-ink-muted mb-1">
           Suggestion ?
         </p>
         <p class="text-ink-muted text-sm leading-relaxed">

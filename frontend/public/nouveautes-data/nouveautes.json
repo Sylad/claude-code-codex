@@ -1,7 +1,28 @@
 {
   "project": "claude-code-codex",
-  "generated": "2026-11-22 14:34",
+  "generated": "2026-11-22 15:42",
   "entries": [
+    {
+      "slug": "2026-11-22-etudes-de-cas-un-texte-plus-lisible-date-et-sans-liens-casses",
+      "title": "Études de cas : un texte plus lisible, daté et sans liens cassés",
+      "date": "2026-11-22",
+      "lots": [
+        "L8"
+      ],
+      "captures": [
+        "captures/L8-hermes-lecon-390-texte-200-avant.png",
+        "captures/L8-hermes-lecon-390-texte-200-apres.png",
+        "captures/L8-etude-tete-1440.png",
+        "captures/L8-catalogue-1440.png"
+      ],
+      "alts": [
+        "Avant : sur un téléphone, texte agrandi à 200 %, une leçon de l'étude Hermes déborde à droite de l'écran et montre des accents graves bruts autour des commandes",
+        "Après : la même leçon, même téléphone et même taille de texte, tient dans la largeur de l'écran et ses commandes sont affichées en police de code",
+        "En tête de l'étude Hermes Agent, sous le titre, un encadré indique Mis à jour le 31 octobre 2026 et le dépôt testé, avec un lien vers GitHub",
+        "Le catalogue des outils testés : chaque carte affiche sa date de dernier push en toutes lettres, en gris lisible, et les commandes de ses descriptions en police de code"
+      ],
+      "html": "<p>Les <a href=\"/case-studies/\">études de cas</a> et le catalogue des outils testés se lisent mieux, sur grand écran comme au téléphone.</p>\n<ul><li>Les textes discrets (dates, licences, « Suggestion ? », lignes « Test mené le… », mentions « Anti ») passent tous au-dessus du seuil de contraste recommandé pour la lecture ; leurs couleurs viennent désormais de la charte du site.</li><li>Avec le texte agrandi à 200 %, aucune étude ne déborde plus de l'écran d'un téléphone : on lit sans faire défiler de côté.</li><li>Chaque étude affiche une seule date, en tête et en toutes lettres (« Mis à jour le 31 octobre 2026 »), avec le dépôt qu'elle décrit ou teste ; les dates du texte sont écrites en français.</li><li>Les intitulés de section des bancs d'essai sont de vrais titres : un lecteur d'écran peut sauter de l'un à l'autre.</li><li>Les commandes et noms de fichiers s'affichent en police de code, sans accents graves bruts.</li><li>Deux liens menaient à une page absente ; ils sont corrigés, et chaque étude finit par un retour à la liste des études.</li></ul>"
+    },
     {
       "slug": "2026-11-22-page-atelier-ia-un-schema-qui-se-lit-sans-defiler",
       "title": "Page Atelier IA : un schéma qui se lit en entier et des cartes mieux titrées",

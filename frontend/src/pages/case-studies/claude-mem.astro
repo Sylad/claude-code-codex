@@ -1,6 +1,9 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
+import RetourEtudes from "@/components/site/RetourEtudes.astro";
+import CodeEnLigne from "@/components/site/CodeEnLigne.astro";
+import EtudeFraicheur from "@/components/site/EtudeFraicheur.astro";
 import CaseStudySection from "@/components/site/CaseStudySection.astro";
 
 const lessons = [
@@ -36,17 +39,19 @@ const lessons = [
   description="Retour d'expérience sur thedotmack/claude-mem, plugin Claude Code de mémoire persistante. Concept séduisant, exécution non-adoptable : --help lance l'install, pas de uninstall, Bun requis, install non-atomique."
 >
   <PageHero
-    eyebrow="Test bench · 2026-05-10"
+    eyebrow="Test bench"
     title="claude-mem (thedotmack)"
-    intro="Plugin de mémoire persistante pour Claude Code — capture l'activité des sessions, génère des résumés sémantiques via l'agent SDK, et réinjecte le contexte pertinent à la session suivante. v13.0.1 stable au test (v15.7.0 au 2026-10-31), 106k★, Apache-2.0."
+    intro="Plugin de mémoire persistante pour Claude Code — capture l'activité des sessions, génère des résumés sémantiques via l'agent SDK, et réinjecte le contexte pertinent à la session suivante. v13.0.1 stable au test (v15.7.0 au 31 octobre 2026), 106k★, Apache-2.0."
   />
 
   <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12">
     <div class="space-y-12">
+      <EtudeFraicheur depots={[{ nom: "thedotmack/claude-mem", href: "https://github.com/thedotmack/claude-mem" }]} date="2026-10-31" nature="testé" />
+
       <CaseStudySection eyebrow="Pourquoi tester">
         <p>
           Le concept est exactement ce qu'on cherche : ne plus perdre le contexte
-          entre deux sessions Claude Code. 106k stars (au 2026-10-31), push récent, Apache-2.0 —
+          entre deux sessions Claude Code. 106k stars (au 31 octobre 2026), push récent, Apache-2.0 —
           le profile est sain au niveau métriques. Sylvain l'a explicitement
           flagué pour test, le pattern est prometteur.
         </p>
@@ -71,9 +76,9 @@ const lessons = [
           </li>
           <li class="flex gap-3">
             <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
-            <span><strong class="text-ink">Tentative `--help`</strong> :
+            <span><strong class="text-ink">Tentative <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">--help</code></strong> :
             <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">npx claude-mem install --help</code>
-            <em>est censé être</em> un help, mais lance l'install entière. Échec sur le bootstrap Bun (`unzip` manquant) sans rollback.</span>
+            <em>est censé être</em> un help, mais lance l'install entière. Échec sur le bootstrap Bun (<code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">unzip</code> manquant) sans rollback.</span>
           </li>
           <li class="flex gap-3">
             <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
@@ -90,7 +95,7 @@ const lessons = [
             </p>
             <ul class="text-sm text-ink-muted leading-relaxed space-y-1.5">
               <li>• Concept réel et utile (mémoire persistante automatique)</li>
-              <li>• Stable v13.0.1 au test (v15.7.0 au 2026-10-31)</li>
+              <li>• Stable v13.0.1 au test (v15.7.0 au 31 octobre 2026)</li>
               <li>• 106k★ + Apache-2.0 + push récent</li>
               <li>• Site dédié <a href="https://claude-mem.ai" target="_blank" rel="noopener" class="text-emerald-300 hover:text-emerald-200 underline">claude-mem.ai</a> + 30+ traductions README</li>
               <li>• Multi-IDE (Claude Code / Gemini CLI / OpenCode)</li>
@@ -101,10 +106,10 @@ const lessons = [
               Ce qui pète
             </p>
             <ul class="text-sm text-ink-muted leading-relaxed space-y-1.5">
-              <li>• <code class="font-mono text-rose-300/80 text-[0.9em]">--help</code> lance l'install entière sans confirmation</li>
-              <li>• Pas de flag <code class="font-mono text-rose-300/80 text-[0.9em]">--dry-run</code></li>
-              <li>• Pas de commande <code class="font-mono text-rose-300/80 text-[0.9em]">claude-mem uninstall</code></li>
-              <li>• Bun runtime requis (échoue si <code class="font-mono text-rose-300/80 text-[0.9em]">unzip</code> absent)</li>
+              <li>• <code class="font-mono text-negative text-[0.9em]">--help</code> lance l'install entière sans confirmation</li>
+              <li>• Pas de flag <code class="font-mono text-negative text-[0.9em]">--dry-run</code></li>
+              <li>• Pas de commande <code class="font-mono text-negative text-[0.9em]">claude-mem uninstall</code></li>
+              <li>• Bun runtime requis (échoue si <code class="font-mono text-negative text-[0.9em]">unzip</code> absent)</li>
               <li>• Install non-atomique : pas de rollback en cas d'échec</li>
             </ul>
           </div>
@@ -135,8 +140,8 @@ const lessons = [
               <p class="font-mono text-xs text-claude mb-2">
                 {String(i + 1).padStart(2, "0")}
               </p>
-              <h3 class="text-base font-medium text-ink mb-1.5">{l.title}</h3>
-              <p class="text-sm text-ink-muted leading-relaxed">{l.body}</p>
+              <h3 class="text-base font-medium text-ink mb-1.5"><CodeEnLigne texte={l.title} /></h3>
+              <p class="text-sm text-ink-muted leading-relaxed"><CodeEnLigne texte={l.body} /></p>
             </li>
           ))}
         </ol>
@@ -160,9 +165,10 @@ const lessons = [
         </div>
       </CaseStudySection>
 
-      <p class="text-center text-xs text-ink/50 font-mono pt-4">
-        Test mené 2026-05-10 sur npm v13.0.1 · protocole formalisé dans le skill <code>/test-tool</code>.
+      <p class="text-center text-xs text-ink-muted font-mono pt-4">
+        Test mené le 10 mai 2026 sur npm v13.0.1 · protocole formalisé dans le skill <code>/test-tool</code>.
       </p>
     </div>
   </section>
+  <RetourEtudes />
 </BaseLayout>

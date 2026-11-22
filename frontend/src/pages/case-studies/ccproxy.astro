@@ -1,6 +1,9 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
+import RetourEtudes from "@/components/site/RetourEtudes.astro";
+import CodeEnLigne from "@/components/site/CodeEnLigne.astro";
+import EtudeFraicheur from "@/components/site/EtudeFraicheur.astro";
 import CaseStudySection from "@/components/site/CaseStudySection.astro";
 
 const lessons = [
@@ -36,13 +39,15 @@ const lessons = [
   description="Retour d'expérience sur starbased-co/ccproxy, proxy LiteLLM-based pour Claude Code. Footprint propre mais install non-effectuée : value requires API keys multi-providers, uv requis, AGPL-3.0."
 >
   <PageHero
-    eyebrow="Test bench · 2026-05-10"
+    eyebrow="Test bench"
     title="ccproxy (starbased-co)"
     intro="Proxy programmable LiteLLM-based qui intercepte les requêtes Claude Code et les route vers d'autres providers (Gemini 2M context, Perplexity WebSearch). v1.2.0 stable, 400★, AGPL-3.0-or-later."
   />
 
   <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12">
     <div class="space-y-12">
+      <EtudeFraicheur depots={[{ nom: "starbased-co/ccproxy", href: "https://github.com/starbased-co/ccproxy" }]} date="2026-05-10" nature="testé" />
+
       <CaseStudySection eyebrow="Pourquoi tester">
         <p>
           L'idée est intelligente : garder le harness Claude Code intact, mais
@@ -97,10 +102,10 @@ const lessons = [
               Ce qui est solide
             </p>
             <ul class="text-sm text-ink-muted leading-relaxed space-y-1.5">
-              <li>• Footprint propre dans <code class="font-mono text-emerald-300/80 text-[0.9em]">~/.ccproxy/</code></li>
+              <li>• Footprint propre dans <code class="font-mono text-positive text-[0.9em]">~/.ccproxy/</code></li>
               <li>• PAS un plugin Claude Code (pas de marketplace pollution)</li>
               <li>• Architecture hook pipeline + rule evaluator solide</li>
-              <li>• OAuth forwarding depuis <code class="font-mono text-emerald-300/80 text-[0.9em]">~/.claude/.credentials.json</code></li>
+              <li>• OAuth forwarding depuis <code class="font-mono text-positive text-[0.9em]">~/.claude/.credentials.json</code></li>
               <li>• v1.2.0 stable, 400★, push aujourd'hui — actif</li>
             </ul>
           </div>
@@ -109,11 +114,11 @@ const lessons = [
               Ce qui bloque
             </p>
             <ul class="text-sm text-ink-muted leading-relaxed space-y-1.5">
-              <li>• <code class="font-mono text-rose-300/80 text-[0.9em]">uv</code> pas installé (curl-bootstrap requis)</li>
-              <li>• <code class="font-mono text-rose-300/80 text-[0.9em]">AGPL-3.0-or-later</code> (copyleft réseau)</li>
+              <li>• <code class="font-mono text-negative text-[0.9em]">uv</code> pas installé (curl-bootstrap requis)</li>
+              <li>• <code class="font-mono text-negative text-[0.9em]">AGPL-3.0-or-later</code> (copyleft réseau)</li>
               <li>• Value requires API keys OpenAI/Gemini/Perplexity</li>
-              <li>• Pas de <code class="font-mono text-rose-300/80 text-[0.9em]">ccproxy uninstall</code> documenté</li>
-              <li>• Pas de <code class="font-mono text-rose-300/80 text-[0.9em]">--dry-run</code> sur <code class="font-mono text-rose-300/80 text-[0.9em]">ccproxy install</code></li>
+              <li>• Pas de <code class="font-mono text-negative text-[0.9em]">ccproxy uninstall</code> documenté</li>
+              <li>• Pas de <code class="font-mono text-negative text-[0.9em]">--dry-run</code> sur <code class="font-mono text-negative text-[0.9em]">ccproxy install</code></li>
               <li>• v2.0 dev branch : WireGuard / TLS-MITM (scope creep)</li>
             </ul>
           </div>
@@ -145,8 +150,8 @@ const lessons = [
               <p class="font-mono text-xs text-claude mb-2">
                 {String(i + 1).padStart(2, "0")}
               </p>
-              <h3 class="text-base font-medium text-ink mb-1.5">{l.title}</h3>
-              <p class="text-sm text-ink-muted leading-relaxed">{l.body}</p>
+              <h3 class="text-base font-medium text-ink mb-1.5"><CodeEnLigne texte={l.title} /></h3>
+              <p class="text-sm text-ink-muted leading-relaxed"><CodeEnLigne texte={l.body} /></p>
             </li>
           ))}
         </ol>
@@ -170,9 +175,10 @@ const lessons = [
         </div>
       </CaseStudySection>
 
-      <p class="text-center text-xs text-ink/50 font-mono pt-4">
-        Test mené 2026-05-10 sur PyPI claude-ccproxy v1.2.0 · protocole formalisé dans le skill <code>/test-tool</code>.
+      <p class="text-center text-xs text-ink-muted font-mono pt-4">
+        Test mené sur PyPI claude-ccproxy v1.2.0 · protocole formalisé dans le skill <code>/test-tool</code>.
       </p>
     </div>
   </section>
+  <RetourEtudes />
 </BaseLayout>

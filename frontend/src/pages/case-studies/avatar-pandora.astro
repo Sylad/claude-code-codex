@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
+import RetourEtudes from "@/components/site/RetourEtudes.astro";
 import MermaidDiagram from "@/components/site/MermaidDiagram.vue";
 import CaseStudySection from "@/components/site/CaseStudySection.astro";
 import EtudeFraicheur from "@/components/site/EtudeFraicheur.astro";
@@ -289,10 +290,11 @@ const DATE_ETUDE = "2026-11-17";
         </div>
       </article>
 
-      <p class="text-center text-xs text-ink/50 font-mono pt-4">
+      <p class="text-center text-xs text-ink-muted font-mono pt-4">
         Stack — Astro 7 · React 19 · React Three Fiber · Tailwind 4 · Content
         Collections · Cloudflare Pages (aucun backend).
       </p>
     </div>
   </section>
+  <RetourEtudes />
 </BaseLayout>

@@ -10,9 +10,10 @@ const brut = readFileSync(join(DIST, 'case-studies/finance-tracker/index.html'),
 const t = brut.replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&').replace(/&#39;/g, "'").replace(/&quot;/g, '"')
   .replace(/&nbsp;| | /g, ' ').replace(/\s+/g, ' ');
 
-test('R1 — l\'étude est datée du 21 novembre 2026, en tête et dans l\'eyebrow ; plus de mise à jour au 31 octobre', () => {
-  assert.match(t, /Case study · mise à jour 21 novembre 2026/);
-  assert.match(t, /Mise à jour 21 novembre 2026/);
+// L8 (revue UX) : la date n'apparaît plus qu'une fois, dans le bloc de date commun à toutes les études.
+test('R1 — l\'étude est datée du 21 novembre 2026, une seule fois, en tête ; plus de mise à jour au 31 octobre', () => {
+  assert.match(t, /Mis à jour le 21 novembre 2026/);
+  assert.doesNotMatch(t, /Case study · mise à jour/);
   assert.doesNotMatch(t, /[Mm]ise à jour 31 octobre 2026/);
   assert.match(t, /97 Nouveautés/);
 });

@@ -1,6 +1,9 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
+import RetourEtudes from "@/components/site/RetourEtudes.astro";
+import CodeEnLigne from "@/components/site/CodeEnLigne.astro";
+import EtudeFraicheur from "@/components/site/EtudeFraicheur.astro";
 
 const lessons = [
   {
@@ -27,18 +30,20 @@ const lessons = [
   description="Retour d'expérience sur code-review-graph (tirth8205) — MCP Tree-sitter + blast-radius graph pour Claude Code. Adopt-conditional, leçons à reprendre."
 >
   <PageHero
-    eyebrow="Test bench · 2026-05-20"
+    eyebrow="Test bench"
     title="code-review-graph"
     intro="Serveur MCP Python qui construit un graphe de dépendances code (Tree-sitter AST + blast-radius SQLite) pour servir des extraits ciblés aux agents Claude — au lieu de leur faire ingérer tout le repo. Annonce 8.2× moins de tokens vs ingestion brute. Testé en sandbox venv sur maritime-atlas (Angular + NestJS + Python)."
   />
 
   <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12">
     <div class="space-y-12">
+      <EtudeFraicheur depots={[{ nom: "tirth8205/code-review-graph", href: "https://github.com/tirth8205/code-review-graph" }]} date="2026-10-31" nature="testé" />
+
 
       <article class="space-y-4">
-        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+        <h2 class="font-mono text-xs font-normal uppercase tracking-[0.2em] text-claude">
           Pourquoi le tester
-        </p>
+        </h2>
         <p class="text-ink leading-relaxed text-base sm:text-lg">
           Le repo
           <a href="https://github.com/tirth8205/code-review-graph"
@@ -57,9 +62,9 @@ const lessons = [
       </article>
 
       <article class="space-y-4">
-        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+        <h2 class="font-mono text-xs font-normal uppercase tracking-[0.2em] text-claude">
           Ce qu'on a testé
-        </p>
+        </h2>
         <ul class="space-y-2.5 text-ink leading-relaxed">
           <li class="flex gap-3">
             <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
@@ -92,9 +97,9 @@ const lessons = [
       </article>
 
       <article class="space-y-4">
-        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+        <h2 class="font-mono text-xs font-normal uppercase tracking-[0.2em] text-claude">
           Verdict
-        </p>
+        </h2>
         <div class="grid gap-4 sm:grid-cols-2">
           <div class="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-5">
             <p class="font-mono text-xs uppercase tracking-wider text-emerald-400 mb-2">
@@ -102,10 +107,10 @@ const lessons = [
             </p>
             <ul class="text-sm text-ink-muted leading-relaxed space-y-1.5">
               <li>• Build <strong>4.7s</strong> sur maritime-atlas (127 fichiers → 929 nodes, 7939 edges, 94 flows)</li>
-              <li>• <strong>Zéro pollution</strong> <code class="font-mono text-emerald-300/80 text-[0.9em]">~/.claude/</code> tant qu'on saute <code class="font-mono text-emerald-300/80 text-[0.9em]">install --platform</code></li>
-              <li>• <code class="font-mono text-emerald-300/80 text-[0.9em]">detect-changes</code> donne <strong>11 test gaps + risk 0.65</strong> sur commit cascade WMS, signal actionnable immédiat</li>
-              <li>• 24 langages supportés (TS, Python, Vue, Go, Rust, Solidity…) + Jupyter <code class="font-mono text-emerald-300/80 text-[0.9em]">.ipynb</code></li>
-              <li>• Flag <code class="font-mono text-emerald-300/80 text-[0.9em]">--data-dir</code> permet SQLite externe (pas de pollution dans le repo target)</li>
+              <li>• <strong>Zéro pollution</strong> <code class="font-mono text-positive text-[0.9em]">~/.claude/</code> tant qu'on saute <code class="font-mono text-positive text-[0.9em]">install --platform</code></li>
+              <li>• <code class="font-mono text-positive text-[0.9em]">detect-changes</code> donne <strong>11 test gaps + risk 0.65</strong> sur commit cascade WMS, signal actionnable immédiat</li>
+              <li>• 24 langages supportés (TS, Python, Vue, Go, Rust, Solidity…) + Jupyter <code class="font-mono text-positive text-[0.9em]">.ipynb</code></li>
+              <li>• Flag <code class="font-mono text-positive text-[0.9em]">--data-dir</code> permet SQLite externe (pas de pollution dans le repo target)</li>
               <li>• License MIT, 32.5k★, push fréquent — projet sain</li>
             </ul>
           </div>
@@ -114,8 +119,8 @@ const lessons = [
               Caveats
             </p>
             <ul class="text-sm text-ink-muted leading-relaxed space-y-1.5">
-              <li>• <code class="font-mono text-amber-300/80 text-[0.9em]">install --platform claude-code</code> non testé — modifie probablement <code class="font-mono text-amber-300/80 text-[0.9em]">settings.json</code> + injecte du CLAUDE.md, pas de <code class="font-mono text-amber-300/80 text-[0.9em]">--dry-run</code></li>
-              <li>• Pas de <code class="font-mono text-amber-300/80 text-[0.9em]">uninstall</code> standalone — rollback = <code class="font-mono text-amber-300/80 text-[0.9em]">rm -rf sandbox/</code> (335 MB)</li>
+              <li>• <code class="font-mono text-caution text-[0.9em]">install --platform claude-code</code> non testé — modifie probablement <code class="font-mono text-caution text-[0.9em]">settings.json</code> + injecte du CLAUDE.md, pas de <code class="font-mono text-caution text-[0.9em]">--dry-run</code></li>
+              <li>• Pas de <code class="font-mono text-caution text-[0.9em]">uninstall</code> standalone — rollback = <code class="font-mono text-caution text-[0.9em]">rm -rf sandbox/</code> (335 MB)</li>
               <li>• Claim <strong>8.2×</strong> tokens benché sur 6 repos publics, pas mesuré chez nous (à confirmer par usage prolongé)</li>
               <li>• Stockage SQLite des signatures + embeddings → ne pas builder sur des repos privés sensibles tant qu'on n'a pas inspecté le contenu</li>
             </ul>
@@ -139,9 +144,9 @@ const lessons = [
       </article>
 
       <article class="space-y-4">
-        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+        <h2 class="font-mono text-xs font-normal uppercase tracking-[0.2em] text-claude">
           Leçons à reprendre ({lessons.length})
-        </p>
+        </h2>
         <p class="text-ink-muted leading-relaxed">
           Au-delà de l'adoption, les patterns piqués au passage et réutilisables sur d'autres outils :
         </p>
@@ -152,8 +157,8 @@ const lessons = [
               <p class="font-mono text-xs text-claude mb-2">
                 {String(i + 1).padStart(2, "0")}
               </p>
-              <h3 class="text-base font-medium text-ink mb-1.5">{l.title}</h3>
-              <p class="text-sm text-ink-muted leading-relaxed">{l.body}</p>
+              <h3 class="text-base font-medium text-ink mb-1.5"><CodeEnLigne texte={l.title} /></h3>
+              <p class="text-sm text-ink-muted leading-relaxed"><CodeEnLigne texte={l.body} /></p>
             </li>
           ))}
         </ol>
@@ -187,9 +192,10 @@ const lessons = [
         </div>
       </article>
 
-      <p class="text-center text-xs text-ink/50 font-mono pt-4">
-        Test mené 2026-05-20 · version 2.3.3 · cible maritime-atlas (929 nodes / 7939 edges).
+      <p class="text-center text-xs text-ink-muted font-mono pt-4">
+        Test mené le 20 mai 2026 · version 2.3.3 · cible maritime-atlas (929 nodes / 7939 edges).
       </p>
     </div>
   </section>
+  <RetourEtudes />
 </BaseLayout>

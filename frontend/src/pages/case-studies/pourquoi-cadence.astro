@@ -8,6 +8,8 @@
 */
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
+import RetourEtudes from "@/components/site/RetourEtudes.astro";
+import EtudeFraicheur from "@/components/site/EtudeFraicheur.astro";
 import CaseStudySection from "@/components/site/CaseStudySection.astro";
 import Schema from "@/components/site/Schema.astro";
 import Callout from "@/components/site/Callout.astro";
@@ -155,6 +157,8 @@ const limites = [
   />
 
   <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12 space-y-12">
+    <EtudeFraicheur depots={[{ nom: "Sylad/cadence", href: "https://github.com/Sylad/cadence" }]} date="2026-11-19" />
+
     <CaseStudySection eyebrow="Cinq besoins">
       <h3 data-intertitre class={H3}>Ce qui manquait en codant seul avec une IA</h3>
       <p>
@@ -289,4 +293,5 @@ const limites = [
       </p>
     </CaseStudySection>
   </section>
+  <RetourEtudes />
 </BaseLayout>

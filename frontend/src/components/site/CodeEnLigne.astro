@@ -1,0 +1,19 @@
+---
+/**
+ * L8 — texte court écrit en Markdown léger (`code` entre accents graves) : le code cité devient un vrai
+ * <code>, le reste est échappé (inline-code.mjs). Sert aux données des études (leçons, causes, raisons)
+ * qui affichaient leurs accents graves bruts.
+ */
+import { inlineCodeHtml } from "@/lib/inline-code.mjs";
+
+interface Props {
+  texte: string;
+}
+
+const { texte } = Astro.props;
+---
+
+<span
+  class="[&_code]:font-mono [&_code]:text-claude-soft [&_code]:text-[0.9em] [&_code]:px-1 [&_code]:rounded [&_code]:bg-white/5"
+  set:html={inlineCodeHtml(texte)}
+/>

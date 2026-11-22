@@ -1,21 +1,42 @@
 ---
 import { dateMajLabel } from "@/lib/etude-fraicheur.mjs";
 
+/** Un dépôt : son nom, ou son nom et un lien (dépôt public). */
+type Depot = string | { nom: string; href: string };
+
 interface Props {
-  /** Dépôts décrits par l'étude (au moins un). */
-  depots: string[];
+  /** Dépôts décrits (ou testés) par l'étude (au moins un). */
+  depots: Depot[];
   /** Jour de la dernière mise à jour de CETTE étude (« YYYY-MM-DD ») ; DATE_MAJ de L38 par défaut. */
   date?: string;
+  /** L8 : « testé » pour les pages Test bench (outil d'un tiers), « décrit » par défaut. */
+  nature?: "décrit" | "testé";
 }
 
-const { depots, date } = Astro.props;
+const { depots, date, nature = "décrit" } = Astro.props;
 if (!depots.length) throw new Error("EtudeFraicheur : au moins un dépôt décrit");
+const pluriel = depots.length > 1;
+const libelle = `${pluriel ? "Dépôts" : "Dépôt"} ${nature}${pluriel ? "s" : ""}`;
+const hasNote = Astro.slots.has("default");
 ---
 
-<div class="rounded-lg border border-border bg-paper-elevated px-4 py-3">
+<!-- L8 : LE bloc de date des études (une seule forme, format-date.mjs), sous le héros, sur toutes les études. -->
+<div class="rounded-lg border border-border bg-paper-elevated px-4 py-3 min-w-0">
   <p class="font-semibold text-claude-soft" data-testid="date-maj">Mis à jour le {dateMajLabel(date)}</p>
-  <p class="text-sm text-ink-muted" data-testid="depots-decrits">
-    {depots.length > 1 ? "Dépôts décrits" : "Dépôt décrit"} :
-    {depots.map((d, i) => (<>{i > 0 && ", "}<code class="text-ink">{d}</code></>))}
+  <p class="text-sm text-ink-muted [overflow-wrap:anywhere]" data-testid="depots-decrits">
+    {libelle} :
+    {depots.map((d, i) => (
+      <>
+        {i > 0 && ", "}
+        {typeof d === "string" ? (
+          <code class="text-ink">{d}</code>
+        ) : (
+          <a href={d.href} target="_blank" rel="noopener" class="text-claude underline underline-offset-4 hover:text-claude-soft"><code>{d.nom}</code></a>
+        )}
+      </>
+    ))}
   </p>
+  {hasNote && (
+    <p class="mt-1 text-sm text-ink-muted [overflow-wrap:anywhere]"><slot /></p>
+  )}
 </div>

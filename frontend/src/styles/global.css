@@ -29,6 +29,12 @@
   --claude-orange-soft: oklch(0.78 0.1 45);
   --ink: oklch(0.92 0.005 285);
   --ink-muted: oklch(0.74 0.005 285);
+  /* L8 — textes de verdict des études (ce qui marche, ce qui casse, réserves) : jetons opaques,
+     ≥ 4,5:1 sur tous les fonds de la charte (tests/l8-contraste-jetons.test.mjs), au lieu des
+     styles locaux à transparence (text-rose-300/80, text-emerald-300/80…). */
+  --positive: oklch(0.845 0.143 164.978);
+  --negative: oklch(0.81 0.117 11.638);
+  --caution: oklch(0.879 0.169 91.605);
   --paper: oklch(0.145 0 0);
   --paper-elevated: oklch(0.185 0 0);
 }
@@ -58,6 +64,9 @@
   --color-claude-soft: var(--claude-orange-soft);
   --color-ink: var(--ink);
   --color-ink-muted: var(--ink-muted);
+  --color-positive: var(--positive);
+  --color-negative: var(--negative);
+  --color-caution: var(--caution);
   --color-paper: var(--paper);
   --color-paper-elevated: var(--paper-elevated);
 
@@ -142,4 +151,24 @@
    il se coupe n'importe où plutôt que de faire défiler la page. Les blocs <pre> défilent seuls. */
 :not(pre) > code {
   overflow-wrap: anywhere;
+}
+
+/* L8 (revue UX, WCAG 1.4.4) — texte à 200 % au téléphone : 119 à 174 px de défilement latéral sur les
+   études. Deux causes : un mot long (chemin, URL, identifiant) plus large que la colonne, et un enfant
+   de flex/grille dont la largeur minimale est celle de son plus long mot (min-width: auto).
+   Le contenu coupe ses mots plutôt que de déborder ; les tableaux gardent leurs mots entiers et
+   défilent dans leur région ; un enfant de flex/grille peut rétrécir sous la largeur de son contenu.
+   En couche base : une classe utilitaire (whitespace-nowrap, min-w-*) l'emporte toujours. */
+@layer base {
+  main,
+  body > footer {
+    overflow-wrap: anywhere;
+  }
+  main table {
+    overflow-wrap: normal;
+  }
+  main :where(.flex, .inline-flex, .grid) > *,
+  body > footer :where(.flex, .grid) > * {
+    min-width: 0;
+  }
 }

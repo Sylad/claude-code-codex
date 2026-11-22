@@ -81,7 +81,7 @@ const PAGES = {
   'case-studies/code-review-graph': { oui: [/32\.5k★/], non: [/16\.9k/] },
   'case-studies/drona23-token-efficient': { oui: [/6\.1k★/], non: [/5\.4k/] },
   'case-studies/superclaude': { oui: [/23\.9k★/, /v5\.0/], non: [/22\.7k★/] },
-  'case-studies/token-optimizers-2026': { oui: [/19\.3k⭐/, /v20/], non: [/15k⭐/] },
+  'case-studies/token-optimizers-2026': { oui: [/19\.3k étoiles/, /v20/], non: [/15k(⭐| étoiles)/] },
   'case-studies/token-savior': { oui: [/v4\.24\.0/, /1\.2k★/], non: [/891★/] },
 };
 for (const [p, { oui, non }] of Object.entries(PAGES)) {

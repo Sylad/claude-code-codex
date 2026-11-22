@@ -1,6 +1,9 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
+import RetourEtudes from "@/components/site/RetourEtudes.astro";
+import CodeEnLigne from "@/components/site/CodeEnLigne.astro";
+import EtudeFraicheur from "@/components/site/EtudeFraicheur.astro";
 import CaseStudySection from "@/components/site/CaseStudySection.astro";
 
 const lessons = [
@@ -36,17 +39,19 @@ const lessons = [
   description="Retour d'expérience sur davila7/claude-code-templates v1.28.16. Registry CLI bien designé : project-local install, --health-check read-only, zéro pollution ~/.claude/. Adopté avec caveats (`--dry-run` bugué)."
 >
   <PageHero
-    eyebrow="Test bench · 2026-05-10"
+    eyebrow="Test bench"
     title="claude-code-templates (davila7)"
-    intro="Registry CLI npm pour bootstrap un setup Claude Code — agents, commands, skills, MCPs, hooks via `npx claude-code-templates@latest --agent X --yes`. v1.28.16 stable au test (v1.29.7 sur GitHub, 1.30.0 sur npm au 2026-10-31), 33k★, MIT, 152 releases. Site catalog : aitmpl.com."
+    intro="Registry CLI npm pour bootstrap un setup Claude Code — agents, commands, skills, MCPs, hooks via `npx claude-code-templates@latest --agent X --yes`. v1.28.16 stable au test (v1.29.7 sur GitHub, 1.30.0 sur npm au 31 octobre 2026), 33k★, MIT, 152 releases. Site catalog : aitmpl.com."
   />
 
   <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12">
     <div class="space-y-12">
+      <EtudeFraicheur depots={[{ nom: "davila7/claude-code-templates", href: "https://github.com/davila7/claude-code-templates" }]} date="2026-10-31" nature="testé" />
+
       <CaseStudySection eyebrow="Pourquoi tester">
         <p>
           Premier outil testé qui ressemble fortement à <strong>claude-mem</strong>
-          en surface (CLI registry pour Claude Code, install via `npx`). Question :
+          en surface (CLI registry pour Claude Code, install via <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">npx</code>). Question :
           est-ce un nouveau claude-mem (invasive, pas d'uninstall) ou un design propre ?
           Bonus : 152 releases stables et un site catalog (aitmpl.com) qui donne envie
           de browser sans s'engager.
@@ -88,13 +93,13 @@ const lessons = [
             <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">--dry-run</code>
             silencieux), mais project-local
             (<code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">./.claude/agents/code-reviewer.md</code>
-            seul), zéro pollution `~/.claude/`.</span>
+            seul), zéro pollution <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">~/.claude/</code>.</span>
           </li>
           <li class="flex gap-3">
             <span class="mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0"></span>
             <span><strong class="text-ink">Cleanup</strong> :
             <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">rm -rf cct-sandbox</code>.
-            Baseline `~/.claude/` strictement préservée (md5 inchangés).</span>
+            Baseline <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">~/.claude/</code> strictement préservée (md5 inchangés).</span>
           </li>
         </ul>
       </CaseStudySection>
@@ -106,11 +111,11 @@ const lessons = [
               Ce qui est solide
             </p>
             <ul class="text-sm text-ink-muted leading-relaxed space-y-1.5">
-              <li>• Project-local install par défaut (pas `~/.claude/`)</li>
-              <li>• <code class="font-mono text-emerald-300/80 text-[0.9em]">--health-check</code> genuinely read-only</li>
+              <li>• Project-local install par défaut (pas <code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">~/.claude/</code>)</li>
+              <li>• <code class="font-mono text-positive text-[0.9em]">--health-check</code> genuinely read-only</li>
               <li>• Zéro Claude Code plugin / marketplace pollution</li>
-              <li>• Cleanup = <code class="font-mono text-emerald-300/80 text-[0.9em]">rm</code> un fichier .md</li>
-              <li>• Lifecycle complet (<code class="font-mono text-emerald-300/80 text-[0.9em]">--list/remove/update-agent</code>)</li>
+              <li>• Cleanup = <code class="font-mono text-positive text-[0.9em]">rm</code> un fichier .md</li>
+              <li>• Lifecycle complet (<code class="font-mono text-positive text-[0.9em]">--list/remove/update-agent</code>)</li>
               <li>• Telemetry opt-out propre (env vars)</li>
               <li>• MIT, 152 releases, sponsored "Claude for OSS"</li>
             </ul>
@@ -120,7 +125,7 @@ const lessons = [
               Ce qui pète
             </p>
             <ul class="text-sm text-ink-muted leading-relaxed space-y-1.5">
-              <li>• <code class="font-mono text-rose-300/80 text-[0.9em]">--dry-run</code> silencieusement ignoré avec <code class="font-mono text-rose-300/80 text-[0.9em]">--agent</code></li>
+              <li>• <code class="font-mono text-negative text-[0.9em]">--dry-run</code> silencieusement ignoré avec <code class="font-mono text-negative text-[0.9em]">--agent</code></li>
               <li>• Catalogue communautaire de qualité variable (7+ sources)</li>
               <li>• Marketing-driven (Trendshift, sponsors multiples)</li>
               <li>• Dashboards localhost à isoler (analytics/chats/tunnel)</li>
@@ -157,8 +162,8 @@ const lessons = [
               <p class="font-mono text-xs text-claude mb-2">
                 {String(i + 1).padStart(2, "0")}
               </p>
-              <h3 class="text-base font-medium text-ink mb-1.5">{l.title}</h3>
-              <p class="text-sm text-ink-muted leading-relaxed">{l.body}</p>
+              <h3 class="text-base font-medium text-ink mb-1.5"><CodeEnLigne texte={l.title} /></h3>
+              <p class="text-sm text-ink-muted leading-relaxed"><CodeEnLigne texte={l.body} /></p>
             </li>
           ))}
         </ol>
@@ -180,9 +185,10 @@ const lessons = [
         </div>
       </CaseStudySection>
 
-      <p class="text-center text-xs text-ink/50 font-mono pt-4">
-        Test mené 2026-05-10 sur npm v1.28.16 · protocole formalisé dans le skill <code>/test-tool</code>.
+      <p class="text-center text-xs text-ink-muted font-mono pt-4">
+        Test mené le 10 mai 2026 sur npm v1.28.16 · protocole formalisé dans le skill <code>/test-tool</code>.
       </p>
     </div>
   </section>
+  <RetourEtudes />
 </BaseLayout>

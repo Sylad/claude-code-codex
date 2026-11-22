@@ -1,6 +1,9 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
+import RetourEtudes from "@/components/site/RetourEtudes.astro";
+import CodeEnLigne from "@/components/site/CodeEnLigne.astro";
+import EtudeFraicheur from "@/components/site/EtudeFraicheur.astro";
 import CaseStudySection from "@/components/site/CaseStudySection.astro";
 
 const lessons = [
@@ -36,13 +39,15 @@ const lessons = [
   description="Retour d'expérience sur SuperClaude-Org/SuperClaude_Framework v4.3.0. Worst-case d'invasion testé : 30 cmds + 20 agents + SessionStart hook + plugin + pytest auto-discovery. Reject + watchlist + skillify : notre stack custom couvre déjà 7/8 des features."
 >
   <PageHero
-    eyebrow="Test bench · 2026-05-10"
+    eyebrow="Test bench"
     title="SuperClaude Framework (SuperClaude-Org)"
     intro="Méta-framework qui transforme Claude Code en « plateforme de développement structurée » via 30 commandes /sc:*, 20 agents, 7 modes cognitifs et 8 intégrations MCP. v4.3.0 stable, 23.9k★, MIT."
   />
 
   <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12">
     <div class="space-y-12">
+      <EtudeFraicheur depots={[{ nom: "SuperClaude-Org/SuperClaude_Framework", href: "https://github.com/SuperClaude-Org/SuperClaude_Framework" }]} date="2026-10-31" nature="testé" />
+
       <CaseStudySection eyebrow="Pourquoi tester">
         <p>
           23.9k★ + MIT + active = surface saine en métriques. La promesse
@@ -110,13 +115,13 @@ const lessons = [
               Ce qui pète
             </p>
             <ul class="text-sm text-ink-muted leading-relaxed space-y-1.5">
-              <li>• 30 cmds + 20 agents écrits dans <code class="font-mono text-rose-300/80 text-[0.9em]">~/.claude/</code></li>
+              <li>• 30 cmds + 20 agents écrits dans <code class="font-mono text-negative text-[0.9em]">~/.claude/</code></li>
               <li>• SessionStart hook auto-injecté</li>
-              <li>• Plugin marketplace + <code class="font-mono text-rose-300/80 text-[0.9em]">enabledPlugins</code> registered</li>
+              <li>• Plugin marketplace + <code class="font-mono text-negative text-[0.9em]">enabledPlugins</code> registered</li>
               <li>• Pytest plugin auto-loaded dans toute env Python</li>
-              <li>• Pas de <code class="font-mono text-rose-300/80 text-[0.9em]">--dry-run</code>, pas de <code class="font-mono text-rose-300/80 text-[0.9em]">uninstall</code> first-class</li>
+              <li>• Pas de <code class="font-mono text-negative text-[0.9em]">--dry-run</code>, pas de <code class="font-mono text-negative text-[0.9em]">uninstall</code> first-class</li>
               <li>• PLUGIN_INSTALL.md en japonais seulement</li>
-              <li>• Demande <code class="font-mono text-rose-300/80 text-[0.9em]">USE_BUILTIN_RIPGREP=0</code></li>
+              <li>• Demande <code class="font-mono text-negative text-[0.9em]">USE_BUILTIN_RIPGREP=0</code></li>
               <li>• 5 chemins d'install documentés (chaos)</li>
             </ul>
           </div>
@@ -149,8 +154,8 @@ const lessons = [
               <p class="font-mono text-xs text-claude mb-2">
                 {String(i + 1).padStart(2, "0")}
               </p>
-              <h3 class="text-base font-medium text-ink mb-1.5">{l.title}</h3>
-              <p class="text-sm text-ink-muted leading-relaxed">{l.body}</p>
+              <h3 class="text-base font-medium text-ink mb-1.5"><CodeEnLigne texte={l.title} /></h3>
+              <p class="text-sm text-ink-muted leading-relaxed"><CodeEnLigne texte={l.body} /></p>
             </li>
           ))}
         </ol>
@@ -203,9 +208,10 @@ const lessons = [
         </div>
       </CaseStudySection>
 
-      <p class="text-center text-xs text-ink/50 font-mono pt-4">
-        Test mené 2026-05-10 sur PyPI v4.3.0 · protocole formalisé dans le skill <code>/test-tool</code>.
+      <p class="text-center text-xs text-ink-muted font-mono pt-4">
+        Test mené le 10 mai 2026 sur PyPI v4.3.0 · protocole formalisé dans le skill <code>/test-tool</code>.
       </p>
     </div>
   </section>
+  <RetourEtudes />
 </BaseLayout>

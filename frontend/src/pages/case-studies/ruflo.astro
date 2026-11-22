@@ -1,6 +1,8 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
+import RetourEtudes from "@/components/site/RetourEtudes.astro";
+import EtudeFraicheur from "@/components/site/EtudeFraicheur.astro";
 
 const lessons = [
   {
@@ -43,19 +45,21 @@ const lessons = [
   description="Retour d'expérience sur Ruflo (claude-flow), framework multi-agent pour Claude Code. Ce qui marche, ce qui pète, et les 8 leçons à reprendre."
 >
   <PageHero
-    eyebrow="Test bench · 2026-05-08"
+    eyebrow="Test bench"
     title="Ruflo (claude-flow)"
     intro="Framework d'orchestration multi-agent qui se greffe sur Claude Code — 32 plugins, swarms hiérarchiques, mémoire vectorielle, fédération multi-machines. Testé en sandbox sur la 3.7.0-alpha.17 puis sur la 3.6.30 stable."
   />
 
   <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12">
     <div class="space-y-12">
+      <EtudeFraicheur depots={[{ nom: "ruvnet/ruflo", href: "https://github.com/ruvnet/ruflo" }]} date="2026-05-08" nature="testé" />
+
       <article class="space-y-4">
-        <p
-          class="font-mono text-xs uppercase tracking-[0.2em] text-claude"
+        <h2
+          class="font-mono text-xs font-normal uppercase tracking-[0.2em] text-claude"
         >
           Pourquoi le tester
-        </p>
+        </h2>
         <p class="text-ink leading-relaxed text-base sm:text-lg">
           Le repo
           <a
@@ -75,11 +79,11 @@ const lessons = [
       </article>
 
       <article class="space-y-4">
-        <p
-          class="font-mono text-xs uppercase tracking-[0.2em] text-claude"
+        <h2
+          class="font-mono text-xs font-normal uppercase tracking-[0.2em] text-claude"
         >
           Ce qu'on a testé
-        </p>
+        </h2>
         <ul class="space-y-2.5 text-ink leading-relaxed">
           <li class="flex gap-3">
             <span
@@ -144,11 +148,11 @@ const lessons = [
       </article>
 
       <article class="space-y-4">
-        <p
-          class="font-mono text-xs uppercase tracking-[0.2em] text-claude"
+        <h2
+          class="font-mono text-xs font-normal uppercase tracking-[0.2em] text-claude"
         >
           Verdict
-        </p>
+        </h2>
         <div class="grid gap-4 sm:grid-cols-2">
           <div
             class="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-5"
@@ -162,7 +166,7 @@ const lessons = [
               <li>• Toolkit massif (47+ commandes, V3 features)</li>
               <li>• Swarm init donne un graphe coordonné en une commande</li>
               <li>• 8 skills pré-installés sur la 3.6.30 (SPARC, swarm-orchestration, pair-programming…)</li>
-              <li>• <code class="font-mono text-emerald-300/80 text-[0.9em]">cleanup --dry-run</code> est l'output par défaut (safety)</li>
+              <li>• <code class="font-mono text-positive text-[0.9em]">cleanup --dry-run</code> est l'output par défaut (safety)</li>
               <li>• Documentation détaillée des modes minimal / full</li>
             </ul>
           </div>
@@ -175,11 +179,11 @@ const lessons = [
               Ce qui pète
             </p>
             <ul class="text-sm text-ink-muted leading-relaxed space-y-1.5">
-              <li>• <code class="font-mono text-rose-300/80 text-[0.9em]">--no-global</code> ne respecte pas <code class="font-mono text-rose-300/80 text-[0.9em]">~/.claude/CLAUDE.md</code> (testé sur les deux versions)</li>
-              <li>• <code class="font-mono text-rose-300/80 text-[0.9em]">cleanup --force</code> laisse CLAUDE.md projet, .mcp.json, et 8 skills/</li>
+              <li>• <code class="font-mono text-negative text-[0.9em]">--no-global</code> ne respecte pas <code class="font-mono text-negative text-[0.9em]">~/.claude/CLAUDE.md</code> (testé sur les deux versions)</li>
+              <li>• <code class="font-mono text-negative text-[0.9em]">cleanup --force</code> laisse CLAUDE.md projet, .mcp.json, et 8 skills/</li>
               <li>• Naming inconsistent (ruflo vs claude-flow dans les mêmes fichiers)</li>
               <li>• Plugin registry IPFS ralentit la commande (~8s via Pinata)</li>
-              <li>• npm <code class="font-mono text-rose-300/80 text-[0.9em]">latest</code> tag pointe sur du prerelease alpha</li>
+              <li>• npm <code class="font-mono text-negative text-[0.9em]">latest</code> tag pointe sur du prerelease alpha</li>
             </ul>
           </div>
         </div>
@@ -206,11 +210,11 @@ const lessons = [
       </article>
 
       <article class="space-y-4">
-        <p
-          class="font-mono text-xs uppercase tracking-[0.2em] text-claude"
+        <h2
+          class="font-mono text-xs font-normal uppercase tracking-[0.2em] text-claude"
         >
           Leçons à reprendre (8)
-        </p>
+        </h2>
         <p class="text-ink-muted leading-relaxed">
           Ne pas adopter Ruflo n'invalide pas ses idées. Voici les patterns
           qu'on ré-applique chez nous, indépendamment :
@@ -292,9 +296,10 @@ const lessons = [
         </div>
       </article>
 
-      <p class="text-center text-xs text-ink/50 font-mono pt-4">
-        Test mené 2026-05-08 · versions 3.7.0-alpha.17 + 3.6.30 stable.
+      <p class="text-center text-xs text-ink-muted font-mono pt-4">
+        Versions testées : 3.7.0-alpha.17 + 3.6.30 stable.
       </p>
     </div>
   </section>
+  <RetourEtudes />
 </BaseLayout>

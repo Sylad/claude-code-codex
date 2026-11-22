@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
+import RetourEtudes from "@/components/site/RetourEtudes.astro";
 import MermaidDiagram from "@/components/site/MermaidDiagram.vue";
 import CaseStudySection from "@/components/site/CaseStudySection.astro";
 import EtudeFraicheur from "@/components/site/EtudeFraicheur.astro";
@@ -187,7 +188,7 @@ const tokenFlow = `flowchart LR
   <PageHero
     eyebrow="Case study · encyclopédie aetherwx"
     title="L'encyclopédie AetherWX"
-    intro="« 12 ans que je fais du GeoServer et de l'OpenLayers, je ne comprends rien aux technos que tu utilises. » — Sylvain, 2026-05-14, 22h, juste avant que la tour Big-Blue arrête de clignoter. Cette page part de ce qui a été déployé pendant 14h de marathon — une vingtaine de services, GitOps complet, et pourquoi des dizaines de tokens ont été générés — et décrit l'infrastructure telle qu'elle tourne au 3 novembre 2026, après deux déménagements depuis ce marathon."
+    intro="« 12 ans que je fais du GeoServer et de l'OpenLayers, je ne comprends rien aux technos que tu utilises. » — Sylvain, 14 mai 2026, 22h, juste avant que la tour Big-Blue arrête de clignoter. Cette page part de ce qui a été déployé pendant 14h de marathon — une vingtaine de services, GitOps complet, et pourquoi des dizaines de tokens ont été générés — et décrit l'infrastructure telle qu'elle tourne au 3 novembre 2026, après deux déménagements depuis ce marathon."
   />
 
   <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12 space-y-12">
@@ -196,7 +197,7 @@ const tokenFlow = `flowchart LR
 
     <CaseStudySection eyebrow="00 · Ce qui a changé depuis l'écriture">
       <p>
-        Cette page a été écrite le 2026-05-14, au sortir du marathon qui a
+        Cette page a été écrite le 14 mai 2026, au sortir du marathon qui a
         mis AetherWX sur Kubernetes. L'architecture décrite plus bas
         (Kubernetes, GitOps, tunnel, tokens) est toujours la bonne, mais
         <strong>trois faits ont changé</strong> et la version que vous lisez
@@ -447,10 +448,9 @@ const tokenFlow = `flowchart LR
             <br/><strong class="text-ink">Où vit-il :</strong> dans
             <code>kubectl get secret argocd-secret -n argocd</code> en
             stringData, ET dans GitHub repo Settings → Webhooks → Secret.
-            <br/><strong class="text-ink">Rotation :</strong> recette dans
-            la <a href="/case-studies/aetherwx-encyclopedia#rotation">section
-            rotation</a> ci-dessous (jamais en arg shell, toujours via
-            stdin <code>read -s</code>).
+            <br/><strong class="text-ink">Rotation :</strong> le nouveau
+            secret passe par stdin (<code>read -s</code>), jamais en argument
+            du shell, puis est reporté aux deux endroits ci-dessus.
           </p>
         </div>
 
@@ -486,7 +486,7 @@ const tokenFlow = `flowchart LR
             comme <code>GOOGLE_CLIENT_SECRET</code>.
             <br/><strong class="text-ink">Rotation :</strong> Google
             Cloud Console → Credentials → ton OAuth Client → ⟳ Reset
-            secret. (Note : ce token a été rotaté le 2026-05-14 après
+            secret. (Note : ce token a été rotaté le 14 mai 2026 après
             une fuite accidentelle dans un terminal.)
           </p>
         </div>
@@ -747,7 +747,7 @@ const tokenFlow = `flowchart LR
 
     <CaseStudySection eyebrow="10 · Quoi maintenant ?">
       <p>
-        Le marathon 2026-05-14 a livré le strict nécessaire. Le backlog
+        Le marathon du 14 mai 2026 a livré le strict nécessaire. Le backlog
         d'alors, et ce qu'il est devenu quatre mois plus tard :
       </p>
 
@@ -824,7 +824,7 @@ const tokenFlow = `flowchart LR
 
       <p class="mt-8 text-sm text-ink-muted italic">
         Encyclopédie écrite en pair-programming avec Claude Opus 4.7 le
-        2026-05-14, en fin de journée d'un marathon de 14 heures, et tenue à
+        14 mai 2026, en fin de journée d'un marathon de 14 heures, et tenue à
         jour depuis (prod bare-metal, GeoServer 3.0.1 ; date en tête de page). Si
         quelque chose ne te paraît pas clair, ouvre une issue sur le
         repo claude-code-codex — c'est probablement que j'ai sauté une
@@ -833,4 +833,5 @@ const tokenFlow = `flowchart LR
     </CaseStudySection>
 
   </section>
+  <RetourEtudes />
 </BaseLayout>

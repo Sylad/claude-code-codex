@@ -17,8 +17,8 @@ const DATES = { 'ol-companion': '22 novembre 2026', warhammer40k: '31 octobre 20
 test('R1 — chaque étude est datée en tête de sa dernière mise à jour et porte le dépôt qu\'elle décrit', () => {
   for (const p of PAGES) {
     const t = texte(`case-studies/${p}`);
-    assert.match(t, new RegExp(`Mise à jour ${DATES[p]}`), p);
-    assert.match(t, new RegExp(`github\\.com/Sylad/${p}`), p);
+    assert.match(t, new RegExp(`Mis à jour le ${DATES[p]}`), p); // forme unique des études (L8)
+    assert.match(html(`case-studies/${p}`), new RegExp(`href="https://github\\.com/Sylad/${p}"`), p);
   }
 });
 
@@ -76,7 +76,7 @@ test('R7 — la ligne de date n\'affiche aucune barre oblique inverse', () => {
   for (const p of PAGES) {
     const t = texte(`case-studies/${p}`);
     assert.doesNotMatch(t, /\\/, `${p} : barre oblique inverse affichée`);
-    assert.match(t, /état relu d'après son README/, p);
+    assert.match(t, /[Éé]tat relu d'après son README/, p);
   }
 });
 

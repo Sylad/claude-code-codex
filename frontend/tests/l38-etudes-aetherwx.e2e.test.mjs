@@ -110,7 +110,7 @@ test('R4 — chaque image des études touchées a une légende « Capture du <da
       assert.equal(legendes.length, attendues.length + 2);
       attendues.forEach((a, i) => assert.ok(legendes[i].includes(a), `description conservée : ${a}`));
       // diagrammes du 17 septembre 2026 : datés, sans la mention de l'ancienne carte 2D
-      assert.match(legendes[7], /^Capture du 17 septembre 2026 — État de la prod dark-blue au 2026-09-17\./);
+      assert.match(legendes[7], /^Capture du 17 septembre 2026 — État de la prod dark-blue au 17 septembre 2026\./);
       assert.match(legendes[8], /^Capture du 17 septembre 2026 — La chaîne de livraison/);
       // fichiers d'origine du 11 mai 2026 : la légende le dit
       for (const l of legendes.slice(0, 7)) assert.match(l, /^Capture du 11 mai 2026 \(carte 2D, avant le globe\) — /);

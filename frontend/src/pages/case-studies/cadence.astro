@@ -8,6 +8,8 @@
 */
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
+import RetourEtudes from "@/components/site/RetourEtudes.astro";
+import EtudeFraicheur from "@/components/site/EtudeFraicheur.astro";
 import CaseStudySection from "@/components/site/CaseStudySection.astro";
 import Schema from "@/components/site/Schema.astro";
 import StepChain from "@/components/site/StepChain.astro";
@@ -172,6 +174,8 @@ const echecs = [
   />
 
   <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12 space-y-12">
+    <EtudeFraicheur depots={[{ nom: "Sylad/cadence", href: "https://github.com/Sylad/cadence" }]} date="2026-11-19" />
+
     <CaseStudySection eyebrow="Le problème de départ">
       <h3 data-intertitre class={H3}>Deux questions qui reviennent sans cesse</h3>
       <p>
@@ -213,7 +217,7 @@ const echecs = [
             </p>
             <h3 class="text-base font-medium text-ink mb-1.5">{p.nom}</h3>
             <p class={`text-sm text-ink-muted leading-relaxed [overflow-wrap:anywhere] ${CODE}`} set:html={inlineCodeHtml(p.corps)} />
-            <p class="mt-3 font-mono text-[11px] text-ink/60">
+            <p class="mt-3 font-mono text-[11px] text-ink-muted">
               <a href={`${CADENCE}/blob/main/${p.doc}`} target="_blank" rel="noopener">↗ {p.doc}</a>
             </p>
           </li>
@@ -332,7 +336,7 @@ const echecs = [
             <dt class="font-mono text-lg text-claude">{c.valeur}</dt>
             <dd class="mt-2 text-sm text-ink-muted leading-relaxed [overflow-wrap:anywhere]">
               <span class={CODE} set:html={inlineCodeHtml(c.legende)} />
-              <span class="mt-2 block font-mono text-[11px] text-ink/60">Source : {c.source}</span>
+              <span class="mt-2 block font-mono text-[11px] text-ink-muted">Source : {c.source}</span>
             </dd>
           </div>
         ))}
@@ -399,4 +403,5 @@ const echecs = [
       </p>
     </CaseStudySection>
   </section>
+  <RetourEtudes />
 </BaseLayout>

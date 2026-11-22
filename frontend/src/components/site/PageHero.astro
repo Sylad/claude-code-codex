@@ -1,4 +1,7 @@
 ---
+// L8 : un `code` cité dans l'intro devient un vrai <code> (plus d'accents graves bruts).
+import { inlineCodeHtml } from "@/lib/inline-code.mjs";
+
 interface Props {
   eyebrow: string;
   title: string;
@@ -17,9 +20,10 @@ const { eyebrow, title, intro } = Astro.props;
       {title}
     </h1>
     {intro && (
-      <p class="mt-5 max-w-2xl text-base sm:text-lg text-ink leading-relaxed [text-shadow:0_1px_3px_rgb(0_0_0_/0.85)]">
-        {intro}
-      </p>
+      <p
+        class="mt-5 max-w-2xl text-base sm:text-lg text-ink leading-relaxed [text-shadow:0_1px_3px_rgb(0_0_0_/0.85)] [&_code]:font-mono [&_code]:text-[0.9em]"
+        set:html={inlineCodeHtml(intro)}
+      />
     )}
   </div>
 </section>

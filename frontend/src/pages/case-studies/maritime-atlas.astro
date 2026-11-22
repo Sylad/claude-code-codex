@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
+import RetourEtudes from "@/components/site/RetourEtudes.astro";
 import MermaidDiagram from "@/components/site/MermaidDiagram.vue";
 import CaseStudySection from "@/components/site/CaseStudySection.astro";
 import EtudeFraicheur from "@/components/site/EtudeFraicheur.astro";
@@ -13,7 +14,7 @@ const nbLayers: number | undefined = 68;
 // Relevé du 3 novembre 2026 : lignes de la matrice du canary, `grep -c '^[^#]' charts/maritime/files/wms-canary-matrix.txt` dans aetherwx-gitops.
 const nbCombos: number | undefined = 87;
 const DESC_PLATEFORME =
-  "État de la prod dark-blue au 2026-09-17. Diagramme — cliquer pour la version interactive (vues guidées Ingestion / Stockage / Publication, trace amont-aval, export). Le frontend n'attaque que GeoServer (WMS-T) et l'API ; toute l'ingestion est en amont.";
+  "État de la prod dark-blue au 17 septembre 2026. Diagramme — cliquer pour la version interactive (vues guidées Ingestion / Stockage / Publication, trace amont-aval, export). Le frontend n'attaque que GeoServer (WMS-T) et l'API ; toute l'ingestion est en amont.";
 const DESC_LIVRAISON =
   "La chaîne de livraison : un seul levier déploie, le tag sha-… dans le values.yaml du chart. ArgoCD lit le dépôt GitOps en SSH lecture seule ; aucun port ouvert, tout passe par le tunnel Cloudflare.";
 const DESC_PARTICULES = "Particules vent style windy.com — à l'époque 1500 particules canvas 2D, advectées par interpolation IDW sur les 4 plus proches voisins de la grille GFS. Depuis le passage au globe, elles sont portées en WebGL (custom layer MapLibre, 3000 particules par défaut, port du webgl-wind de Mapbox sous licence ISC).";
@@ -525,7 +526,7 @@ const DESC_PARTICULES = "Particules vent style windy.com — à l'époque 1500 p
           de la legend en 5 groupes (Info maritimes, Modèles océano,
           Modèles atmo, Radar, Foudre) + un placeholder "Satellite à venir".
           Chaque layer reçoit un slider d'opacité 0-100% visible quand le
-          toggle est actif (`@if (showXXX())` dans le template). Bind sur
+          toggle est actif (<code class="font-mono text-claude-soft text-[0.9em] px-1 py-0.5 rounded bg-white/5">@if (showXXX())</code> dans le template). Bind sur
           <code>layer.setOpacity()</code> côté OL. Particules vent =
           opacity CSS sur le canvas overlay (signal séparé du rAF loop).
           Bouton « ↺ Réinitialiser » qui restore les defaults
@@ -599,7 +600,7 @@ const DESC_PARTICULES = "Particules vent style windy.com — à l'époque 1500 p
           4. Champ vectoriel C¹ continu, courbes naturelles.
         </li>
         <li>
-          <strong>Cluster GeoServer non-breaking</strong> : marathon 2026-05-24
+          <strong>Cluster GeoServer non-breaking</strong> : marathon du 24 mai 2026
           passe de 1 à 2 replicas GeoServer (3 aujourd'hui) synchronisés par
           <strong>Hazelcast K8s</strong> (plugin community
           <code>gs-hz-cluster</code>) — RBAC ServiceAccount + Role pod-reader,
@@ -709,7 +710,7 @@ const DESC_PARTICULES = "Particules vent style windy.com — à l'époque 1500 p
         </li>
         <li>
           <strong>Plugin Java <code>maritime-cascade-time-forward</code> — fix un bug GeoTools.</strong>
-          Sprint G65 (2026-05-27). Symptôme : l'animation cascade HRV/RSS/MTG/radar
+          Sprint G65 (27 mai 2026). Symptôme : l'animation cascade HRV/RSS/MTG/radar
           affichait toujours la même image quel que soit <code>TIME</code>. Cause racine
           trouvée en lisant <code>gt-wms</code> (538 + 215 lignes) : <strong>0 occurrence
           du mot <em>time</em> case-insensitive</strong>. GeoTools ne forwarde
@@ -737,7 +738,7 @@ const DESC_PARTICULES = "Particules vent style windy.com — à l'époque 1500 p
       </ul>
     </CaseStudySection>
 
-    <CaseStudySection eyebrow="Plugin WPS custom — densification IDW (2026-05-13)">
+    <CaseStudySection eyebrow="Plugin WPS custom — densification IDW (13 mai 2026)">
       <p>
         Les rasters source météo / océano sont sur grille grossière : GFS 0.25°
         (~28km), OISST 0.25°, WW3 0.5°. Au rendu, on voit les pixels — pas joli,
@@ -1078,4 +1079,5 @@ const DESC_PARTICULES = "Particules vent style windy.com — à l'époque 1500 p
       </p>
     </CaseStudySection>
   </section>
+  <RetourEtudes />
 </BaseLayout>

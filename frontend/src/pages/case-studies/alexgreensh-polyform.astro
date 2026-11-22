@@ -1,6 +1,9 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
+import RetourEtudes from "@/components/site/RetourEtudes.astro";
+import CodeEnLigne from "@/components/site/CodeEnLigne.astro";
+import EtudeFraicheur from "@/components/site/EtudeFraicheur.astro";
 
 const polyformBlockers = [
   {
@@ -46,18 +49,20 @@ const screeningRules = [
   description="Pourquoi on n'a pas testé alexgreensh/token-optimizer : license PolyForm Noncommercial. Dissuasion avant install, méthode de screening license appliquée à 8 candidats."
 >
   <PageHero
-    eyebrow="Test bench · 2026-05-20"
+    eyebrow="Test bench"
     title="alexgreensh/token-optimizer"
     intro="On n'a même pas cloné. La license PolyForm Noncommercial est un deal-breaker pour usage pro futur (même perso peut basculer). Cas d'école sur le screening license en amont du test."
   />
 
   <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12">
     <div class="space-y-12">
+      <EtudeFraicheur depots={[{ nom: "alexgreensh/token-optimizer", href: "https://github.com/alexgreensh/token-optimizer" }]} date="2026-05-20" nature="testé" />
+
 
       <article class="space-y-4">
-        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+        <h2 class="font-mono text-xs font-normal uppercase tracking-[0.2em] text-claude">
           Le pitch (intéressant pourtant)
-        </p>
+        </h2>
         <p class="text-ink leading-relaxed text-base sm:text-lg">
           <a href="https://github.com/alexgreensh/token-optimizer"
              target="_blank" rel="noopener"
@@ -76,9 +81,9 @@ const screeningRules = [
       </article>
 
       <article class="space-y-4">
-        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+        <h2 class="font-mono text-xs font-normal uppercase tracking-[0.2em] text-claude">
           Le deal-breaker
-        </p>
+        </h2>
         <div class="rounded-xl border border-rose-500/30 bg-rose-500/10 p-5 sm:p-6">
           <div class="flex items-baseline gap-3 mb-3">
             <span class="font-mono text-xs uppercase tracking-wider text-rose-400">License</span>
@@ -99,20 +104,20 @@ const screeningRules = [
         <ol class="grid gap-3">
           {polyformBlockers.map((b, i) => (
             <li class="min-w-0 [overflow-wrap:anywhere] rounded-xl border border-white/10 bg-paper-elevated p-5">
-              <p class="font-mono text-xs text-rose-400/80 mb-2">
+              <p class="font-mono text-xs text-negative mb-2">
                 {String(i + 1).padStart(2, "0")}
               </p>
-              <h3 class="text-base font-medium text-ink mb-1.5">{b.title}</h3>
-              <p class="text-sm text-ink-muted leading-relaxed">{b.body}</p>
+              <h3 class="text-base font-medium text-ink mb-1.5"><CodeEnLigne texte={b.title} /></h3>
+              <p class="text-sm text-ink-muted leading-relaxed"><CodeEnLigne texte={b.body} /></p>
             </li>
           ))}
         </ol>
       </article>
 
       <article class="space-y-4">
-        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+        <h2 class="font-mono text-xs font-normal uppercase tracking-[0.2em] text-claude">
           Verdict
-        </p>
+        </h2>
         <div class="rounded-xl border border-claude/20 bg-claude/5 p-5 sm:p-6">
           <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">
             Décision
@@ -129,9 +134,9 @@ const screeningRules = [
       </article>
 
       <article class="space-y-4">
-        <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+        <h2 class="font-mono text-xs font-normal uppercase tracking-[0.2em] text-claude">
           Méthode de screening license ({screeningRules.length})
-        </p>
+        </h2>
         <p class="text-ink-muted leading-relaxed">
           Règles appliquées avant tout test d'un outil tiers Claude Code. Les
           quatre du dessous résument le filtrage qu'on fait en amont du
@@ -144,8 +149,8 @@ const screeningRules = [
               <p class="font-mono text-xs text-claude mb-2">
                 {String(i + 1).padStart(2, "0")}
               </p>
-              <h3 class="text-base font-medium text-ink mb-1.5">{r.title}</h3>
-              <p class="text-sm text-ink-muted leading-relaxed">{r.body}</p>
+              <h3 class="text-base font-medium text-ink mb-1.5"><CodeEnLigne texte={r.title} /></h3>
+              <p class="text-sm text-ink-muted leading-relaxed"><CodeEnLigne texte={r.body} /></p>
             </li>
           ))}
         </ol>
@@ -183,9 +188,10 @@ const screeningRules = [
         </div>
       </article>
 
-      <p class="text-center text-xs text-ink/50 font-mono pt-4">
-        Skip décidé 2026-05-20 · screening license seul · pas de clone effectué.
+      <p class="text-center text-xs text-ink-muted font-mono pt-4">
+        Skip décidé sur le seul examen de la licence · pas de clone effectué.
       </p>
     </div>
   </section>
+  <RetourEtudes />
 </BaseLayout>

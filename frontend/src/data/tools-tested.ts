@@ -68,7 +68,7 @@ export const testedTools: TestedTool[] = [
     author: "BloopAI",
     category: "tool",
     description:
-      "UI Kanban pour dispatcher et superviser plusieurs agents Claude Code (ou Codex) en parallèle — orchestration visuelle des workflows branch/worktree. Testé 2026-06-04 : REJECT HARD. License Apache 2.0 et 26.8k⭐ OK, mais `npx vibe-kanban` ressemble à un wrapper inoffensif (pattern ccusage) tandis qu'il installe en réalité 188 MB de binaire dans `~/.vibe-kanban/`, ouvre un serveur persistant sur port 8181 et touche `~/.config/opencode/` — sans rien déclarer dans le README \"Quick Start\". Pas de flag `--check` / `--dry-run`, pas de `uninstall` command. Faux ami du pattern NPX read-only. À re-tester si le README documente l'install footprint avant le `npx` + ajoute `--check` + fournit `vibe-kanban uninstall`.",
+      "UI Kanban pour dispatcher et superviser plusieurs agents Claude Code (ou Codex) en parallèle — orchestration visuelle des workflows branch/worktree. Testé 2026-06-04 : REJECT HARD. License Apache 2.0 et 26.8k étoiles OK, mais `npx vibe-kanban` ressemble à un wrapper inoffensif (pattern ccusage) tandis qu'il installe en réalité 188 MB de binaire dans `~/.vibe-kanban/`, ouvre un serveur persistant sur port 8181 et touche `~/.config/opencode/` — sans rien déclarer dans le README \"Quick Start\". Pas de flag `--check` / `--dry-run`, pas de `uninstall` command. Faux ami du pattern NPX read-only. À re-tester si le README documente l'install footprint avant le `npx` + ajoute `--check` + fournit `vibe-kanban uninstall`.",
     tags: ["claude-code", "kanban", "orchestration", "parallel", "tested"],
     url: "https://github.com/BloopAI/vibe-kanban",
     stars: 28778,
@@ -97,7 +97,7 @@ export const testedTools: TestedTool[] = [
     author: "jarrodwatts",
     category: "plugin",
     description:
-      "Plugin qui overlay un HUD sur Claude Code : jauge de contexte live, quotas 5h/hebdo, tools actifs, sub-agents en cours, progression todos — de la visibilité dans la black box. Testé 2026-09-18 (v0.8.0, 28k⭐) : ADOPT. Install par CLI `claude plugin marketplace add` + `install` = diff `settings.json` limité à `enabledPlugins` + marketplace, 0 hook, 0 daemon, 0 port ; rendu 60 ms / 58 Mo RSS via l'API `statusLine` native ; stdin vide ou JSON invalide gérés ; lit correctement le transcript réel (tools ×N). Deux caveats : (1) `/claude-hud:setup` est un prompt dont l'étape « ghost install » propose un reset de `installed_plugins.json` qui EFFACE TOUS les plugins — refuser, écrire la clé `statusLine` à la main ; (2) la jauge hebdo n'apparaît qu'au-delà de `display.sevenDayThreshold` (80) — mettre 0 pour la voir en permanence. Terminal/tmux uniquement, pas dans le panneau VS Code.",
+      "Plugin qui overlay un HUD sur Claude Code : jauge de contexte live, quotas 5h/hebdo, tools actifs, sub-agents en cours, progression todos — de la visibilité dans la black box. Testé 2026-09-18 (v0.8.0, 28k étoiles) : ADOPT. Install par CLI `claude plugin marketplace add` + `install` = diff `settings.json` limité à `enabledPlugins` + marketplace, 0 hook, 0 daemon, 0 port ; rendu 60 ms / 58 Mo RSS via l'API `statusLine` native ; stdin vide ou JSON invalide gérés ; lit correctement le transcript réel (tools ×N). Deux caveats : (1) `/claude-hud:setup` est un prompt dont l'étape « ghost install » propose un reset de `installed_plugins.json` qui EFFACE TOUS les plugins — refuser, écrire la clé `statusLine` à la main ; (2) la jauge hebdo n'apparaît qu'au-delà de `display.sevenDayThreshold` (80) — mettre 0 pour la voir en permanence. Terminal/tmux uniquement, pas dans le panneau VS Code.",
     tags: ["claude-code", "plugin", "hud", "observability", "tested"],
     url: "https://github.com/jarrodwatts/claude-hud",
     stars: 29283,
@@ -111,7 +111,7 @@ export const testedTools: TestedTool[] = [
     author: "winfunc",
     category: "tool",
     description:
-      "Application de bureau Tauri pour Claude Code : navigateur de projets et de sessions (`~/.claude/projects`), historique, tableau de bord de consommation, éditeurs CLAUDE.md / hooks / MCP, « CC Agents » maison. Testé 2026-09-26 (v0.2.0, 22k⭐) sous WSL via WSLg — AppImage Linux extraite sans installation, empreinte SHA-256 vérifiée, aucune écriture dans `~/.claude` au lancement (données dans `~/.local/share/opcode*`). REJECT + watchlist : dernière version publiée en août 2025 (dépôt actif, aucune release depuis 13 mois) → liste de modèles codée en dur (Sonnet 4 / Opus 4 seulement, ni Fable 5.1 ni Opus 5.5) ; « CC Agents » lancés avec `--dangerously-skip-permissions` ; télémétrie PostHog autorisée dans sa CSP ; et surtout il ne montre ni les sous-agents d'une session, ni les skills, ni les mémoires en cours — seulement sessions et historique. Pas de build Windows ; sous WSL c'est au contraire la bonne place (il lit les sessions WSL).",
+      "Application de bureau Tauri pour Claude Code : navigateur de projets et de sessions (`~/.claude/projects`), historique, tableau de bord de consommation, éditeurs CLAUDE.md / hooks / MCP, « CC Agents » maison. Testé 2026-09-26 (v0.2.0, 22k étoiles) sous WSL via WSLg — AppImage Linux extraite sans installation, empreinte SHA-256 vérifiée, aucune écriture dans `~/.claude` au lancement (données dans `~/.local/share/opcode*`). REJECT + watchlist : dernière version publiée en août 2025 (dépôt actif, aucune release depuis 13 mois) → liste de modèles codée en dur (Sonnet 4 / Opus 4 seulement, ni Fable 5.1 ni Opus 5.5) ; « CC Agents » lancés avec `--dangerously-skip-permissions` ; télémétrie PostHog autorisée dans sa CSP ; et surtout il ne montre ni les sous-agents d'une session, ni les skills, ni les mémoires en cours — seulement sessions et historique. Pas de build Windows ; sous WSL c'est au contraire la bonne place (il lit les sessions WSL).",
     tags: ["claude-code", "gui", "desktop", "tauri", "sessions", "usage", "tested"],
     url: "https://github.com/winfunc/opcode",
     stars: 22455,
@@ -169,7 +169,7 @@ export const testedTools: TestedTool[] = [
     author: "ryoppippi",
     category: "tool",
     description:
-      "CLI qui parse les logs JSONL locaux de Claude Code (+ Codex, Gemini CLI, Copilot CLI — 15 agents au total) pour calculer consommation tokens, coût USD et tendances par jour/semaine/mois/session. Testé 2026-05-29 via `npx -y ccusage@latest claude daily/monthly/session --json` : ZÉRO pollution (md5 CLAUDE.md + settings.json inchangés, aucun marketplace, rien dans ~/.config|~/.cache), pur read-only. Verdict ADOPT — le test-tool le plus propre du catalogue : aucun install, MIT, mature (15k⭐, v20 pushé le jour même), multi-agent. Complément de RTK/token-savior : ceux-ci réduisent les tokens, ccusage les mesure. Caveat : coût affiché = pricing API public × tokens loggés, donc proxy de volume (sur-estime sous abonnement Max/Team).",
+      "CLI qui parse les logs JSONL locaux de Claude Code (+ Codex, Gemini CLI, Copilot CLI — 15 agents au total) pour calculer consommation tokens, coût USD et tendances par jour/semaine/mois/session. Testé 2026-05-29 via `npx -y ccusage@latest claude daily/monthly/session --json` : ZÉRO pollution (md5 CLAUDE.md + settings.json inchangés, aucun marketplace, rien dans ~/.config|~/.cache), pur read-only. Verdict ADOPT — le test-tool le plus propre du catalogue : aucun install, MIT, mature (15k étoiles, v20 pushé le jour même), multi-agent. Complément de RTK/token-savior : ceux-ci réduisent les tokens, ccusage les mesure. Caveat : coût affiché = pricing API public × tokens loggés, donc proxy de volume (sur-estime sous abonnement Max/Team).",
     tags: ["claude-code", "cli", "usage", "cost-tracking", "tested"],
     url: "https://github.com/ccusage/ccusage",
     stars: 19540,
@@ -243,7 +243,7 @@ export const testedTools: TestedTool[] = [
     author: "alexgreensh",
     category: "plugin",
     description:
-      "Plugin marketplace Claude Code avec compaction-survival, dashboard live, hooks SessionStart, daemon port 24843. Concept intéressant mais license **PolyForm Noncommercial** bloque tout usage pro futur + pattern d'install invasive (cf Ruflo/SuperClaude déjà rejetés). Skip. Revue radar 2026-09-18 : 2.3k⭐ mais licence toujours PolyForm NC — skip confirmé.",
+      "Plugin marketplace Claude Code avec compaction-survival, dashboard live, hooks SessionStart, daemon port 24843. Concept intéressant mais license **PolyForm Noncommercial** bloque tout usage pro futur + pattern d'install invasive (cf Ruflo/SuperClaude déjà rejetés). Skip. Revue radar 2026-09-18 : 2.3k étoiles mais licence toujours PolyForm NC — skip confirmé.",
     tags: ["claude-code", "plugin", "tokens", "dashboard", "polyform"],
     url: "https://github.com/alexgreensh/token-optimizer",
     stars: 3043,
