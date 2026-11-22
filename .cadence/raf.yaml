@@ -770,6 +770,7 @@ lots:
     title: "Fiabiliser deux tests instables sous la charge de la porte : hydration.e2e sur /atelier-ia/ (îlot pas encore chargé au comptage) et visionneuse de /nouveautes/ (défilement lu avant d'être rétabli) — vus au run L21 le 22-11, verts seuls"
     status: done
     estimate: 1
+    delivered: { date: 2026-11-22, sha: d177701c5bb75b1f17890b3bb33a270c8ec6ca92 }
     created: 2026-11-22
     started: 2026-11-22
     review: { date: 2026-11-22, verdict: "conforme (relu par le lead : attentes sur signal réel — attribut ssr des îlots, état rétabli de la visionneuse — au lieu de délais fixes ; 10/10 sous charge modérée et forte ; aucun retry ni code applicatif touché)", commit: fe9651e800d14a223bc5e517cde8eddd1c5e4a29 }
