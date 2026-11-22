@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
+import RevueContenu from "@/components/site/RevueContenu.astro";
 import { apps, APP_COUNT } from "@/data/apps";
 import RtkStats from "@/components/site/RtkStats.astro";
 import { testedTools, TOOLS_SURVEYED_AT } from "@/data/tools-tested";
@@ -317,6 +318,7 @@ function formatStars(n?: number): string {
       <p class="font-mono text-xs text-ink-muted -mt-5 mb-8">
         Étoiles, licences et dates de push relevées le {formatDay(TOOLS_SURVEYED_AT)}.
       </p>
+      <RevueContenu page="outils" class="-mt-4 mb-8" />
 
       {groupedTools.map(({ status, tools }) => (
         tools.length > 0 && (

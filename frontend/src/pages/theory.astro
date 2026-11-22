@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
+import RevueContenu from "@/components/site/RevueContenu.astro";
 import TheorySection from "@/components/site/TheorySection.astro";
 import TheoryTOC from "@/components/site/TheoryTOC.vue";
 import { sections } from "@/data/theory";
@@ -21,6 +22,10 @@ const tocEntries = sections.map((s) => ({
     title="Comment Claude Code fonctionne"
     intro="L'architecture, les abstractions et les mécaniques qu'il faut comprendre pour utiliser Claude Code efficacement — et pour savoir pourquoi il fait parfois ce qu'il fait. Tout est sourcé sur la doc Anthropic publique."
   />
+
+  <div class="mx-auto max-w-6xl px-5 sm:px-8 pt-8">
+    <RevueContenu page="theory" />
+  </div>
 
   <div class="mx-auto max-w-6xl px-5 sm:px-8 py-10">
     <div class="grid gap-10 lg:grid-cols-[220px_1fr]">

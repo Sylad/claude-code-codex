@@ -1,0 +1,39 @@
+---
+// L21 — actualités de l'écosystème retenues par la veille : datées, sourcées, avec la page mise à jour.
+import { actualites, verifierActualites } from "@/data/veille-ecosysteme.mjs";
+import { PAGES_REVUES } from "@/lib/revue-contenu.mjs";
+import { formatDay } from "@/lib/format-date.mjs";
+
+verifierActualites(new Date());
+---
+
+<section class="mx-auto max-w-6xl px-5 sm:px-8 pt-10" aria-labelledby="veille-titre" data-veille>
+  <p class="font-mono text-xs uppercase tracking-wider text-claude mb-3">Veille</p>
+  <h2 id="veille-titre" class="text-2xl font-medium text-ink mb-3">Actualités de l'écosystème</h2>
+  <p class="text-ink-muted leading-relaxed max-w-3xl mb-6">
+    Ce que la veille a retenu, vérifié sur sa source. La date est celle de la publication, ou
+    celle du relevé quand la source n'en donne pas.
+  </p>
+  <ol class="grid gap-4 md:grid-cols-2">
+    {actualites.map((a) => (
+      <li class="rounded-lg border border-white/10 bg-paper-elevated p-4 [overflow-wrap:anywhere]" data-actualite>
+        <p class="font-mono text-xs text-ink-muted">
+          {a.nature === "publie" ? "Publié le " : "Relevé le "}
+          <time datetime={a.date}>{formatDay(a.date)}</time>
+        </p>
+        <h3 class="mt-1 text-base font-medium text-ink">{a.titre}</h3>
+        <p class="mt-2 text-sm text-ink-muted leading-relaxed">{a.texte}</p>
+        <p class="mt-3 text-sm">
+          Source :{" "}
+          <a href={a.source.href} target="_blank" rel="noopener" class="text-claude underline underline-offset-4">{a.source.label}</a>
+          {a.page !== "ecosystem" && (
+            <>
+              {" · "}
+              <a href={PAGES_REVUES[a.page].chemin} class="text-claude underline underline-offset-4">page {PAGES_REVUES[a.page].titre}</a>
+            </>
+          )}
+        </p>
+      </li>
+    ))}
+  </ol>
+</section>

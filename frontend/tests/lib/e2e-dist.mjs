@@ -67,6 +67,9 @@ export async function setupBrowser(t) {
 // reconnu, texte ignoré).
 export async function worstPixelContrast(page, selector, { ring = 0 } = {}) {
   const el = page.locator(selector).first();
+  // L21 : un élément sous le pli (bloc de revue ajouté au-dessus) se mesure une fois amené dans la vue ;
+  // la capture découpée ne sait lire que la fenêtre visible.
+  await el.scrollIntoViewIfNeeded();
   const box = await el.boundingBox();
   const clip = { x: Math.floor(box.x), y: Math.floor(box.y), width: Math.ceil(box.width), height: Math.ceil(box.height) };
   const { color, opacity } = await el.evaluate((n) => {

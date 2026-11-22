@@ -1,0 +1,89 @@
+---
+// L21 — date de la dernière revue d'une page de contenu, son rythme et la prochaine revue.
+// La mention « en retard » est rendue au build ; un petit script la révèle aussi dans le navigateur
+// le jour où la page passe en retard sans nouveau build (site statique).
+import { PAGES_REVUES, RYTHME_JOURS, etatRevue, verifierRevues } from "@/lib/revue-contenu.mjs";
+
+interface Props {
+  page: keyof typeof PAGES_REVUES;
+  class?: string;
+}
+
+const { page, class: classe = "" } = Astro.props;
+const maintenant = new Date();
+verifierRevues(maintenant);
+const p = PAGES_REVUES[page];
+if (!p) throw new Error(`revue : page inconnue ${String(page)}`);
+const e = etatRevue(p.derniereRevue, maintenant);
+const idDetails = `revue-${page}-details`;
+---
+
+<aside
+  class={`rounded-lg border border-white/10 bg-paper-elevated px-4 py-3 text-sm text-ink-muted [overflow-wrap:anywhere] ${classe}`}
+  aria-label={`Revue du contenu de la page ${p.titre}`}
+  data-revue={page}
+  data-revue-derniere={e.derniere}
+  data-revue-prochaine={e.prochaine}
+>
+  <p>
+    <span class="text-ink">Dernière revue : <time datetime={e.derniere}>{e.derniereLabel}</time></span>
+    <span aria-hidden="true"> · </span>
+    revue tous les {RYTHME_JOURS} jours
+    <span aria-hidden="true"> · </span>
+    prochaine avant le <time datetime={e.prochaine}>{e.prochaineLabel}</time>
+  </p>
+  <p
+    data-revue-retard
+    class="mt-2 font-medium text-amber-300"
+    hidden={!e.enRetard}
+  >
+    ⚠ Revue en retard : des informations de cette page peuvent être périmées.
+  </p>
+  <details class="mt-1 group">
+    <summary
+      class="inline-flex min-h-11 cursor-pointer items-center text-claude underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-claude"
+      aria-controls={idDetails}
+    >
+      Ce que cette revue a vérifié
+    </summary>
+    <div id={idDetails} class="pb-1 space-y-3">
+      {p.corrige.length > 0 && (
+        <div data-revue-corrige>
+          <p class="text-ink font-medium">Mis à jour</p>
+          <ul class="mt-1 list-disc pl-5 space-y-1">{p.corrige.map((x) => <li>{x}</li>)}</ul>
+        </div>
+      )}
+      <div data-revue-perimes>
+        <p class="text-ink font-medium">Signalé périmé, pas encore corrigé</p>
+        {p.perimes.length === 0 ? (
+          <p class="mt-1">Rien à cette revue.</p>
+        ) : (
+          <ul class="mt-1 list-disc pl-5 space-y-1">
+            {p.perimes.map((x) => (
+              <li>
+                {x.texte} (relevé le {etatRevue(x.releve, maintenant).derniereLabel},{" "}
+                <a href={x.source.href} target="_blank" rel="noopener" class="text-claude underline underline-offset-4">{x.source.label}</a>)
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+      {p.nonVerifie.length > 0 && (
+        <div data-revue-non-verifie>
+          <p class="text-ink font-medium">Pas revérifié à cette revue</p>
+          <ul class="mt-1 list-disc pl-5 space-y-1">{p.nonVerifie.map((x) => <li>{x}</li>)}</ul>
+        </div>
+      )}
+    </div>
+  </details>
+</aside>
+
+<script>
+  // Révèle « en retard » si la date de la prochaine revue est passée depuis le build.
+  const aujourdhui = new Date().toISOString().slice(0, 10);
+  for (const el of document.querySelectorAll<HTMLElement>("[data-revue]")) {
+    const prochaine = el.dataset.revueProchaine;
+    const retard = el.querySelector<HTMLElement>("[data-revue-retard]");
+    if (prochaine && retard && aujourdhui > prochaine) retard.hidden = false;
+  }
+</script>

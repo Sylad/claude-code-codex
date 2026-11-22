@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
+import RevueContenu from "@/components/site/RevueContenu.astro";
 import VideosCatalog from "@/components/site/VideosCatalog.vue";
 import { videoEntries } from "@/data/videos";
 ---
@@ -14,6 +15,10 @@ import { videoEntries } from "@/data/videos";
     title="Chaînes & talks curés"
     intro="Une sélection courte de chaînes YouTube, talks et podcasts qui parlent vraiment de Claude Code, des hooks, du MCP et de l'agentic coding — pas des AI-influencers généralistes."
   />
+
+  <div class="mx-auto max-w-6xl px-5 sm:px-8 pt-8">
+    <RevueContenu page="videos" />
+  </div>
 
   <section class="mx-auto max-w-6xl px-5 sm:px-8 py-12">
     <VideosCatalog entries={videoEntries} client:load />

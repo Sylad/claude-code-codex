@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
+import RevueContenu from "@/components/site/RevueContenu.astro";
 import LearningCatalog from "@/components/site/LearningCatalog.vue";
 import LatestNews from "@/components/site/LatestNews.astro";
 import { learningEntries } from "@/data/learning";
@@ -15,6 +16,10 @@ import { learningEntries } from "@/data/learning";
     title="Sources curées pour suivre Claude"
     intro="Une sélection courte de blogs, newsletters et podcasts qui parlent vraiment de Claude Code, des agents et de l'AI engineering — pas des AI-influencers génériques."
   />
+
+  <div class="mx-auto max-w-6xl px-5 sm:px-8 pt-8">
+    <RevueContenu page="learning" />
+  </div>
 
   <LatestNews />
 

@@ -1,6 +1,8 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
+import RevueContenu from "@/components/site/RevueContenu.astro";
+import VeilleEcosysteme from "@/components/site/VeilleEcosysteme.astro";
 import EcosystemCatalog from "@/components/site/EcosystemCatalog.vue";
 import { ecosystemEntries } from "@/data/ecosystem";
 
@@ -17,6 +19,10 @@ const communityEntries = ecosystemEntries.filter((e) => !e.official);
     title="Plugins, MCP, skills, SDKs"
     intro="Catalogue des composants officiels (Anthropic + protocole MCP) que tu peux installer pour étendre Claude Code. Filtre par catégorie, cherche, et copie la commande d'installation d'un clic."
   />
+
+  <div class="mx-auto max-w-6xl px-5 sm:px-8 pt-8">
+    <RevueContenu page="ecosystem" />
+  </div>
 
   <section class="mx-auto max-w-6xl px-5 sm:px-8 py-12">
     <EcosystemCatalog
@@ -73,6 +79,8 @@ const communityEntries = ecosystemEntries.filter((e) => !e.official);
       </p>
     </div>
   </section>
+
+  <VeilleEcosysteme />
 
   {
     communityEntries.length > 0 && (
