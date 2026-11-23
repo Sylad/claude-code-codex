@@ -1,7 +1,28 @@
 {
   "project": "claude-code-codex",
-  "generated": "2026-11-23 16:50",
+  "generated": "2026-11-23 17:25",
   "entries": [
+    {
+      "slug": "2026-11-23-page-videos-titre-original-et-cases-a-cocher-entieres",
+      "title": "Page Vidéos : le vrai titre de la conférence de Boris Cherny",
+      "date": "2026-11-23",
+      "lots": [
+        "L90"
+      ],
+      "captures": [
+        "captures/L90-carte-avant-390.png",
+        "captures/L90-carte-apres-390.png",
+        "captures/L90-cases-avant-320-200.png",
+        "captures/L90-cases-apres-320-200.png"
+      ],
+      "alts": [
+        "Avant, au téléphone : la carte de la conférence de Boris Cherny s'intitule « Claude Code et l'évolution du codage agentique », un titre traduit qu'on ne trouve pas sur YouTube",
+        "Après : la carte porte le titre de la vidéo sur YouTube, « Claude Code & the evolution of agentic coding — Boris Cherny, Anthropic »",
+        "Avant, à 320 pixels avec le texte agrandi à 200 % : les cases « Officiel Anthropic » et « En français uniquement » sont écrasées, plus étroites que hautes",
+        "Après, mêmes réglages : les deux cases restent carrées, l'état coché se voit nettement"
+      ],
+      "html": "<p>Trois retouches sur la page <a href=\"/videos/\">Vidéos</a>, après sa relecture :</p>\n<ul><li><strong>Titre de la conférence</strong> : la conférence de Boris Cherny à l'AI Engineer World's Fair reprend son titre d'origine, tel qu'il s'affiche sur YouTube, pour qu'on puisse la retrouver ; il est lu en anglais par les lecteurs d'écran, comme les autres titres anglais.</li><li><strong>Cases à cocher</strong> : avec le texte agrandi sur un petit écran, les cases des filtres s'écrasaient jusqu'à 8 pixels de large ; elles gardent maintenant leur taille.</li><li><strong>Un seul nom</strong> : l'encadré des critères disait « l'auteur » quand les cartes disaient « Sylvain » ; la page dit partout « Sylvain », comme le reste du site.</li></ul>\n<p>Un test relit la page construite et mesure les cases à 320 pixels, texte à 200 % ; il échouait sur l'ancienne version.</p>"
+    },
     {
       "slug": "2026-11-23-pages-learning-et-a-propos-sans-anglicismes",
       "title": "Pages Learning et À propos : « choisies » plutôt que « curées »",

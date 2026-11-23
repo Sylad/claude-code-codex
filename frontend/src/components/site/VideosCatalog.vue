@@ -129,7 +129,7 @@ function clearFilters() {
           <input
             v-model="onlyOfficial"
             type="checkbox"
-            class="accent-claude"
+            class="accent-claude shrink-0"
           />
           Officiel Anthropic
         </label>
@@ -137,7 +137,7 @@ function clearFilters() {
         <label
           class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm border border-white/10 text-ink-muted cursor-pointer hover:text-ink hover:border-claude/40 transition-colors"
         >
-          <input v-model="onlyFr" type="checkbox" class="accent-claude" />
+          <input v-model="onlyFr" type="checkbox" class="accent-claude shrink-0" />
           En français uniquement
         </label>
 

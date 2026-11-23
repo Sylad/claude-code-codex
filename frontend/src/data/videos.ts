@@ -28,7 +28,8 @@ export const videoEntries: VideoEntry[] = [
   },
   {
     id: "boris-cherny-ai-engineer",
-    name: "Claude Code et l'évolution du codage agentique — Boris Cherny",
+    name: "Claude Code & the evolution of agentic coding — Boris Cherny, Anthropic",
+    nameLang: "en",
     kind: "video",
     language: "en",
     author: "AI Engineer / Boris Cherny (Anthropic)",
@@ -145,7 +146,7 @@ export const videoEntries: VideoEntry[] = [
     language: "fr",
     author: "BenBK",
     description:
-      "Chaîne française développement et IA suivie par l'auteur. Contenu autour des outils d'IA pour développeurs et de l'écosystème des agents. Recommandation de Sylvain.",
+      "Chaîne française développement et IA suivie par Sylvain. Contenu autour des outils d'IA pour développeurs et de l'écosystème des agents. Recommandation de Sylvain.",
     tags: ["ia-développeurs", "tutoriel", "fr"],
     url: "https://www.youtube.com/@BenBK",
     official: false,
@@ -157,7 +158,7 @@ export const videoEntries: VideoEntry[] = [
     language: "fr",
     author: "Julien Snsn",
     description:
-      "Chaîne française développement et IA suivie par l'auteur. Contenu autour de l'outillage moderne et des grands modèles de langage en pratique. Recommandation de Sylvain.",
+      "Chaîne française développement et IA suivie par Sylvain. Contenu autour de l'outillage moderne et des grands modèles de langage en pratique. Recommandation de Sylvain.",
     tags: ["ia-développeurs", "tutoriel", "fr"],
     url: "https://www.youtube.com/@JulienSnsn",
     official: false,

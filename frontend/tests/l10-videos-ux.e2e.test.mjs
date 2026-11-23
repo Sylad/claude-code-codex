@@ -49,6 +49,7 @@ test('L10 (6, 7) — titres : h1 puis h2, titres anglais en lang="en", noms prop
   assert.deepEqual(en.sort(), [
     'A conversation on Claude Code — Boris Cherny &amp; Alex Albert',
     'Anthropic&#39;s Felix Rieseberg on AI Coworkers, Local-First Agents',
+    'Claude Code &amp; the evolution of agentic coding — Boris Cherny, Anthropic',
     'Anthropic&#39;s Surprise Hit: How Claude Code Became an AI Coding Powerhouse',
     'Head of Claude Code — Boris Cherny',
     'How Anthropic&#39;s product team moves faster — Cat Wu',
