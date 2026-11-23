@@ -250,13 +250,16 @@ lots:
     finished: 2026-11-23
   - id: L11
     title: Revue UX — À propos
-    status: doing
+    status: done
     visible: true
     estimate: 0.25
     created: 2026-09-28
     notes:
       - { date: 2026-10-01, text: "contrôle UX L2 01-10 : sur /about, intro de l'en-tête 3,86:1 (1440) et « Site fan-made — sans affiliation » 3,54:1 / 2,85:1 (390) ; « Dev Java depuis 2005 » répété dans la carte auteur et plus bas" }
     started: 2026-11-23
+    review: { date: 2026-11-23, verdict: "conforme (lead) : bc1f314 — titres h2, lang=en du h1, liens externes nommés « (nouvel onglet) » avec le texte visible dans le nom (2.5.3), contraste 1.4.3, modèle Haiku 4.5 = scripts/lib/claude.ts:14 ; 5 tests e2e rouges avant/verts après. Nit : indentation des h2 de la grille.", commit: bc1f3143a289e46c2123b85da3315c930989428d }
+    ux: { date: 2026-11-23, verdict: "conforme (lead) : capture 320 px texte 200 % regardée, aucun mot coupé, titres lisibles ; suites (tutoiement/vouvoiement, anglicismes) = choix de ton de Sylvain ; logo réduit et focus → L12" }
+    finished: 2026-11-23
   - id: L12
     title: "Revue UX — Gabarit commun : navigation, en-tête, pied, rendu téléphone"
     status: todo
