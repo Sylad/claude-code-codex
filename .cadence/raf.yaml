@@ -242,6 +242,7 @@ lots:
     status: done
     visible: true
     estimate: 0.25
+    delivered: { date: 2026-11-23, sha: 85737f13beacb191c7dc4ba164344d527aa1b1a1 }
     created: 2026-09-28
     started: 2026-11-23
     review: { date: 2026-11-23, verdict: "conforme revue du lead : aria-pressed, role=status, nom du champ, h2, lang=en, tailles en rem et gouttières plafonnées ; test e2e rouge avant, vert après", commit: 51c2105828c30e9d9f7b8551f340fa2033956980 }
