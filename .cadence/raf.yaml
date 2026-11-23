@@ -878,12 +878,22 @@ lots:
     created: 2026-11-23
   - id: L87
     title: "Suite de L83 (QA du 23-11, tmp/qa-codex-L83.md du dossier parent) : dans le texte courant, les dates gardent une espace simple entre le jour et le mois et le jour reste seul en fin de ligne — /nouveautes « 31 octobre 2026 » (1440), « 3 novembre 2026 » (390) ; /livre-de-bord « (29 octobre) », « 23 octobre » ; /learning « du 22 novembre 2026 » (390), cas que L83 disait corrigé. Insécable jour-mois appliquée au contenu rendu (markdown et données), pas seulement aux dates formatées par le code ; test sur le HTML construit de toutes les pages."
-    status: doing
+    status: done
     estimate: 1
     visible: true
     created: 2026-11-23
     started: 2026-11-23
     review: { date: 2026-11-23, verdict: "conforme (lead) : une fonction pure lierJourMois (jour 1er/1-31 + mois, mots entiers, scripts/styles/commentaires intacts) appliquée par le middleware au build ; recherche des catalogues insensible aux insécables ; test sur tout dist (249 paires → 0) et e2e 320/200 %, 390, 1440. Exception <wbr> dans DateLongue quand la paire ne tient pas sur la ligne : non-débordement d'abord (WCAG 1.4.10), accepté. Porte complète rejouée à la livraison.", commit: 5908eaedcb3c675cac850f81dd158687293af7d4 }
+    ux: { date: 2026-11-23, verdict: "conforme (ux-reviewer, grille 5/5) : 39 pages × 1440/390/320-200 %, 307 dates, 0 jour seul, 0 débordement ; 5 cas de la QA bons ; recherche « 22 novembre » trouvée ; compromis DateLongue juste (coupure seulement à 320/200 %, dates trop larges même seules, WCAG 1.4.10). Mineurs : double espace dans la recherche → 13 cartes au lieu de 14 ; le test ne couvre ni les 70 DateLongue ni les sections repliées. tmp/ux-codex-L87.md" }
+    notes:
+      - { date: 2026-11-23, text: "Mineurs UX gardés : (1) recherche — réduire les suites d'espaces dans la requête et le texte cherché ; (2) test — couvrir les DateLongue (texte coupé par <wbr>) et les sections repliées." }
+    finished: 2026-11-23
+  - id: L88
+    title: "À 320 px texte 200 %, des titres se coupent au milieu d'un mot sans trait d'union (« chang|é », « vérific|ation », « descripti|ons ») : césure française (hyphens: auto, lang=fr) ou titres qui passent à la ligne entre les mots ; WCAG 1.4.10 (revue UX de L87, tmp/ux-codex-L87.md du dossier parent)"
+    status: todo
+    estimate: 1
+    visible: true
+    created: 2026-11-23
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
