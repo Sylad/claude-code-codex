@@ -69,7 +69,7 @@ export const learningEntries: LearningEntry[] = [
     kind: "newsletter",
     author: "Équipe Every",
     description:
-      "Culture engineering et patterns d'une boîte AI-native qui ship vraiment avec Claude Code au quotidien. Pair-bien avec Anthropic Engineering.",
+      "Culture engineering et patterns d'une boîte AI-native qui livre vraiment avec Claude Code au quotidien. Pair-bien avec Anthropic Engineering.",
     tags: ["claude-code", "engineering", "practitioner"],
     url: "https://every.to/source-code",
   },

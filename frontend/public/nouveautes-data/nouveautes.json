@@ -1,7 +1,28 @@
 {
   "project": "claude-code-codex",
-  "generated": "2026-11-23 15:26",
+  "generated": "2026-11-23 16:50",
   "entries": [
+    {
+      "slug": "2026-11-23-pages-learning-et-a-propos-sans-anglicismes",
+      "title": "Pages Learning et À propos : « choisies » plutôt que « curées »",
+      "date": "2026-11-23",
+      "lots": [
+        "L86"
+      ],
+      "captures": [
+        "captures/L86-learning-titre-avant-390.png",
+        "captures/L86-learning-titre-apres-390.png",
+        "captures/L86-learning-filtres-avant-390.png",
+        "captures/L86-learning-filtres-apres-390.png"
+      ],
+      "alts": [
+        "Avant, au téléphone : le titre de la page Learning dit « Sources curées pour suivre Claude »",
+        "Après : le titre dit « Sources choisies pour suivre Claude »",
+        "Avant : l'encadré en bas de la page Learning s'intitule « Filtres de curation »",
+        "Après : l'encadré s'intitule « Filtres de sélection », le reste du texte n'a pas changé"
+      ],
+      "html": "<p>Après la page Vidéos, les derniers anglicismes relevés sur <a href=\"/learning/\">Learning</a> et <a href=\"/about/\">À propos</a> passent en français courant, sans changer le sens.</p>\n<ul><li><strong>Learning</strong> : « Sources choisies pour suivre Claude », un catalogue de sources « sélectionnées », un encadré « Filtres de sélection », et la newsletter d'Every décrit une équipe qui « livre » avec Claude Code au lieu de « ship ».</li><li><strong>À propos</strong> : la liste des sources cite des blogs et articles indépendants « choisis ».</li></ul>\n<p>Un test relit les deux pages construites et échoue si « curé », « curation » ou « ship » y reviennent ; il échouait sur l'ancienne version.</p>"
+    },
     {
       "slug": "2026-11-23-le-jour-reste-avec-son-mois-dans-tout-le-texte",
       "title": "Le jour reste avec son mois dans tout le texte du site",
