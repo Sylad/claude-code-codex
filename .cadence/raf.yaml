@@ -912,12 +912,20 @@ lots:
     created: 2026-11-23
   - id: L90
     title: "Vidéos, suite de L82 (revue UX m1, m3, m4) : shrink-0 sur les cases à cocher des filtres de /videos (8×13 px à 320 px et 200 %) ; un seul nom pour la même personne (« Sylvain » ou « l'auteur ») ; titre anglais d'origine de la conférence de Boris Cherny avec lang=en (Nielsen 6)"
-    status: doing
+    status: done
     estimate: 1
     visible: true
     created: 2026-11-23
     started: 2026-11-23
     review: { date: 2026-11-23, verdict: "conforme (lead) : f305459 relu — shrink-0 sur les 2 cases, « Sylvain » à la place de « l'auteur », titre anglais d'origine avec nameLang en ; test rouge avant ; note mineure : « suivie par Sylvain … Recommandation de Sylvain » répète le nom dans la même description", commit: f3054590b31441e9490c82f2fe4acba3bf03c44b }
+    ux: { date: 2026-11-23, verdict: "conforme (ux-reviewer, tmp/ux-codex-L90.md) : cases 13×13 à 320–1440 px 100/200 %, « l'auteur » absent, titre d'origine lang=en, 0 défilement horizontal, Nouveautés L90 avec 4 captures" }
+    finished: 2026-11-23
+  - id: L91
+    title: "/videos, rédaction (revue UX de L90) : retirer « suivie par Sylvain » des cartes BenBK et Julien Snsn qui disent déjà « Recommandation de Sylvain » (Nielsen 8) ; encadré « suivies par Sylvain … on liste celles qu'on regarde » → « Sylvain liste celles qu'il regarde » (Nielsen 4) ; à 390 px cocher un filtre fait remonter le libellé de 435 px, à vérifier"
+    status: todo
+    estimate: 1
+    visible: true
+    created: 2026-11-23
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
