@@ -106,7 +106,7 @@ const DEPOTS = ["maritime-atlas", "aetherwx-gitops"];
            et coupait « Ce qu'il fait vraiment ») ; le tableau à partir de 40em. Mêmes données. */}
       <ul class="sm:hidden space-y-3" aria-label="Tableau de traduction Kubernetes et Java/Spring" data-traduction-cartes>
         {TRADUCTION.map((l) => (
-          <li class="rounded-lg border border-white/10 bg-paper p-4">
+          <li class="rounded-lg border border-white/10 bg-paper p-[min(1rem,16px)]">
             <dl>
               <dt class="sr-only">Concept K8s</dt>
               <dd class="font-mono font-medium text-claude">{l.k8s}</dd>

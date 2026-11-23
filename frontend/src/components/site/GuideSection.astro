@@ -18,7 +18,7 @@ const { section } = Astro.props;
     {section.number && (
       <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">{section.number}</p>
     )}
-    <h2 class="mt-1.5 text-2xl sm:text-[1.75rem] leading-tight font-semibold tracking-tight text-ink">
+    <h2 class="mt-1.5 text-[length:min(1.5rem,max(1.25rem,10vw))] sm:text-[1.75rem] leading-tight font-semibold tracking-tight text-ink">
       {section.title}
     </h2>
   </header>

@@ -85,19 +85,19 @@ const DEPOTS = ["developpeur-gitops"];
       <MermaidDiagram
         client:visible
         tailleNaturelle
-        caption="Aucune flèche n'entre dans la maison : cloudflared a appelé Cloudflare en premier, et la connexion reste ouverte pour faire passer les requêtes à contresens."
+        caption="Aucune connexion n'est ouverte depuis Internet vers chez toi, aucun port n'est ouvert sur la box : cloudflared appelle Cloudflare (1, connexions sortantes), puis les requêtes entrent par le tunnel que cloudflared a ouvert lui-même (2)."
         definition={`flowchart TB
   subgraph internet["Internet"]
     visiteur["Visiteur\naetherwx.sladoire.dev"]
     cf["Edge Cloudflare\n(TLS, DNS, Access)"]
   end
-  subgraph maison["Chez toi (aucun port ouvert)"]
+  subgraph maison["Chez toi"]
     cfd["Pod cloudflared"]
     svc["Service K8s\nmaritime-frontend:80"]
   end
   visiteur -->|"HTTPS"| cf
-  cfd -.->|"4 connexions sortantes\npermanentes (QUIC)"| cf
-  cf ==>|"requêtes poussées\ndans le tunnel"| cfd
+  cfd -.->|"1 ouvre le tunnel\n(sortant, QUIC)"| cf
+  cf -.->|"2 requêtes,\ndans le tunnel"| cfd
   cfd --> svc`}
       />
       <p>

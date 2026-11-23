@@ -38,7 +38,7 @@ const autres = GUIDES.filter((g) => g.href !== ici);
 <BaseLayout title={title} description={description}>
   <PageHero eyebrow={eyebrow} title={title} intro={intro} />
 
-  <div class="mx-auto max-w-6xl px-5 sm:px-8 py-10 xl:grid xl:grid-cols-[220px_minmax(0,44rem)] xl:justify-center xl:gap-12">
+  <div class="mx-auto max-w-6xl px-[min(1.25rem,20px)] sm:px-8 py-10 xl:grid xl:grid-cols-[220px_minmax(0,44rem)] xl:justify-center xl:gap-12">
     <aside class="hidden xl:block">
       <TheoryTOC entries={entries} client:load />
     </aside>
@@ -123,4 +123,15 @@ const autres = GUIDES.filter((g) => g.href !== ici);
   }
 
   document.addEventListener("astro:page-load", brancher);
+
+  // L9 r1 (m4, WCAG 2.4.3) : « Revenir au sommaire » ramène la page au sommaire ET y place le focus
+  // (sur le bouton qui le déplie), sinon il restait sur <body> et Tab repartait du haut de la page.
+  // Le défilement reste celui de l'ancre (preventScroll) ; sans JavaScript, l'ancre seule.
+  document.addEventListener("click", (e) => {
+    const lien = (e.target as Element | null)?.closest?.("[data-retour-sommaire]");
+    if (!lien) return;
+    requestAnimationFrame(() => {
+      document.querySelector<HTMLElement>("#sommaire [data-sommaire-mobile] > summary")?.focus({ preventScroll: true });
+    });
+  });
 </script>
