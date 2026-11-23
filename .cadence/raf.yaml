@@ -838,7 +838,7 @@ lots:
   - id: L82
     title: "Vidéos : descriptions réécrites en français (« Chaînes & talks curés », « Demos de launch », « walkthroughs de features », « ship »…), Nielsen 2 (constat L10)"
     public: "Page Vidéos : des descriptions en français"
-    status: doing
+    status: done
     estimate: 1
     visible: true
     created: 2026-11-23
@@ -847,6 +847,7 @@ lots:
     ux: { date: 2026-11-23, verdict: "conforme (ux-reviewer, rapport tmp/ux-codex-L82.md) : aucun débordement aux 6 combinaisons, libellé relié, lang=en sur les titres anglais, contrastes ≥ 7,1:1 ; 4 mineurs (case à cocher comprimée à 200 %, coupure du libellé à 390 px, « Sylvain »/« l'auteur », titre de Boris traduit)" }
     tasks:
       - { id: t1, title: "Suite L82 (revue UX m1, m3, m4) : shrink-0 sur les cases à cocher des filtres de /videos (8×13 px à 320 px et 200 %) ; un seul nom pour la même personne (« Sylvain » ou « l'auteur ») ; remettre le titre anglais d'origine de la conférence de Boris Cherny avec lang=en (Nielsen 6 : le retrouver sur YouTube)", status: todo }
+    finished: 2026-11-23
   - id: L83
     title: "Suite de la revue UX de L81 : (m1) /nouveautes à 320 px texte 200 %, le libellé « Copier le lien » sort de 26 px de son bouton (WCAG 1.4.4, 1.4.10) ; (m2) une date ne laisse pas le jour seul en fin de ligne (« prochaine avant le 22 | décembre 2026 » à 375 et 390 px) : insécable entre le jour et le mois, sécable ailleurs, sans recouper un nombre ni sortir de l'écran à 320/200 %. Rapport : tmp/ux-codex-L81.md du dossier parent."
     status: todo
