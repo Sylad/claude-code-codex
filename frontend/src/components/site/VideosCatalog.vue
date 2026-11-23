@@ -80,9 +80,11 @@ function clearFilters() {
   <div>
     <div class="flex flex-col gap-4 mb-8">
       <!-- L81 : l'exemple de recherche était un texte indicatif, tronqué au téléphone (« Rechercher ( »)
-           et effacé à la saisie (WCAG 3.3.2, Nielsen 6) : c'est désormais un libellé visible, qui passe à la ligne. -->
+           et effacé à la saisie (WCAG 3.3.2, Nielsen 6) : c'est désormais un libellé visible, qui passe à la ligne.
+           L82 : « mot-clé » (au lieu de « tag ») est plus long ; la parenthèse peut passer à la ligne après « sujet, »
+           pour tenir à 320 px avec le texte à 200 %. -->
       <label for="videos-recherche" class="-mb-2 text-sm text-ink-muted">
-        Rechercher une chaîne ou une vidéo <span class="whitespace-nowrap">(auteur, sujet, tag)</span>
+        Rechercher une chaîne ou une vidéo <span class="whitespace-nowrap">(auteur, sujet,</span> <span class="whitespace-nowrap">mot-clé)</span>
       </label>
       <div class="relative">
         <Search
@@ -134,7 +136,7 @@ function clearFilters() {
           class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm border border-white/10 text-ink-muted cursor-pointer hover:text-ink hover:border-claude/40 transition-colors"
         >
           <input v-model="onlyFr" type="checkbox" class="accent-claude" />
-          FR uniquement
+          En français uniquement
         </label>
 
         <button

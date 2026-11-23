@@ -18,7 +18,7 @@ export interface VideoEntry {
 export const KIND_LABELS: Record<VideoKind, string> = {
   channel: "Chaîne",
   video: "Vidéo",
-  playlist: "Playlist",
+  playlist: "Liste de lecture",
 };
 
 export const KIND_ACCENTS: Record<VideoKind, string> = {

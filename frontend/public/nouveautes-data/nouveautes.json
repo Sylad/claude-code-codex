@@ -1,7 +1,28 @@
 {
   "project": "claude-code-codex",
-  "generated": "2026-11-23 11:22",
+  "generated": "2026-11-23 14:32",
   "entries": [
+    {
+      "slug": "2026-11-23-page-videos-des-descriptions-en-francais-courant",
+      "title": "Page Vidéos : des descriptions en français courant",
+      "date": "2026-11-23",
+      "lots": [
+        "L82"
+      ],
+      "captures": [
+        "captures/L82-videos-hero-avant-390.png",
+        "captures/L82-videos-hero-apres-390.png",
+        "captures/L82-videos-cartes-avant-390.png",
+        "captures/L82-videos-cartes-apres-390.png"
+      ],
+      "alts": [
+        "Avant, au téléphone : le titre de la page Vidéos dit « Chaînes & talks curés », et l'introduction parle d'« agentic coding » et d'« AI-influencers »",
+        "Après : le titre dit « Chaînes et conférences choisies », et l'introduction parle de « codage agentique » et d'« influenceurs IA »",
+        "Avant : la carte de la chaîne Anthropic annonce des « Demos de launch » et des « walkthroughs de features » ; la suivante, un « Fireside » sur les « Patterns d'usage » et les « workflows »",
+        "Après : « Démonstrations des lancements » et « visites guidées des fonctions », puis une « discussion » sur les « habitudes d'usage » et les « méthodes de travail » ; les titres des vidéos n'ont pas changé"
+      ],
+      "html": "<p>Sur la page <a href=\"/videos/\">Vidéos</a>, les descriptions mêlaient l'anglais et le français : « talks curés », « Demos de launch », « walkthroughs de features », « l'équipe ship »… Elles sont réécrites en français courant, avec le même sens et à peu près la même longueur.</p>\n<ul><li><strong>Titre et introduction</strong> : « Chaînes et conférences choisies », une sélection qui parle du « codage agentique », pas d'« influenceurs IA » généralistes.</li><li><strong>Fiches des quinze chaînes et vidéos</strong> : chaque anglicisme qui a un équivalent français est remplacé (« entretien », « réalisations », « livrer », « outillage »…). Les noms des chaînes, des produits et les titres des vidéos restent tels quels ; seul le titre de la conférence de Boris Cherny, que le site avait déjà traduit à moitié, est passé entièrement en français.</li><li><strong>Mots-clés et filtres</strong> : les étiquettes des cartes passent en français (« tutoriel », « conférence », « entretien »…), la case « FR uniquement » devient « En français uniquement » et le champ de recherche cite un « mot-clé » au lieu d'un « tag ».</li><li><strong>Critères de sélection</strong> : l'encadré ne tutoie plus le lecteur ; on peut proposer une autre chaîne française par un ticket sur le dépôt.</li></ul>\n<p>Un test relit la page construite et échoue si l'un des anglicismes relevés revient, ou si le texte s'adresse au lecteur par « tu » ou « vous » ; il échouait sur l'ancienne version.</p>"
+    },
     {
       "slug": "2026-11-23-dates-qui-passent-a-la-ligne-et-recherche-lisible-au-telephone",
       "title": "Dates qui passent à la ligne, recherche lisible au téléphone",
