@@ -844,6 +844,9 @@ lots:
     created: 2026-11-23
     started: 2026-11-23
     review: { date: 2026-11-23, verdict: "conforme (lead) : diff b91942a relu — textes et étiquettes de /videos en français, aucune logique touchée hors libellé de recherche coupé en deux spans nowrap ; test l82 rouge avant (40 anglicismes + 1 tu) puis vert ; note : titre de la conférence de Boris Cherny traduit (il était déjà à moitié traduit), réversible", commit: b91942a14c56fb8045b711f47315cbaa8bd72083 }
+    ux: { date: 2026-11-23, verdict: "conforme (ux-reviewer, rapport tmp/ux-codex-L82.md) : aucun débordement aux 6 combinaisons, libellé relié, lang=en sur les titres anglais, contrastes ≥ 7,1:1 ; 4 mineurs (case à cocher comprimée à 200 %, coupure du libellé à 390 px, « Sylvain »/« l'auteur », titre de Boris traduit)" }
+    tasks:
+      - { id: t1, title: "Suite L82 (revue UX m1, m3, m4) : shrink-0 sur les cases à cocher des filtres de /videos (8×13 px à 320 px et 200 %) ; un seul nom pour la même personne (« Sylvain » ou « l'auteur ») ; remettre le titre anglais d'origine de la conférence de Boris Cherny avec lang=en (Nielsen 6 : le retrouver sur YouTube)", status: todo }
   - id: L83
     title: "Suite de la revue UX de L81 : (m1) /nouveautes à 320 px texte 200 %, le libellé « Copier le lien » sort de 26 px de son bouton (WCAG 1.4.4, 1.4.10) ; (m2) une date ne laisse pas le jour seul en fin de ligne (« prochaine avant le 22 | décembre 2026 » à 375 et 390 px) : insécable entre le jour et le mois, sécable ailleurs, sans recouper un nombre ni sortir de l'écran à 320/200 %. Rapport : tmp/ux-codex-L81.md du dossier parent."
     status: todo
@@ -853,6 +856,12 @@ lots:
     title: "Outils testés : ajouter ECC / everything-claude-code (github.com/affaan-m/ECC), statut tested, verdict reject + watchlist, d'après le banc du 23-11 (rapport bilans/2026-11-23/banc-ECC.md du dossier parent) : 72 agents lancés d'office par une règle, 328 skills, 28 hooks, ~21 k tokens par session ; aucun gain mesuré des agents ; GateGuard non confirmé par leur propre éval (p = 0,21, +37 à +45 % de coût) ; l'installeur coupe Co-Authored-By. Étude de cas si les leçons le justifient (orchestration d'agents sans mesure, écho de cadence v1)."
     status: todo
     estimate: 1
+    created: 2026-11-23
+  - id: L85
+    title: "En-tête à 1440 px avec le texte à 200 % : « Guides », « Ressources » et « Nouveautés » sortent du cadre et ne sont plus atteignables (WCAG 1.4.4, revue UX L82, capture tmp/ux-codex-L82/zoom-1440-200-entete.png)"
+    status: todo
+    estimate: 1
+    visible: true
     created: 2026-11-23
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
