@@ -229,6 +229,7 @@ lots:
     status: done
     visible: true
     estimate: 0.25
+    delivered: { date: 2026-11-23, sha: 86a01f4f4fb75db63cc5445e41b0254f62c9a81f }
     created: 2026-09-28
     started: 2026-11-22
     notes:
@@ -798,6 +799,7 @@ lots:
     title: "Test PageHero (page-hero.e2e) instable sous charge : rouge à la porte de livraison de L8 le 22-11 (contraste au pire pixel, 6 largeurs), vert rejoué seul ; 2e occurrence après la porte rouge de L5 (plafond de 600 s) — le rendre déterministe sous charge (attente explicite des polices et du rendu, ou mesure indépendante du temps), sans affaiblir le seuil de 4,5:1"
     status: done
     estimate: 1
+    delivered: { date: 2026-11-23, sha: 86a01f4f4fb75db63cc5445e41b0254f62c9a81f }
     created: 2026-11-22
     review: { date: 2026-11-22, verdict: "conforme — relu par le lead : 2 fichiers de test seulement (page-hero.e2e, tests/lib/e2e-dist.mjs) ; limite par sous-test page × largeur, attentes sur signal (polices, images décodées, deux images après défilement), seuil 4,5:1 et couverture inchangés ; sous charge 0/3 → 6/6 verts, suite 690/690", commit: 1ed5d4760e1761410c0e823a2b4ee9111a11b603 }
     started: 2026-11-22
