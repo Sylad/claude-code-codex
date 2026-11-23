@@ -872,12 +872,14 @@ lots:
     created: 2026-11-23
   - id: L86
     title: "Anglicismes restants hors /videos (QA L82 en prod, 23-11) : /learning/ « curés », « ship », « Filtres de curation » ; /about/ « curés » ; réécrire en français courant comme L82 (le tu/vous de /about reste à L18). /nouveautes garde son historique tel quel."
-    status: doing
+    status: done
     estimate: 1
     visible: true
     created: 2026-11-23
     started: 2026-11-23
     review: { date: 2026-11-23, verdict: "conforme (lead) : 7d08ba6 relu — 6 remplacements (livre, choisis, sélection), test e2e rouge avant, noms propres gardés", commit: 7d08ba6dff70c760211f46a12533d7c10cc1e96a }
+    ux: { date: 2026-11-23, verdict: "conforme (ux-reviewer, tmp/ux-codex-L86.md) : 0 « curés/curation/ship » visibles ni en meta, 0 défilement horizontal 320–1440 à 100 et 200 %, Nouveautés L86 avec 4 captures" }
+    finished: 2026-11-23
   - id: L87
     title: "Suite de L83 (QA du 23-11, tmp/qa-codex-L83.md du dossier parent) : dans le texte courant, les dates gardent une espace simple entre le jour et le mois et le jour reste seul en fin de ligne — /nouveautes « 31 octobre 2026 » (1440), « 3 novembre 2026 » (390) ; /livre-de-bord « (29 octobre) », « 23 octobre » ; /learning « du 22 novembre 2026 » (390), cas que L83 disait corrigé. Insécable jour-mois appliquée au contenu rendu (markdown et données), pas seulement aux dates formatées par le code ; test sur le HTML construit de toutes les pages."
     status: done
@@ -897,6 +899,8 @@ lots:
     estimate: 1
     visible: true
     created: 2026-11-23
+    notes:
+      - { date: 2026-11-23, text: "ajout 23-11 (UX L86) : /learning h2 « …podcasts sélectionnés » coupé « sélectionn|és » à 320 px texte 200 % (overflow-wrap:anywhere) ; « newsletters » idem — piste hyphens:auto avec lang fr" }
   - id: L89
     title: "Anglicismes restants sur /learning, hors périmètre de L86 : « tooling », « tag », « issue », « repo », « AI engineering », « patterns », « Pair-bien »… — réécrire en français courant comme L82/L86 (relevé du run L86, 23-11)"
     status: todo
