@@ -239,11 +239,14 @@ lots:
     finished: 2026-11-23
   - id: L10
     title: Revue UX — Vidéos
-    status: doing
+    status: done
     visible: true
     estimate: 0.25
     created: 2026-09-28
     started: 2026-11-23
+    review: { date: 2026-11-23, verdict: "conforme revue du lead : aria-pressed, role=status, nom du champ, h2, lang=en, tailles en rem et gouttières plafonnées ; test e2e rouge avant, vert après", commit: 51c2105828c30e9d9f7b8551f340fa2033956980 }
+    ux: { date: 2026-11-23, verdict: "conforme verdict du lead d'après les captures avant/après (390, 320 à 200 %) : plus de mots coupés ni de défilement ; suites ouvertes en lots" }
+    finished: 2026-11-23
   - id: L11
     title: Revue UX — À propos
     status: todo
@@ -805,6 +808,20 @@ lots:
     review: { date: 2026-11-22, verdict: "conforme — relu par le lead : 2 fichiers de test seulement (page-hero.e2e, tests/lib/e2e-dist.mjs) ; limite par sous-test page × largeur, attentes sur signal (polices, images décodées, deux images après défilement), seuil 4,5:1 et couverture inchangés ; sous charge 0/3 → 6/6 verts, suite 690/690", commit: 1ed5d4760e1761410c0e823a2b4ee9111a11b603 }
     started: 2026-11-22
     finished: 2026-11-22
+  - id: L81
+    title: "Vidéos et Learning, suites de la revue L10 : dates du bloc « Dernière revue » coupées à 320 px/200 % (« 202|6 », espaces insécables de format-date) ; texte d'exemple du champ tronqué (« Rechercher ( ») ; deux arrêts clavier par carte (titre + icône, 30 pour 15) sur /videos et /learning ; contraste du nombre des filtres de /learning (opacity-70) à mesurer"
+    public: "Pages Vidéos et Learning : dates, recherche et clavier plus simples"
+    status: todo
+    estimate: 1
+    visible: true
+    created: 2026-11-23
+  - id: L82
+    title: "Vidéos : descriptions réécrites en français (« Chaînes & talks curés », « Demos de launch », « walkthroughs de features », « ship »…), Nielsen 2 (constat L10)"
+    public: "Page Vidéos : des descriptions en français"
+    status: todo
+    estimate: 1
+    visible: true
+    created: 2026-11-23
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
