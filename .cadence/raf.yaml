@@ -233,6 +233,8 @@ lots:
     started: 2026-11-22
     notes:
       - { date: 2026-11-22, text: "22-11 soir : revue UX r1 (tmp/ux-codex-L9-r1.md) non conforme — R1 majeur : légende du schéma du tunnel Cloudflare « Aucune flèche n'entre dans la maison » contredite par la flèche « requêtes poussées dans le tunnel » ; mineurs m1 schéma du tunnel +8 px à 390, m2 courbe sur « Chez toi », m3 mots coupés à 320/200 % (k8s ≈ 80 contre 18 au r0), m4 focus sur body après « Revenir au sommaire ». Correction r2 lundi matin, puis livraison de L9 avec L80 (1ed5d47, au-dessus de L9)." }
+    ux: { date: 2026-11-23, verdict: "conforme (revue UX r2, tmp/ux-codex-L9-r2.md) : R1 légende = dessin, m1-m4 levés, 0 régression sur 10 pages PageHero + accueil à 320/390/1440 × 100/200 % ; notes : n1 schéma du tunnel +8 px à 360, n2 h1 plafonné à 122 % sous 640 px / 200 %" }
+    review: { date: 2026-11-23, verdict: "conforme après 1 correction (tmp/revue-codex-L9.md) : M1 PageHero sous 640 px, le h1 perd son line-height (54 px au lieu de 40, 33 pages) — correction r3", commit: adc3592ac44afa3b9dd66d713791a087a5c40c0f }
   - id: L10
     title: Revue UX — Vidéos
     status: todo
