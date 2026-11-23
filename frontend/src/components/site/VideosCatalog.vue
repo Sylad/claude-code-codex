@@ -14,7 +14,7 @@ import {
 
 const props = defineProps<{ entries: VideoEntry[] }>();
 
-const kinds: VideoKind[] = ["channel", "video", "playlist"];
+const ALL_KINDS: VideoKind[] = ["channel", "video", "playlist"];
 const selectedKinds = ref<Set<VideoKind>>(new Set());
 const onlyOfficial = ref(false);
 const onlyFr = ref(false);
@@ -58,6 +58,9 @@ const filteredEntries = computed(() => {
   });
 });
 
+// L10 (Nielsen 5) : un filtre sans aucune entrée (« Playlist 0 ») ne menait qu'à une liste vide.
+const kinds = computed(() => ALL_KINDS.filter((k) => counts.value[k] > 0));
+
 function toggleKind(k: VideoKind) {
   const next = new Set(selectedKinds.value);
   if (next.has(k)) next.delete(k);
@@ -79,13 +82,15 @@ function clearFilters() {
       <div class="relative">
         <Search
           :size="16"
-          class="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted"
+          aria-hidden="true"
+          class="absolute left-[min(0.75rem,12px)] top-1/2 -translate-y-1/2 text-ink-muted"
         />
         <input
           v-model="searchQuery"
           type="search"
+          aria-label="Rechercher une chaîne ou une vidéo"
           placeholder="Rechercher (auteur, sujet, tag)..."
-          class="w-full pl-10 pr-4 py-2.5 rounded-lg bg-paper-elevated border border-white/10 text-ink placeholder:text-ink-muted focus:outline-none focus:border-claude/50 focus:ring-1 focus:ring-claude/30 transition-colors"
+          class="w-full pl-[min(2.5rem,40px)] pr-[min(1rem,16px)] py-2.5 rounded-lg bg-paper-elevated border border-white/10 text-ink placeholder:text-ink-muted focus:outline-none focus:border-claude focus-visible:ring-2 focus-visible:ring-claude transition-colors"
         />
       </div>
 
@@ -93,20 +98,22 @@ function clearFilters() {
         <button
           v-for="k in kinds"
           :key="k"
+          type="button"
+          :aria-pressed="selectedKinds.has(k)"
           :class="[
-            'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm border transition-colors motion-safe:active:scale-95',
+            'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm border cursor-pointer transition-colors motion-safe:active:scale-95',
             selectedKinds.has(k)
               ? 'bg-claude text-paper border-claude'
               : 'border-white/10 text-ink-muted hover:border-claude/40 hover:text-ink',
           ]"
           @click="toggleKind(k)"
         >
-          <Check v-if="selectedKinds.has(k)" :size="14" />
+          <Check v-if="selectedKinds.has(k)" :size="14" aria-hidden="true" />
           <span>{{ KIND_LABELS[k] }}</span>
-          <span class="font-mono text-xs opacity-70">{{ counts[k] }}</span>
+          <span class="font-mono text-xs">{{ counts[k] }}</span>
         </button>
 
-        <span class="w-px h-5 bg-white/10 mx-1"></span>
+        <span class="w-px h-5 bg-white/10 mx-1" aria-hidden="true"></span>
 
         <label
           class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm border border-white/10 text-ink-muted cursor-pointer hover:text-ink hover:border-claude/40 transition-colors"
@@ -116,7 +123,7 @@ function clearFilters() {
             type="checkbox"
             class="accent-claude"
           />
-          Anthropic-officiel
+          Officiel Anthropic
         </label>
 
         <label
@@ -133,15 +140,16 @@ function clearFilters() {
             onlyFr ||
             searchQuery.trim() !== ''
           "
-          class="text-sm text-ink-muted hover:text-claude underline underline-offset-4 ml-auto"
+          type="button"
+          class="py-1 text-sm text-ink-muted hover:text-claude underline underline-offset-4 ml-auto cursor-pointer"
           @click="clearFilters"
         >
           Réinitialiser
         </button>
       </div>
 
-      <p class="font-mono text-xs text-ink-muted">
-        {{ filteredEntries.length }} / {{ entries.length }} vidéos
+      <p class="font-mono text-xs text-ink-muted" role="status">
+        {{ filteredEntries.length }} / {{ entries.length }} chaînes et vidéos
       </p>
     </div>
 
@@ -149,20 +157,18 @@ function clearFilters() {
       v-if="filteredEntries.length === 0"
       class="text-center py-12 text-ink-muted"
     >
-      <p>Aucune vidéo ne match ces filtres.</p>
-      <button
-        class="mt-3 text-claude hover:text-claude-soft underline underline-offset-4"
-        @click="clearFilters"
-      >
-        Réinitialiser
-      </button>
+      <!-- L10 (comme /learning, L78) : un seul bouton de remise à zéro, « Réinitialiser » au-dessus. -->
+      <p>Aucune chaîne ni vidéo ne correspond à ces filtres.</p>
+      <p class="mt-2 text-sm">
+        « Réinitialiser », au-dessus, affiche de nouveau toute la sélection.
+      </p>
     </div>
 
     <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       <li
         v-for="entry in filteredEntries"
         :key="entry.id"
-        class="relative overflow-hidden rounded-xl border border-white/10 bg-paper-elevated p-5 transition-[colors,transform,box-shadow] duration-200 hover:border-claude/30 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-claude/10"
+        class="relative overflow-hidden rounded-xl border border-white/10 bg-paper-elevated p-[min(1.25rem,20px)] transition-[colors,transform,box-shadow] duration-200 hover:border-claude/30 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-claude/10"
       >
         <div
           :class="`absolute inset-0 bg-gradient-to-br ${KIND_ACCENTS[entry.kind]} opacity-50 pointer-events-none`"
@@ -173,21 +179,24 @@ function clearFilters() {
             <div class="min-w-0">
               <div class="flex items-center gap-1.5 flex-wrap">
                 <p
-                  class="font-mono text-[10px] uppercase tracking-wider text-claude"
+                  class="font-mono text-[0.625rem] uppercase tracking-wider text-claude"
                 >
                   {{ KIND_LABELS[entry.kind] }}
                 </p>
-                <span class="font-mono text-[10px] text-ink/40">·</span>
-                <p class="font-mono text-[10px] text-ink-muted">
+                <span class="font-mono text-[0.625rem] text-ink-muted" aria-hidden="true">·</span>
+                <p class="font-mono text-[0.625rem] text-ink-muted">
                   {{ LANGUAGE_LABELS[entry.language] }}
                 </p>
                 <span
                   v-if="entry.official"
-                  class="font-mono text-[10px] text-claude-soft"
-                  >· officiel</span
+                  class="font-mono text-[0.625rem] text-claude-soft"
+                  ><span aria-hidden="true">· </span>officiel</span
                 >
               </div>
-              <h3 class="mt-1.5 text-base font-medium text-ink leading-tight">
+              <h2
+                class="mt-1.5 text-base font-medium text-ink leading-tight"
+                :lang="entry.nameLang"
+              >
                 <a
                   :href="entry.url"
                   target="_blank"
@@ -196,7 +205,7 @@ function clearFilters() {
                 >
                   {{ entry.name }}
                 </a>
-              </h3>
+              </h2>
               <p class="mt-0.5 text-xs text-ink-muted">
                 {{ entry.author }}
               </p>
@@ -208,8 +217,8 @@ function clearFilters() {
               class="p-1.5 -m-1.5 text-ink-muted hover:text-claude transition-colors shrink-0"
               :aria-label="`Ouvrir ${entry.name}`"
             >
-              <PlaySquare v-if="entry.kind === 'video'" :size="16" />
-              <ExternalLink v-else :size="16" />
+              <PlaySquare v-if="entry.kind === 'video'" :size="16" aria-hidden="true" />
+              <ExternalLink v-else :size="16" aria-hidden="true" />
             </a>
           </div>
 
@@ -223,9 +232,9 @@ function clearFilters() {
           >
             <li v-for="tag in entry.tags" :key="tag">
               <span
-                class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono text-ink-muted bg-white/5"
+                class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[0.625rem] font-mono text-ink-muted bg-white/5"
               >
-                <Tag :size="10" />
+                <Tag :size="10" aria-hidden="true" />
                 {{ tag }}
               </span>
             </li>

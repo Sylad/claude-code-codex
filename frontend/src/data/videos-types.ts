@@ -11,6 +11,8 @@ export interface VideoEntry {
   tags: string[];
   url: string;
   official: boolean;
+  /** L10 (WCAG 3.1.2) : langue du TITRE quand il n'est pas en français (les noms propres n'en ont pas). */
+  nameLang?: "en";
 }
 
 export const KIND_LABELS: Record<VideoKind, string> = {

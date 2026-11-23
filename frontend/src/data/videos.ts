@@ -16,6 +16,7 @@ export const videoEntries: VideoEntry[] = [
   {
     id: "anthropic-conversation-claude-code",
     name: "A conversation on Claude Code — Boris Cherny & Alex Albert",
+    nameLang: "en",
     kind: "video",
     language: "en",
     author: "Anthropic",
@@ -40,6 +41,7 @@ export const videoEntries: VideoEntry[] = [
   {
     id: "boris-cherny-lennys-podcast",
     name: "Head of Claude Code — Boris Cherny",
+    nameLang: "en",
     kind: "video",
     language: "en",
     author: "Lenny's Podcast",
@@ -52,6 +54,7 @@ export const videoEntries: VideoEntry[] = [
   {
     id: "cat-wu-lennys-podcast",
     name: "How Anthropic's product team moves faster — Cat Wu",
+    nameLang: "en",
     kind: "video",
     language: "en",
     author: "Lenny's Podcast",
@@ -100,6 +103,7 @@ export const videoEntries: VideoEntry[] = [
   {
     id: "latent-space-claude-code-surprise-hit",
     name: "Anthropic's Surprise Hit: How Claude Code Became an AI Coding Powerhouse",
+    nameLang: "en",
     kind: "video",
     language: "en",
     author: "Latent Space",
@@ -112,6 +116,7 @@ export const videoEntries: VideoEntry[] = [
   {
     id: "felix-rieseberg-cowork",
     name: "Anthropic's Felix Rieseberg on AI Coworkers, Local-First Agents",
+    nameLang: "en",
     kind: "video",
     language: "en",
     author: "Latent Space",

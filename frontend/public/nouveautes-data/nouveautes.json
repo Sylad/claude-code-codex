@@ -1,7 +1,28 @@
 {
   "project": "claude-code-codex",
-  "generated": "2026-11-22 17:26",
+  "generated": "2026-11-23 09:10",
   "entries": [
+    {
+      "slug": "2026-11-23-page-videos-filtres-clairs-et-texte-agrandi-sans-mots-coupes",
+      "title": "Page Vidéos : des filtres clairs et un texte agrandi sans mots coupés",
+      "date": "2026-11-23",
+      "lots": [
+        "L10"
+      ],
+      "captures": [
+        "captures/L10-videos-filtres-avant-390.png",
+        "captures/L10-videos-filtres-apres-390.png",
+        "captures/L10-videos-texte-200-avant-320.png",
+        "captures/L10-videos-texte-200-apres-320.png"
+      ],
+      "alts": [
+        "Avant, au téléphone : les filtres de la page Vidéos proposent « Playlist 0 », qui ne mène à rien, et le compteur annonce « 15 / 15 vidéos » alors que la liste contient aussi des chaînes",
+        "Après, au téléphone : seuls les filtres Chaîne et Vidéo restent, la case s'appelle « Officiel Anthropic » et le compteur dit « 15 / 15 chaînes et vidéos »",
+        "Avant, sur un petit téléphone avec le texte agrandi deux fois : la colonne est étroite, « Anthropic » et « walkthroughs » sont coupés au milieu et les petites étiquettes des cartes restent minuscules",
+        "Après, même réglage : la colonne est plus large, les mots tiennent entiers et les étiquettes Chaîne, EN et officiel ont grandi avec le reste du texte"
+      ],
+      "html": "<p>La page <a href=\"/videos/\">Vidéos</a> a été passée en revue au bureau, au téléphone et avec le texte agrandi deux fois, avec les règles d'accessibilité du Web. Rien ne déborde sur le côté ; neuf défauts ont été corrigés.</p>\n<ul><li><strong>Filtres</strong> : le filtre « Playlist », qui ne comptait aucune entrée, ne menait qu'à une liste vide ; il n'est plus proposé. Un lecteur d'écran dit si chaque filtre est actif, et annonce le nombre d'entrées affichées quand il change.</li><li><strong>Compteur</strong> : il disait « 15 / 15 vidéos » en comptant les chaînes ; il dit maintenant « chaînes et vidéos ». Le nombre de chaque filtre passe de 4,3 à plus de 4,5 contre 1, le minimum.</li><li><strong>Champ de recherche</strong> : il est nommé « Rechercher une chaîne ou une vidéo » pour les lecteurs d'écran et porte, au clavier, un anneau orangé plein au lieu d'un contour à peine visible.</li><li><strong>Aucun résultat</strong> : le message dit « Aucune chaîne ni vidéo ne correspond à ces filtres », avec un seul bouton « Réinitialiser », assez grand pour le doigt.</li><li><strong>Titres</strong> : les cartes ont de vrais titres de section, et les cinq titres de vidéos en anglais sont prononcés avec la voix anglaise.</li><li><strong>Texte agrandi</strong> : les petites étiquettes des cartes grandissent avec le texte ; sur un petit téléphone, les marges ne grandissent plus avec lui, et les mots coupés au milieu passent de 39 à 2.</li></ul>\n<p>Un test refait ces mesures sur la page construite ; il échouait sur l'ancienne version.</p>"
+    },
     {
       "slug": "2026-11-22-guides-longs-un-sommaire-des-schemas-entiers-et-des-faits-a-jour",
       "title": "Guides longs : un sommaire, des schémas entiers et des faits à jour",
