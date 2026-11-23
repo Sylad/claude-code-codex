@@ -846,6 +846,11 @@ lots:
     status: todo
     estimate: 1
     created: 2026-11-23
+  - id: L84
+    title: "Outils testés : ajouter ECC / everything-claude-code (github.com/affaan-m/ECC), statut tested, verdict reject + watchlist, d'après le banc du 23-11 (rapport bilans/2026-11-23/banc-ECC.md du dossier parent) : 72 agents lancés d'office par une règle, 328 skills, 28 hooks, ~21 k tokens par session ; aucun gain mesuré des agents ; GateGuard non confirmé par leur propre éval (p = 0,21, +37 à +45 % de coût) ; l'installeur coupe Co-Authored-By. Étude de cas si les leçons le justifient (orchestration d'agents sans mesure, écho de cadence v1)."
+    status: todo
+    estimate: 1
+    created: 2026-11-23
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
