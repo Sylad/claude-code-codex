@@ -164,13 +164,16 @@ test('lots au même titre public : une seule ligne par groupe, date la plus réc
   assert.equal(q.done.length + q.doing.length, 2);
 });
 
-test('avancement : accord sur le nombre d’étapes faites (0 et 1 au singulier), espaces insécables', () => {
+test('avancement : accord sur le nombre d’étapes faites (0 et 1 au singulier), insécables autour des nombres', () => {
   const nb = (x) => x.replaceAll(' ', ' ');
   assert.equal(nb(stepsLabel({ done: 0, total: 1 })), '0 étape faite sur 1');
   assert.equal(nb(stepsLabel({ done: 1, total: 2 })), '1 étape faite sur 2');
   assert.equal(nb(stepsLabel({ done: 2, total: 3 })), '2 étapes faites sur 3');
   assert.equal(nb(stepsLabel({ done: 13, total: 13 })), '13 étapes faites sur 13');
-  assert.doesNotMatch(stepsLabel({ done: 2, total: 3 }), / /, 'espace sécable : le nombre peut se retrouver seul en fin de ligne');
+  // Un nombre n'est jamais seul en fin ni en début de ligne ; les mots, eux, passent à la ligne (L81 :
+  // entièrement insécable, le libellé sortait de l'écran à 320 px texte 200 %).
+  assert.match(stepsLabel({ done: 2, total: 3 }), /^2\u00a0étapes faites sur\u00a03$/);
+  assert.match(stepsLabel({ done: 13, total: 13 }), /^13\u00a0étapes faites sur\u00a013$/);
 });
 
 test(`plus de ${RECENT_DONE} lots livrés ET des titres partagés : fusion avant la coupe, ${RECENT_DONE} lignes, la plus récente porte la fusion`, () => {

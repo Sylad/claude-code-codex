@@ -79,6 +79,11 @@ function clearFilters() {
 <template>
   <div>
     <div class="flex flex-col gap-4 mb-8">
+      <!-- L81 : l'exemple de recherche était un texte indicatif, tronqué au téléphone (« Rechercher ( »)
+           et effacé à la saisie (WCAG 3.3.2, Nielsen 6) : c'est désormais un libellé visible, qui passe à la ligne. -->
+      <label for="videos-recherche" class="-mb-2 text-sm text-ink-muted">
+        Rechercher une chaîne ou une vidéo <span class="whitespace-nowrap">(auteur, sujet, tag)</span>
+      </label>
       <div class="relative">
         <Search
           :size="16"
@@ -87,9 +92,8 @@ function clearFilters() {
         />
         <input
           v-model="searchQuery"
+          id="videos-recherche"
           type="search"
-          aria-label="Rechercher une chaîne ou une vidéo"
-          placeholder="Rechercher (auteur, sujet, tag)..."
           class="w-full pl-[min(2.5rem,40px)] pr-[min(1rem,16px)] py-2.5 rounded-lg bg-paper-elevated border border-white/10 text-ink placeholder:text-ink-muted focus:outline-none focus:border-claude focus-visible:ring-2 focus-visible:ring-claude transition-colors"
         />
       </div>
@@ -210,12 +214,15 @@ function clearFilters() {
                 {{ entry.author }}
               </p>
             </div>
+            <!-- L81 : l'icône double le lien du titre (même adresse) : cliquable à la souris, mais
+                 un seul arrêt du clavier et un seul lien lu par carte (WCAG 2.4.3, Nielsen 8). -->
             <a
               :href="entry.url"
               target="_blank"
               rel="noopener"
+              tabindex="-1"
+              aria-hidden="true"
               class="p-1.5 -m-1.5 text-ink-muted hover:text-claude transition-colors shrink-0"
-              :aria-label="`Ouvrir ${entry.name}`"
             >
               <PlaySquare v-if="entry.kind === 'video'" :size="16" aria-hidden="true" />
               <ExternalLink v-else :size="16" aria-hidden="true" />

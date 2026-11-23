@@ -2,9 +2,12 @@
  * L15 — mise en forme UNIQUE des dates en français (repris d'evatosorus, revue UX L27/L28) :
  * Nouveautés, séparateur « Déjà vu lors de votre visite du … », Plan de travail.
  * Le premier du mois s'écrit « 1er » (« 1er octobre 2026 »), ce que Intl ne fait pas ;
- * l'heure s'écrit à la française, « 20 h 42 ». Espaces insécables : une date ne se coupe
- * jamais en fin de ligne. Module pur en .mjs, importable tel quel par node --test
- * (tests/format-date.test.mjs).
+ * l'heure s'écrit à la française, « 20 h 42 » (espaces insécables : courte, elle ne se coupe pas).
+ * L81 : une date porte des espaces ORDINAIRES entre ses mots. Entièrement insécable, « 22 novembre
+ * 2026 » sortait de l'écran à 320 px texte 200 % (27 à 92 px), ou se coupait au milieu de l'année
+ * (« 202|6 ») sous `overflow-wrap: anywhere` ; elle passe maintenant à la ligne entre ses mots, et
+ * un nombre ne se coupe jamais (règle `time` de src/styles/global.css). Module pur en .mjs,
+ * importable tel quel par node --test (tests/format-date.test.mjs).
  */
 const NBSP = ' ';
 
@@ -18,7 +21,7 @@ const LONG = { day: 'numeric', month: 'long', year: 'numeric' };
 export function formatLongDate(date, timeZone) {
   const parts = new Intl.DateTimeFormat('fr-FR', { ...LONG, ...(timeZone ? { timeZone } : {}) }).formatToParts(date);
   return parts
-    .map((p) => (p.type === 'day' && p.value === '1' ? '1er' : p.type === 'literal' ? p.value.replace(/\s/g, NBSP) : p.value))
+    .map((p) => (p.type === 'day' && p.value === '1' ? '1er' : p.type === 'literal' ? p.value.replace(/\s/g, ' ') : p.value))
     .join('');
 }
 

@@ -14,8 +14,17 @@ test('formatDay (YYYY-MM-DD) : « 1er » le premier du mois, chiffre simple ensu
   assert.equal(nb(formatDay('2026-01-11')), '11 janvier 2026');
 });
 
-test('formatDay : espaces insécables, la date ne se coupe jamais en son milieu', () => {
-  assert.doesNotMatch(formatDay('2026-10-01'), / /);
+// L81 : une date entièrement insécable (« 22 novembre 2026 ») débordait de 27 à 92 px à 320 px texte
+// 200 %, ou se coupait au milieu de l'année (« 202|6 ») sous `overflow-wrap: anywhere`. Une date passe
+// désormais à la ligne entre ses mots, espaces ordinaires ; un nombre ne se coupe jamais (CSS de `time`,
+// tests/l12-gabarit-ux.e2e.test.mjs).
+test('formatDay : espaces ordinaires entre les mots, la date peut passer à la ligne entre eux', () => {
+  for (const day of ['2026-10-01', '2026-11-22', '2026-09-21']) {
+    const s = formatDay(day);
+    assert.doesNotMatch(s, /[\u00a0\u202f]/, `insécable dans « ${s} »`);
+    assert.equal(s.split(' ').length, 3, s);
+  }
+  assert.deepEqual(formatDay('2026-10-01').split(' '), ['1er', 'octobre', '2026']);
 });
 
 test('formatLongDate (instant) : dans le fuseau demandé', () => {

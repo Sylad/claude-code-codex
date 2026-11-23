@@ -241,7 +241,9 @@ export function planSummary(counts: PublicPlan['counts']): string[] {
   ].filter(Boolean);
 }
 
-/** Avancement d'un lot : « 1 étape faite sur 2 », « 2 étapes faites sur 3 » (0 et 1 au singulier). */
+/** Avancement d'un lot : « 1 étape faite sur 2 », « 2 étapes faites sur 3 » (0 et 1 au singulier).
+ * Insécables seulement autour des nombres (jamais seuls en fin de ligne) ; L81 : entièrement insécable,
+ * le libellé sortait de l'écran de 92 px à 320 px texte 200 % : il passe à la ligne entre ses mots. */
 export function stepsLabel({ done, total }: { done: number; total: number }): string {
-  return `${done} ${done > 1 ? 'étapes faites' : 'étape faite'} sur ${total}`.replace(/ /g, ' ');
+  return `${done} ${done > 1 ? 'étapes faites' : 'étape faite'} sur ${total}`;
 }

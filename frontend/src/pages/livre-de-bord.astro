@@ -73,7 +73,7 @@ const external = (href: string) => href.startsWith("https://");
           {e.theme ?? `Semaine ${e.semaine.slice(-2)}`}
         </h2>
         <p class="mt-1 font-mono text-sm text-ink-muted">
-          {e.theme && <span>Semaine {e.semaine.slice(-2)} · </span>}<time datetime={e.date} class="whitespace-nowrap">{formatDay(e.date)}</time>
+          {e.theme && <span>Semaine {e.semaine.slice(-2)} · </span>}<time datetime={e.date}>{formatDay(e.date)}</time>
         </p>
         <p class="mt-4 text-ink leading-relaxed">{e.resume}</p>
         {e.schema && <BookSchema id={e.schema} />}

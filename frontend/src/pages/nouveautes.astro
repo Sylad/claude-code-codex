@@ -73,7 +73,7 @@ const pngSize = (rel: string) => {
                   sans survol, après la date et la marque « Nouveau » ; le titre reste du texte
                   (un toucher sur le titre écrasait le presse-papiers et faisait défiler). */}
               <p class="news-date flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-xs uppercase tracking-wider text-claude">
-                <span class="inline-flex items-center"><time datetime={e.date} class="whitespace-nowrap">{formatDate(e.date)}</time><span class="news-new-slot"></span></span>
+                <span class="inline-flex items-center"><time datetime={e.date}>{formatDate(e.date)}</time><span class="news-new-slot"></span></span>
                 <button type="button" class="news-copy" data-slug={e.slug} data-state="idle">
                   <svg class="news-copy-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
@@ -235,9 +235,11 @@ const pngSize = (rel: string) => {
   .news-copy-labels {
     display: inline-grid;
   }
+  /* L81 : à 320 px texte 200 %, « Copie impossible » insécable sortait de l'écran (27 px) ;
+     le libellé passe à la ligne entre ses mots, sans couper un mot. */
   .news-copy-label {
     grid-area: 1 / 1;
-    white-space: nowrap;
+    overflow-wrap: normal;
   }
   .news-copy-label.is-hidden {
     visibility: hidden;

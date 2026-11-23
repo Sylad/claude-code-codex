@@ -52,8 +52,11 @@ test('une entrée par nouveauté, dans l’ordre du JSON (la plus récente en ha
   }
 });
 
-test('date par le formateur commun (« 1er octobre 2026 », espaces insécables, jamais coupée)', () => {
-  assert.match(html(), /<time datetime="2026-10-01" class="whitespace-nowrap"[^>]*>1er\u00a0octobre\u00a02026<\/time>/);
+// L81 : la date passe à la ligne entre ses mots (insécable, elle sortait de l'écran de 27 px à 320 px
+// texte 200 %) ; aucun nombre n'est coupé (règle `time` du CSS, mesurée par tests/l12-gabarit-ux.e2e.test.mjs).
+test('date par le formateur commun (« 1er octobre 2026 »), passe à la ligne entre ses mots', () => {
+  assert.match(html(), /<time datetime="2026-10-01"[^>]*>1er octobre 2026<\/time>/);
+  assert.doesNotMatch(html(), /<time [^>]*whitespace-nowrap/);
 });
 
 test('pas de doublon non habillé : dist/nouveautes-data/index.html absent', () => {

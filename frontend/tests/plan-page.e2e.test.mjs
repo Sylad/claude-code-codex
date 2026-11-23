@@ -95,11 +95,14 @@ test('note courte (« ok ») : ignorée et comptée, ne fait pas échouer la sui
   assert.deepEqual(needles.map(([k]) => k), ['L1 titre brut']);
 });
 
-test('dates en français par le formateur commun (« 1er octobre 2026 »), jamais coupées', () => {
+// L81 : la date passe à la ligne entre ses mots, sans `whitespace-nowrap` (92 px hors de l'écran à 320 px
+// texte 200 %) ; aucun nombre n'est coupé (règle `time` du CSS, tests/l12-gabarit-ux.e2e.test.mjs).
+test('dates en français par le formateur commun (« 1er octobre 2026 »), passent à la ligne entre leurs mots', () => {
   const page = normalize(html());
   assert.ok(!/>1 (janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)/.test(page), '« 1 octobre » au lieu de « 1er »');
   if (PLAN.done.some((l) => String(l.finished).endsWith('-01'))) assert.match(page, />1er /);
-  assert.match(html(), /<time datetime="\d{4}-\d{2}-\d{2}" class="whitespace-nowrap"/);
+  assert.match(html(), /<time datetime="\d{4}-\d{2}-\d{2}"[^>]*>\d+(er)? \S+ \d{4}<\/time>/);
+  assert.doesNotMatch(html(), /<time [^>]*whitespace-nowrap/);
 });
 
 test('sous chaque lot, l’état du groupe n’est pas répété ; aucun identifiant de lot visible', () => {

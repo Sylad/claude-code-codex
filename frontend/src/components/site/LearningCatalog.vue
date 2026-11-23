@@ -63,16 +63,20 @@ function clearFilters() {
 <template>
   <div>
     <div class="flex flex-col gap-4 mb-8">
+      <!-- L81 : libellé visible au lieu d'un texte indicatif tronqué au téléphone (comme /videos). -->
+      <label for="learning-recherche" class="-mb-2 text-sm text-ink-muted">
+        Rechercher une source <span class="whitespace-nowrap">(auteur, sujet, tag)</span>
+      </label>
       <div class="relative">
         <Search
           :size="16"
+          aria-hidden="true"
           class="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted"
         />
         <input
           v-model="searchQuery"
+          id="learning-recherche"
           type="search"
-          aria-label="Rechercher une source"
-          placeholder="Rechercher (auteur, sujet, tag)..."
           class="w-full pl-10 pr-4 py-2.5 rounded-lg bg-paper-elevated border border-white/10 text-ink placeholder:text-ink-muted focus:outline-none focus:border-claude focus-visible:ring-2 focus-visible:ring-claude transition-colors"
         />
       </div>
@@ -92,7 +96,7 @@ function clearFilters() {
           @click="toggleKind(k)"
         >
           <span>{{ KIND_LABELS[k] }}</span>
-          <span class="font-mono text-xs opacity-70">{{ counts[k] }}</span>
+          <span class="font-mono text-xs">{{ counts[k] }}</span>
         </button>
 
         <button
@@ -150,14 +154,16 @@ function clearFilters() {
                 </a>
               </h3>
             </div>
+            <!-- L81 : l'icône double le lien du titre : un seul arrêt du clavier par carte (comme /videos). -->
             <a
               :href="entry.url"
               target="_blank"
               rel="noopener"
-              class="p-1.5 -m-1.5 text-ink-muted hover:text-claude transition-colors"
-              :aria-label="`Ouvrir ${entry.name}`"
+              tabindex="-1"
+              aria-hidden="true"
+              class="p-1.5 -m-1.5 text-ink-muted hover:text-claude transition-colors shrink-0"
             >
-              <ExternalLink :size="16" />
+              <ExternalLink :size="16" aria-hidden="true" />
             </a>
           </div>
 

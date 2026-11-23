@@ -181,6 +181,12 @@
   main table {
     overflow-wrap: normal;
   }
+  /* L81 — une date (formatDay, src/lib/format-date.mjs) passe à la ligne entre ses mots, jamais au
+     milieu d'un nombre (« 202|6 ») : ses mots, courts, ne se coupent pas. */
+  time {
+    overflow-wrap: normal;
+    word-break: normal;
+  }
   main :where(.flex, .inline-flex, .grid) > *,
   body > footer :where(.flex, .grid) > * {
     min-width: 0;
