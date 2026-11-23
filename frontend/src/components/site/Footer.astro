@@ -60,16 +60,18 @@ const isCurrent = (href: string) => pathname === href || pathname.startsWith(`${
         href="https://claude.com/claude-code"
         target="_blank"
         rel="noopener"
+        aria-label="Claude Code (Anthropic) (nouvel onglet)"
       >
-        Claude Code (Anthropic)
+        <span>Claude Code (Anthropic)&nbsp;<span aria-hidden="true">↗</span></span>
       </a>
       <a
         class="inline-flex items-center min-h-11 hover:text-ink transition-colors"
         href="https://github.com/Sylad/claude-code-codex"
         target="_blank"
         rel="noopener"
+        aria-label="Repo GitHub (nouvel onglet)"
       >
-        Repo GitHub
+        <span>Repo GitHub&nbsp;<span aria-hidden="true">↗</span></span>
       </a>
     </div>
   </div>
@@ -89,8 +91,9 @@ const isCurrent = (href: string) => pathname === href || pathname.startsWith(`${
           href="https://claude.com/claude-code"
           target="_blank"
           rel="noopener"
+          aria-label="Claude Code (nouvel onglet)"
         >
-          Claude Code
+          <span>Claude Code&nbsp;<span aria-hidden="true">↗</span></span>
         </a>
       </p>
     </div>

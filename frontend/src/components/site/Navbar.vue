@@ -162,7 +162,14 @@ const panelId = (label: string) => `panneau-${label.toLowerCase()}`;
     <!-- Seuils en rem dans les requêtes média (= em : taille de police par défaut du
          navigateur) : avec une police par défaut plus grande, le menu du téléphone prend
          le relais plus tôt au lieu d'une barre qui déborde. -->
-    <nav class="mx-auto max-w-6xl px-5 sm:px-8 h-16 flex items-center justify-between gap-3">
+    <!-- L12 — la barre est un conteneur : sous la barre du bureau, quand « claude-code-codex »
+         ne tient pas entier à côté du bouton du menu (320 px, texte 200 % : il tombait à « c… »),
+         on ne garde que l'icône — le nom du lien reste dans aria-label. La requête lit la boîte de
+         contenu (sans les marges) : icône et écart 2,6em + nom 8,1em + écart et bouton 3,5em =
+         14,25em, seuil à 14,75em. Requête de
+         conteneur en em (police de la barre) : elle suit le texte agrandi, par la police par défaut
+         du navigateur comme par la taille du texte de la page. -->
+    <nav class="@container mx-auto max-w-6xl px-5 sm:px-8 h-16 flex items-center justify-between gap-3">
       <a
         href="/"
         class="flex min-w-0 lg:shrink-0 items-center gap-2.5 whitespace-nowrap group"
@@ -173,7 +180,7 @@ const panelId = (label: string) => `panneau-${label.toLowerCase()}`;
         >
           <BookOpenText :size="16" />
         </span>
-        <span class="min-w-0 truncate font-mono text-sm tracking-tight text-ink">
+        <span data-wordmark class="min-w-0 truncate font-mono text-sm tracking-tight text-ink max-lg:@max-[14.75em]:hidden">
           claude-code-codex
         </span>
       </a>

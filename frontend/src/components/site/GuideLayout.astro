@@ -44,7 +44,7 @@ const autres = GUIDES.filter((g) => g.href !== ici);
     </aside>
 
     <article class="mx-auto max-w-[44rem] min-w-0 xl:mx-0" data-guide>
-      <div id="sommaire" class="scroll-mt-24 space-y-4">
+      <div id="sommaire" class="scroll-mt-4 space-y-4">
         {Astro.slots.has("fraicheur") ? (
           <EtudeFraicheur depots={depots} date={date}><slot name="fraicheur" /></EtudeFraicheur>
         ) : (
