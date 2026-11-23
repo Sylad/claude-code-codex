@@ -6,7 +6,10 @@
  * L81 : une date porte des espaces ORDINAIRES entre ses mots. Entièrement insécable, « 22 novembre
  * 2026 » sortait de l'écran à 320 px texte 200 % (27 à 92 px), ou se coupait au milieu de l'année
  * (« 202|6 ») sous `overflow-wrap: anywhere` ; elle passe maintenant à la ligne entre ses mots, et
- * un nombre ne se coupe jamais (règle `time` de src/styles/global.css). Module pur en .mjs,
+ * un nombre ne se coupe jamais (règle `time` de src/styles/global.css).
+ * L83 : sauf entre le jour et le mois, qu'une insécable garde ensemble (typographie française : à
+ * 375-390 px, « prochaine avant le 22 | décembre 2026 » laissait le jour seul en fin de ligne) ; la
+ * date passe à la ligne avant l'année (« 22 décembre | 2026 »). Module pur en .mjs,
  * importable tel quel par node --test (tests/format-date.test.mjs).
  */
 const NBSP = ' ';
@@ -20,8 +23,15 @@ const LONG = { day: 'numeric', month: 'long', year: 'numeric' };
  */
 export function formatLongDate(date, timeZone) {
   const parts = new Intl.DateTimeFormat('fr-FR', { ...LONG, ...(timeZone ? { timeZone } : {}) }).formatToParts(date);
+  // L83 : insécable entre le jour et le mois (« 22 décembre », jamais « 22 | décembre »), espace
+  // ordinaire ailleurs : la date passe à la ligne avant l'année.
   return parts
-    .map((p) => (p.type === 'day' && p.value === '1' ? '1er' : p.type === 'literal' ? p.value.replace(/\s/g, ' ') : p.value))
+    .map((p, i) => {
+      if (p.type === 'day') return p.value === '1' ? '1er' : p.value;
+      if (p.type !== 'literal') return p.value;
+      const apresJour = parts[i - 1]?.type === 'day' && parts[i + 1]?.type === 'month';
+      return p.value.replace(/\s/g, apresJour ? NBSP : ' ');
+    })
     .join('');
 }
 
@@ -31,6 +41,21 @@ export function formatLongDate(date, timeZone) {
  */
 export function formatDay(day) {
   return formatLongDate(new Date(`${day}T12:00:00Z`), 'UTC');
+}
+
+/**
+ * L83 — la même date en deux groupes pour un élément `<time>` (composant DateLongue.astro) :
+ * « jour mois » et l'année. Le composant met « jour mois » dans une boîte en ligne : les deux mots
+ * restent ensemble quand ils tiennent sur la ligne, et ne passent à la ligne entre eux que si, même
+ * seuls sur une ligne, ils ne tiennent pas (« 23 NOVEMBRE » en majuscules à chasse fixe dans la carte
+ * de /nouveautes à 320 px texte 200 % : 142 px de large) — là où l'insécable sortait du bloc. D'où une
+ * espace ORDINAIRE dans `jourMois` : c'est la boîte qui les garde ensemble.
+ * @param {string} day « YYYY-MM-DD » @returns {{ jourMois: string, annee: string }}
+ */
+export function formatDayParts(day) {
+  const s = formatDay(day);
+  const i = s.lastIndexOf(' ');
+  return { jourMois: s.slice(0, i).replaceAll(NBSP, ' '), annee: s.slice(i + 1) };
 }
 
 /**

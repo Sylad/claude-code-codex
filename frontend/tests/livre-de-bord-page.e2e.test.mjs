@@ -9,7 +9,7 @@ import { DIST, setupBrowser } from './lib/e2e-dist.mjs';
 import { ENTRIES } from '../src/data/livre-de-bord.ts';
 import { entryId } from '../src/lib/livre-de-bord.ts';
 import { PRIVATE_PATTERNS } from '../src/lib/livre-de-bord.ts';
-import { formatDay } from '../src/lib/format-date.mjs';
+import { formatDayParts } from '../src/lib/format-date.mjs';
 
 const PAGE = join(DIST, 'livre-de-bord', 'index.html');
 const html = () => readFileSync(PAGE, 'utf8');
@@ -27,7 +27,9 @@ test('R8 — une entrée par semaine, dans l’ordre, datée en français, avec 
   assert.deepEqual(arts.map((m) => m[1]), ENTRIES.map((e) => e.semaine));
   arts.forEach((m, i) => {
     const e = ENTRIES[i];
-    assert.match(m[2], new RegExp(`<time datetime="${e.date}"[^>]*>${formatDay(e.date)}</time>`), `${e.semaine} : date`);
+    // L83 : DateLongue.astro, « jour mois » dans sa boîte en ligne puis l'année.
+    const { jourMois, annee } = formatDayParts(e.date);
+    assert.match(m[2], new RegExp(`<time datetime="${e.date}"[^>]*><span class="date-jour-mois">${jourMois}</span> ${annee}</time>`), `${e.semaine} : date`);
     assert.match(m[0], new RegExp(`id="${entryId(e)}"`));
     const titres = { appris: 'Ce que nous avons appris', fabrique: 'Ce que nous fabriquons', teste: 'Ce que nous avons testé', ...e.rubriques };
     for (const h of Object.values(titres)) {

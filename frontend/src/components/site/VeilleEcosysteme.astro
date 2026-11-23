@@ -2,7 +2,7 @@
 // L21 — actualités de l'écosystème retenues par la veille : datées, sourcées, avec la page mise à jour.
 import { actualites, verifierActualites } from "@/data/veille-ecosysteme.mjs";
 import { PAGES_REVUES } from "@/lib/revue-contenu.mjs";
-import { formatDay } from "@/lib/format-date.mjs";
+import DateLongue from "./DateLongue.astro";
 
 verifierActualites(new Date());
 ---
@@ -19,7 +19,7 @@ verifierActualites(new Date());
       <li class="rounded-lg border border-white/10 bg-paper-elevated p-4 [overflow-wrap:anywhere]" data-actualite>
         <p class="font-mono text-xs text-ink-muted">
           {a.nature === "publie" ? "Publié le " : "Relevé le "}
-          <time datetime={a.date}>{formatDay(a.date)}</time>
+          <DateLongue day={a.date} />
         </p>
         <h3 class="mt-1 text-base font-medium text-ink">{a.titre}</h3>
         <p class="mt-2 text-sm text-ink-muted leading-relaxed">{a.texte}</p>

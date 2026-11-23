@@ -187,6 +187,12 @@
     overflow-wrap: normal;
     word-break: normal;
   }
+  /* L83 — « jour mois » d'une date (DateLongue.astro) : boîte en ligne, ensemble tant qu'ils tiennent
+     sur une ligne, séparés seulement s'ils ne tiennent pas même seuls (largeur bornée au bloc). */
+  .date-jour-mois {
+    display: inline-block;
+    max-width: 100%;
+  }
   main :where(.flex, .inline-flex, .grid) > *,
   body > footer :where(.flex, .grid) > * {
     min-width: 0;

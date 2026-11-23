@@ -3,7 +3,7 @@
 // (jamais « 1 octobre 2026 »), heure « 20 h 42 », espaces insécables.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { formatDay, formatLongDate, formatTime, frenchDatesIn } from '../src/lib/format-date.mjs';
+import { formatDay, formatDayParts, formatLongDate, formatTime, frenchDatesIn } from '../src/lib/format-date.mjs';
 
 const nb = (s) => s.replaceAll(' ', ' ');
 
@@ -16,15 +16,27 @@ test('formatDay (YYYY-MM-DD) : « 1er » le premier du mois, chiffre simple ensu
 
 // L81 : une date entièrement insécable (« 22 novembre 2026 ») débordait de 27 à 92 px à 320 px texte
 // 200 %, ou se coupait au milieu de l'année (« 202|6 ») sous `overflow-wrap: anywhere`. Une date passe
-// désormais à la ligne entre ses mots, espaces ordinaires ; un nombre ne se coupe jamais (CSS de `time`,
-// tests/l12-gabarit-ux.e2e.test.mjs).
-test('formatDay : espaces ordinaires entre les mots, la date peut passer à la ligne entre eux', () => {
-  for (const day of ['2026-10-01', '2026-11-22', '2026-09-21']) {
+// désormais à la ligne entre ses mots ; un nombre ne se coupe jamais (CSS de `time`).
+// L83 : sauf entre le jour et le mois, qu'une insécable garde ensemble (« prochaine avant le 22 |
+// décembre 2026 » à 375-390 px laissait le jour seul en fin de ligne) ; espace ordinaire avant l'année.
+test('formatDay : insécable entre le jour et le mois, espace ordinaire avant l’année', () => {
+  for (const [day, jour, mois] of [['2026-10-01', '1er', 'octobre'], ['2026-12-22', '22', 'décembre'], ['2026-09-21', '21', 'septembre']]) {
     const s = formatDay(day);
-    assert.doesNotMatch(s, /[\u00a0\u202f]/, `insécable dans « ${s} »`);
-    assert.equal(s.split(' ').length, 3, s);
+    assert.equal(s, `${jour}\u00a0${mois} 2026`, JSON.stringify(s));
   }
-  assert.deepEqual(formatDay('2026-10-01').split(' '), ['1er', 'octobre', '2026']);
+  assert.equal(formatLongDate(new Date('2026-09-30T22:30:00Z'), 'Europe/Paris'), '1er\u00a0octobre 2026');
+});
+
+// L83 : pour un <time> (DateLongue.astro), « jour mois » à part, espace ordinaire : c'est la boîte en
+// ligne qui les garde ensemble, et ils peuvent encore se séparer quand ils ne tiennent pas sur une ligne
+// entière (« 23 NOVEMBRE » à chasse fixe, carte de /nouveautes à 320 px texte 200 %).
+test('formatDayParts : « jour mois » (espace ordinaire) et l’année, même texte que formatDay', () => {
+  assert.deepEqual(formatDayParts('2026-12-22'), { jourMois: '22 décembre', annee: '2026' });
+  assert.deepEqual(formatDayParts('2026-10-01'), { jourMois: '1er octobre', annee: '2026' });
+  for (const day of ['2026-01-11', '2026-11-23']) {
+    const { jourMois, annee } = formatDayParts(day);
+    assert.equal(`${jourMois} ${annee}`, nb(formatDay(day)));
+  }
 });
 
 test('formatLongDate (instant) : dans le fuseau demandé', () => {

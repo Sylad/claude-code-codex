@@ -1,0 +1,19 @@
+---
+// L83 — date longue d'un jour « YYYY-MM-DD » dans un <time>, seule façon d'afficher une date isolée
+// (Nouveautés, Plan de travail, Livre de bord, bloc « Dernière revue », veille de l'écosystème).
+// « jour mois » forme une boîte en ligne (.date-jour-mois, src/styles/global.css) : le jour n'est
+// jamais laissé seul en fin de ligne (« prochaine avant le 22 | décembre 2026 » à 375-390 px), la date
+// passe à la ligne avant l'année, et « jour | mois » ne se séparent que s'ils ne tiennent pas ensemble
+// sur une ligne entière (jamais hors du bloc, jamais un nombre coupé). Texte : src/lib/format-date.mjs.
+import { formatDayParts } from "@/lib/format-date.mjs";
+
+interface Props {
+  day: string;
+  class?: string;
+}
+
+const { day, class: classe } = Astro.props;
+const { jourMois, annee } = formatDayParts(day);
+---
+
+<time datetime={day} class={classe}><span class="date-jour-mois">{jourMois}</span> {annee}</time>

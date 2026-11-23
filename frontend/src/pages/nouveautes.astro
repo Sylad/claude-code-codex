@@ -10,7 +10,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { formatDay } from "@/lib/format-date.mjs";
+import DateLongue from "@/components/site/DateLongue.astro";
 import news from "../../public/nouveautes-data/nouveautes.json";
 
 interface NewsEntry {
@@ -25,8 +25,6 @@ interface NewsEntry {
 const BASE = "/nouveautes-data";
 const entries = (news as { entries: NewsEntry[] }).entries;
 
-// Formateur commun (Nouveautés, séparateur « Déjà vu … », Plan de travail) : « 1er octobre 2026 ».
-const formatDate = formatDay;
 
 // Dimensions lues dans l'en-tête PNG (IHDR) : réservent la place des captures,
 // pas de saut de mise en page au chargement.
@@ -73,7 +71,7 @@ const pngSize = (rel: string) => {
                   sans survol, après la date et la marque « Nouveau » ; le titre reste du texte
                   (un toucher sur le titre écrasait le presse-papiers et faisait défiler). */}
               <p class="news-date flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-xs uppercase tracking-wider text-claude">
-                <span class="inline-flex items-center"><time datetime={e.date}>{formatDate(e.date)}</time><span class="news-new-slot"></span></span>
+                <span class="inline-flex items-center"><DateLongue day={e.date} /><span class="news-new-slot"></span></span>
                 <button type="button" class="news-copy" data-slug={e.slug} data-state="idle">
                   <svg class="news-copy-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
@@ -84,7 +82,7 @@ const pngSize = (rel: string) => {
                   <span class="news-copy-labels" aria-hidden="true">
                     <span class="news-copy-label" data-for="idle">Copier le lien</span>
                     <span class="news-copy-label is-hidden" data-for="ok">Lien copié</span>
-                    <span class="news-copy-label is-hidden" data-for="ko">Copie impossible</span>
+                    <span class="news-copy-label is-hidden" data-for="ko">Non copié</span>
                   </span>
                   <span class="sr-only">Copier le lien : {e.title}</span>
                 </button>
@@ -234,6 +232,20 @@ const pngSize = (rel: string) => {
   }
   .news-copy-labels {
     display: inline-grid;
+  }
+  /* L83 : à 320 px texte 200 %, la ligne de date n'a que 142 px ; avec la marge intérieure et l'icône,
+     la case des libellés en recevait 75 et « Copier le » en sortait de 26 px (« Lien copié » 34 px,
+     « Copie impossible » 7 px ; WCAG 1.4.4, 1.4.10). Sur une ligne étroite (container query, en em de
+     la ligne de date), la marge intérieure et l'écart se resserrent ; l'échec s'écrit « Non copié »,
+     dont les mots tiennent dans la case (« impossible » seul y prenait 132 px). */
+  .news-date {
+    container-type: inline-size;
+  }
+  @container (max-width: 12em) {
+    .news-copy {
+      gap: 0.3rem;
+      padding-inline: 0.35rem;
+    }
   }
   /* L81 : à 320 px texte 200 %, « Copie impossible » insécable sortait de l'écran (27 px) ;
      le libellé passe à la ligne entre ses mots, sans couper un mot. */

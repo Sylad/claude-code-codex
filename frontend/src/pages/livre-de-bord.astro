@@ -12,7 +12,7 @@ import { ENTRIES } from "@/data/livre-de-bord";
 import { findProblems, entryId, paragraphs, type BookItem } from "@/lib/livre-de-bord";
 import { SCHEMAS } from "@/data/livre-de-bord-schemas";
 import BookSchema from "@/components/site/BookSchema.astro";
-import { formatDay } from "@/lib/format-date.mjs";
+import DateLongue from "@/components/site/DateLongue.astro";
 
 // Le build se lance depuis frontend/ : les pages sont à src/pages.
 const pages = readdirSync(join(process.cwd(), "src", "pages"), { recursive: true })
@@ -73,7 +73,7 @@ const external = (href: string) => href.startsWith("https://");
           {e.theme ?? `Semaine ${e.semaine.slice(-2)}`}
         </h2>
         <p class="mt-1 font-mono text-sm text-ink-muted">
-          {e.theme && <span>Semaine {e.semaine.slice(-2)} · </span>}<time datetime={e.date}>{formatDay(e.date)}</time>
+          {e.theme && <span>Semaine {e.semaine.slice(-2)} · </span>}<DateLongue day={e.date} />
         </p>
         <p class="mt-4 text-ink leading-relaxed">{e.resume}</p>
         {e.schema && <BookSchema id={e.schema} />}

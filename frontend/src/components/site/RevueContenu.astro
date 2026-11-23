@@ -3,6 +3,7 @@
 // La mention « en retard » est rendue au build ; un petit script la révèle aussi dans le navigateur
 // le jour où la page passe en retard sans nouveau build (site statique).
 import { PAGES_REVUES, RYTHME_JOURS, etatRevue, verifierRevues } from "@/lib/revue-contenu.mjs";
+import DateLongue from "./DateLongue.astro";
 
 interface Props {
   page: keyof typeof PAGES_REVUES;
@@ -26,11 +27,11 @@ const idDetails = `revue-${page}-details`;
   data-revue-prochaine={e.prochaine}
 >
   <p>
-    <span class="text-ink">Dernière revue : <time datetime={e.derniere}>{e.derniereLabel}</time></span>
+    <span class="text-ink">Dernière revue : <DateLongue day={e.derniere} /></span>
     <span aria-hidden="true"> · </span>
     revue tous les {RYTHME_JOURS} jours
     <span aria-hidden="true"> · </span>
-    prochaine avant le <time datetime={e.prochaine}>{e.prochaineLabel}</time>
+    prochaine avant le <DateLongue day={e.prochaine} />
   </p>
   <p
     data-revue-retard

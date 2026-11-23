@@ -54,8 +54,10 @@ test('une entrée par nouveauté, dans l’ordre du JSON (la plus récente en ha
 
 // L81 : la date passe à la ligne entre ses mots (insécable, elle sortait de l'écran de 27 px à 320 px
 // texte 200 %) ; aucun nombre n'est coupé (règle `time` du CSS, mesurée par tests/l12-gabarit-ux.e2e.test.mjs).
+// L83 : « jour mois » dans une boîte en ligne (DateLongue.astro) : le jour ne reste pas seul en fin de
+// ligne (tests/l83-dates-copier.e2e.test.mjs).
 test('date par le formateur commun (« 1er octobre 2026 »), passe à la ligne entre ses mots', () => {
-  assert.match(html(), /<time datetime="2026-10-01"[^>]*>1er octobre 2026<\/time>/);
+  assert.match(html(), /<time datetime="2026-10-01"[^>]*><span class="date-jour-mois">1er octobre<\/span> 2026<\/time>/);
   assert.doesNotMatch(html(), /<time [^>]*whitespace-nowrap/);
 });
 

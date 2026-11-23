@@ -14,7 +14,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { formatDay } from "@/lib/format-date.mjs";
+import DateLongue from "@/components/site/DateLongue.astro";
 import { parsePublicPlan, planSummary, stepsLabel, RECENT_DONE, type PublicLot } from "@/lib/plan-public";
 import news from "../../public/nouveautes-data/nouveautes.json";
 
@@ -95,7 +95,7 @@ const sections: Section[] = [
                 <p class="plan-lot-title text-base sm:text-lg text-ink leading-snug [overflow-wrap:anywhere]">{l.title}</p>
                 {(l.finished || l.tasks) && (
                   <p class="plan-lot-meta mt-1.5 flex flex-wrap gap-x-4 gap-y-1 font-mono text-sm text-ink-muted">
-                    {l.finished && <time datetime={l.finished}>{formatDay(l.finished)}</time>}
+                    {l.finished && <DateLongue day={l.finished} />}
                     {l.tasks && <span class="plan-tasks [overflow-wrap:normal]">{stepsLabel(l.tasks)}</span>}
                   </p>
                 )}
