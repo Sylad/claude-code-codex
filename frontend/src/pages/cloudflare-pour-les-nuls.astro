@@ -96,8 +96,8 @@ const DEPOTS = ["developpeur-gitops"];
     svc["Service K8s\nmaritime-frontend:80"]
   end
   visiteur -->|"HTTPS"| cf
-  cfd -.->|"1 ouvre le tunnel\n(sortant, QUIC)"| cf
-  cf -.->|"2 requêtes,\ndans le tunnel"| cfd
+  cfd -.->|"1 ouvre\nle tunnel\n(sortant, QUIC)"| cf
+  cf -.->|"2 requêtes,\ndans le\ntunnel"| cfd
   cfd --> svc`}
       />
       <p>

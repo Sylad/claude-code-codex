@@ -3,7 +3,7 @@
 //  R1 (majeur, Nielsen 2 et 4) : la légende du schéma du tunnel de Cloudflare dit ce que montre le dessin —
 //     aucune connexion ouverte depuis Internet ; les requêtes passent DANS le tunnel, dessinées du même
 //     trait que les connexions sortantes, sens annoté.
-//  m1 : à 390 px, ce schéma tient dans son cadre (341 px pour 333 au r1).
+//  m1 : à 390 px, ce schéma tient dans son cadre (341 px pour 333 au r1) ; r3 : à 360 px aussi, barre classique.
 //  m2 : aucune arête du schéma ne barre le titre d'un cadre (« Chez toi … »).
 //  m3 : à 320 px et texte à 200 %, plus de coupure au milieu de « Kubernetes » (h1), « Sommaire », « Spring »
 //     (cartes de traduction) ; moins de mots coupés en tout ; toujours aucun défilement horizontal.
@@ -14,6 +14,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { createRequire } from 'node:module';
 import { DIST, setupBrowser } from './lib/e2e-dist.mjs';
 
 const CF = '/cloudflare-pour-les-nuls/';
@@ -87,19 +88,33 @@ test('R1 — dans le dessin, les requêtes passent par le tunnel : même trait q
   assert.match(r.legende, /Aucune connexion n'est ouverte depuis Internet/);
 });
 
-test('m1 — à 390 px, le schéma du tunnel tient dans son cadre (police réelle)', { timeout: 120_000 }, async (t) => {
+// r3 (revue UX r2, n1) : à 360 px, avec une barre de défilement classique (≈ 15 px, celle d'un navigateur de
+// bureau rétréci — le Chromium de test la cache par défaut), le schéma débordait encore de 8 px (311 dans 303).
+// Mesuré avec et sans cette barre, à 390 et 360 px.
+async function navigateurBarreClassique() {
+  const require = createRequire(new URL('../package.json', import.meta.url));
+  const { chromium } = require('playwright-core');
+  return chromium.launch({ ignoreDefaultArgs: ['--hide-scrollbars'] });
+}
+
+test('m1 — à 390 et 360 px, le schéma du tunnel tient dans son cadre (police réelle, barre de défilement classique ou non)', { timeout: 180_000 }, async (t) => {
   const env = await setupBrowser(t);
   if (!env) return;
-  for (const width of [390, 360]) {
-    const { context, page } = await ouvrir(env, CF, width);
-    if (!(await schemaTunnel(t, page))) { await context.close(); return; }
-    const r = await page.evaluate((s) => {
-      const c = document.querySelector(s).querySelector('[data-mermaid-inline]');
-      return { cadre: c.clientWidth, contenu: c.scrollWidth, region: c.getAttribute('role') };
-    }, TUNNEL);
-    await context.close();
-    assert.ok(r.contenu <= r.cadre, `${width} px : ${r.contenu} px de schéma pour un cadre de ${r.cadre} px`);
-    assert.equal(r.region, null, `${width} px : le schéma défile (région)`);
+  const classique = await navigateurBarreClassique();
+  t.after(() => classique.close());
+  for (const [nom, browser] of [['barre cachée', env.browser], ['barre classique', classique]]) {
+    for (const width of [390, 360]) {
+      const { context, page } = await ouvrir({ ...env, browser }, CF, width);
+      if (!(await schemaTunnel(t, page))) { await context.close(); return; }
+      const r = await page.evaluate((s) => {
+        const c = document.querySelector(s).querySelector('[data-mermaid-inline]');
+        return { cadre: c.clientWidth, contenu: c.scrollWidth, region: c.getAttribute('role'), barre: innerWidth - document.documentElement.clientWidth };
+      }, TUNNEL);
+      await context.close();
+      if (nom === 'barre classique') assert.ok(r.barre > 0, `${width} px : barre de défilement non classique, rien de mesuré`);
+      assert.ok(r.contenu <= r.cadre, `${width} px, ${nom} : ${r.contenu} px de schéma pour un cadre de ${r.cadre} px`);
+      assert.equal(r.region, null, `${width} px, ${nom} : le schéma défile (région)`);
+    }
   }
 });
 
