@@ -272,6 +272,8 @@ lots:
     review: { date: 2026-11-23, verdict: "conforme (lead) fd64170 : :focus-visible 2 px accent décalé 2 px (2.4.7/1.4.11), logo → icône par requête de conteneur en em sous lg, scroll-padding-top 5rem (2.4.11) avec scroll-mt réduits, surtitres = chemin de la barre, liens externes du pied ↗ masqué + « (nouvel onglet) » ; 5 tests rouges sur 1c7fac7 ; aucun test existant affaibli. Reste : aria-label du bouton GitHub de /about contient « ↗ » (QA L11).", commit: fd64170885eaf79070649956d799fee7519bbe52 }
     ux: { date: 2026-11-23, verdict: "conforme (lead) : captures avant/après regardées par le run (barre 320/200 %, focus bureau, pied, menu 390) ; non mesurés : 600, 840 px, paysage 844×390" }
     finished: 2026-11-23
+    notes:
+      - { date: 2026-11-23, text: "QA prod (tmp/qa-codex-L12.md) conforme sauf 1 mineur : contour de focus orange seulement sur le logo et 2 liens du pied ; les autres liens (barre, pied) prennent la couleur du texte (2 px, ≥ 3:1, donc WCAG tenu) — règles locales qui écrasent :focus-visible ; à unifier" }
   - id: L13
     title: "Page Nouveautés : vérifier l'existant et le brancher sur cadence news (signature commune des apps)"
     status: done
@@ -829,6 +831,7 @@ lots:
     notes:
       - { date: 2026-11-23, text: "Depuis L12 (23-11) : à 320 px texte 200 %, /plan-de-travail déborde de 92 px et /nouveautes de 27 px à cause d'une date insécable (« 22 novembre 2026 ») ; ces deux pages ne sont pas dans tests/l12-gabarit-ux.e2e.test.mjs : les y ajouter une fois corrigées. Aussi : aria-label du bouton GitHub de /about contient « ↗ » non masqué." }
     started: 2026-11-23
+    review: { date: 2026-11-23, verdict: "conforme 2346b03 + 398804f : format-date en espaces ordinaires + règle CSS time (pas de coupure de nombre), nowrap retiré des dates, libellé visible au-dessus de la recherche, icône doublon tabindex -1/aria-hidden, opacity-70 retiré (4,39:1), ↗ hors aria-label ; tests L81 rouges avant, 4 anciens tests mis à la nouvelle règle avec raison ; 398804f = tests seuls (moins de Chromium).", commit: 398804f99055f8786fb630fcc903efef661c397e }
   - id: L82
     title: "Vidéos : descriptions réécrites en français (« Chaînes & talks curés », « Demos de launch », « walkthroughs de features », « ship »…), Nielsen 2 (constat L10)"
     public: "Page Vidéos : des descriptions en français"
