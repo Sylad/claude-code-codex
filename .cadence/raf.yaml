@@ -841,6 +841,7 @@ lots:
     status: done
     estimate: 1
     visible: true
+    delivered: { date: 2026-11-23, sha: 607cec147c4fb7bda66516c747600d358cbdc11d }
     created: 2026-11-23
     started: 2026-11-23
     review: { date: 2026-11-23, verdict: "conforme (lead) : diff b91942a relu — textes et étiquettes de /videos en français, aucune logique touchée hors libellé de recherche coupé en deux spans nowrap ; test l82 rouge avant (40 anglicismes + 1 tu) puis vert ; note : titre de la conférence de Boris Cherny traduit (il était déjà à moitié traduit), réversible", commit: b91942a14c56fb8045b711f47315cbaa8bd72083 }
