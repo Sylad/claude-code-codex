@@ -822,12 +822,13 @@ lots:
   - id: L81
     title: "Vidéos et Learning, suites de la revue L10 : dates du bloc « Dernière revue » coupées à 320 px/200 % (« 202|6 », espaces insécables de format-date) ; texte d'exemple du champ tronqué (« Rechercher ( ») ; deux arrêts clavier par carte (titre + icône, 30 pour 15) sur /videos et /learning ; contraste du nombre des filtres de /learning (opacity-70) à mesurer"
     public: "Pages Vidéos et Learning : dates, recherche et clavier plus simples"
-    status: todo
+    status: doing
     estimate: 1
     visible: true
     created: 2026-11-23
     notes:
       - { date: 2026-11-23, text: "Depuis L12 (23-11) : à 320 px texte 200 %, /plan-de-travail déborde de 92 px et /nouveautes de 27 px à cause d'une date insécable (« 22 novembre 2026 ») ; ces deux pages ne sont pas dans tests/l12-gabarit-ux.e2e.test.mjs : les y ajouter une fois corrigées. Aussi : aria-label du bouton GitHub de /about contient « ↗ » non masqué." }
+    started: 2026-11-23
   - id: L82
     title: "Vidéos : descriptions réécrites en français (« Chaînes & talks curés », « Demos de launch », « walkthroughs de features », « ship »…), Nielsen 2 (constat L10)"
     public: "Page Vidéos : des descriptions en français"
