@@ -824,7 +824,7 @@ lots:
   - id: L81
     title: "Vidéos et Learning, suites de la revue L10 : dates du bloc « Dernière revue » coupées à 320 px/200 % (« 202|6 », espaces insécables de format-date) ; texte d'exemple du champ tronqué (« Rechercher ( ») ; deux arrêts clavier par carte (titre + icône, 30 pour 15) sur /videos et /learning ; contraste du nombre des filtres de /learning (opacity-70) à mesurer"
     public: "Pages Vidéos et Learning : dates, recherche et clavier plus simples"
-    status: doing
+    status: done
     estimate: 1
     visible: true
     created: 2026-11-23
@@ -832,12 +832,19 @@ lots:
       - { date: 2026-11-23, text: "Depuis L12 (23-11) : à 320 px texte 200 %, /plan-de-travail déborde de 92 px et /nouveautes de 27 px à cause d'une date insécable (« 22 novembre 2026 ») ; ces deux pages ne sont pas dans tests/l12-gabarit-ux.e2e.test.mjs : les y ajouter une fois corrigées. Aussi : aria-label du bouton GitHub de /about contient « ↗ » non masqué." }
     started: 2026-11-23
     review: { date: 2026-11-23, verdict: "conforme 2346b03 + 398804f : format-date en espaces ordinaires + règle CSS time (pas de coupure de nombre), nowrap retiré des dates, libellé visible au-dessus de la recherche, icône doublon tabindex -1/aria-hidden, opacity-70 retiré (4,39:1), ↗ hors aria-label ; tests L81 rouges avant, 4 anciens tests mis à la nouvelle règle avec raison ; 398804f = tests seuls (moins de Chromium).", commit: 398804f99055f8786fb630fcc903efef661c397e }
+    ux: { date: 2026-11-23, verdict: "conforme Revue UX tmp/ux-codex-L81.md : 5 points tenus (0 date coupée sur 66 rendus, 0 px de défilement horizontal à 200 %, libellé 8,55:1, un arrêt par carte, compteur 7,01:1, GitHub sans ↗). Mineurs → L83 : m1 « Copier le lien » sort de 26 px de son bouton à 320/200 % ; m2 jour seul en fin de ligne (« 22 | décembre ») à 375-390 px. m3 /videos effet des filtres hors vue à 390 px, antérieur, note." }
+    finished: 2026-11-23
   - id: L82
     title: "Vidéos : descriptions réécrites en français (« Chaînes & talks curés », « Demos de launch », « walkthroughs de features », « ship »…), Nielsen 2 (constat L10)"
     public: "Page Vidéos : des descriptions en français"
     status: todo
     estimate: 1
     visible: true
+    created: 2026-11-23
+  - id: L83
+    title: "Suite de la revue UX de L81 : (m1) /nouveautes à 320 px texte 200 %, le libellé « Copier le lien » sort de 26 px de son bouton (WCAG 1.4.4, 1.4.10) ; (m2) une date ne laisse pas le jour seul en fin de ligne (« prochaine avant le 22 | décembre 2026 » à 375 et 390 px) : insécable entre le jour et le mois, sécable ailleurs, sans recouper un nombre ni sortir de l'écran à 320/200 %. Rapport : tmp/ux-codex-L81.md du dossier parent."
+    status: todo
+    estimate: 1
     created: 2026-11-23
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
