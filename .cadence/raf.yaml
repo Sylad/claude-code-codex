@@ -883,6 +883,7 @@ lots:
     visible: true
     created: 2026-11-23
     started: 2026-11-23
+    review: { date: 2026-11-23, verdict: "conforme (lead) : une fonction pure lierJourMois (jour 1er/1-31 + mois, mots entiers, scripts/styles/commentaires intacts) appliquée par le middleware au build ; recherche des catalogues insensible aux insécables ; test sur tout dist (249 paires → 0) et e2e 320/200 %, 390, 1440. Exception <wbr> dans DateLongue quand la paire ne tient pas sur la ligne : non-débordement d'abord (WCAG 1.4.10), accepté. Porte complète rejouée à la livraison.", commit: 5908eaedcb3c675cac850f81dd158687293af7d4 }
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
