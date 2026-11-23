@@ -872,10 +872,11 @@ lots:
     created: 2026-11-23
   - id: L86
     title: "Anglicismes restants hors /videos (QA L82 en prod, 23-11) : /learning/ « curés », « ship », « Filtres de curation » ; /about/ « curés » ; réécrire en français courant comme L82 (le tu/vous de /about reste à L18). /nouveautes garde son historique tel quel."
-    status: todo
+    status: doing
     estimate: 1
     visible: true
     created: 2026-11-23
+    started: 2026-11-23
   - id: L87
     title: "Suite de L83 (QA du 23-11, tmp/qa-codex-L83.md du dossier parent) : dans le texte courant, les dates gardent une espace simple entre le jour et le mois et le jour reste seul en fin de ligne — /nouveautes « 31 octobre 2026 » (1440), « 3 novembre 2026 » (390) ; /livre-de-bord « (29 octobre) », « 23 octobre » ; /learning « du 22 novembre 2026 » (390), cas que L83 disait corrigé. Insécable jour-mois appliquée au contenu rendu (markdown et données), pas seulement aux dates formatées par le code ; test sur le HTML construit de toutes les pages."
     status: done
