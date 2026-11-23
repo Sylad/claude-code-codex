@@ -853,6 +853,7 @@ lots:
     title: "Suite de la revue UX de L81 : (m1) /nouveautes à 320 px texte 200 %, le libellé « Copier le lien » sort de 26 px de son bouton (WCAG 1.4.4, 1.4.10) ; (m2) une date ne laisse pas le jour seul en fin de ligne (« prochaine avant le 22 | décembre 2026 » à 375 et 390 px) : insécable entre le jour et le mois, sécable ailleurs, sans recouper un nombre ni sortir de l'écran à 320/200 %. Rapport : tmp/ux-codex-L81.md du dossier parent."
     status: done
     estimate: 1
+    delivered: { date: 2026-11-23, sha: b1caf9e9e4ecf375a4d86cbad1b7b02f7ae8b7bb }
     created: 2026-11-23
     started: 2026-11-23
     review: { date: 2026-11-23, verdict: "conforme (lead) : insécable jour-mois par formatLongDate et boîte en ligne DateLongue.astro, container query sur la ligne de date, tests rouges avant / verts après (l83-dates-copier.e2e, format-date) ; note : « Non copié » moins explicite que « Copie impossible », accepté (place mesurée)", commit: 4d6ec4d8bbdf005595c1505f50178d4393ac2ccc }
