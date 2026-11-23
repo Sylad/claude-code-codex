@@ -5,6 +5,8 @@
 // jamais laissé seul en fin de ligne (« prochaine avant le 22 | décembre 2026 » à 375-390 px), la date
 // passe à la ligne avant l'année, et « jour | mois » ne se séparent que s'ils ne tiennent pas ensemble
 // sur une ligne entière (jamais hors du bloc, jamais un nombre coupé). Texte : src/lib/format-date.mjs.
+// L87 : insécable entre le jour et le mois, comme dans tout le texte rendu (src/lib/jour-mois.mjs), suivie
+// de <wbr>, seule coupure possible dans la boîte : elle ne sert que quand la boîte est plus large que la ligne.
 import { formatDayParts } from "@/lib/format-date.mjs";
 
 interface Props {
@@ -13,7 +15,7 @@ interface Props {
 }
 
 const { day, class: classe } = Astro.props;
-const { jourMois, annee } = formatDayParts(day);
+const { jour, mois, annee } = formatDayParts(day);
 ---
 
-<time datetime={day} class={classe}><span class="date-jour-mois">{jourMois}</span> {annee}</time>
+<time datetime={day} class={classe}><span class="date-jour-mois">{jour + '\u00a0'}<wbr />{mois}</span> {annee}</time>

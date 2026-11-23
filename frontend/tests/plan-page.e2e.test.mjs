@@ -101,7 +101,7 @@ test('dates en français par le formateur commun (« 1er octobre 2026 »), passe
   const page = normalize(html());
   assert.ok(!/>1 (janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)/.test(page), '« 1 octobre » au lieu de « 1er »');
   if (PLAN.done.some((l) => String(l.finished).endsWith('-01'))) assert.match(page, />1er /);
-  assert.match(html(), /<time datetime="\d{4}-\d{2}-\d{2}"[^>]*><span class="date-jour-mois">\d+(er)? \S+<\/span> \d{4}<\/time>/);
+  assert.match(html(), /<time datetime="\d{4}-\d{2}-\d{2}"[^>]*><span class="date-jour-mois">\d+(er)?\u00a0<wbr>\S+<\/span> \d{4}<\/time>/);
   assert.doesNotMatch(html(), /<time [^>]*whitespace-nowrap/);
 });
 

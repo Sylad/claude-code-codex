@@ -12,6 +12,8 @@ import { existsSync, mkdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { DIST, setupBrowser, worstPixelContrast } from './lib/e2e-dist.mjs';
 import { badgeLabel } from '../src/lib/news-badge.ts';
+import { lierJourMois } from '../src/lib/jour-mois.mjs';
+
 
 const DATA = JSON.parse(readFileSync(new URL('../public/nouveautes-data/nouveautes.json', import.meta.url), 'utf8'));
 const PAGE = join(DIST, 'nouveautes', 'index.html');
@@ -55,9 +57,9 @@ test('une entrée par nouveauté, dans l’ordre du JSON (la plus récente en ha
 // L81 : la date passe à la ligne entre ses mots (insécable, elle sortait de l'écran de 27 px à 320 px
 // texte 200 %) ; aucun nombre n'est coupé (règle `time` du CSS, mesurée par tests/l12-gabarit-ux.e2e.test.mjs).
 // L83 : « jour mois » dans une boîte en ligne (DateLongue.astro) : le jour ne reste pas seul en fin de
-// ligne (tests/l83-dates-copier.e2e.test.mjs).
+// ligne (tests/l83-dates-copier.e2e.test.mjs). L87 : insécable puis <wbr>, seule coupure de la boîte.
 test('date par le formateur commun (« 1er octobre 2026 »), passe à la ligne entre ses mots', () => {
-  assert.match(html(), /<time datetime="2026-10-01"[^>]*><span class="date-jour-mois">1er octobre<\/span> 2026<\/time>/);
+  assert.match(html(), /<time datetime="2026-10-01"[^>]*><span class="date-jour-mois">1er\u00a0<wbr>octobre<\/span> 2026<\/time>/);
   assert.doesNotMatch(html(), /<time [^>]*whitespace-nowrap/);
 });
 
@@ -735,7 +737,8 @@ test('L31 : chaque capture porte le alt écrit de l’entrée (image et aria-lab
     e.captures.forEach((c, i) => {
       const alt = e.alts?.[i];
       if (!alt) return;
-      const esc = alt.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+      // L87 : la page lie le jour à son mois (src/lib/jour-mois.mjs), attributs compris.
+      const esc = lierJourMois(alt).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
       const ok = (s) => block.includes(s) || block.includes(s.replace(/&#39;/g, "'"));
       assert.ok(ok(`alt="${esc}"`), `${e.slug} : alt de la capture ${i + 1} non repris`);
       assert.ok(ok(`aria-label="${esc} (agrandir)"`), `${e.slug} : aria-label de la capture ${i + 1} non repris`);

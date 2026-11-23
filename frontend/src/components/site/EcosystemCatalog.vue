@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
+import { espacesOrdinaires } from "@/lib/jour-mois.mjs";
 import { Search, Tag, ExternalLink, Check } from "lucide-vue-next";
 import type {
   EcosystemEntry,
@@ -43,7 +44,8 @@ const counts = computed(() => {
 });
 
 const filteredEntries = computed(() => {
-  const query = searchQuery.value.trim().toLowerCase();
+  // L87 : le texte rendu lie le jour à son mois par une insécable ; la recherche les lit comme des espaces.
+  const query = espacesOrdinaires(searchQuery.value).trim().toLowerCase();
   return props.entries.filter((entry) => {
     if (
       selectedCategories.value.size > 0 &&
@@ -59,7 +61,7 @@ const filteredEntries = computed(() => {
       ]
         .join(" ")
         .toLowerCase();
-      if (!haystack.includes(query)) return false;
+      if (!espacesOrdinaires(haystack).includes(query)) return false;
     }
     return true;
   });

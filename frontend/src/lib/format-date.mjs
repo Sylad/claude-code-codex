@@ -45,17 +45,20 @@ export function formatDay(day) {
 
 /**
  * L83 — la même date en deux groupes pour un élément `<time>` (composant DateLongue.astro) :
- * « jour mois » et l'année. Le composant met « jour mois » dans une boîte en ligne : les deux mots
- * restent ensemble quand ils tiennent sur la ligne, et ne passent à la ligne entre eux que si, même
- * seuls sur une ligne, ils ne tiennent pas (« 23 NOVEMBRE » en majuscules à chasse fixe dans la carte
- * de /nouveautes à 320 px texte 200 % : 142 px de large) — là où l'insécable sortait du bloc. D'où une
- * espace ORDINAIRE dans `jourMois` : c'est la boîte qui les garde ensemble.
- * @param {string} day « YYYY-MM-DD » @returns {{ jourMois: string, annee: string }}
+ * « jour mois » et l'année. Le composant met « jour mois » dans une boîte en ligne.
+ * L87 : le jour et le mois sont liés par une insécable (`jourMois`, comme partout dans le texte rendu,
+ * src/lib/jour-mois.mjs) ; le composant ajoute après elle une seule possibilité de coupure (<wbr>),
+ * qui ne sert que si, même seuls sur une ligne entière de leur bloc, ils ne tiennent pas (« 23 NOVEMBRE »
+ * en majuscules à chasse fixe dans la carte de /nouveautes à 320 px texte 200 % : 167 px pour 142) —
+ * là où l'insécable seule sortait du bloc. `jour` et `mois` sont donnés à part pour ce composant.
+ * @param {string} day « YYYY-MM-DD » @returns {{ jourMois: string, jour: string, mois: string, annee: string }}
  */
 export function formatDayParts(day) {
   const s = formatDay(day);
   const i = s.lastIndexOf(' ');
-  return { jourMois: s.slice(0, i).replaceAll(NBSP, ' '), annee: s.slice(i + 1) };
+  const jourMois = s.slice(0, i);
+  const [jour, mois] = jourMois.split(NBSP);
+  return { jourMois, jour, mois, annee: s.slice(i + 1) };
 }
 
 /**

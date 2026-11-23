@@ -30,12 +30,13 @@ test('formatDay : insécable entre le jour et le mois, espace ordinaire avant l�
 // L83 : pour un <time> (DateLongue.astro), « jour mois » à part, espace ordinaire : c'est la boîte en
 // ligne qui les garde ensemble, et ils peuvent encore se séparer quand ils ne tiennent pas sur une ligne
 // entière (« 23 NOVEMBRE » à chasse fixe, carte de /nouveautes à 320 px texte 200 %).
-test('formatDayParts : « jour mois » (espace ordinaire) et l’année, même texte que formatDay', () => {
-  assert.deepEqual(formatDayParts('2026-12-22'), { jourMois: '22 décembre', annee: '2026' });
-  assert.deepEqual(formatDayParts('2026-10-01'), { jourMois: '1er octobre', annee: '2026' });
+// L87 : « jour mois » liés par l'insécable, comme dans tout le texte rendu ; jour et mois aussi à part.
+test('formatDayParts : « jour mois » (insécable), jour, mois et l’année, même texte que formatDay', () => {
+  assert.deepEqual(formatDayParts('2026-12-22'), { jourMois: '22\u00a0décembre', jour: '22', mois: 'décembre', annee: '2026' });
+  assert.deepEqual(formatDayParts('2026-10-01'), { jourMois: '1er\u00a0octobre', jour: '1er', mois: 'octobre', annee: '2026' });
   for (const day of ['2026-01-11', '2026-11-23']) {
     const { jourMois, annee } = formatDayParts(day);
-    assert.equal(`${jourMois} ${annee}`, nb(formatDay(day)));
+    assert.equal(`${jourMois} ${annee}`, formatDay(day));
   }
 });
 

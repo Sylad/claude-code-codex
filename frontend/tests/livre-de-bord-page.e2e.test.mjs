@@ -28,8 +28,9 @@ test('R8 — une entrée par semaine, dans l’ordre, datée en français, avec 
   arts.forEach((m, i) => {
     const e = ENTRIES[i];
     // L83 : DateLongue.astro, « jour mois » dans sa boîte en ligne puis l'année.
-    const { jourMois, annee } = formatDayParts(e.date);
-    assert.match(m[2], new RegExp(`<time datetime="${e.date}"[^>]*><span class="date-jour-mois">${jourMois}</span> ${annee}</time>`), `${e.semaine} : date`);
+    // L87 : jour et mois liés par l'insécable, suivie de <wbr>, seule coupure de la boîte.
+    const { jour, mois, annee } = formatDayParts(e.date);
+    assert.match(m[2], new RegExp(`<time datetime="${e.date}"[^>]*><span class="date-jour-mois">${jour}\u00a0<wbr>${mois}</span> ${annee}</time>`), `${e.semaine} : date`);
     assert.match(m[0], new RegExp(`id="${entryId(e)}"`));
     const titres = { appris: 'Ce que nous avons appris', fabrique: 'Ce que nous fabriquons', teste: 'Ce que nous avons testé', ...e.rubriques };
     for (const h of Object.values(titres)) {

@@ -52,7 +52,8 @@ test('R4 — chaque chiffre est daté et sourcé dans le dépôt cadence', () =>
   assert.ok(chiffres.length >= 4, `${chiffres.length} chiffres`);
   for (const [, id, corps] of chiffres) {
     const t = corps.replace(/<[^>]+>/g, ' ');
-    assert.match(t, /\b\d{1,2}(er)? (janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre) 20\d\d\b/, `${id} sans date`);
+    // L87 : le jour est lié à son mois par une insécable (src/lib/jour-mois.mjs).
+    assert.match(t, /\b\d{1,2}(er)?[ \u00a0](janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre) 20\d\d\b/, `${id} sans date`);
     assert.match(t, /Source :\s+docs\/[\w./-]+\.md/, `${id} sans source`);
   }
 });
