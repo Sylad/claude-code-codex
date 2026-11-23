@@ -226,15 +226,16 @@ lots:
     finished: 2026-11-22
   - id: L9
     title: "Revue UX — Guides longs : Kubernetes pour développeurs Java, ArgoCD/K8s pour les nuls, Cloudflare pour les nuls"
-    status: doing
+    status: done
     visible: true
     estimate: 0.25
     created: 2026-09-28
     started: 2026-11-22
     notes:
       - { date: 2026-11-22, text: "22-11 soir : revue UX r1 (tmp/ux-codex-L9-r1.md) non conforme — R1 majeur : légende du schéma du tunnel Cloudflare « Aucune flèche n'entre dans la maison » contredite par la flèche « requêtes poussées dans le tunnel » ; mineurs m1 schéma du tunnel +8 px à 390, m2 courbe sur « Chez toi », m3 mots coupés à 320/200 % (k8s ≈ 80 contre 18 au r0), m4 focus sur body après « Revenir au sommaire ». Correction r2 lundi matin, puis livraison de L9 avec L80 (1ed5d47, au-dessus de L9)." }
-    ux: { date: 2026-11-23, verdict: "conforme (revue UX r2, tmp/ux-codex-L9-r2.md) : R1 légende = dessin, m1-m4 levés, 0 régression sur 10 pages PageHero + accueil à 320/390/1440 × 100/200 % ; notes : n1 schéma du tunnel +8 px à 360, n2 h1 plafonné à 122 % sous 640 px / 200 %" }
-    review: { date: 2026-11-23, verdict: "conforme après 1 correction (tmp/revue-codex-L9.md) : M1 PageHero sous 640 px, le h1 perd son line-height (54 px au lieu de 40, 33 pages) — correction r3", commit: adc3592ac44afa3b9dd66d713791a087a5c40c0f }
+    ux: { date: 2026-11-23, verdict: "conforme (r2 tmp/ux-codex-L9-r2.md + r3 vérifié par le lead sur mesures du run : rendu du titre inchangé à 100 %, schéma entier à 360) ; note : à 320 px avec barre de défilement classique le schéma du tunnel défile encore (298 dans 263), n2 h1 plafonné à 122 % sous 640 px / 200 %" }
+    review: { date: 2026-11-23, verdict: "conforme (r3, revue du lead) : M1 corrigé — max-sm:leading-(--text-4xl--line-height), titre identique à dfb7a3c sur 35 pages à 390 et 1440 (70 comparaisons), test qui échoue avant ; n1 libellés sur 3 lignes, schéma 303 dans 303 à 360, test étendu à 360 avec barre classique ; suite 711/712", commit: 52536e1186048da187092fd92f5616692b4eaf98 }
+    finished: 2026-11-23
   - id: L10
     title: Revue UX — Vidéos
     status: todo
