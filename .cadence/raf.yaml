@@ -250,12 +250,13 @@ lots:
     finished: 2026-11-23
   - id: L11
     title: Revue UX — À propos
-    status: todo
+    status: doing
     visible: true
     estimate: 0.25
     created: 2026-09-28
     notes:
       - { date: 2026-10-01, text: "contrôle UX L2 01-10 : sur /about, intro de l'en-tête 3,86:1 (1440) et « Site fan-made — sans affiliation » 3,54:1 / 2,85:1 (390) ; « Dev Java depuis 2005 » répété dans la carte auteur et plus bas" }
+    started: 2026-11-23
   - id: L12
     title: "Revue UX — Gabarit commun : navigation, en-tête, pied, rendu téléphone"
     status: todo
