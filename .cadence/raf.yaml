@@ -827,6 +827,7 @@ lots:
     status: done
     estimate: 1
     visible: true
+    delivered: { date: 2026-11-23, sha: 1895fcb65c6efb826d4f96eaa7e062241616a356 }
     created: 2026-11-23
     notes:
       - { date: 2026-11-23, text: "Depuis L12 (23-11) : à 320 px texte 200 %, /plan-de-travail déborde de 92 px et /nouveautes de 27 px à cause d'une date insécable (« 22 novembre 2026 ») ; ces deux pages ne sont pas dans tests/l12-gabarit-ux.e2e.test.mjs : les y ajouter une fois corrigées. Aussi : aria-label du bouton GitHub de /about contient « ↗ » non masqué." }
