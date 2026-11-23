@@ -881,6 +881,7 @@ lots:
     status: done
     estimate: 1
     visible: true
+    delivered: { date: 2026-11-23, sha: eaecd653d536c4edbd102b46c0f129d655f2a6fe }
     created: 2026-11-23
     started: 2026-11-23
     review: { date: 2026-11-23, verdict: "conforme (lead) : une fonction pure lierJourMois (jour 1er/1-31 + mois, mots entiers, scripts/styles/commentaires intacts) appliquée par le middleware au build ; recherche des catalogues insensible aux insécables ; test sur tout dist (249 paires → 0) et e2e 320/200 %, 390, 1440. Exception <wbr> dans DateLongue quand la paire ne tient pas sur la ligne : non-débordement d'abord (WCAG 1.4.10), accepté. Porte complète rejouée à la livraison.", commit: 5908eaedcb3c675cac850f81dd158687293af7d4 }
