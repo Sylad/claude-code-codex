@@ -875,6 +875,7 @@ lots:
     status: done
     estimate: 1
     visible: true
+    delivered: { date: 2026-11-23, sha: 7d08ba6dff70c760211f46a12533d7c10cc1e96a }
     created: 2026-11-23
     started: 2026-11-23
     review: { date: 2026-11-23, verdict: "conforme (lead) : 7d08ba6 relu — 6 remplacements (livre, choisis, sélection), test e2e rouge avant, noms propres gardés", commit: 7d08ba6dff70c760211f46a12533d7c10cc1e96a }
