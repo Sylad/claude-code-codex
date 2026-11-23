@@ -1,5 +1,23 @@
 [
   {
+    "id": "f27b1f34ce20932c",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Nov/20/levent-alpoge/",
+    "title": "Quoting Levent Alpöge",
+    "summary": "Mathématicien affirme avoir prouvé l'hypothèse de Riemann avec Claude, démontrant les capacités de raisonnement avancé des LLM.",
+    "publishedAt": "2026-11-20T16:30:48+00:00",
+    "fetchedAt": "2026-11-23T17:16:56.419Z"
+  },
+  {
+    "id": "b4439a7527ca175b",
+    "source": "simon-willison",
+    "url": "https://simonwillison.net/2026/Nov/17/external-sandboxes-for-coding-agents/",
+    "title": "External sandboxes for coding agents",
+    "summary": "Isoler l'exécution de code des agents dans des sandbox externes pour sécuriser les modèles locaux contre les injections de prompts.",
+    "publishedAt": "2026-11-17T22:52:29+00:00",
+    "fetchedAt": "2026-11-23T17:16:56.419Z"
+  },
+  {
     "id": "81dba6fe40f7c0eb",
     "source": "simon-willison",
     "url": "https://simonwillison.net/2026/Nov/15/datasette-apps/",
@@ -429,24 +447,6 @@
     "title": "Gemini 3.8 TTS Playground",
     "summary": "<p><strong>Tool:</strong> <a href=\"https://tools.simonwillison.net/gemini-tts-playground\">Gemini 3.8 TTS Playground</a></p> <p>Google <a hre",
     "publishedAt": "2026-09-23T17:12:27+00:00",
-    "fetchedAt": "2026-09-28T12:49:15.659Z"
-  },
-  {
-    "id": "c81040207630f754",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Sep/23/shadow-roots/",
-    "title": "Shadow roots, explained with live examples",
-    "summary": "<p><strong>Tool:</strong> <a href=\"https://tools.simonwillison.net/shadow-roots\">Shadow roots, explained with live examples</a></p> <p>Promp",
-    "publishedAt": "2026-09-23T16:37:18+00:00",
-    "fetchedAt": "2026-09-28T12:49:15.659Z"
-  },
-  {
-    "id": "327f7261ab07f686",
-    "source": "simon-willison",
-    "url": "https://simonwillison.net/2026/Sep/23/bof-agentic-engineering/",
-    "title": "SF October 14th: A Birds of a Feather Session on Agentic Engineering",
-    "summary": "<p><strong><a href=\"https://luma.com/vxuiuyvg\">SF October 14th: A Birds of a Feather Session on Agentic Engineering</a></strong></p> I'm hos",
-    "publishedAt": "2026-09-23T02:53:19+00:00",
     "fetchedAt": "2026-09-28T12:49:15.659Z"
   }
 ]
