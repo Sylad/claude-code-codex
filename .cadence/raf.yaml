@@ -877,6 +877,7 @@ lots:
     visible: true
     created: 2026-11-23
     started: 2026-11-23
+    review: { date: 2026-11-23, verdict: "conforme (lead) : 7d08ba6 relu — 6 remplacements (livre, choisis, sélection), test e2e rouge avant, noms propres gardés", commit: 7d08ba6dff70c760211f46a12533d7c10cc1e96a }
   - id: L87
     title: "Suite de L83 (QA du 23-11, tmp/qa-codex-L83.md du dossier parent) : dans le texte courant, les dates gardent une espace simple entre le jour et le mois et le jour reste seul en fin de ligne — /nouveautes « 31 octobre 2026 » (1440), « 3 novembre 2026 » (390) ; /livre-de-bord « (29 octobre) », « 23 octobre » ; /learning « du 22 novembre 2026 » (390), cas que L83 disait corrigé. Insécable jour-mois appliquée au contenu rendu (markdown et données), pas seulement aux dates formatées par le code ; test sur le HTML construit de toutes les pages."
     status: done
@@ -892,6 +893,12 @@ lots:
     finished: 2026-11-23
   - id: L88
     title: "À 320 px texte 200 %, des titres se coupent au milieu d'un mot sans trait d'union (« chang|é », « vérific|ation », « descripti|ons ») : césure française (hyphens: auto, lang=fr) ou titres qui passent à la ligne entre les mots ; WCAG 1.4.10 (revue UX de L87, tmp/ux-codex-L87.md du dossier parent)"
+    status: todo
+    estimate: 1
+    visible: true
+    created: 2026-11-23
+  - id: L89
+    title: "Anglicismes restants sur /learning, hors périmètre de L86 : « tooling », « tag », « issue », « repo », « AI engineering », « patterns », « Pair-bien »… — réécrire en français courant comme L82/L86 (relevé du run L86, 23-11)"
     status: todo
     estimate: 1
     visible: true
