@@ -69,8 +69,11 @@ test('L81 (2) — le champ de recherche de /videos et /learning : aucun texte d�
   if (!env) return;
   const failures = [];
   for (const cfg of CONFIGS) {
+    // Un contexte par configuration, les deux pages chargées l'une après l'autre (porte de L81 : moins de
+    // contextes Chromium sous la charge de la porte ; mêmes mesures).
+    const { context, page } = await ouvrir(env, cfg, '/videos/');
     for (const route of ['/videos/', '/learning/']) {
-      const { context, page } = await ouvrir(env, cfg, route);
+      if (route !== '/videos/') { await page.goto(`${env.base}${route}`, { waitUntil: 'networkidle' }); await pageReady(page); }
       const m = await page.evaluate(() => {
         const i = document.querySelector('main input[type="search"]');
         const s = getComputedStyle(i);
@@ -92,8 +95,8 @@ test('L81 (2) — le champ de recherche de /videos et /learning : aucun texte d�
       if (!m.libelleVisible) failures.push(`${where} : pas de libellé visible`);
       if (m.libelleDeborde) failures.push(`${where} : libellé hors de l’écran`);
       if (!/auteur/.test(m.libelle)) failures.push(`${where} : libellé sans exemple « ${m.libelle} »`);
-      await context.close();
     }
+    await context.close();
   }
   assert.deepEqual(failures, []);
 });

@@ -56,7 +56,10 @@ test('L74 — texte orangé sur le fond fixe ≥ 4,5:1 au pire pixel, toutes les
   const failures = [];
   const mesures = { total: 0 };
   let pire = { worst: Infinity };
-  for (const width of [1440, 390]) {
+  // Porte rouge de L81 : ce test, 2 × ~40 pages l'une après l'autre, était avec PageHero le chemin critique
+  // de la suite (~320 s sous charge) et la porte dépassait son délai. Les deux largeurs tournent en
+  // parallèle, chacune dans son contexte (comme PageHero) : mêmes pages, formes, positions, seuil.
+  await Promise.all([1440, 390].map(async (width) => {
     const H = width > 1000 ? 900 : 844;
     const context = await env.browser.newContext({ viewport: { width, height: H }, deviceScaleFactor: 2 });
     const page = await context.newPage();
@@ -92,7 +95,7 @@ test('L74 — texte orangé sur le fond fixe ≥ 4,5:1 au pire pixel, toutes les
       }
     }
     await context.close();
-  }
+  }));
   t.diagnostic(`${mesures.total} mesures sur ${routes.length} pages, pire ${pire.worst.toFixed(2)}:1 (${pire.ou})`);
   // Les deux pages du constat doivent avoir été réellement mesurées (un sélecteur muet n'est pas un succès).
   for (const r of ['/case-studies/cadence/', '/case-studies/pourquoi-cadence/']) {

@@ -204,19 +204,57 @@ test('L12 (3) — en remontant au clavier (Maj+Tab), aucun élément ne finit en
   assert.deepEqual(failures, []);
 });
 
+// Un seul passage pour le défilement horizontal (L12) et les dates (L81) : chaque page est chargée une
+// fois par configuration, dans un contexte par configuration (porte rouge de L81 : la suite dépassait le
+// délai de la porte sous charge ; mêmes pages, mêmes configurations, mêmes mesures).
+const ROUTES_DEFILEMENT = ['/', '/about/', '/theory/', '/learning/', '/plan-de-travail/', '/nouveautes/', '/livre-de-bord/'];
+const ROUTES_DATES = ['/plan-de-travail/', '/nouveautes/', '/livre-de-bord/', '/theory/', '/videos/'];
+let passage;
+function mesurerPages(env) {
+  passage ??= (async () => {
+    const out = [];
+    for (const cfg of CONFIGS) {
+      const { context, page } = await ouvrir(env, cfg, ROUTES_DEFILEMENT[0]);
+      for (const route of [...new Set([...ROUTES_DEFILEMENT, ...ROUTES_DATES])]) {
+        if (route !== ROUTES_DEFILEMENT[0]) {
+          await page.goto(`${env.base}${route}`, { waitUntil: 'networkidle' });
+          await pageReady(page);
+        }
+        const m = await page.evaluate(() => {
+          const r = { defilement: document.documentElement.scrollWidth - innerWidth, dates: 0, defauts: [] };
+          for (const el of document.querySelectorAll('main time')) {
+            const b = el.getBoundingClientRect();
+            if (!b.width) continue;
+            r.dates++;
+            if (b.right > innerWidth + 0.5 || b.left < -0.5) r.defauts.push(`« ${el.textContent} » hors de l’écran (${Math.round(b.right - innerWidth)} px)`);
+            const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+            for (let n = w.nextNode(); n; n = w.nextNode()) {
+              for (const x of n.data.matchAll(/\S+/g)) {
+                const rg = document.createRange();
+                rg.setStart(n, x.index);
+                rg.setEnd(n, x.index + x[0].length);
+                if (new Set([...rg.getClientRects()].map((q) => Math.round(q.top))).size > 1) r.defauts.push(`« ${x[0]} » coupé dans « ${el.textContent} »`);
+              }
+            }
+          }
+          return r;
+        });
+        out.push({ cfg: cfg.name, route, ...m });
+      }
+      await context.close();
+    }
+    return out;
+  })();
+  return passage;
+}
+
 // L81 : /plan-de-travail (92 px à 320 px texte 200 %), /nouveautes (27 px) et /livre-de-bord (24 px) ajoutées.
 test('L12 — gabarit sans défilement horizontal aux quatre configurations (accueil, /about, /theory, /learning, /plan-de-travail, /nouveautes, /livre-de-bord)', { timeout: 300_000 }, async (t) => {
   const env = await setupBrowser(t);
   if (!env) return;
-  const failures = [];
-  for (const cfg of CONFIGS) {
-    for (const route of ['/', '/about/', '/theory/', '/learning/', '/plan-de-travail/', '/nouveautes/', '/livre-de-bord/']) {
-      const { context, page } = await ouvrir(env, cfg, route);
-      const d = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
-      if (d > 0) failures.push(`@${cfg.name} ${route} : ${d} px`);
-      await context.close();
-    }
-  }
+  const mesures = (await mesurerPages(env)).filter((m) => ROUTES_DEFILEMENT.includes(m.route));
+  assert.equal(mesures.length, CONFIGS.length * ROUTES_DEFILEMENT.length);
+  const failures = mesures.filter((m) => m.defilement > 0).map((m) => `@${m.cfg} ${m.route} : ${m.defilement} px`);
   assert.deepEqual(failures, []);
 });
 
@@ -226,35 +264,10 @@ test('L12 — gabarit sans défilement horizontal aux quatre configurations (acc
 test('L81 (1) — dates : aucun nombre coupé, aucune date hors de l’écran, aux quatre configurations', { timeout: 300_000 }, async (t) => {
   const env = await setupBrowser(t);
   if (!env) return;
-  const failures = [];
-  let vues = 0;
-  for (const cfg of CONFIGS) {
-    for (const route of ['/plan-de-travail/', '/nouveautes/', '/livre-de-bord/', '/theory/', '/videos/']) {
-      const { context, page } = await ouvrir(env, cfg, route);
-      const r = await page.evaluate(() => {
-        const out = { vues: 0, defauts: [] };
-        for (const el of document.querySelectorAll('main time')) {
-          const b = el.getBoundingClientRect();
-          if (!b.width) continue;
-          out.vues++;
-          if (b.right > innerWidth + 0.5 || b.left < -0.5) out.defauts.push(`« ${el.textContent} » hors de l’écran (${Math.round(b.right - innerWidth)} px)`);
-          const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
-          for (let n = w.nextNode(); n; n = w.nextNode()) {
-            for (const m of n.data.matchAll(/\S+/g)) {
-              const rg = document.createRange();
-              rg.setStart(n, m.index);
-              rg.setEnd(n, m.index + m[0].length);
-              if (new Set([...rg.getClientRects()].map((x) => Math.round(x.top))).size > 1) out.defauts.push(`« ${m[0]} » coupé dans « ${el.textContent} »`);
-            }
-          }
-        }
-        return out;
-      });
-      vues += r.vues;
-      for (const d of r.defauts) failures.push(`@${cfg.name} ${route} ${d}`);
-      await context.close();
-    }
-  }
+  const mesures = (await mesurerPages(env)).filter((m) => ROUTES_DATES.includes(m.route));
+  assert.equal(mesures.length, CONFIGS.length * ROUTES_DATES.length);
+  const vues = mesures.reduce((n, m) => n + m.dates, 0);
   assert.ok(vues >= 40, `${vues} date(s) mesurée(s) seulement`);
+  const failures = mesures.flatMap((m) => m.defauts.map((d) => `@${m.cfg} ${m.route} ${d}`));
   assert.deepEqual([...new Set(failures)], []);
 });
