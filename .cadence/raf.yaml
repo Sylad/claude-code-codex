@@ -915,6 +915,7 @@ lots:
     status: done
     estimate: 1
     visible: true
+    delivered: { date: 2026-11-23, sha: f3054590b31441e9490c82f2fe4acba3bf03c44b }
     created: 2026-11-23
     started: 2026-11-23
     review: { date: 2026-11-23, verdict: "conforme (lead) : f305459 relu — shrink-0 sur les 2 cases, « Sylvain » à la place de « l'auteur », titre anglais d'origine avec nameLang en ; test rouge avant ; note mineure : « suivie par Sylvain … Recommandation de Sylvain » répète le nom dans la même description", commit: f3054590b31441e9490c82f2fe4acba3bf03c44b }
