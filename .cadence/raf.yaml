@@ -855,6 +855,7 @@ lots:
     estimate: 1
     created: 2026-11-23
     started: 2026-11-23
+    review: { date: 2026-11-23, verdict: "conforme (lead) : insécable jour-mois par formatLongDate et boîte en ligne DateLongue.astro, container query sur la ligne de date, tests rouges avant / verts après (l83-dates-copier.e2e, format-date) ; note : « Non copié » moins explicite que « Copie impossible », accepté (place mesurée)", commit: 4d6ec4d8bbdf005595c1505f50178d4393ac2ccc }
   - id: L84
     title: "Outils testés : ajouter ECC / everything-claude-code (github.com/affaan-m/ECC), statut tested, verdict reject + watchlist, d'après le banc du 23-11 (rapport bilans/2026-11-23/banc-ECC.md du dossier parent) : 72 agents lancés d'office par une règle, 328 skills, 28 hooks, ~21 k tokens par session ; aucun gain mesuré des agents ; GateGuard non confirmé par leur propre éval (p = 0,21, +37 à +45 % de coût) ; l'installeur coupe Co-Authored-By. Étude de cas si les leçons le justifient (orchestration d'agents sans mesure, écho de cadence v1)."
     status: todo
