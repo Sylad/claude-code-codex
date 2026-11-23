@@ -851,11 +851,13 @@ lots:
     finished: 2026-11-23
   - id: L83
     title: "Suite de la revue UX de L81 : (m1) /nouveautes à 320 px texte 200 %, le libellé « Copier le lien » sort de 26 px de son bouton (WCAG 1.4.4, 1.4.10) ; (m2) une date ne laisse pas le jour seul en fin de ligne (« prochaine avant le 22 | décembre 2026 » à 375 et 390 px) : insécable entre le jour et le mois, sécable ailleurs, sans recouper un nombre ni sortir de l'écran à 320/200 %. Rapport : tmp/ux-codex-L81.md du dossier parent."
-    status: doing
+    status: done
     estimate: 1
     created: 2026-11-23
     started: 2026-11-23
     review: { date: 2026-11-23, verdict: "conforme (lead) : insécable jour-mois par formatLongDate et boîte en ligne DateLongue.astro, container query sur la ligne de date, tests rouges avant / verts après (l83-dates-copier.e2e, format-date) ; note : « Non copié » moins explicite que « Copie impossible », accepté (place mesurée)", commit: 4d6ec4d8bbdf005595c1505f50178d4393ac2ccc }
+    ux: { date: 2026-11-23, verdict: "conforme (ux-reviewer) : m1 0 px de débordement aux 5 largeurs, 100/200 %, clavier OK ; m2 plus de jour seul ; 96 rendus sans régression ; notes : nom accessible « Copie impossible » vs « Non copié » (Nielsen 4), bord du bouton 2,52:1 hors lot ; tmp/ux-codex-L83.md" }
+    finished: 2026-11-23
   - id: L84
     title: "Outils testés : ajouter ECC / everything-claude-code (github.com/affaan-m/ECC), statut tested, verdict reject + watchlist, d'après le banc du 23-11 (rapport bilans/2026-11-23/banc-ECC.md du dossier parent) : 72 agents lancés d'office par une règle, 328 skills, 28 hooks, ~21 k tokens par session ; aucun gain mesuré des agents ; GateGuard non confirmé par leur propre éval (p = 0,21, +37 à +45 % de coût) ; l'installeur coupe Co-Authored-By. Étude de cas si les leçons le justifient (orchestration d'agents sans mesure, écho de cadence v1)."
     status: todo
