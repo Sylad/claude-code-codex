@@ -253,6 +253,7 @@ lots:
     status: done
     visible: true
     estimate: 0.25
+    delivered: { date: 2026-11-23, sha: ffe91b65f3b2bb7df2c88214d66e0d84dd7bf2ba }
     created: 2026-09-28
     notes:
       - { date: 2026-10-01, text: "contrôle UX L2 01-10 : sur /about, intro de l'en-tête 3,86:1 (1440) et « Site fan-made — sans affiliation » 3,54:1 / 2,85:1 (390) ; « Dev Java depuis 2005 » répété dans la carte auteur et plus bas" }
