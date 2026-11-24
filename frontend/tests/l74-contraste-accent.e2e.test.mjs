@@ -27,8 +27,13 @@ function marquer() {
   const rgba = (c) => { pr.clearRect(0, 0, 1, 1); pr.fillStyle = c; pr.fillRect(0, 0, 1, 1); return pr.getImageData(0, 0, 1, 1).data; };
   const seen = new Set();
   let i = 0;
+  // Ce que pose le script de césure (L88, src/lib/cesure.mjs : <span> autour d'un mot ou d'une option de
+  // code) est refait à chaque changement de taille de la page : ce n'est pas une forme du site, et son
+  // texte compte comme celui de l'élément qui le porte.
+  const POSE = '[data-cesure], [data-cesure-vu], [data-cesure-copie], [data-cesure-colle]';
   for (const el of document.querySelectorAll('main *, body > footer *')) {
-    if (![...el.childNodes].some((c) => c.nodeType === 3 && c.textContent.trim())) continue;
+    if (el.matches(POSE)) continue;
+    if (![...el.childNodes].some((c) => (c.nodeType === 3 || (c.nodeType === 1 && c.matches(POSE))) && c.textContent.trim())) continue;
     if (el.closest('svg, pre, [aria-hidden="true"]') || !el.getClientRects().length) continue;
     const [r, g, b] = rgba(getComputedStyle(el).color);
     if (!(r > 200 && g > 90 && g < 200 && b < 160 && r - b > 60)) continue; // orangés (accent et voisins)

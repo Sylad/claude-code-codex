@@ -20,6 +20,10 @@
 //    sans trait. Avec un trait : à une frontière de syllabe (revue r2, M3-bis : pas « tok-ens »,
 //    « modelcontextp-rotocol »), au moins 3 lettres de chaque côté (M2), pas plus de 2 lignes à trait de
 //    suite dans un même bloc (M2), et le mot ne tient pas sur une ligne entière de son bloc (M1).
+// 3. Signes seuls (`releverSignesSeuls`, revue r3, m-a-bis) : la règle « aucun morceau sans lettre ni
+//    chiffre seul sur sa ligne » vaut pour tout ce qu'aucune espace sécable ne sépare — insécables et code
+//    en ligne compris : « Réinitialiser | », », « 46,9 | % », « -- | dry-run » ou « - | -dry-run » dans un
+//    <code>, « <code>~/.claude/skills/</code> | , ». Seuls les <pre> (qui défilent) en sont exclus.
 
 export function releverCoupures() {
   // Le texte masqué aux aides techniques mais visible (aria-hidden) compte : on juge ce qui se voit.
@@ -58,6 +62,9 @@ export function releverCoupures() {
     // Un passage exclu (code en ligne…) ou masqué sépare les mots qui l'entourent.
     // Texte hors écran pour les aides techniques (sr-only : boîte de 1 px), sans rendu visible.
     const boite = el.getBoundingClientRect();
+    // Un élément en ligne sans largeur (taille de police nulle : la copie d'un mot doublé pour les aides
+    // techniques) n'affiche rien et ne sépare rien : ses voisins se touchent à l'écran (revue r3).
+    if (boite.width === 0 && getComputedStyle(el).display === 'inline' && getComputedStyle(el).position === 'static') continue;
     if (el.closest(EXCLUS) || !el.getClientRects().length || getComputedStyle(el).visibility === 'hidden'
       || boite.width <= 1 || boite.height <= 1) {
       if (chars.at(-1)) chars.push(null);
@@ -95,12 +102,15 @@ export function releverCoupures() {
   // groupe qu'on ne sépare pas (consonne + l ou r, ch, ph, th, sh, gn) suivi d'une voyelle ; et ce groupe
   // n'est jamais coupé en son milieu. Ainsi « to|kens », « model|context », « context|protocol » sont des
   // frontières ; « tok|ens », « prot|ocol », « contextp|rotocol » n'en sont pas.
+  // Un sigle sans voyelle (3 lettres au moins : « jdbc », « html ») ne forme pas de syllabe : la coupure
+  // entre lui et la syllabe qui le suit est une frontière (« jdbc|config », revue r3, M3-ter).
   const V = 'aeiouyàâäéèêëîïôöùûüÿæœ';
   const groupe = /^(?:[bcdfgkptv][lr]|[cpst]h|gn)/i;
   const syllabe = (gauche, droite) => {
     const g = gauche.toLowerCase();
     const d = droite.toLowerCase();
-    if (![...g].some((x) => V.includes(x)) || ![...d].some((x) => V.includes(x))) return false;
+    if (![...d].some((x) => V.includes(x))) return false;
+    if (![...g].some((x) => V.includes(x)) && g.length < 3) return false;
     const ouvre = new RegExp(`^(?:[bcdfgkptv][lr]|[cpst]h|gn|[^${V}])[${V}]`, 'u');
     if (!ouvre.test(d)) return false;
     return !groupe.test(g.slice(-1) + d[0]);
@@ -198,6 +208,86 @@ export function releverCoupures() {
   return out;
 }
 
+// Signes seuls sur leur ligne : voir le point 3 de l'en-tête. Une unité est une suite sans espace sécable
+// (espace, tabulation, saut de ligne), d'un nœud à l'autre d'un même bloc, texte des <code> compris.
+export function releverSignesSeuls() {
+  const EXCLUS = 'pre, script, style, noscript, template, svg, textarea';
+  const range = document.createRange();
+  const blocs = new Map();
+  const blocDe = (el) => {
+    for (let e = el; e; e = e.parentElement) {
+      if (blocs.has(e)) return blocs.get(e);
+      const d = getComputedStyle(e).display;
+      if (d !== 'inline' && d !== 'contents') { blocs.set(e, e); return e; }
+    }
+    return document.body;
+  };
+  const chars = [];
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  let blocPrec = null;
+  for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+    const el = n.parentElement;
+    const boite = el.getBoundingClientRect();
+    // Un élément en ligne sans largeur (taille de police nulle : la copie d'un mot doublé pour les aides
+    // techniques) n'affiche rien et ne sépare rien : ses voisins se touchent à l'écran (revue r3).
+    if (boite.width === 0 && getComputedStyle(el).display === 'inline' && getComputedStyle(el).position === 'static') continue;
+    if (el.closest(EXCLUS) || !el.getClientRects().length || getComputedStyle(el).visibility === 'hidden'
+      || boite.width <= 1 || boite.height <= 1) {
+      if (chars.at(-1)) chars.push(null);
+      continue;
+    }
+    const bloc = blocDe(el);
+    if (bloc !== blocPrec) chars.push(null);
+    blocPrec = bloc;
+    for (let i = 0; i < n.data.length; i++) chars.push({ n, i, c: n.data[i] });
+  }
+  chars.push(null);
+  const alnum = (m) => /[\p{L}\p{N}]/u.test(m.c);
+  const out = [];
+  let debut = null;
+  for (let k = 0; k < chars.length; k++) {
+    const x = chars[k];
+    const blanc = !x || /[ \t\n\r\f]/.test(x.c);
+    if (!blanc) { if (debut === null) debut = k; continue; }
+    if (debut === null) continue;
+    const mot = chars.slice(debut, k).filter((m) => m.c !== '\u00AD');
+    debut = null;
+    if (mot.length < 2 || !mot.some(alnum)) continue;
+    const rects = mot.map((m) => {
+      range.setStart(m.n, m.i);
+      range.setEnd(m.n, m.i + 1);
+      return [...range.getClientRects()].filter((r) => r.width > 0.1 || r.height > 0).at(-1);
+    });
+    const sauts = [];
+    let prec = null;
+    for (let j = 0; j < mot.length; j++) {
+      if (!rects[j]) continue;
+      if (prec !== null && rects[j].top - rects[prec].top >= rects[prec].height / 2) sauts.push(j);
+      prec = j;
+    }
+    if (!sauts.length) continue;
+    const bornes = [0, ...sauts, mot.length];
+    const texte = mot.map((m) => m.c).join('');
+    for (let s = 0; s + 1 < bornes.length; s++) {
+      const morceau = mot.slice(bornes[s], bornes[s + 1]);
+      if (morceau.some(alnum) || morceau.every((m) => /\s/.test(m.c))) continue;
+      const el = morceau[0].n.parentElement;
+      const titre = el.closest('h1, h2, h3');
+      out.push({
+        ponctuation: true,
+        nom: true,
+        code: Boolean(el.closest('code, kbd, samp')),
+        ilot: Boolean(el.closest('astro-island')),
+        titre: Boolean(titre),
+        vu: bornes.slice(1, -1).reduceRight((t, b) => `${t.slice(0, b)}|${t.slice(b)}`, texte),
+        el: `${(titre ?? el).tagName.toLowerCase()} « ${blocDe(el).textContent.trim().replace(/\s+/g, ' ').slice(0, 50)}… »`,
+      });
+      break;
+    }
+  }
+  return out;
+}
+
 const TRANSPARENT = `*, *::before, *::after { color: transparent !important; -webkit-text-fill-color: transparent !important;
   text-shadow: none !important; text-decoration-color: transparent !important; caret-color: transparent !important; }`;
 
@@ -256,7 +346,10 @@ export async function verifierCoupures(page, { exempter = () => false, exemptees
   const toutes = await page.evaluate(releverCoupures);
   const coupures = toutes.filter((c) => !exempter(c));
   exemptees.push(...toutes.filter((c) => exempter(c)).map((c) => `« ${c.vu} » (${c.el})`));
-  if (!coupures.length) return [];
+  const signes = await page.evaluate(releverSignesSeuls);
+  exemptees.push(...signes.filter((c) => exempter(c)).map((c) => `« ${c.vu} » (${c.el})`));
+  const seuls = signes.filter((c) => !exempter(c)).map((c) => `signe seul sur sa ligne « ${c.vu} » (${c.el})`);
+  if (!coupures.length) return seuls;
   const scroll = await page.evaluate(() => [window.scrollX, window.scrollY]);
   const avec = await capturer(page, coupures.map((c) => c.zone));
   const style = await page.addStyleTag({ content: TRANSPARENT });
@@ -269,7 +362,7 @@ export async function verifierCoupures(page, { exempter = () => false, exemptees
     throw new Error('la mise en page a changé pendant la mesure des coupures (charger les images avant : chargerImages)');
   }
   const pixels = await encre(page, avec, sans);
-  const fautes = [];
+  const fautes = [...seuls];
   const traits = new Map();
   const blocs = new Map();
   coupures.forEach((c, k) => {

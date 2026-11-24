@@ -106,10 +106,14 @@ const stats = [
     </p>
   </div>
 
-  <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+  <!-- L88 (revue r3) : un chiffre et son unité tiennent sur une ligne (plus de « 46,9 | % ») quand le texte est agrandi.
+       Colonnes : au réglage normal, 2 dès 640 px et 4 dès 1024 px comme avant ; chacune garde au moins 13 rem, donc
+       moins de colonnes quand le texte grandit (768 px, texte 200 % : 1 colonne au lieu de 2 de 197 px).
+       Marge latérale de la carte : 20 px au réglage normal, resserrée à mesure que le texte grandit (8 px à 200 %). -->
+  <div class="grid gap-4 sm:grid-cols-[repeat(auto-fit,minmax(min(100%,max(13rem,33%)),1fr))] lg:grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))]">
     {stats.map((s) => (
       <div
-        class={`rounded-xl border p-borne-5 ${
+        class={`rounded-xl border py-borne-5 px-[max(8px,calc(40px-1.25rem))] ${
           s.accent
             ? "border-claude/40 bg-paper-elevated"
             : "border-white/10 bg-paper-elevated"

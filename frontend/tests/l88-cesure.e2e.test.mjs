@@ -8,7 +8,10 @@
 //   - aucun U+00AD dans le texte copié ni dans le nom accessible (m1) ;
 //   - les h1 doublent avec le texte (WCAG 1.4.4, F94 : M4) ;
 //   - au réglage normal (texte 100 %, 390 à 1440 px), rien n'est posé : le rendu ne change pas ;
-//   - la césure suit la taille du texte et la navigation interne.
+//   - la césure suit la taille du texte et la navigation interne ;
+//   - revue r3 : un nom se coupe avec un trait quelle que soit la largeur de la ligne au pixel près (M3-ter :
+//     « jdbccon|fig. » sans trait dans le Chrome de la revue, pas dans le Chromium des tests) ; aucun signe
+//     seul sur sa ligne, insécables et code en ligne compris (m-a-bis : « -- | dry-run », « 46,9 | % »).
 // Oracle : tests/lib/coupures.mjs, qui juge chaque coupure sur le rendu (trait dessiné ou mot entier), sans
 // rien reprendre de src/lib/cesure.mjs. Texte agrandi simulé comme dans la revue : html { font-size: N % }.
 // Lit le site CONSTRUIT : `npx astro build` avant.
@@ -18,7 +21,7 @@ import { readdirSync, existsSync, readFileSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { DIST, setupBrowser } from './lib/e2e-dist.mjs';
-import { chargerImages, releverCoupures, verifierCoupures } from './lib/coupures.mjs';
+import { chargerImages, releverCoupures, releverSignesSeuls, verifierCoupures } from './lib/coupures.mjs';
 
 function pages(dir) {
   if (!existsSync(dir)) return [];
@@ -160,6 +163,26 @@ test('l\'oracle voit une coupure sans trait, une césure trop courte, une césur
   assert.ok(f7.some((x) => /^ponctuation seule/.test(x)), `parenthèse seule : ${f7}`);
   const f8 = await juger(bloc('', 'pas /<wbr>geoserver/web/', await largeur('geoserver/web/')));
   assert.ok(f8.some((x) => /^ponctuation seule/.test(x)), `barre seule en fin de ligne : ${f8}`);
+  // Revue r3, M3-ter : un nom coupé sans trait reste une faute quand il finit par un point (« jdbccon|fig. ») ;
+  // un sigle sans voyelle se détache de la syllabe qui le suit (« jdbc-config »).
+  const f9 = await juger(bloc('', 'Le jdbcconfig.', await largeur('jdbccon')));
+  assert.ok(f9.some((x) => /^sans trait/.test(x)), `nom à point final coupé sans trait : ${f9}`);
+  assert.deepEqual(await juger(bloc('', 'jdbc­config.', await ligne('jdbc­config.'))), [], 'sigle détaché de la syllabe suivante');
+  const f10 = await juger(bloc('', 'jd­bcconfig', await ligne('jd­bcconfig')));
+  assert.ok(f10.length > 0, `sigle coupé en son milieu : ${f10}`);
+  // Revue r3, m-a-bis : signe seul après une insécable, après un <code>, « -- » d'une option dans un <code>.
+  const code = (t) => `<code style="font:inherit;overflow-wrap:anywhere">${t}</code>`;
+  const seul = async (corps, l, quoi) => {
+    const f = await juger(bloc('', corps, l));
+    assert.ok(f.some((x) => /^signe seul/.test(x)), `${quoi} : ${f}`);
+  };
+  await seul('«\u00a0Réinitialiser\u00a0»,', await largeur('«\u00a0Réinitialiser'), 'guillemet fermant seul après une insécable');
+  await seul('46,9\u00a0%', await largeur('46,9'), '« % » seul après une insécable');
+  await seul(`un ${code('~/.claude/skills/')},`, await largeur('~/.claude/skills/'), 'virgule seule après un <code>');
+  await seul(`un ${code('--<wbr>dry-run')}`, await largeur('un --'), '« -- » d\'une option seul en fin de ligne');
+  await seul(`un ${code('-<wbr>-dry-run')}`, await largeur('un -'), 'option coupée entre ses deux traits');
+  assert.deepEqual(await juger(bloc('', `un ${code('~/.claude/<wbr>skills/')}, ${code('--dry-<wbr>run')} «\u00a0Réini\u00adtialiser\u00a0»,`, await largeur('un ~/.claude/'))), [],
+    'code coupé à sa ponctuation, option coupée après son nom, mot césuré avant son guillemet');
   await page.close();
 });
 
@@ -195,7 +218,7 @@ test('aucun mot coupé sans trait, aucune césure inutile ni trop courte, aucun 
   assert.deepEqual(fautes, []);
 });
 
-test('réglage normal (texte 100 %, 390 à 1440 px) : aucune césure posée ; des <wbr> seulement là où la prod coupe un nom sans trait', { timeout: 600_000 }, async (t) => {
+test('réglage normal (texte 100 %, 390 à 1440 px) : aucune césure posée ; des <wbr> ou un signe collé seulement là où la prod coupe un nom sans trait ou laisse un signe seul', { timeout: 600_000 }, async (t) => {
   const env = await setupBrowser(t);
   if (!env) return;
   const marques = [];
@@ -206,7 +229,8 @@ test('réglage normal (texte 100 %, 390 à 1440 px) : aucune césure posée ; de
     for (const route of ROUTES) {
       await ouvrir(page, `${env.base}${route}`);
       const servi = (readFileSync(join(DIST, route, 'index.html'), 'utf8').match(/<wbr/g) ?? []).length;
-      const n = await page.evaluate((sel) => ({ pose: document.querySelectorAll(sel).length, wbr: document.querySelectorAll('wbr').length }), POSE);
+      // Les <wbr> et les signes collés (« -- » d'une option de code, revue r3) comptent ensemble.
+      const n = await page.evaluate((sel) => ({ pose: document.querySelectorAll(sel).length, wbr: document.querySelectorAll('wbr, [data-cesure-colle]').length }), POSE);
       if (n.pose) marques.push(`${route} @${width}px : ${n.pose} élément(s) posé(s) à 100 %`);
       if (n.wbr === servi) continue;
       // Des <wbr> ajoutés ne se justifient que si la page servie, sans le script, coupe un mot ici : sans le
@@ -217,14 +241,14 @@ test('réglage normal (texte 100 %, 390 à 1440 px) : aucune césure posée ; de
       const pb = await brut.newPage();
       await pb.goto(`${env.base}${route}`);
       await pb.evaluate(() => document.fonts.ready);
-      const avant = await pb.evaluate(releverCoupures);
+      const avant = [...await pb.evaluate(releverCoupures), ...await pb.evaluate(releverSignesSeuls)];
       await brut.close();
-      if (!avant.length) marques.push(`${route} @${width}px : ${n.wbr - servi} <wbr> ajouté(s) sans coupure sans trait à corriger`);
-      corriges.push(`${route} @${width}px : ${n.wbr - servi} <wbr>`);
+      if (!avant.length) marques.push(`${route} @${width}px : ${n.wbr - servi} <wbr> ou signe collé ajouté(s) sans coupure à corriger`);
+      corriges.push(`${route} @${width}px : ${n.wbr - servi} (${avant.map((c) => c.vu).join(' ; ')})`);
     }
     await context.close();
   }
-  t.diagnostic(`<wbr> posés à 100 % (la prod y coupait un nom sans trait) : ${corriges.join(' ; ') || 'aucun'}`);
+  t.diagnostic(`<wbr> et signes collés posés à 100 % (coupures de la page servie sans le script) : ${corriges.join(' ; ') || 'aucun'}`);
   assert.deepEqual(marques, []);
 });
 
@@ -245,6 +269,84 @@ test('la césure suit la taille du texte : posée à 200 %, entièrement défait
     assert.equal(await page.evaluate(() => document.querySelector('main').innerHTML), avant, `${route} : retour à 100 %, la page n'est pas revenue à son état servi`);
   }
   await context.close();
+});
+
+// Revue r3, M3-ter : « Le jdbcconfig.properties du data_dir surcharge les env vars » (h3 de l'étude k8s) à
+// 320 px, texte 200 %, montrait « jdbccon|fig. » sans trait dans le Chrome de la revue et un trait dans le
+// Chromium des tests : à un pixel près, le trait ne tenait plus sur la ligne. Le titre est jugé sur toute une
+// plage de largeurs autour de 320 px (une barre de défilement en retire jusqu'à 17).
+test('M3-ter : le h3 « jdbcconfig.properties » de l\'étude k8s garde un trait à chaque coupure, texte 200 %, de 296 à 330 px', { timeout: 600_000 }, async (t) => {
+  const env = await setupBrowser(t);
+  if (!env) return;
+  const fautes = [];
+  const context = await env.browser.newContext({ viewport: { width: 320, height: 844 } });
+  const page = await context.newPage();
+  await ouvrir(page, `${env.base}/case-studies/k8s-migration-overnight/`);
+  await taille(page, 200);
+  const lu = new Set();
+  for (let width = 296; width <= 330; width += 1) {
+    await page.setViewportSize({ width, height: 844 });
+    await attendreCesure(page);
+    const titre = await page.evaluate(() => [...document.querySelectorAll('main h3')].find((h) => h.textContent.includes('jdbcconfig.properties'))?.textContent);
+    assert.ok(titre, 'titre « jdbcconfig.properties » absent de la page');
+    const f = await verifierCoupures(page, { exempter: (c) => !c.el.includes('jdbcconfig.properties') });
+    for (const x of f) fautes.push(`${width}px : ${x}`);
+    lu.add(width);
+  }
+  assert.equal(lu.size, 35);
+  assert.deepEqual(fautes, []);
+  await context.close();
+});
+
+// Revue r3, m-a-bis : les cas cités, sur le rendu.
+test('m-a-bis : « --dry-run » de /nouveautes (390 px, 150 %) et « 46,9 % » de /case-studies (320 et 768 px, 200 %) d\'un seul tenant', { timeout: 180_000 }, async (t) => {
+  const env = await setupBrowser(t);
+  if (!env) return;
+  // Lignes (haut arrondi) occupées par un texte dans la page : une seule s'il n'est pas coupé.
+  const lignesDe = (page, sel, texte) => page.evaluate(([s, tx]) => {
+    const out = [];
+    const r = document.createRange();
+    for (const el of document.querySelectorAll(s)) {
+      const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      let tout = '';
+      const pos = [];
+      for (let n = w.nextNode(); n; n = w.nextNode()) for (let i = 0; i < n.data.length; i++) { tout += n.data[i]; pos.push([n, i]); }
+      for (let i = tout.indexOf(tx); i >= 0; i = tout.indexOf(tx, i + 1)) {
+        const hauts = new Set();
+        for (const [n, k] of pos.slice(i, i + tx.length)) {
+          r.setStart(n, k);
+          r.setEnd(n, k + 1);
+          for (const q of r.getClientRects()) if (q.width > 0.5) hauts.add(Math.round(q.top));
+        }
+        out.push(hauts.size);
+      }
+    }
+    return out;
+  }, [sel, texte]);
+  for (const [route, width, n, sel, texte] of [
+    ['/nouveautes/', 390, 150, 'main :not(pre) > code', '--d'],
+    ['/nouveautes/', 320, 200, 'main :not(pre) > code', '--d'],
+    ['/case-studies/', 390, 200, 'main :not(pre) > code', '--f'],
+    ['/case-studies/', 320, 200, 'main p', '46,9\u00a0%'],
+    ['/case-studies/', 768, 200, 'main p', '46,9\u00a0%'],
+  ]) {
+    const context = await env.browser.newContext({ viewport: { width, height: 844 } });
+    const page = await context.newPage();
+    await ouvrir(page, `${env.base}${route}`);
+    await taille(page, n);
+    const l = await lignesDe(page, sel, texte);
+    assert.ok(l.length > 0, `${route} : « ${texte} » absent de ${sel}`);
+    assert.ok(l.every((x) => x === 1), `${route} @${width}px ${n} % : « ${texte} » sur ${l} ligne(s)`);
+    // Aucun <code> en ligne ne sort de son bloc (« --dry-run » débordait de 12 px à gauche de la colonne).
+    const dehors = await page.evaluate(() => [...document.querySelectorAll('main :not(pre) > code')].flatMap((c) => {
+      let b = c.parentElement;
+      while (b && getComputedStyle(b).display === 'inline') b = b.parentElement;
+      const cadre = b.getBoundingClientRect();
+      return [...c.getClientRects()].filter((q) => q.left < cadre.left - 1 || q.right > cadre.right + 1).map((q) => `${c.textContent.slice(0, 30)} : ${Math.round(q.left - cadre.left)} px`);
+    }));
+    assert.deepEqual(dehors, [], `${route} @${width}px ${n} % : <code> hors de son bloc`);
+    await context.close();
+  }
 });
 
 test('M3 : les noms des titres se coupent à leur ponctuation — h1 « alexgreensh/token-optimizer » à 320 px', { timeout: 120_000 }, async (t) => {
