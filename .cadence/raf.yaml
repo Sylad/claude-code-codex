@@ -976,6 +976,7 @@ lots:
     title: "Le mot « undefined » s'affiche dans le texte rendu de /case-studies/aetherwx-encyclopedia/ (absent du HTML statique : vient d'un script au chargement ; relevé par la QA de L93 le 24-11)"
     status: done
     estimate: 0.25
+    delivered: { date: 2026-11-24, sha: e639d73c63bd737eec47702f0be469d2a5a08a4c }
     created: 2026-11-24
     started: 2026-11-24
     review: { date: 2026-11-24, verdict: "conforme (lead : diff a621789 relu — « undefined » était écrit en dur dans Piège #3 entre <code>, remplacé par « pas d'option du tout » ; test e2e des 39 pages, rouge avant, vert après ; 786 tests verts)", commit: a621789d923e15e88f29d315a923935ab6790258 }
