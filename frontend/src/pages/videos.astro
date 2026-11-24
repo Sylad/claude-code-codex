@@ -16,15 +16,15 @@ import { videoEntries } from "@/data/videos";
     intro="Une courte sélection de chaînes YouTube, conférences et podcasts qui parlent vraiment de Claude Code, des hooks, du MCP et du codage agentique — pas d'influenceurs IA généralistes."
   />
 
-  <div class="mx-auto max-w-6xl px-[min(1.25rem,20px)] sm:px-8 pt-8">
+  <div class="mx-auto max-w-6xl px-borne-5 sm:px-8 pt-8">
     <RevueContenu page="videos" />
   </div>
 
-  <section class="mx-auto max-w-6xl px-[min(1.25rem,20px)] sm:px-8 py-12">
+  <section class="mx-auto max-w-6xl px-borne-5 sm:px-8 py-12">
     <VideosCatalog entries={videoEntries} client:load />
 
     <div
-      class="mt-12 rounded-xl border border-claude/20 bg-claude/5 p-[min(1.5rem,24px)] sm:p-8"
+      class="mt-12 rounded-xl border border-claude/20 bg-claude/5 p-borne-6 sm:p-8"
     >
       <h2 class="font-mono text-xs uppercase tracking-wider text-claude mb-3">
         Critères de sélection

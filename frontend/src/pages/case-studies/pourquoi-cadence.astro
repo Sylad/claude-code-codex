@@ -156,7 +156,7 @@ const limites = [
     intro="Cadence est né d'une liste de besoins, pas d'une idée d'outil. Cette page dit lesquels, ce que l'outil fait pour chacun, et ce que les mesures en disent : celles qui lui donnent raison comme celles qui lui donnent tort."
   />
 
-  <section class="mx-auto max-w-3xl px-[min(1.25rem,20px)] sm:px-8 py-12 space-y-12">
+  <section class="mx-auto max-w-3xl px-borne-5 sm:px-8 py-12 space-y-12">
     <EtudeFraicheur depots={[{ nom: "Sylad/cadence", href: "https://github.com/Sylad/cadence" }]} date="2026-11-19" />
 
     <CaseStudySection eyebrow="Cinq besoins">
@@ -167,7 +167,7 @@ const limites = [
       </p>
       <ol class="space-y-3 list-none">
         {besoins.map((b, i) => (
-          <li data-besoin={i + 1} class="rounded-xl border border-white/10 bg-paper-elevated p-[min(1.25rem,20px)]">
+          <li data-besoin={i + 1} class="rounded-xl border border-white/10 bg-paper-elevated p-borne-5">
             <p class="font-mono text-xs text-claude mb-2">Besoin {i + 1}</p>
             <h3 class="text-base font-medium text-ink mb-1.5">{b.nom}</h3>
             <p class="text-sm text-ink-muted leading-relaxed">{insecable(b.corps)}</p>
@@ -196,7 +196,7 @@ const limites = [
         travail à part ; un programme, pas un modèle, enchaîne la porte et
         l'intégration. Chaque besoin a sa pièce :
       </p>
-      <div class="-mx-[min(1.25rem,20px)] sm:mx-0">
+      <div class="-mx-borne-5 sm:mx-0">
       <Schema id="besoins-mecanismes" legende="Les cinq besoins, à gauche, et la pièce de cadence qui répond à chacun, à droite.">
         <svg viewBox="0 0 340 330" style="max-width:26rem" role="img" aria-labelledby="sch-besoins-t sch-besoins-d" xmlns="http://www.w3.org/2000/svg">
           <title id="sch-besoins-t">Un mécanisme par besoin</title>
@@ -224,7 +224,7 @@ const limites = [
       </div>
       <ul class="space-y-3 list-none">
         {reponses.map((r) => (
-          <li class="rounded-xl border border-white/10 bg-paper-elevated p-[min(1.25rem,20px)]">
+          <li class="rounded-xl border border-white/10 bg-paper-elevated p-borne-5">
             <p class="font-mono text-xs text-claude mb-2">Besoin {r.besoin}</p>
             <h3 class="text-base font-medium text-ink mb-1.5">{r.mecanisme}</h3>
             <p class="text-sm text-ink-muted leading-relaxed">{insecable(r.detail)}</p>
@@ -245,7 +245,7 @@ const limites = [
       </p>
       <div class="grid gap-3 sm:grid-cols-2">
         {chiffres.map((c) => (
-          <div data-chiffre={c.id} data-nombres={c.nombres} data-source={c.source} class="rounded-xl border border-white/10 bg-paper-elevated p-[min(1.25rem,20px)]">
+          <div data-chiffre={c.id} data-nombres={c.nombres} data-source={c.source} class="rounded-xl border border-white/10 bg-paper-elevated p-borne-5">
             <p class="font-mono text-lg text-claude">{insecable(c.valeur)}</p>
             <p class="mt-1 font-mono text-xs text-ink-muted">{c.date}</p>
             <p class="mt-2 text-sm text-ink-muted leading-relaxed">{insecable(c.legende)}</p>
@@ -264,7 +264,7 @@ const limites = [
       </p>
       <ul data-limites class="space-y-3 list-none">
         {limites.map((l) => (
-          <li data-limite={l.id} data-nombres={l.nombres || undefined} data-source={l.source} class="rounded-xl border border-white/10 bg-paper-elevated p-[min(1.25rem,20px)]">
+          <li data-limite={l.id} data-nombres={l.nombres || undefined} data-source={l.source} class="rounded-xl border border-white/10 bg-paper-elevated p-borne-5">
             <h3 class="text-base font-medium text-ink mb-1.5">{insecable(l.titre)}</h3>
             <p class="text-sm text-ink-muted leading-relaxed">{insecable(l.corps)}</p>
             <p class="mt-2 font-mono text-[11px] text-ink-muted [overflow-wrap:anywhere]">
@@ -277,7 +277,7 @@ const limites = [
 
     <CaseStudySection eyebrow="Essayer cadence">
       <p class={CODE} set:html={inlineCodeHtml("Cadence est libre et publié sur npm sous le nom `@sylad/cadence`. Il faut Node 22.18 ou plus récent, et Claude Code installé et connecté :")} />
-      <pre tabindex="0" role="region" aria-label="Commande d’installation de cadence" class="rounded-xl border border-white/10 bg-paper-elevated p-[min(1rem,16px)] font-mono text-sm text-ink overflow-x-auto"><code>npm install -g @sylad/cadence</code></pre>
+      <pre tabindex="0" role="region" aria-label="Commande d’installation de cadence" class="rounded-xl border border-white/10 bg-paper-elevated p-borne-4 font-mono text-sm text-ink overflow-x-auto"><code>npm install -g @sylad/cadence</code></pre>
       <p>
         L'histoire de l'outil, ses premières versions et ses échecs sont dans
         l'<a href="/case-studies/cadence">étude de cas cadence</a> ; ce qu'il
@@ -288,7 +288,7 @@ const limites = [
         <a href={NPM} target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">↗ Paquet npm @sylad/cadence</a>
         <a href={doc("docs/v2/banc.md")} target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">↗ Le banc, en détail</a>
       </div>
-      <p class="text-center text-xs text-ink-muted font-mono rounded-xl border border-white/10 bg-paper-elevated p-[min(1rem,16px)]">
+      <p class="text-center text-xs text-ink-muted font-mono rounded-xl border border-white/10 bg-paper-elevated p-borne-4">
         Chiffres relevés dans le dépôt cadence au 19 novembre 2026.
       </p>
     </CaseStudySection>

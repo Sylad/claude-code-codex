@@ -7,7 +7,7 @@ import DateLongue from "./DateLongue.astro";
 verifierActualites(new Date());
 ---
 
-<section class="mx-auto max-w-6xl px-[min(1.25rem,20px)] sm:px-8 pt-10" aria-labelledby="veille-titre" data-veille>
+<section class="mx-auto max-w-6xl px-borne-5 sm:px-8 pt-10" aria-labelledby="veille-titre" data-veille>
   <p class="font-mono text-xs uppercase tracking-wider text-claude mb-3">Veille</p>
   <h2 id="veille-titre" class="text-2xl font-medium text-ink mb-3">Actualités de l'écosystème</h2>
   <p class="text-ink-muted leading-relaxed max-w-3xl mb-6">
@@ -16,7 +16,7 @@ verifierActualites(new Date());
   </p>
   <ol class="grid gap-4 md:grid-cols-2">
     {actualites.map((a) => (
-      <li class="rounded-lg border border-white/10 bg-paper-elevated p-[min(1rem,16px)] [overflow-wrap:anywhere]" data-actualite>
+      <li class="rounded-lg border border-white/10 bg-paper-elevated p-borne-4 [overflow-wrap:anywhere]" data-actualite>
         <p class="font-mono text-xs text-ink-muted">
           {a.nature === "publie" ? "Publié le " : "Relevé le "}
           <DateLongue day={a.date} />

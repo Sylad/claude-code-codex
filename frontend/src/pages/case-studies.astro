@@ -41,11 +41,11 @@ function formatStars(n?: number): string {
     intro={`${APP_COUNT - 1} projets perso + ce site lui-même. Tous codés en pair-programming avec Claude Code — 0 ligne de code écrite par l'humain. Clique sur une card pour le deep dive : architecture, stack, process IA, lessons learned.`}
   />
 
-  <section class="mx-auto max-w-6xl px-[min(1.25rem,20px)] sm:px-8 py-16">
+  <section class="mx-auto max-w-6xl px-borne-5 sm:px-8 py-16">
     <div class="grid gap-5 sm:grid-cols-2">
       {apps.map((app) => (
         <article
-          class={`group relative overflow-hidden rounded-xl border border-white/10 bg-paper-elevated p-[min(1.5rem,24px)] hover:border-claude/40 transition-colors motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-claude/10`}
+          class={`group relative overflow-hidden rounded-xl border border-white/10 bg-paper-elevated p-borne-6 hover:border-claude/40 transition-colors motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-claude/10`}
         >
           <div
             class={`absolute inset-0 bg-gradient-to-br ${app.accent} opacity-50 group-hover:opacity-80 transition-opacity pointer-events-none`}
@@ -105,7 +105,7 @@ function formatStars(n?: number): string {
         techniques et leçons.
       </p>
       <div class="grid gap-5 sm:grid-cols-2">
-        <article class="group relative overflow-hidden rounded-xl border border-white/10 bg-paper-elevated p-[min(1.5rem,24px)] hover:border-claude/40 transition-colors motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-claude/10">
+        <article class="group relative overflow-hidden rounded-xl border border-white/10 bg-paper-elevated p-borne-6 hover:border-claude/40 transition-colors motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-claude/10">
           <div class="absolute inset-0 bg-gradient-to-br from-violet-500/20 to-transparent opacity-50 group-hover:opacity-80 transition-opacity pointer-events-none"></div>
           <div class="relative">
             <p class="font-mono text-sm text-claude mb-3">k8s-migration-overnight</p>
@@ -134,7 +134,7 @@ function formatStars(n?: number): string {
           </div>
         </article>
 
-        <article class="group relative overflow-hidden rounded-xl border border-white/10 bg-paper-elevated p-[min(1.5rem,24px)] hover:border-claude/40 transition-colors motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-claude/10">
+        <article class="group relative overflow-hidden rounded-xl border border-white/10 bg-paper-elevated p-borne-6 hover:border-claude/40 transition-colors motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-claude/10">
           <div class="absolute inset-0 bg-gradient-to-br from-teal-500/20 to-transparent opacity-50 group-hover:opacity-80 transition-opacity pointer-events-none"></div>
           <div class="relative">
             <p class="font-mono text-sm text-claude mb-3">aetherwx-encyclopedia</p>
@@ -166,7 +166,7 @@ function formatStars(n?: number): string {
           </div>
         </article>
 
-        <article class="group relative overflow-hidden rounded-xl border border-white/10 bg-paper-elevated p-[min(1.5rem,24px)] hover:border-claude/40 transition-colors motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-claude/10">
+        <article class="group relative overflow-hidden rounded-xl border border-white/10 bg-paper-elevated p-borne-6 hover:border-claude/40 transition-colors motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-claude/10">
           <div class="absolute inset-0 bg-gradient-to-br from-amber-500/20 to-transparent opacity-50 group-hover:opacity-80 transition-opacity pointer-events-none"></div>
           <div class="relative">
             <p class="font-mono text-sm text-claude mb-3">token-optimizers-2026</p>
@@ -194,7 +194,7 @@ function formatStars(n?: number): string {
           </div>
         </article>
 
-        <article class="group relative overflow-hidden rounded-xl border border-white/10 bg-paper-elevated p-[min(1.5rem,24px)] hover:border-claude/40 transition-colors motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-claude/10">
+        <article class="group relative overflow-hidden rounded-xl border border-white/10 bg-paper-elevated p-borne-6 hover:border-claude/40 transition-colors motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-claude/10">
           <div class="absolute inset-0 bg-gradient-to-br from-teal-500/20 to-transparent opacity-50 group-hover:opacity-80 transition-opacity pointer-events-none"></div>
           <div class="relative">
             <p class="font-mono text-sm text-claude mb-3">aetherwx-qa-harness</p>
@@ -229,7 +229,7 @@ function formatStars(n?: number): string {
           </div>
         </article>
 
-        <article class="group relative overflow-hidden rounded-xl border border-white/10 bg-paper-elevated p-[min(1.5rem,24px)] hover:border-claude/40 transition-colors motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-claude/10">
+        <article class="group relative overflow-hidden rounded-xl border border-white/10 bg-paper-elevated p-borne-6 hover:border-claude/40 transition-colors motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-claude/10">
           <div class="absolute inset-0 bg-gradient-to-br from-orange-500/20 to-transparent opacity-50 group-hover:opacity-80 transition-opacity pointer-events-none"></div>
           <div class="relative">
             <p class="font-mono text-sm text-claude mb-3">cadence</p>
@@ -260,7 +260,7 @@ function formatStars(n?: number): string {
           </div>
         </article>
 
-        <article class="group relative overflow-hidden rounded-xl border border-white/10 bg-paper-elevated p-[min(1.5rem,24px)] hover:border-claude/40 transition-colors motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-claude/10">
+        <article class="group relative overflow-hidden rounded-xl border border-white/10 bg-paper-elevated p-borne-6 hover:border-claude/40 transition-colors motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-claude/10">
           <div class="absolute inset-0 bg-gradient-to-br from-orange-500/20 to-transparent opacity-50 group-hover:opacity-80 transition-opacity pointer-events-none"></div>
           <div class="relative">
             <p class="font-mono text-sm text-claude mb-3">pourquoi-cadence</p>
@@ -330,7 +330,7 @@ function formatStars(n?: number): string {
                 const isInternal = !!tool.caseStudyHref;
                 return (
                   <article
-                    class={`relative overflow-hidden rounded-xl border ${STATUS_ACCENTS[status]} p-[min(1.25rem,20px)] transition-colors hover:border-claude/40 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-claude/10`}
+                    class={`relative overflow-hidden rounded-xl border ${STATUS_ACCENTS[status]} p-borne-5 transition-colors hover:border-claude/40 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-claude/10`}
                   >
                     <div class="flex flex-col gap-3 h-full">
                       <div class="flex items-start justify-between gap-2">
@@ -399,7 +399,7 @@ function formatStars(n?: number): string {
       ))}
 
       <div
-        class="rounded-xl border border-white/5 border-dashed bg-paper-elevated/50 p-[min(1.25rem,20px)] text-center"
+        class="rounded-xl border border-white/5 border-dashed bg-paper-elevated/50 p-borne-5 text-center"
       >
         <p class="font-mono text-xs uppercase tracking-wider text-ink-muted mb-1">
           Suggestion ?

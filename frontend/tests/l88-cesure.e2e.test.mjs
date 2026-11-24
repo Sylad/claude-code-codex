@@ -1,17 +1,24 @@
-// L88 (WCAG 1.4.10, revue UX de L87) — à 320 px avec le texte à 200 %, des titres se coupaient au milieu
-// d'un mot sans trait d'union (« chang|é » sur /nouveautes, « vérific|ation » et « confia|nce » sur
-// /livre-de-bord, « descripti|ons » sur /plan-de-travail, « sélectionn|és » et « newsletters » sur /learning).
-// Attendu : aucun mot coupé sans trait à 320, 390 et 768 px, texte de 100 à 200 %, sur toutes les pages ;
-// la césure française (hyphens: auto, lang=fr) seulement là où un mot ne tient pas ; rendu inchangé au
-// réglage normal. Texte agrandi simulé comme dans la revue : html { font-size: N % }.
-// Mesure : tests/lib/mots-casses.mjs. Lit le site CONSTRUIT : `npx astro build` avant.
+// L88 (WCAG 1.4.10, revue UX de L87, revue r1) — à 320 px avec le texte à 200 %, des titres se coupaient au
+// milieu d'un mot sans trait d'union (« chang|é », « vérific|ation », « alexgreensh/tok|en-optimizer »).
+// Attendu, d'après la spec du lot et la revue r1 :
+//   - aucun mot coupé sans trait à 320, 390 et 768 px, texte de 100 à 200 %, sur toutes les pages ; un nom
+//     ou un identifiant (titres compris) se coupe à sa ponctuation, sa casse ou ses chiffres ;
+//   - la césure ne touche que le mot qui ne tient pas sur une ligne (M1) ; au moins 3 lettres de chaque
+//     côté, pas plus de 2 lignes à trait de suite (M2) ;
+//   - aucun U+00AD dans le texte copié ni dans le nom accessible (m1) ;
+//   - les h1 doublent avec le texte (WCAG 1.4.4, F94 : M4) ;
+//   - au réglage normal (texte 100 %, 390 à 1440 px), rien n'est posé : le rendu ne change pas ;
+//   - la césure suit la taille du texte et la navigation interne.
+// Oracle : tests/lib/coupures.mjs, qui juge chaque coupure sur le rendu (trait dessiné ou mot entier), sans
+// rien reprendre de src/lib/cesure.mjs. Texte agrandi simulé comme dans la revue : html { font-size: N % }.
+// Lit le site CONSTRUIT : `npx astro build` avant.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readdirSync, existsSync, readFileSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { DIST, setupBrowser } from './lib/e2e-dist.mjs';
-import { motsCasses } from './lib/mots-casses.mjs';
+import { chargerImages, releverCoupures, verifierCoupures } from './lib/coupures.mjs';
 
 function pages(dir) {
   if (!existsSync(dir)) return [];
@@ -24,7 +31,9 @@ function pages(dir) {
 const ROUTES = pages(DIST);
 const LARGEURS = [320, 390, 768];
 const TAILLES = [100, 125, 150, 175, 200];
-const CITEES = ['/nouveautes/', '/livre-de-bord/', '/plan-de-travail/', '/learning/'];
+const CITEES = ['/nouveautes/', '/livre-de-bord/', '/plan-de-travail/', '/learning/', '/case-studies/k8s-migration-overnight/'];
+// Ce que le script de césure peut poser dans la page.
+const POSE = '[data-cesure], [data-cesure-vu], [data-cesure-copie]';
 
 // La césure est recalculée à l'image qui suit un changement de taille du <body> (src/lib/cesure.mjs) :
 // on attend que son dernier calcul porte sur la mise en page courante.
@@ -35,31 +44,37 @@ async function attendreCesure(page) {
   }, null, { timeout: 15_000 });
 }
 
-// Éléments césurés et césures conditionnelles posées dans le texte affiché (hors <script> : le script de
-// césure contient lui-même le caractère U+00AD).
-function compterCesures() {
-  let shy = 0;
-  const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
-    acceptNode: (n) => (n.parentElement.closest('script, style') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT),
-  });
-  for (let n = w.nextNode(); n; n = w.nextNode()) shy += n.data.split('\u00AD').length - 1;
-  return { cesure: document.querySelectorAll('[data-cesure]').length, shy };
-}
-
 async function ouvrir(page, url) {
   await page.goto(url, { waitUntil: 'load' });
   await page.evaluate(() => document.fonts.ready);
   await attendreCesure(page);
   // Le texte des <details> fermés compte aussi (revue L87, m2) : on les ouvre tous.
   await page.evaluate(() => document.querySelectorAll('details').forEach((d) => { d.open = true; }));
+  await chargerImages(page);
   await attendreCesure(page);
 }
 
-test('les pages citées par la revue sont dans dist', () => {
+async function taille(page, n) {
+  await page.evaluate((v) => { document.documentElement.style.fontSize = v ? `${v}%` : ''; }, n);
+  await attendreCesure(page);
+}
+
+// U+00AD dans le texte que lisent les aides techniques et que copie le lecteur (hors <script>, hors texte vu
+// d'un mot doublé, masqué aux aides techniques et non sélectionnable).
+function shyLisibles() {
+  let n = 0;
+  const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+    acceptNode: (t) => (t.parentElement.closest('script, style, [data-cesure-vu]') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT),
+  });
+  for (let t = w.nextNode(); t; t = w.nextNode()) n += t.data.split('­').length - 1;
+  return n;
+}
+
+test('les pages citées par les revues sont dans dist', () => {
   for (const r of CITEES) assert.ok(ROUTES.includes(r), `${r} absent de dist : lancer astro build`);
 });
 
-test('la césure automatique n\'est donnée qu\'aux éléments marqués data-cesure', () => {
+test('la césure automatique n\'est donnée qu\'à [data-cesure], avec 3 lettres au moins de chaque côté', () => {
   const src = fileURLToPath(new URL('../src/', import.meta.url));
   const fichiers = (d) => readdirSync(d, { withFileTypes: true }).flatMap((e) => (e.isDirectory()
     ? fichiers(join(d, e.name)) : /\.(css|astro|vue)$/.test(e.name) ? [join(d, e.name)] : []));
@@ -69,82 +84,245 @@ test('la césure automatique n\'est donnée qu\'aux éléments marqués data-ces
     for (const m of texte.matchAll(/hyphens\s*:\s*auto|\bhyphens-auto\b/g)) trouves.push(`${relative(src, f)}@${m.index}`);
   }
   const css = readFileSync(join(src, 'styles/global.css'), 'utf8');
-  assert.match(css, /\[data-cesure\]\s*\{\s*-webkit-hyphens:\s*auto;\s*hyphens:\s*auto;\s*\}/);
+  assert.match(css, /\[data-cesure\]\s*\{\s*-webkit-hyphens:\s*auto;\s*hyphens:\s*auto;\s*hyphenate-limit-chars:\s*6 3 3;\s*\}/);
   assert.equal(trouves.length, 2, `hyphens: auto ailleurs que sous [data-cesure] : ${trouves.join(', ')}`);
 });
 
-test('l\'outil de mesure voit une coupure sans trait et accepte une césure', { timeout: 60_000 }, async (t) => {
-  const env = await setupBrowser(t);
-  if (!env) return;
-  const page = await env.browser.newPage();
-  const bloc = (style, texte, largeur = 70) => `<p style="width:${largeur}px;font-size:20px;overflow-wrap:anywhere;${style}">${texte}</p>`;
-  await page.setContent(`<html lang="fr"><body>${bloc('', 'confiance')}</body></html>`);
-  assert.equal((await page.evaluate(motsCasses)).length, 1, 'mot coupé de force non vu');
-  await page.setContent(`<html lang="fr"><body>${bloc('hyphens:auto', 'vérification descriptions')}</body></html>`);
-  assert.deepEqual(await page.evaluate(motsCasses), [], 'une césure au dictionnaire est permise');
-  await page.setContent(`<html lang="fr"><body>${bloc('', 'le 23 no\u00ADvembre')}</body></html>`);
-  assert.deepEqual(await page.evaluate(motsCasses), [], 'une césure conditionnelle (U+00AD) est permise');
-  await page.setContent(`<html lang="fr"><body>${bloc('', 'PersistentVolumeClaim warhammer40k /geoserver/web/')}</body></html>`);
-  assert.deepEqual(await page.evaluate(motsCasses), [], 'un identifiant ou un chemin n\'est pas un mot');
-  await page.setContent(`<html lang="fr"><body>${bloc('hyphens:auto', 'confiance')}</body></html>`);
-  assert.equal((await page.evaluate(motsCasses)).length, 1, 'une coupure hors point de césure reste une faute');
+test('marges bornées : une seule source (jetons --spacing-borne-*), plus aucune valeur recopiée', () => {
+  const src = fileURLToPath(new URL('../src/', import.meta.url));
+  const fichiers = (d) => readdirSync(d, { withFileTypes: true }).flatMap((e) => (e.isDirectory()
+    ? fichiers(join(d, e.name)) : /\.(astro|vue|ts|mjs)$/.test(e.name) ? [join(d, e.name)] : []));
+  const recopies = [];
+  for (const f of fichiers(src)) {
+    const texte = readFileSync(f, 'utf8');
+    for (const m of texte.matchAll(/min\(\s*[0-9.]+rem\s*,\s*[0-9.]+px\s*\)/g)) recopies.push(`${relative(src, f)} : ${m[0]}`);
+  }
+  assert.deepEqual(recopies, []);
+  const css = readFileSync(join(src, 'styles/global.css'), 'utf8');
+  for (const n of [3, 4, 5, 6, 10]) {
+    assert.match(css, new RegExp(`--spacing-borne-${n}: min\\(${n * 0.25}rem, ${n * 4}px\\);`), `--spacing-borne-${n}`);
+  }
 });
 
-test('aucun mot coupé sans trait d\'union à 320, 390 et 768 px, texte de 100 à 200 %', { timeout: 900_000 }, async (t) => {
+test('l\'oracle voit une coupure sans trait, une césure trop courte, une césure inutile et 3 traits de suite', { timeout: 60_000 }, async (t) => {
+  const env = await setupBrowser(t);
+  if (!env) return;
+  const page = await env.browser.newPage({ viewport: { width: 600, height: 600 } });
+  const juger = async (corps) => {
+    await page.setContent(`<html lang="fr"><body style="margin:0;background:#111;color:#eee;font:20px/1.4 sans-serif">${corps}</body></html>`);
+    return verifierCoupures(page);
+  };
+  const bloc = (style, texte, largeur = 80) => `<p style="width:${largeur}px;overflow-wrap:anywhere;${style}">${texte}</p>`;
+  const f1 = await juger(bloc('', 'confiance'));
+  assert.equal(f1.length, 1, `mot coupé de force : ${f1}`);
+  assert.match(f1[0], /^sans trait/);
+  assert.deepEqual(await juger(bloc('hyphens:auto;hyphenate-limit-chars:6 3 3', 'vérification')), [], 'césure au dictionnaire');
+  assert.deepEqual(await juger(bloc('', 'post­gresql')), [], 'césure conditionnelle dessinée');
+  assert.deepEqual(await juger(bloc('', 'Persistent<wbr>Volume<wbr>Claim warhammer<wbr>40k /geoserver/<wbr>web/', 120)), [], 'nom coupé à sa casse, ses chiffres, sa ponctuation');
+  const f2 = await juger(bloc('', 'so­lidement', 40));
+  assert.ok(f2.some((x) => /^moins de 3 lettres/.test(x)), `coupure à 2 lettres : ${f2}`);
+  // Chromium ne coupe au dictionnaire qu'un mot qui ne tient pas : le cas vu en r1 est un U+00AD posé
+  // dans un mot qui tenait sur la ligne suivante (« dé-crit », « Vi-déos »).
+  const f3 = await juger(bloc('', 'des bana\u00adnes', 100));
+  assert.ok(f3.some((x) => /^césure d'un mot qui tient/.test(x)), `mot qui tient sur une ligne : ${f3}`);
+  const f4 = await juger(bloc('', 'abc­def­ghi­jkl­mno', 60));
+  assert.ok(f4.some((x) => /^3 lignes à trait de suite/.test(x)), `suite de traits : ${f4}`);
+  await page.close();
+});
+
+test('aucun mot coupé sans trait, aucune césure inutile ni trop courte, aucun U+00AD lisible ni défilement latéral — 320, 390 et 768 px, texte de 100 à 200 %', { timeout: 1_500_000 }, async (t) => {
   const env = await setupBrowser(t);
   if (!env) return;
   const fautes = [];
+  const exemptees = new Set();
   for (const width of LARGEURS) {
     const context = await env.browser.newContext({ viewport: { width, height: 844 } });
     const page = await context.newPage();
     for (const route of ROUTES) {
       await ouvrir(page, `${env.base}${route}`);
-      for (const taille of TAILLES) {
-        await page.evaluate((n) => { document.documentElement.style.fontSize = `${n}%`; }, taille);
-        await attendreCesure(page);
-        const casses = await page.evaluate(motsCasses);
-        if (casses.length) fautes.push(`${route} @${width}px ${taille} % : ${casses.slice(0, 5).join(', ')}${casses.length > 5 ? ` (+${casses.length - 5})` : ''}`);
+      for (const n of TAILLES) {
+        await taille(page, n);
+        const ici = `${route} @${width}px ${n} %`;
+        // Un nom (commande, chemin) dans un îlot Vue hors titre : le script n'y touche pas au DOM (Vue le
+        // réécrit), sa coupure reste celle d'overflow-wrap. Compté à part, pas jugé.
+        const ex = [];
+        const f = await verifierCoupures(page, { exempter: (c) => c.nom && c.ilot && !c.titre, exemptees: ex });
+        for (const x of ex) exemptees.add(`${route} ${x}`);
+        if (f.length) fautes.push(`${ici} : ${f.slice(0, 5).join(' ; ')}${f.length > 5 ? ` (+${f.length - 5})` : ''}`);
+        const shy = await page.evaluate(shyLisibles);
+        if (shy) fautes.push(`${ici} : ${shy} U+00AD dans le texte lisible`);
+        const deborde = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+        if (deborde > 0) fautes.push(`${ici} : défilement latéral de ${deborde} px`);
       }
     }
     await context.close();
   }
+  t.diagnostic(`noms coupés sans trait dans un îlot Vue (non jugés) : ${exemptees.size}`);
   assert.deepEqual(fautes, []);
 });
 
-test('réglage normal (texte 100 %, 390 à 1440 px) : aucune césure posée, rendu inchangé', { timeout: 600_000 }, async (t) => {
+test('réglage normal (texte 100 %, 390 à 1440 px) : aucune césure posée ; des <wbr> seulement là où la prod coupe un nom sans trait', { timeout: 600_000 }, async (t) => {
   const env = await setupBrowser(t);
   if (!env) return;
   const marques = [];
+  const corriges = [];
   for (const width of [390, 768, 1440]) {
     const context = await env.browser.newContext({ viewport: { width, height: 900 } });
     const page = await context.newPage();
     for (const route of ROUTES) {
       await ouvrir(page, `${env.base}${route}`);
-      const n = await page.evaluate(compterCesures);
-      if (n.cesure || n.shy) marques.push(`${route} @${width}px : ${n.cesure} élément(s) césuré(s), ${n.shy} césure(s) posée(s)`);
+      const servi = (readFileSync(join(DIST, route, 'index.html'), 'utf8').match(/<wbr/g) ?? []).length;
+      const n = await page.evaluate((sel) => ({ pose: document.querySelectorAll(sel).length, wbr: document.querySelectorAll('wbr').length }), POSE);
+      if (n.pose) marques.push(`${route} @${width}px : ${n.pose} élément(s) posé(s) à 100 %`);
+      if (n.wbr === servi) continue;
+      // Des <wbr> ajoutés ne se justifient que si la page servie, sans le script, coupe un mot ici : sans le
+      // script, ni U+00AD ni césure automatique, toute coupure au milieu d'un mot y est donc sans trait.
+      const fautes = await verifierCoupures(page);
+      if (fautes.length) marques.push(...fautes.map((f) => `${route} @${width}px : ${f}`));
+      const brut = await env.browser.newContext({ viewport: { width, height: 900 }, javaScriptEnabled: false });
+      const pb = await brut.newPage();
+      await pb.goto(`${env.base}${route}`);
+      await pb.evaluate(() => document.fonts.ready);
+      const avant = await pb.evaluate(releverCoupures);
+      await brut.close();
+      if (!avant.length) marques.push(`${route} @${width}px : ${n.wbr - servi} <wbr> ajouté(s) sans coupure sans trait à corriger`);
+      corriges.push(`${route} @${width}px : ${n.wbr - servi} <wbr>`);
     }
     await context.close();
   }
+  t.diagnostic(`<wbr> posés à 100 % (la prod y coupait un nom sans trait) : ${corriges.join(' ; ') || 'aucun'}`);
   assert.deepEqual(marques, []);
 });
 
-test('la césure suit la taille du texte : posée à 200 %, retirée au retour à 100 %', { timeout: 120_000 }, async (t) => {
+test('la césure suit la taille du texte : posée à 200 %, entièrement défaite au retour à 100 %', { timeout: 120_000 }, async (t) => {
   const env = await setupBrowser(t);
   if (!env) return;
   const context = await env.browser.newContext({ viewport: { width: 320, height: 844 } });
   const page = await context.newPage();
-  await ouvrir(page, `${env.base}/nouveautes/`);
-  const compte = () => page.evaluate(compterCesures);
-  const avant = await compte();
-  await page.evaluate(() => { document.documentElement.style.fontSize = '200%'; });
-  await attendreCesure(page);
-  const grand = await compte();
-  assert.ok(grand.cesure > avant.cesure, `200 % : ${grand.cesure} élément(s) césuré(s), pas plus qu'à 100 % (${avant.cesure})`);
-  // Le titre cité par la revue (« chang|é ») tient désormais sur ses lignes.
-  const h1 = await page.evaluate(() => document.querySelector('h1').textContent.trim());
-  assert.match(h1, /changé/);
-  await page.evaluate(() => { document.documentElement.style.fontSize = ''; });
-  await attendreCesure(page);
-  assert.deepEqual(await compte(), avant, 'retour à 100 % : la page revient à son état initial');
+  for (const route of ['/nouveautes/', '/case-studies/k8s-migration-overnight/']) {
+    await ouvrir(page, `${env.base}${route}`);
+    const avant = await page.evaluate(() => document.querySelector('main').innerHTML);
+    await taille(page, 200);
+    const poses = await page.evaluate((sel) => document.querySelectorAll(`${sel}, main wbr`).length, POSE);
+    assert.ok(poses > 0, `${route} 200 % : rien de posé`);
+    // Le titre cité par la revue (« chang|é ») est entier.
+    if (route === '/nouveautes/') assert.match(await page.evaluate(() => document.querySelector('h1').textContent), /changé/);
+    await taille(page, 100);
+    assert.equal(await page.evaluate(() => document.querySelector('main').innerHTML), avant, `${route} : retour à 100 %, la page n'est pas revenue à son état servi`);
+  }
+  await context.close();
+});
+
+test('M3 : les noms des titres se coupent à leur ponctuation — h1 « alexgreensh/token-optimizer » à 320 px', { timeout: 120_000 }, async (t) => {
+  const env = await setupBrowser(t);
+  if (!env) return;
+  const context = await env.browser.newContext({ viewport: { width: 320, height: 844 } });
+  const page = await context.newPage();
+  await ouvrir(page, `${env.base}/case-studies/alexgreensh-polyform/`);
+  const h1 = await page.evaluate(() => document.querySelector('h1').textContent);
+  assert.match(h1, /alexgreensh\/token-optimizer/);
+  assert.deepEqual(await verifierCoupures(page), []);
+  // La coupure est à la barre oblique : « alexgreensh/ » finit sa ligne.
+  const fin = await page.evaluate(() => {
+    const h = document.querySelector('h1');
+    const r = document.createRange();
+    const w = document.createTreeWalker(h, NodeFilter.SHOW_TEXT);
+    let txt = '';
+    let haut = null;
+    for (let n = w.nextNode(); n; n = w.nextNode()) {
+      for (let i = 0; i < n.data.length; i++) {
+        r.setStart(n, i);
+        r.setEnd(n, i + 1);
+        const q = [...r.getClientRects()].at(-1);
+        if (q && haut !== null && q.top - haut > q.height / 2) txt += '|';
+        if (q) haut = q.top;
+        txt += n.data[i];
+      }
+    }
+    return txt;
+  });
+  assert.match(fin, /alexgreensh\/\|token/, `coupure du h1 : ${fin}`);
+  await context.close();
+});
+
+test('m1 : texte copié et nom accessible sans U+00AD, texte agrandi (320 px, 200 %)', { timeout: 120_000 }, async (t) => {
+  const env = await setupBrowser(t);
+  if (!env) return;
+  const context = await env.browser.newContext({ viewport: { width: 320, height: 844 } });
+  const page = await context.newPage();
+  const cdp = await context.newCDPSession(page);
+  for (const route of ['/nouveautes/', '/case-studies/k8s-migration-overnight/']) {
+    await ouvrir(page, `${env.base}${route}`);
+    await taille(page, 200);
+    const copies = await page.evaluate(() => {
+      const out = [];
+      for (const el of document.querySelectorAll('main h1, main h2, main h3, main p, main li')) {
+        if (!el.querySelector('[data-cesure], [data-cesure-vu]')) continue;
+        const r = document.createRange();
+        r.selectNodeContents(el);
+        getSelection().removeAllRanges();
+        getSelection().addRange(r);
+        out.push(getSelection().toString());
+      }
+      getSelection().removeAllRanges();
+      return out;
+    });
+    assert.ok(copies.length > 0, `${route} : aucun passage césuré à copier`);
+    for (const c of copies) assert.ok(!c.includes('­'), `${route} : U+00AD copié dans « ${c.slice(0, 60)} »`);
+    const doubles = await page.evaluate(() => [...document.querySelectorAll('[data-cesure-vu]')].map((v) => [v.textContent.replace(/­/g, ''), v.nextSibling?.textContent]));
+    for (const [vu, copie] of doubles) assert.equal(copie, vu, `${route} : la copie d'un mot doublé diffère du texte vu`);
+    const { nodes } = await cdp.send('Accessibility.getFullAXTree');
+    const noms = nodes.map((n) => n.name?.value ?? '').filter((v) => v.includes('­'));
+    assert.deepEqual(noms, [], `${route} : U+00AD dans un nom accessible`);
+  }
+  if (!(await page.evaluate(() => document.querySelector('[data-cesure-vu]')))) t.diagnostic('aucun mot doublé sur la dernière page');
+  await context.close();
+});
+
+test('M4 (WCAG 1.4.4, F94) : les h1 doublent avec le texte, rien n\'est plafonné par la largeur', { timeout: 120_000 }, async (t) => {
+  const env = await setupBrowser(t);
+  if (!env) return;
+  const ecarts = [];
+  for (const width of [320, 390, 768]) {
+    const context = await env.browser.newContext({ viewport: { width, height: 844 } });
+    const page = await context.newPage();
+    for (const route of ['/', '/nouveautes/', '/livre-de-bord/', '/plan-de-travail/']) {
+      await ouvrir(page, `${env.base}${route}`);
+      const corps = () => page.evaluate(() => parseFloat(getComputedStyle(document.querySelector('h1')).fontSize));
+      const a = await corps();
+      await taille(page, 200);
+      const b = await corps();
+      await taille(page, 100);
+      if (Math.abs(b / a - 2) > 0.01) ecarts.push(`${route} @${width}px : h1 ${a} → ${b} px (× ${(b / a).toFixed(2)})`);
+    }
+    await context.close();
+  }
+  assert.deepEqual(ecarts, []);
+});
+
+test('navigation interne (transitions Astro) : la césure suit la nouvelle page', { timeout: 120_000 }, async (t) => {
+  const env = await setupBrowser(t);
+  if (!env) return;
+  const context = await env.browser.newContext({ viewport: { width: 320, height: 844 } });
+  const page = await context.newPage();
+  await ouvrir(page, `${env.base}/`);
+  await taille(page, 200);
+  for (const cible of ['/nouveautes', '/livre-de-bord']) {
+    // La promesse reste dans la page (window survit à l'échange du <body>) : evaluateHandle l'attendrait.
+    await page.evaluate(() => { window.__chargee = new Promise((r) => document.addEventListener('astro:page-load', () => r(true), { once: true })); });
+    // Clic sur un lien de la page (pied de page, présent partout) : le ClientRouter échange le <body>.
+    await page.evaluate((href) => document.querySelector(`footer a[href="${href}"], footer a[href="${href}/"]`).click(), cible);
+    await page.evaluate(() => window.__chargee);
+    assert.equal(new URL(page.url()).pathname.replace(/\/$/, ''), cible);
+    // Le ClientRouter recopie les attributs du nouveau <html> : le style posé par le test disparaît. Le réglage
+    // réel de taille du texte vient du navigateur et survit à la navigation : on le rétablit ici.
+    await taille(page, 200);
+    await page.evaluate(() => document.querySelectorAll('details').forEach((d) => { d.open = true; }));
+    await chargerImages(page);
+    await attendreCesure(page);
+    const poses = await page.evaluate((sel) => document.querySelectorAll(sel).length, POSE);
+    assert.ok(poses > 0, `${cible} : rien de posé après la navigation interne`);
+    assert.deepEqual(await verifierCoupures(page), [], `${cible} après navigation interne`);
+  }
   await context.close();
 });

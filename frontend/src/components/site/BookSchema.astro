@@ -2,7 +2,7 @@
 // L51 — schéma ou illustration du Livre de bord : cadre Schema + StepChain, contenu de
 // data/livre-de-bord-schemas.ts (identifiant déjà vérifié par findProblems au build).
 // L54 — au téléphone le schéma prend toute la largeur de l'écran, bord à bord, sans marge intérieure.
-// L60 — bord à bord par marges négatives (page px-[min(1.25rem,20px)] + article p-[min(1.5rem,24px)] + bordure 1 px), jamais en 100vw : 100vw compte la
+// L60 — bord à bord par marges négatives (page px-borne-5 + article p-borne-6 + bordure 1 px), jamais en 100vw : 100vw compte la
 // barre de défilement classique, la page défilait de 8 px et le schéma était rogné à gauche. Le texte du schéma est
 // à 14 px dans le viewBox de 420 : il reste à 11 px ou plus rendu, jusqu'à 360 px de large barre comprise.
 import Schema from "@/components/site/Schema.astro";
@@ -23,7 +23,7 @@ const s = SCHEMAS[id];
 <style is:global>
   /* hors couche : les utilités Tailwind sont dans une couche, le .schema de Schema.astro n'en a pas, il l'emporterait */
   /* L88 — mêmes bornes que la gouttière et le cadre de l'article : bord à bord aussi avec le texte agrandi. */
-  .book-schema { margin-inline: calc(-1 * (min(1.25rem, 20px) + min(1.5rem, 24px)) - 1px); }
+  .book-schema { margin-inline: calc(-1 * (var(--spacing-borne-5) + var(--spacing-borne-6)) - 1px); }
   .book-schema .schema { padding: 0.5rem 0; border-inline: 0; border-radius: 0; }
   .book-schema .schema figcaption { padding-inline: 1rem; }
   .book-schema .sch-m, .book-schema .sch-a { font-size: 14px; }

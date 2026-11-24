@@ -52,7 +52,7 @@ async function fontsReady() {
 const escapeHtml = (v: string) =>
   v.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 const sourcePre = (label: string) =>
-  `<pre tabindex="0" role="region" aria-label="${label}" class="px-[min(1rem,16px)] py-4 overflow-x-auto text-xs leading-snug font-mono text-ink/80 whitespace-pre">${escapeHtml(props.definition)}</pre>`;
+  `<pre tabindex="0" role="region" aria-label="${label}" class="px-borne-4 py-4 overflow-x-auto text-xs leading-snug font-mono text-ink/80 whitespace-pre">${escapeHtml(props.definition)}</pre>`;
 const noscriptHtml = sourcePre("Diagramme (source)");
 const errorSourceHtml = sourcePre("Source du schéma");
 
@@ -270,7 +270,7 @@ onBeforeUnmount(() => {
     class="my-6 rounded-lg border border-white/10 bg-paper overflow-hidden"
   >
     <div
-      class="px-[min(1rem,16px)] py-2 border-b border-white/5 bg-white/[0.02] flex items-center gap-2"
+      class="px-borne-4 py-2 border-b border-white/5 bg-white/[0.02] flex items-center gap-2"
     >
       <span class="inline-block w-2 h-2 rounded-full bg-claude/70"></span>
       <span
@@ -309,7 +309,7 @@ onBeforeUnmount(() => {
         :tabindex="inlineScrolls ? 0 : undefined"
         :role="inlineScrolls ? 'region' : undefined"
         :aria-label="inlineScrolls ? regionLabel : undefined"
-        class="px-[min(1rem,16px)] py-6 overflow-x-auto min-h-[200px] rounded-b-lg focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-claude"
+        class="px-borne-4 py-6 overflow-x-auto min-h-[200px] rounded-b-lg focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-claude"
       ></div>
     </div>
 
@@ -319,7 +319,7 @@ onBeforeUnmount(() => {
 
     <div
       v-if="!isReady && !error"
-      class="px-[min(1rem,16px)] py-3 text-xs font-mono text-ink-muted border-t border-white/5"
+      class="px-borne-4 py-3 text-xs font-mono text-ink-muted border-t border-white/5"
     >
       Chargement du schéma…
     </div>
@@ -327,7 +327,7 @@ onBeforeUnmount(() => {
     <div
       v-if="error"
       role="alert"
-      class="px-[min(1rem,16px)] py-3 text-sm text-rose-300 border-t border-white/5 space-y-2"
+      class="px-borne-4 py-3 text-sm text-rose-300 border-t border-white/5 space-y-2"
     >
       <p>
         Le schéma n'a pas pu s'afficher. Rechargez la page pour réessayer ;
@@ -336,13 +336,13 @@ onBeforeUnmount(() => {
       <p class="font-mono text-xs text-ink-muted">Détail technique : {{ error }}</p>
     </div>
     <details v-if="error" class="border-t border-white/5">
-      <summary class="px-[min(1rem,16px)] py-2 text-xs font-mono text-ink-muted cursor-pointer">Voir la source du schéma</summary>
+      <summary class="px-borne-4 py-2 text-xs font-mono text-ink-muted cursor-pointer">Voir la source du schéma</summary>
       <div v-html="errorSourceHtml"></div>
     </details>
 
     <figcaption
       v-if="caption"
-      class="px-[min(1rem,16px)] py-2 border-t border-white/5 bg-white/[0.02] text-xs text-ink-muted"
+      class="px-borne-4 py-2 border-t border-white/5 bg-white/[0.02] text-xs text-ink-muted"
     >
       {{ caption }}
     </figcaption>
@@ -366,7 +366,7 @@ onBeforeUnmount(() => {
         :aria-label="caption ?? 'Schéma d\'architecture'"
       >
         <div
-          class="shrink-0 flex items-center justify-between px-[min(1.25rem,20px)] py-3 border-b border-white/5 bg-white/[0.02]"
+          class="shrink-0 flex items-center justify-between px-borne-5 py-3 border-b border-white/5 bg-white/[0.02]"
         >
           <div class="flex items-center gap-2">
             <span class="inline-block w-2 h-2 rounded-full bg-claude/70"></span>
@@ -394,7 +394,7 @@ onBeforeUnmount(() => {
           :tabindex="fullscreenScrolls ? 0 : undefined"
           :role="fullscreenScrolls ? 'region' : undefined"
           :aria-label="fullscreenScrolls ? regionLabel : undefined"
-          class="flex-1 min-h-0 flex overflow-auto p-[min(1rem,16px)] sm:p-8 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-claude"
+          class="flex-1 min-h-0 flex overflow-auto p-borne-4 sm:p-8 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-claude"
           @click.self="close"
         >
           <div
@@ -405,7 +405,7 @@ onBeforeUnmount(() => {
 
         <div
           v-if="caption"
-          class="shrink-0 px-[min(1.25rem,20px)] py-3 border-t border-white/5 bg-white/[0.02] text-xs text-ink-muted text-center"
+          class="shrink-0 px-borne-5 py-3 border-t border-white/5 bg-white/[0.02] text-xs text-ink-muted text-center"
         >
           {{ caption }}
         </div>

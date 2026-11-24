@@ -20,7 +20,7 @@ const idDetails = `revue-${page}-details`;
 ---
 
 <aside
-  class={`rounded-lg border border-white/10 bg-paper-elevated px-[min(1rem,16px)] py-3 text-sm text-ink-muted [overflow-wrap:anywhere] ${classe}`}
+  class={`rounded-lg border border-white/10 bg-paper-elevated px-borne-4 py-3 text-sm text-ink-muted [overflow-wrap:anywhere] ${classe}`}
   aria-label={`Revue du contenu de la page ${p.titre}`}
   data-revue={page}
   data-revue-derniere={e.derniere}
@@ -51,7 +51,7 @@ const idDetails = `revue-${page}-details`;
       {p.corrige.length > 0 && (
         <div data-revue-corrige>
           <p class="text-ink font-medium">Mis à jour</p>
-          <ul class="mt-1 list-disc pl-[min(1.25rem,20px)] space-y-1">{p.corrige.map((x) => <li>{x}</li>)}</ul>
+          <ul class="mt-1 list-disc pl-borne-5 space-y-1">{p.corrige.map((x) => <li>{x}</li>)}</ul>
         </div>
       )}
       <div data-revue-perimes>
@@ -59,7 +59,7 @@ const idDetails = `revue-${page}-details`;
         {p.perimes.length === 0 ? (
           <p class="mt-1">Rien à cette revue.</p>
         ) : (
-          <ul class="mt-1 list-disc pl-[min(1.25rem,20px)] space-y-1">
+          <ul class="mt-1 list-disc pl-borne-5 space-y-1">
             {p.perimes.map((x) => (
               <li>
                 {x.texte} (relevé le {etatRevue(x.releve, maintenant).derniereLabel},{" "}
@@ -72,7 +72,7 @@ const idDetails = `revue-${page}-details`;
       {p.nonVerifie.length > 0 && (
         <div data-revue-non-verifie>
           <p class="text-ink font-medium">Pas revérifié à cette revue</p>
-          <ul class="mt-1 list-disc pl-[min(1.25rem,20px)] space-y-1">{p.nonVerifie.map((x) => <li>{x}</li>)}</ul>
+          <ul class="mt-1 list-disc pl-borne-5 space-y-1">{p.nonVerifie.map((x) => <li>{x}</li>)}</ul>
         </div>
       )}
     </div>

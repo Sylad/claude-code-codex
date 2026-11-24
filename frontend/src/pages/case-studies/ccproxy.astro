@@ -44,7 +44,7 @@ const lessons = [
     intro="Proxy programmable LiteLLM-based qui intercepte les requêtes Claude Code et les route vers d'autres providers (Gemini 2M context, Perplexity WebSearch). v1.2.0 stable, 400★, AGPL-3.0-or-later."
   />
 
-  <section class="mx-auto max-w-3xl px-[min(1.25rem,20px)] sm:px-8 py-12">
+  <section class="mx-auto max-w-3xl px-borne-5 sm:px-8 py-12">
     <div class="space-y-12">
       <EtudeFraicheur depots={[{ nom: "starbased-co/ccproxy", href: "https://github.com/starbased-co/ccproxy" }]} date="2026-05-10" nature="testé" />
 
@@ -97,7 +97,7 @@ const lessons = [
 
       <CaseStudySection eyebrow="Verdict">
         <div class="grid gap-4 sm:grid-cols-2">
-          <div class="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-[min(1.25rem,20px)]">
+          <div class="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-borne-5">
             <p class="font-mono text-xs uppercase tracking-wider text-emerald-400 mb-2">
               Ce qui est solide
             </p>
@@ -109,7 +109,7 @@ const lessons = [
               <li>• v1.2.0 stable, 400★, push aujourd'hui — actif</li>
             </ul>
           </div>
-          <div class="rounded-xl border border-rose-500/20 bg-rose-500/5 p-[min(1.25rem,20px)]">
+          <div class="rounded-xl border border-rose-500/20 bg-rose-500/5 p-borne-5">
             <p class="font-mono text-xs uppercase tracking-wider text-rose-400 mb-2">
               Ce qui bloque
             </p>
@@ -124,7 +124,7 @@ const lessons = [
           </div>
         </div>
 
-        <div class="rounded-xl border border-claude/20 bg-claude/5 p-[min(1.25rem,20px)] sm:p-6 mt-2">
+        <div class="rounded-xl border border-claude/20 bg-claude/5 p-borne-5 sm:p-6 mt-2">
           <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">
             Décision
           </p>
@@ -146,7 +146,7 @@ const lessons = [
         </p>
         <ol class="grid gap-3 sm:grid-cols-2">
           {lessons.map((l, i) => (
-            <li class="min-w-0 [overflow-wrap:anywhere] rounded-xl border border-white/10 bg-paper-elevated p-[min(1.25rem,20px)]">
+            <li class="min-w-0 [overflow-wrap:anywhere] rounded-xl border border-white/10 bg-paper-elevated p-borne-5">
               <p class="font-mono text-xs text-claude mb-2">
                 {String(i + 1).padStart(2, "0")}
               </p>

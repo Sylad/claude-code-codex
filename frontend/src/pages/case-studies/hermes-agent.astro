@@ -51,7 +51,7 @@ const lessons = [
     intro="Agent self-improving + messaging gateway multi-plateforme + hub 85 722 skills + MCP first-class. 196 852 étoiles GitHub, licence MIT, au 18 juin 2026 (259 005 au 31 octobre). Testé en sandbox 100 % contenu, puis branché en live sur Anthropic Sonnet 4.6 (juin 2026 ; le modèle actuel est Sonnet 5.5) pour piloter maritime-atlas depuis Telegram."
   />
 
-  <section class="mx-auto max-w-3xl px-[min(1.25rem,20px)] sm:px-8 py-12">
+  <section class="mx-auto max-w-3xl px-borne-5 sm:px-8 py-12">
     <div class="space-y-12">
       <EtudeFraicheur depots={[{ nom: "NousResearch/hermes-agent", href: "https://github.com/NousResearch/hermes-agent" }]} date="2026-10-31" nature="testé" />
 
@@ -110,7 +110,7 @@ const lessons = [
         <h2 class="font-mono text-xs font-normal uppercase tracking-[0.2em] text-claude">Verdict</h2>
 
         <div class="grid gap-4 sm:grid-cols-2">
-          <div class="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-[min(1.25rem,20px)]">
+          <div class="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-borne-5">
             <p class="font-mono text-xs uppercase tracking-wider text-emerald-400 mb-2">Ce qui fonctionne</p>
             <ul class="text-sm text-ink-muted leading-relaxed space-y-1.5">
               <li>• Install <code class="font-mono text-positive text-[0.9em]">curl|bash</code> mais respecte rigoureusement <code class="font-mono text-positive text-[0.9em]">--hermes-home</code> → sandbox propre</li>
@@ -122,7 +122,7 @@ const lessons = [
               <li>• Prompt caching activé par défaut (cache TTL 5 min) → coût réel bien sous le théorique</li>
             </ul>
           </div>
-          <div class="rounded-xl border border-rose-500/20 bg-rose-500/5 p-[min(1.25rem,20px)]">
+          <div class="rounded-xl border border-rose-500/20 bg-rose-500/5 p-borne-5">
             <p class="font-mono text-xs uppercase tracking-wider text-rose-400 mb-2">Ce qui pète</p>
             <ul class="text-sm text-ink-muted leading-relaxed space-y-1.5">
               <li>• Footprint sandbox <strong>1,8 GB</strong> même avec <code class="font-mono text-negative text-[0.9em]">--skip-browser --no-skills</code></li>
@@ -135,7 +135,7 @@ const lessons = [
           </div>
         </div>
 
-        <div class="rounded-xl border border-claude/20 bg-claude/5 p-[min(1.25rem,20px)] sm:p-6 mt-2">
+        <div class="rounded-xl border border-claude/20 bg-claude/5 p-borne-5 sm:p-6 mt-2">
           <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">Décision</p>
           <p class="text-ink leading-relaxed">
             <strong>Adopt-conditional.</strong> Hermes ne remplace pas Claude Code pour le dev pur (80 % overlap, Claude Code reste plus tight côté CLI). Mais il <strong>complète</strong>
@@ -210,7 +210,7 @@ const lessons = [
 
         <ol class="grid gap-3 sm:grid-cols-2">
           {lessons.map((l, i) => (
-            <li class="rounded-xl border border-white/10 bg-paper-elevated p-[min(1.25rem,20px)]">
+            <li class="rounded-xl border border-white/10 bg-paper-elevated p-borne-5">
               <p class="font-mono text-xs text-claude mb-2">{String(i + 1).padStart(2, "0")}</p>
               <h3 class="text-base font-medium text-ink mb-1.5"><CodeEnLigne texte={l.title} /></h3>
               <p class="text-sm text-ink-muted leading-relaxed"><CodeEnLigne texte={l.body} /></p>
@@ -220,7 +220,7 @@ const lessons = [
       </article>
 
       <article class="space-y-4 pt-2">
-        <div class="rounded-xl border border-white/10 bg-paper-elevated p-[min(1.5rem,24px)] sm:p-8">
+        <div class="rounded-xl border border-white/10 bg-paper-elevated p-borne-6 sm:p-8">
           <p class="font-mono text-xs uppercase tracking-wider text-claude mb-3">Ressources</p>
           <ul class="text-sm text-ink-muted space-y-1.5">
             <li>✓ Setup live exécuté sur Big-Blue (WSL2 Ubuntu, RTX 4080 pour Ollama)</li>

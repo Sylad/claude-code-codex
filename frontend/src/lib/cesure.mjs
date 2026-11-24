@@ -1,25 +1,66 @@
-// L88 (WCAG 1.4.10, revue UX de L87) — césure seulement là où un mot ne tient pas.
+// L88 (WCAG 1.4.10, revue UX de L87) — un mot qui ne tient pas sur sa ligne se coupe avec un trait d'union,
+// ou à sa ponctuation si c'est un nom ; les autres mots ne sont jamais coupés.
 //
 // La règle globale `overflow-wrap: anywhere` (L8, global.css) évite le défilement latéral à 320 px et texte
-// 200 %, mais coupe sans trait le mot plus large que sa ligne (« chang|é », « vérific|ation »). La césure
-// française (`hyphens: auto` + `lang="fr"`) coupe ces mots à une syllabe, avec un trait. L'appliquer à tout
-// le site changerait aussi le texte au réglage normal (le navigateur coupe alors tout mot de fin de ligne) :
-// ce script ne la donne qu'aux éléments dont un mot ne tient pas sur une ligne entière, en posant
-// `data-cesure` (global.css : `[data-cesure] { hyphens: auto }`). Au réglage normal, aucun mot ne déborde
-// de sa ligne : rien n'est marqué, le rendu ne change pas.
+// 200 %, mais coupe sans trait le mot plus large que sa ligne (« chang|é », « vérific|ation »). Ce script
+// repère ces seuls mots (coupés ailleurs qu'après un trait d'union écrit) et :
+//   - un mot (lettres, apostrophes, traits d'union) : il l'enveloppe dans un <span data-cesure>, seul en
+//     `hyphens: auto` (global.css, avec au moins 3 lettres de chaque côté de la coupure) ; ses voisins qui
+//     tiennent ne sont jamais césurés (revue r1 de L88, M1) ;
+//   - un nom ou un identifiant (« alexgreensh/token-optimizer », « (NousResearch) », « postInitSQL »,
+//     « warhammer40k ») : il y pose des <wbr> à ses bornes naturelles — après / _ . , avant « ( », entre
+//     minuscule et majuscule, entre lettres et chiffres — pour qu'il se coupe à sa ponctuation et non à une
+//     lettre (M3) ; un morceau encore trop large est ensuite traité comme un mot.
+// Rien n'est écrit dans le texte (aucun U+00AD) : le texte copié et le nom accessible restent ceux de la
+// page (m1). Dans un îlot Vue, qui réécrit son DOM, on ne touche pas aux nœuds : l'élément reçoit
+// l'attribut data-cesure (Vue ne réécrit pas un attribut qu'il ne gère pas).
+// Au réglage normal, aucun mot ne déborde : rien n'est posé, le rendu ne change pas.
 //
 // Recalcul à chaque changement de taille du <body> (largeur de fenêtre, taille du texte, contenu filtré
-// par un catalogue, <details> ouvert) et après chaque navigation interne (transitions Astro). Attribut
-// et non classe : Vue ne réécrit pas un attribut qu'il ne gère pas.
-// Mesure : tests/l88-cesure.e2e.test.mjs (tests/lib/mots-casses.mjs).
+// par un catalogue, <details> ouvert) et après chaque navigation interne (transitions Astro) ; tout ce qui
+// a été posé est défait avant chaque calcul.
+// Mesure : tests/l88-cesure.e2e.test.mjs (oracle indépendant : tests/lib/coupures.mjs).
 
-const EXCLUS = 'code, pre, script, style, noscript, template, svg, textarea, [aria-hidden="true"]';
-// Un mot : lettres seulement (traits d'union et apostrophes séparent les mots). Un bloc qui contient
-// autre chose (chemin, URL, identifiant, nombre) n'est pas césuré : le couper d'un trait le fausserait.
-const MOT = /^[\p{L}\p{M}'’\-‐–—]+$/u;
+const EXCLUS = 'code, pre, kbd, samp, script, style, noscript, template, svg, textarea, [aria-hidden="true"]';
 const BORD = /^[^\p{L}\p{M}\p{N}]+|[^\p{L}\p{M}\p{N}]+$/gu;
-const IDENTIFIANT = /\p{Ll}\p{Lu}/u; // camelCase : un nom de code, pas un mot
-const LETTRES = /\p{L}[\p{L}\p{M}]{4,}/gu; // en dessous de 5 lettres, le navigateur ne césure pas
+// Un mot : lettres seulement (apostrophes et traits d'union compris).
+const MOT = /^[\p{L}\p{M}'’\-‐]+$/u;
+const CAMEL = /\p{Ll}\p{Lu}/u;
+const LETTRE = /[\p{L}\p{M}]/u;
+// Une coupure dans une suite de signes (« »…). ») ne coupe aucun mot.
+const ALNUM = /[\p{L}\p{N}]/u;
+// Coupure déjà permise sans trait de césure : après un trait d'union écrit ou une barre oblique.
+const APRES_PERMIS = /[-‐‑/]/u;
+const SHY = '­';
+
+// Bornes naturelles d'un nom : indices i (0 < i < longueur) avant lesquels un <wbr> peut se poser —
+// après un signe de ponctuation ou un symbole (/ _ . : = → …), sauf une apostrophe, un guillemet ou un signe
+// ouvrant ; avant une parenthèse ou un crochet ouvrant ; entre minuscule et majuscule ; entre lettres et
+// chiffres.
+const SIGNE = /[\p{P}\p{S}]/u;
+const PAS_APRES = /['’«“‘([{<\-‐]/u;
+export function bornesDeNom(texte) {
+  const c = [...texte];
+  const out = [];
+  let i = 0;
+  for (let k = 1; k < c.length; k++) {
+    i += c[k - 1].length;
+    const a = c[k - 1];
+    const b = c[k];
+    if (SIGNE.test(a) && !PAS_APRES.test(a) && (ALNUM.test(b) || /[([{<]/.test(b))) out.push(i);
+    else if (/[([{<]/.test(b) && ALNUM.test(a)) out.push(i);
+    else if (/\p{Ll}/u.test(a) && /\p{Lu}/u.test(b)) out.push(i);
+    else if ((/\p{L}/u.test(a) && /\p{N}/u.test(b)) || (/\p{N}/u.test(a) && /\p{L}/u.test(b))) out.push(i);
+  }
+  return out;
+}
+
+function ligneDe(range, node, i) {
+  range.setStart(node, i);
+  range.setEnd(node, i + 1);
+  // Dernier rectangle : Chromium rattache parfois le trait qu'il dessine au caractère suivant.
+  return [...range.getClientRects()].filter((x) => x.width > 0.1 || x.height > 0).at(-1);
+}
 
 function surPlusieursLignes(rects) {
   let premier = null;
@@ -31,153 +72,208 @@ function surPlusieursLignes(rects) {
   return false;
 }
 
-// Éléments dont un mot ne tient pas sur une ligne (coupé de force par overflow-wrap).
-function elementsATrop(racine, range) {
-  const out = new Set();
+// Premier indice du bloc [debut, fin) qui ouvre une ligne ailleurs qu'à une coupure permise, ou -1. Une
+// coupure de césure (dictionnaire ou U+00AD) est permise : Chromium y dessine un trait, qu'il rattache à
+// la dernière lettre de la ligne (un second rectangle sur la même ligne).
+function coupeDeForce(range, node, debut, fin) {
+  let haut = null;
+  let traitAvant = false;
+  for (let i = debut; i < fin; i++) {
+    range.setStart(node, i);
+    range.setEnd(node, i + 1);
+    const rects = [...range.getClientRects()].filter((x) => x.width > 0.1 || x.height > 0);
+    const r = rects.at(-1);
+    if (!r) continue;
+    if (haut !== null && r.top - haut >= r.height / 2 && !traitAvant && !APRES_PERMIS.test(node.data[i - 1])
+      && node.data[i - 1] !== SHY && ALNUM.test(node.data.slice(debut, i)) && ALNUM.test(node.data.slice(i, fin))) return i;
+    haut = r.top;
+    traitAvant = rects.length > 1 && Math.abs(rects[0].top - r.top) < r.height / 2;
+  }
+  return -1;
+}
+
+// Blocs (suites sans espace) coupés de force, par nœud de texte. Le texte visible d'un mot doublé (repli,
+// plus bas) est masqué aux aides techniques mais compte ; sa copie pour elles ne compte pas.
+function blocsCoupes(racine, range) {
+  const out = [];
   const walker = document.createTreeWalker(racine, NodeFilter.SHOW_TEXT, {
-    acceptNode: (n) => (n.parentElement?.closest(EXCLUS) || n.parentElement?.closest('[data-cesure]')
-      ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT),
+    acceptNode: (n) => {
+      const el = n.parentElement;
+      if (!el || el.closest('[data-cesure-copie]')) return NodeFilter.FILTER_REJECT;
+      if (el.closest('[data-cesure-vu]')) return el.closest('code, pre, kbd, samp') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+      return el.closest(EXCLUS) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+    },
   });
   for (let n = walker.nextNode(); n; n = walker.nextNode()) {
-    if (!LETTRES.test(n.data)) continue;
-    LETTRES.lastIndex = 0;
+    if (n.data.length < 2) continue;
     range.selectNodeContents(n);
-    const rects = [...range.getClientRects()];
-    if (!surPlusieursLignes(rects)) continue;
-    // Largeur de la ligne du texte : un mot plus étroit qu'elle ne peut pas être coupé de force. Borne
-    // haute de la largeur d'un mot : une chasse par lettre (cadratin) plus l'interlettrage.
-    const largeur = Math.max(...rects.map((r) => r.right)) - Math.min(...rects.map((r) => r.left));
-    const style = getComputedStyle(n.parentElement);
-    const chasse = parseFloat(style.fontSize) + (parseFloat(style.letterSpacing) || 0);
-    for (const bloc of n.data.matchAll(/\S+/g)) {
-      const interieur = bloc[0].replace(BORD, '');
-      if (!MOT.test(interieur) || IDENTIFIANT.test(interieur)) continue;
-      for (const m of bloc[0].matchAll(LETTRES)) {
-        if (m[0].length * chasse < largeur) continue;
-        const debut = bloc.index + m.index;
-        range.setStart(n, debut);
-        range.setEnd(n, debut + m[0].length);
-        if (surPlusieursLignes(range.getClientRects())) {
-          out.add(n.parentElement);
-          break;
-        }
-      }
-      if (out.has(n.parentElement)) break;
+    if (!surPlusieursLignes(range.getClientRects())) continue;
+    const blocs = [];
+    for (const b of n.data.matchAll(/\S{2,}/g)) {
+      range.setStart(n, b.index);
+      range.setEnd(n, b.index + b[0].length);
+      if (!surPlusieursLignes(range.getClientRects())) continue;
+      const k = coupeDeForce(range, n, b.index, b.index + b[0].length);
+      if (k >= 0) blocs.push({ debut: b.index, texte: b[0], coupure: k });
     }
+    if (blocs.length) out.push({ node: n, blocs });
   }
   return out;
 }
 
-// Dernier recours : Chromium ne césure pas un mot soudé à son voisin par une espace insécable
-// (« 23 novembre », « « influenceurs », « healthcheck — ») — l'insécable de la typographie française
-// (L87) l'empêche. Une césure conditionnelle (U+00AD) y reste permise : pour ces seuls mots, encore
-// coupés sans trait, on relève les points de césure du navigateur (le mot seul dans une sonde, même
-// langue, même casse) et on les pose dans le texte. Jamais dans un îlot Vue (il réécrit son texte) ;
-// défait avant chaque nouveau calcul.
-const INSECABLE = /[\u00A0\u202F]/;
-const SHY = '\u00AD';
-const poses = new Map(); // nœud de texte -> [texte d'origine, texte avec césures]
+// Ce qui a été posé, défait dans l'ordre inverse : le nœud d'origine a été raccourci (`avant`), les nœuds
+// ajoutés le suivent. Si Vue (ou autre) a réécrit le nœud entre-temps, on retire seulement nos ajouts.
+const poses = [];
 
 function defairePoses() {
-  for (const [n, [origine, pose]] of poses) if (n.data === pose) n.data = origine;
-  poses.clear();
-}
-
-function ligneDe(range, node, i) {
-  range.setStart(node, i);
-  range.setEnd(node, i + 1);
-  // Dernier rectangle : Chromium rattache parfois le trait qu'il dessine au caractère suivant.
-  return [...range.getClientRects()].filter((x) => x.width > 0.1 || x.height > 0).at(-1);
-}
-
-// Points de césure d'un mot selon le dictionnaire du navigateur : la sonde (`overflow-wrap: normal`)
-// ne coupe qu'à un point de césure, le dernier qui tient dans sa largeur ; on balaie la largeur.
-function pointsDeCesure(sonde, mot) {
-  const range = document.createRange();
-  sonde.style.width = 'auto';
-  sonde.style.whiteSpace = 'nowrap';
-  sonde.textContent = `${mot}-`;
-  const t = sonde.firstChild;
-  const gauche = [...mot, '-'].map((_, i) => ligneDe(range, t, i)?.left ?? 0);
-  const trait = ligneDe(range, t, mot.length)?.width ?? 0;
-  sonde.style.whiteSpace = 'normal';
-  sonde.textContent = mot;
-  const n = sonde.firstChild;
-  const premiereCoupure = () => {
-    const r0 = ligneDe(range, n, 0);
-    for (let i = 1; i < mot.length; i++) {
-      const r = ligneDe(range, n, i);
-      if (r && r.top - r0.top >= r0.height / 2) return i;
-    }
-    return null;
-  };
-  const points = [];
-  for (let i = mot.length - 1; i >= 1;) {
-    sonde.style.width = `${gauche[i] - gauche[0] + trait + 0.5}px`;
-    // Le mot entier peut tenir (sa dernière lettre est plus étroite que le trait) : on réduit.
-    const b = premiereCoupure();
-    if (b !== null && !points.includes(b)) points.push(b);
-    i = b === null ? i - 1 : Math.min(i, b) - 1;
+  while (poses.length) {
+    const { node, origine, avant, ajouts } = poses.pop();
+    if (node.isConnected && node.data === avant && ajouts.every((a) => a.isConnected)) node.data = origine;
+    for (const a of ajouts) a.remove();
   }
-  return points;
 }
 
-function poserCesures(racine, range) {
-  let sonde = null;
-  const walker = document.createTreeWalker(racine, NodeFilter.SHOW_TEXT, {
-    acceptNode: (n) => (n.parentElement?.closest('[data-cesure]') && !n.parentElement.closest(`${EXCLUS}, astro-island`)
-      && INSECABLE.test(n.data) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT),
+// Remplace [debut, fin) du nœud par les nœuds que `fabrique` construit pour ce texte.
+function remplacer(node, debut, fin, fabrique) {
+  const origine = node.data;
+  const ajouts = [...fabrique(origine.slice(debut, fin))];
+  if (fin < origine.length) ajouts.push(document.createTextNode(origine.slice(fin)));
+  node.after(...ajouts);
+  node.data = origine.slice(0, debut);
+  poses.push({ node, origine, avant: node.data, ajouts });
+}
+
+function enveloppe(texte) {
+  const span = document.createElement('span');
+  span.setAttribute('data-cesure', '');
+  span.textContent = texte;
+  return [span];
+}
+
+function decoupe(bornes) {
+  return (texte) => {
+    const out = [];
+    let i = 0;
+    for (const b of bornes) {
+      out.push(document.createTextNode(texte.slice(i, b)), document.createElement('wbr'));
+      i = b;
+    }
+    out.push(document.createTextNode(texte.slice(i)));
+    return out;
+  };
+}
+
+// Repli, pour un mot que ni le dictionnaire ni sa ponctuation ne permettent de couper (un nom : « postgresql »,
+// « GEOSERVER ») : une césure conditionnelle (U+00AD) là où il se coupait, dans un double du mot. Le texte
+// vu (aria-hidden, non sélectionnable) porte le trait ; une copie sans U+00AD, hors écran, donne le nom
+// accessible et le texte copié (revue r1, m1). Une U+00AD dans son propre <span> ne marche pas : Chromium
+// renvoie alors le trait seul à la ligne.
+function double(position) {
+  return (texte) => {
+    const vu = document.createElement('span');
+    vu.setAttribute('data-cesure-vu', '');
+    vu.setAttribute('aria-hidden', 'true');
+    vu.textContent = texte.slice(0, position) + SHY + texte.slice(position);
+    const copie = document.createElement('span');
+    copie.setAttribute('data-cesure-copie', '');
+    copie.textContent = texte;
+    return [vu, copie];
+  };
+}
+
+// Où poser la césure de repli : une lettre avant la coupure forcée (le trait prend sa place), avec au
+// moins 3 lettres de chaque côté dans la suite de lettres coupée. -1 si la suite en a moins de 6.
+function positionDeRepli(texte, k) {
+  let g = k;
+  while (g > 0 && LETTRE.test(texte[g - 1])) g--;
+  let d = k;
+  while (d < texte.length && LETTRE.test(texte[d])) d++;
+  if (d - g < 6) return -1;
+  return Math.min(Math.max(k - 1, g + 3), d - 3);
+}
+
+// Dans un conteneur flex ou grid, chaque élément enfant est un élément de la grille : y poser un <span>
+// couperait le texte en plusieurs colonnes (« K8s pour | déve-loppeurs | Java » dans un lien inline-flex).
+// Le texte entier passe d'abord dans un <span>, qui tient la place de l'élément anonyme qu'il formait.
+function horsDeLaGrille(node) {
+  const d = getComputedStyle(node.parentElement).display;
+  if (!/flex|grid/.test(d)) return node;
+  const span = document.createElement('span');
+  remplacer(node, 0, node.data.length, (texte) => {
+    span.textContent = texte;
+    return [span];
   });
-  const noeuds = [];
-  for (let n = walker.nextNode(); n; n = walker.nextNode()) noeuds.push(n);
-  for (const n of noeuds) {
-    const aPoser = [];
-    // Unités soudées par une insécable : séparées seulement par les espaces ordinaires.
-    for (const unite of n.data.matchAll(/[^ \t\n\r\f]+/g)) {
-      if (!INSECABLE.test(unite[0])) continue;
-      for (const bloc of unite[0].matchAll(/[^\s]+/g)) {
-        const interieur = bloc[0].replace(BORD, '');
-        if (!MOT.test(interieur) || IDENTIFIANT.test(interieur)) continue;
-        for (const m of bloc[0].matchAll(LETTRES)) {
-          const debut = unite.index + bloc.index + m.index;
-          range.setStart(n, debut);
-          range.setEnd(n, debut + m[0].length);
-          if (!surPlusieursLignes(range.getClientRects())) continue;
-          if (!sonde) {
-            sonde = document.createElement('div');
-            sonde.setAttribute('aria-hidden', 'true');
-            sonde.style.cssText = 'position:absolute;left:0;top:0;visibility:hidden;hyphens:auto;'
-              + '-webkit-hyphens:auto;overflow-wrap:normal;white-space:normal;font-size:16px';
-            document.body.append(sonde);
-          }
-          sonde.lang = n.parentElement.closest('[lang]')?.lang || document.documentElement.lang;
-          sonde.style.textTransform = getComputedStyle(n.parentElement).textTransform;
-          for (const i of pointsDeCesure(sonde, m[0])) aPoser.push(debut + i);
-        }
+  return span.firstChild;
+}
+
+// Élision (« d'implémentation », « l'encyclopédie ») : seul le mot qui suit l'apostrophe est césuré, pour
+// que ses 3 lettres minimales soient les siennes (« d'im-plémentation » en laissait 2).
+const ELISION = /^(\p{L}{1,5}['’])(?=\p{L})/u;
+
+const NOMBRE = /^[\p{N}.,]+$/u;
+const INSECABLE = /[   ]/;
+
+function traiter({ node: origine, blocs }) {
+  const el = origine.parentElement;
+  const ilot = el.closest('astro-island');
+  const node = ilot || el.hasAttribute('data-cesure-vu') ? origine : horsDeLaGrille(origine);
+  // Du dernier bloc au premier : les positions des blocs précédents restent valables.
+  for (const { debut, texte, coupure } of [...blocs].reverse()) {
+    const interieur = texte.replace(BORD, '');
+    if (!interieur) continue;
+    const motPur = MOT.test(interieur) && !CAMEL.test(interieur);
+    if (ilot) {
+      if (motPur) el.setAttribute('data-cesure', '');
+      continue;
+    }
+    if (el.hasAttribute('data-cesure-vu')) {
+      // Mot déjà doublé, encore trop large : une césure de plus dans son texte vu.
+      const p = positionDeRepli(node.data, coupure);
+      if (p > 0) remplacer(node, p, p, () => [document.createTextNode(SHY)]);
+      continue;
+    }
+    // Un nombre soudé à son voisin par une insécable (« 149 888 ») qui tient seul : il passe entier à la
+    // ligne suivante plutôt que d'être coupé entre deux chiffres.
+    if (NOMBRE.test(interieur) && INSECABLE.test(node.data[debut - 1] ?? '')) {
+      remplacer(node, debut, debut, () => [document.createElement('wbr')]);
+      continue;
+    }
+    let d = debut + texte.indexOf(interieur);
+    let mot = interieur;
+    const elision = ELISION.exec(mot);
+    if (elision) {
+      d += elision[1].length;
+      mot = mot.slice(elision[1].length);
+    }
+    const bornes = motPur ? [] : bornesDeNom(texte);
+    if (bornes.length) remplacer(node, debut, debut + texte.length, decoupe(bornes));
+    else if (!el.hasAttribute('data-cesure') && /\p{L}{6,}/u.test(mot)) {
+      remplacer(node, d, d + mot.length, enveloppe);
+    } else {
+      const p = positionDeRepli(node.data, coupure);
+      if (p > 0) {
+        let g = p;
+        while (g > 0 && !/\s/.test(node.data[g - 1])) g--;
+        let f = p;
+        while (f < node.data.length && !/\s/.test(node.data[f])) f++;
+        remplacer(node, g, f, double(p - g));
       }
     }
-    if (!aPoser.length) continue;
-    const origine = n.data;
-    let texte = origine;
-    for (const i of aPoser.sort((a, b) => b - a)) texte = texte.slice(0, i) + SHY + texte.slice(i);
-    n.data = texte;
-    poses.set(n, [origine, texte]);
   }
-  sonde?.remove();
 }
 
 export function marquerCesures(racine = document.body) {
   defairePoses();
   for (const el of racine.querySelectorAll('[data-cesure]')) el.removeAttribute('data-cesure');
   const range = document.createRange();
-  // Une césure change les lignes de son élément, et parfois la largeur d'une colonne voisine : on
-  // recommence tant qu'un nouveau mot coupé apparaît (borné).
-  for (let passe = 0; passe < 3; passe++) {
-    const nouveaux = elementsATrop(racine, range);
-    if (!nouveaux.size) break;
-    for (const el of nouveaux) el.setAttribute('data-cesure', '');
+  // Un mot césuré change les lignes de son élément (et parfois la largeur d'une colonne voisine) ; un nom
+  // découpé à sa ponctuation peut garder un morceau trop large, que le dictionnaire peut ne pas couper : on
+  // recommence, borné.
+  for (let passe = 0; passe < 6; passe++) {
+    const coupes = blocsCoupes(racine, range);
+    if (!coupes.length) break;
+    for (const c of coupes) traiter(c);
   }
-  poserCesures(racine, range);
 }
 
 export function installerCesure() {
@@ -196,6 +292,8 @@ export function installerCesure() {
   };
   const brancher = () => {
     observateur?.disconnect();
+    // Après un échange du <body> (navigation interne), les nœuds posés sur l'ancienne page sont partis.
+    poses.length = 0;
     taille = '';
     // Hors du rappel de l'observateur (image suivante) : marquer change la hauteur du <body>, ce qui
     // relancerait l'observateur dans le même cycle (« ResizeObserver loop »).

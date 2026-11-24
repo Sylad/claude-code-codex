@@ -155,7 +155,7 @@ const lessons = [
     intro="L'écosystème Claude Code a explosé en outils d'optimisation tokens : MCP servers, plugins marketplace, fichiers CLAUDE.md, daemons, CLI wrappers. Bench de 9 candidats (mai 2026) — qui marche, qui est gadget, et les 5 méta-leçons sur le screening."
   />
 
-  <section class="mx-auto max-w-3xl px-[min(1.25rem,20px)] sm:px-8 py-12">
+  <section class="mx-auto max-w-3xl px-borne-5 sm:px-8 py-12">
     <div class="space-y-12">
       <EtudeFraicheur depots={tools.map((t) => ({ nom: t.repoHref.replace("https://github.com/", ""), href: t.repoHref }))} date="2026-10-31" nature="testé" />
 
@@ -171,7 +171,7 @@ const lessons = [
 
         <div class="space-y-3">
           {tools.map((t) => (
-            <div class="rounded-xl border border-white/10 bg-paper-elevated p-[min(1.25rem,20px)]">
+            <div class="rounded-xl border border-white/10 bg-paper-elevated p-borne-5">
               <div class="flex flex-wrap items-baseline gap-3 mb-3">
                 <h3 class="text-base font-medium text-ink">{t.name}</h3>
                 <p class="font-mono text-xs text-ink-muted/70">par {t.author}</p>
@@ -219,7 +219,7 @@ const lessons = [
         </p>
         <ol class="grid gap-3 sm:grid-cols-2">
           {lessons.map((l, i) => (
-            <li class="rounded-xl border border-white/10 bg-paper-elevated p-[min(1.25rem,20px)]">
+            <li class="rounded-xl border border-white/10 bg-paper-elevated p-borne-5">
               <p class="font-mono text-xs text-claude mb-2">
                 {String(i + 1).padStart(2, "0")}
               </p>
@@ -231,7 +231,7 @@ const lessons = [
       </article>
 
       <article class="space-y-4 pt-2">
-        <div class="rounded-xl border border-claude/20 bg-claude/5 p-[min(1.5rem,24px)] sm:p-8">
+        <div class="rounded-xl border border-claude/20 bg-claude/5 p-borne-6 sm:p-8">
           <p class="font-mono text-xs uppercase tracking-wider text-claude mb-3">
             Bilan
           </p>

@@ -39,11 +39,11 @@ const pngSize = (rel: string) => {
   description="Ce qui a changé sur claude-code-codex, la nouveauté la plus récente en premier."
 >
   <section class="news-hero relative codex-grid border-b border-white/5">
-    <div class="mx-auto max-w-6xl px-[min(1.25rem,20px)] sm:px-8 py-20 sm:py-28">
+    <div class="mx-auto max-w-6xl px-borne-5 sm:px-8 py-20 sm:py-28">
       <p class="news-eyebrow inline-block rounded bg-paper/85 px-2 py-1 font-mono text-xs uppercase tracking-[0.2em] text-claude-soft">
         Nouveautés
       </p>
-      <h1 class="mt-3 text-[length:min(2.25rem,max(1.375rem,12vw))] max-sm:leading-(--text-4xl--line-height) sm:text-5xl font-semibold tracking-tight text-ink">
+      <h1 class="mt-3 text-4xl sm:text-5xl font-semibold tracking-tight text-ink">
         Ce qui a changé
       </h1>
       <p class="news-lede mt-5 max-w-2xl text-base sm:text-lg text-ink leading-relaxed [text-shadow:0_1px_3px_rgb(0_0_0_/0.85)]">
@@ -52,7 +52,7 @@ const pngSize = (rel: string) => {
     </div>
   </section>
 
-  <section class="mx-auto max-w-3xl px-[min(1.25rem,20px)] sm:px-8 py-16">
+  <section class="mx-auto max-w-3xl px-borne-5 sm:px-8 py-16">
     {entries.length === 0 ? (
       <p class="text-ink-muted italic">Aucune nouveauté publiée pour l'instant.</p>
     ) : (
@@ -62,7 +62,7 @@ const pngSize = (rel: string) => {
         {entries.map((e) => (
           <li>
             <article
-              class="news-entry rounded-xl border border-white/10 bg-paper-elevated p-[min(1.5rem,24px)] sm:p-8"
+              class="news-entry rounded-xl border border-white/10 bg-paper-elevated p-borne-6 sm:p-8"
               id={e.slug}
               tabindex="-1"
               aria-labelledby={`${e.slug}-titre`}
@@ -167,7 +167,7 @@ const pngSize = (rel: string) => {
   .news-body :global(ul) {
     margin: 0 0 0.9rem;
     /* L88 — le retrait ne grandit pas avec le texte (320 px, texte 200 %) : la colonne garde sa largeur. */
-    padding-left: min(1.3rem, 20.8px);
+    padding-left: var(--spacing-borne-liste);
     list-style: disc;
   }
   .news-body :global(li) {

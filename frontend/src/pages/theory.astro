@@ -24,11 +24,11 @@ const tocEntries = sections.map((s) => ({
     intro="L'architecture, les abstractions et les mécaniques qu'il faut comprendre pour utiliser Claude Code efficacement — et pour savoir pourquoi il fait parfois ce qu'il fait. Tout est sourcé sur la doc Anthropic publique."
   />
 
-  <div class="mx-auto max-w-6xl px-[min(1.25rem,20px)] sm:px-8 pt-8">
+  <div class="mx-auto max-w-6xl px-borne-5 sm:px-8 pt-8">
     <RevueContenu page="theory" />
   </div>
 
-  <div class="mx-auto max-w-6xl px-[min(1.25rem,20px)] sm:px-8 py-10">
+  <div class="mx-auto max-w-6xl px-borne-5 sm:px-8 py-10">
     <div class="grid gap-10 lg:grid-cols-[220px_1fr]">
       <aside class="hidden lg:block">
         <TheoryTOC entries={tocEntries} client:load />
@@ -43,7 +43,7 @@ const tocEntries = sections.map((s) => ({
         ))}
 
         <div
-          class="mt-12 rounded-xl border border-claude/20 bg-claude/5 p-[min(1.5rem,24px)] sm:p-8"
+          class="mt-12 rounded-xl border border-claude/20 bg-claude/5 p-borne-6 sm:p-8"
         >
           <p
             class="font-mono text-xs uppercase tracking-wider text-claude mb-3"

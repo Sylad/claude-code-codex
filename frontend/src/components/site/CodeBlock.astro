@@ -12,7 +12,7 @@ const { language, filename, code, wrap = false } = Astro.props;
 
 <figure class="rounded-lg border border-white/10 bg-paper overflow-hidden my-4">
   <figcaption
-    class="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 px-[min(1rem,16px)] py-2 border-b border-white/5 bg-white/[0.02]"
+    class="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 px-borne-4 py-2 border-b border-white/5 bg-white/[0.02]"
   >
     {/* L88 — le nom garde au moins 12 caractères de large (en ch : la mesure suit la taille du texte) ;
          quand la langue ne tient plus à côté (texte agrandi au téléphone), elle passe à la ligne au lieu
@@ -29,5 +29,5 @@ const { language, filename, code, wrap = false } = Astro.props;
     tabindex={wrap ? undefined : "0"}
     role={wrap ? undefined : "region"}
     aria-label={wrap ? undefined : `Code : ${filename ?? language}`}
-    class:list={["px-[min(1rem,16px)] py-3 text-sm leading-relaxed font-mono text-ink/90 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-claude", wrap ? "whitespace-pre-wrap break-words" : "overflow-x-auto"]}><code>{code}</code></pre>
+    class:list={["px-borne-4 py-3 text-sm leading-relaxed font-mono text-ink/90 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-claude", wrap ? "whitespace-pre-wrap break-words" : "overflow-x-auto"]}><code>{code}</code></pre>
 </figure>

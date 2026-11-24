@@ -38,7 +38,7 @@ const autres = GUIDES.filter((g) => g.href !== ici);
 <BaseLayout title={title} description={description}>
   <PageHero eyebrow={eyebrow} title={title} intro={intro} />
 
-  <div class="mx-auto max-w-6xl px-[min(1.25rem,20px)] sm:px-8 py-10 xl:grid xl:grid-cols-[220px_minmax(0,44rem)] xl:justify-center xl:gap-12">
+  <div class="mx-auto max-w-6xl px-borne-5 sm:px-8 py-10 xl:grid xl:grid-cols-[220px_minmax(0,44rem)] xl:justify-center xl:gap-12">
     <aside class="hidden xl:block">
       <TheoryTOC entries={entries} client:load />
     </aside>
@@ -55,7 +55,7 @@ const autres = GUIDES.filter((g) => g.href !== ici);
 
       <slot />
 
-      <nav aria-labelledby="autres-guides" class="mt-16 rounded-xl border border-white/10 bg-paper p-[min(1.5rem,24px)]">
+      <nav aria-labelledby="autres-guides" class="mt-16 rounded-xl border border-white/10 bg-paper p-borne-6">
         <h2 id="autres-guides" class="text-xl font-semibold tracking-tight text-ink">Les autres guides</h2>
         <ul class="mt-4 space-y-3">
           {autres.map((g) => (

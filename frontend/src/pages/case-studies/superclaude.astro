@@ -44,7 +44,7 @@ const lessons = [
     intro="Méta-framework qui transforme Claude Code en « plateforme de développement structurée » via 30 commandes /sc:*, 20 agents, 7 modes cognitifs et 8 intégrations MCP. v4.3.0 stable, 23.9k★, MIT."
   />
 
-  <section class="mx-auto max-w-3xl px-[min(1.25rem,20px)] sm:px-8 py-12">
+  <section class="mx-auto max-w-3xl px-borne-5 sm:px-8 py-12">
     <div class="space-y-12">
       <EtudeFraicheur depots={[{ nom: "SuperClaude-Org/SuperClaude_Framework", href: "https://github.com/SuperClaude-Org/SuperClaude_Framework" }]} date="2026-10-31" nature="testé" />
 
@@ -97,7 +97,7 @@ const lessons = [
 
       <CaseStudySection eyebrow="Verdict">
         <div class="grid gap-4 sm:grid-cols-2">
-          <div class="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-[min(1.25rem,20px)]">
+          <div class="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-borne-5">
             <p class="font-mono text-xs uppercase tracking-wider text-emerald-400 mb-2">
               Ce qui est solide
             </p>
@@ -110,7 +110,7 @@ const lessons = [
               <li>• Pytest plugin pourrait servir si scope contrôlé</li>
             </ul>
           </div>
-          <div class="rounded-xl border border-rose-500/20 bg-rose-500/5 p-[min(1.25rem,20px)]">
+          <div class="rounded-xl border border-rose-500/20 bg-rose-500/5 p-borne-5">
             <p class="font-mono text-xs uppercase tracking-wider text-rose-400 mb-2">
               Ce qui pète
             </p>
@@ -127,7 +127,7 @@ const lessons = [
           </div>
         </div>
 
-        <div class="rounded-xl border border-claude/20 bg-claude/5 p-[min(1.25rem,20px)] sm:p-6 mt-2">
+        <div class="rounded-xl border border-claude/20 bg-claude/5 p-borne-5 sm:p-6 mt-2">
           <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">
             Décision
           </p>
@@ -150,7 +150,7 @@ const lessons = [
         </p>
         <ol class="grid gap-3 sm:grid-cols-2">
           {lessons.map((l, i) => (
-            <li class="rounded-xl border border-white/10 bg-paper-elevated p-[min(1.25rem,20px)]">
+            <li class="rounded-xl border border-white/10 bg-paper-elevated p-borne-5">
               <p class="font-mono text-xs text-claude mb-2">
                 {String(i + 1).padStart(2, "0")}
               </p>
@@ -166,7 +166,7 @@ const lessons = [
           Pour décider <em>quoi</em> skillifier, on a mappé chaque catégorie
           de commande SuperClaude contre ce qu'on a déjà :
         </p>
-        <div tabindex="0" role="region" aria-label="Tableau : commandes SuperClaude et équivalents" class="overflow-x-auto -mx-[min(1.25rem,20px)] sm:mx-0">
+        <div tabindex="0" role="region" aria-label="Tableau : commandes SuperClaude et équivalents" class="overflow-x-auto -mx-borne-5 sm:mx-0">
           <table class="w-full text-sm">
             <thead>
               <tr class="border-b border-white/10">

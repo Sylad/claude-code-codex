@@ -92,13 +92,13 @@ function clearFilters() {
         <Search
           :size="16"
           aria-hidden="true"
-          class="absolute left-[min(0.75rem,12px)] top-1/2 -translate-y-1/2 text-ink-muted"
+          class="absolute left-borne-3 top-1/2 -translate-y-1/2 text-ink-muted"
         />
         <input
           v-model="searchQuery"
           id="videos-recherche"
           type="search"
-          class="w-full pl-[min(2.5rem,40px)] pr-[min(1rem,16px)] py-2.5 rounded-lg bg-paper-elevated border border-white/10 text-ink placeholder:text-ink-muted focus:outline-none focus:border-claude focus-visible:ring-2 focus-visible:ring-claude transition-colors"
+          class="w-full pl-borne-10 pr-borne-4 py-2.5 rounded-lg bg-paper-elevated border border-white/10 text-ink placeholder:text-ink-muted focus:outline-none focus:border-claude focus-visible:ring-2 focus-visible:ring-claude transition-colors"
         />
       </div>
 
@@ -176,7 +176,7 @@ function clearFilters() {
       <li
         v-for="entry in filteredEntries"
         :key="entry.id"
-        class="relative overflow-hidden rounded-xl border border-white/10 bg-paper-elevated p-[min(1.25rem,20px)] transition-[colors,transform,box-shadow] duration-200 hover:border-claude/30 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-claude/10"
+        class="relative overflow-hidden rounded-xl border border-white/10 bg-paper-elevated p-borne-5 transition-[colors,transform,box-shadow] duration-200 hover:border-claude/30 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-claude/10"
       >
         <div
           :class="`absolute inset-0 bg-gradient-to-br ${KIND_ACCENTS[entry.kind]} opacity-50 pointer-events-none`"

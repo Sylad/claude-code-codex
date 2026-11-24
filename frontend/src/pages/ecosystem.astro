@@ -20,11 +20,11 @@ const communityEntries = ecosystemEntries.filter((e) => !e.official);
     intro="Catalogue des composants officiels (Anthropic + protocole MCP) que tu peux installer pour étendre Claude Code. Filtre par catégorie, cherche, et copie la commande d'installation d'un clic."
   />
 
-  <div class="mx-auto max-w-6xl px-[min(1.25rem,20px)] sm:px-8 pt-8">
+  <div class="mx-auto max-w-6xl px-borne-5 sm:px-8 pt-8">
     <RevueContenu page="ecosystem" />
   </div>
 
-  <section class="mx-auto max-w-6xl px-[min(1.25rem,20px)] sm:px-8 py-12">
+  <section class="mx-auto max-w-6xl px-borne-5 sm:px-8 py-12">
     <EcosystemCatalog
       entries={officialEntries}
       searchLabel="Rechercher dans le catalogue officiel"
@@ -32,7 +32,7 @@ const communityEntries = ecosystemEntries.filter((e) => !e.official);
     />
 
     <div
-      class="mt-12 rounded-xl border border-claude/20 bg-claude/5 p-[min(1.5rem,24px)] sm:p-8 [overflow-wrap:anywhere]"
+      class="mt-12 rounded-xl border border-claude/20 bg-claude/5 p-borne-6 sm:p-8 [overflow-wrap:anywhere]"
     >
       <p class="font-mono text-xs uppercase tracking-wider text-claude mb-3">
         Critères du catalogue
@@ -84,7 +84,7 @@ const communityEntries = ecosystemEntries.filter((e) => !e.official);
 
   {
     communityEntries.length > 0 && (
-      <section class="mx-auto max-w-6xl px-[min(1.25rem,20px)] sm:px-8 pb-16">
+      <section class="mx-auto max-w-6xl px-borne-5 sm:px-8 pb-16">
         <div class="mb-8 border-t border-white/10 pt-12">
           <p class="font-mono text-xs uppercase tracking-wider text-claude mb-3">
             Section community · passée au banc d'essai
