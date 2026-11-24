@@ -64,6 +64,9 @@ export function bornesDeNom(texte) {
     if (SIGNE.test(a) && !PAS_APRES.test(a) && (ALNUM.test(b) || /[([{<]/.test(b))) out.push(i);
     else if (/[([{<]/.test(b) && ALNUM.test(a)) out.push(i);
     else if (/\p{Ll}/u.test(a) && /\p{Lu}/u.test(b)) out.push(i);
+    // Fin d'un sigle en capitales devant un mot capitalisé : « JDBC|Store », « MCP|Servers » (revue r4),
+    // jamais « UR|Ls » (le mot qui s'ouvre a au moins 2 minuscules).
+    else if (/\p{Lu}/u.test(a) && /\p{Lu}/u.test(b) && /^\p{Ll}{2}/u.test((c[k + 1] ?? '') + (c[k + 2] ?? ''))) out.push(i);
     else if ((/\p{L}/u.test(a) && /\p{N}/u.test(b)) || (/\p{N}/u.test(a) && /\p{L}/u.test(b))) {
       let g = k;
       while (g > 0 && ALNUM.test(c[g - 1])) g--;
@@ -83,14 +86,22 @@ export function bornesDeNom(texte) {
 // et s'il reste une voyelle de chaque côté. Jamais devant une voyelle (« tok|ens », « prot|ocol »).
 // Un sigle sans voyelle (« jdbc », « html ») ne forme pas de syllabe : il se détache d'un bloc, devant la
 // syllabe qui le suit (« jdbc|config », revue r3, M3-ter), jamais en son milieu (pas de voyelle à gauche).
+// Le sigle ne prend pas au mot anglais qui le suit son « s » d'attaque : « jdbc|store », « wms|store »,
+// jamais « jdbcs|tore » (revue r4) ; ces mots-là s'ouvrent sur un groupe « s + consonne ».
 const VOYELLE = /[aeiouyàâäéèêëîïôöùûüÿæœ]/iu;
 const GROUPE = /^(?:[bcdfgkptv][lr]|[cpst]h|gn|qu)$/iu;
+const EN_S = /^s(?:tores?|tack|tart|tate|tatus|tream|tring|tyle|cripts?|cope|pec|kills?|napshot|witch|plit|print|moke)/iu;
 export function frontiereDeSyllabe(mot, p) {
   const a = mot[p - 1];
   const b = mot[p];
   const c = mot[p + 1] ?? '';
   if (!a || !b || !LETTRE.test(a) || !LETTRE.test(b)) return false;
   if (!VOYELLE.test(mot.slice(p))) return false;
+  const gauche = mot.slice(0, p);
+  if (!VOYELLE.test(gauche)) {
+    if (/s$/iu.test(gauche) && gauche.length > 3 && EN_S.test(`s${mot.slice(p)}`)) return false;
+    if (EN_S.test(mot.slice(p))) return true;
+  }
   if (VOYELLE.test(b)) return false;
   // Ce qui ouvre la syllabe de droite : une consonne puis une voyelle, ou un groupe insécable.
   const attaque = VOYELLE.test(c) || (GROUPE.test(b + c) && VOYELLE.test(mot[p + 2] ?? ''));
@@ -371,6 +382,9 @@ function poserDansLeCode({ colles, bornes }) {
 // Ce qui a été posé, défait dans l'ordre inverse : le nœud d'origine a été raccourci (`avant`), les nœuds
 // ajoutés le suivent. Si Vue (ou autre) a réécrit le nœud entre-temps, on retire seulement nos ajouts.
 const poses = [];
+// Gestes faits depuis le chargement (nœuds posés, césures ajoutées à un mot doublé, îlots marqués) : une
+// passe qui n'en fait aucun laisse la page telle quelle, la suivante trouverait les mêmes blocs.
+let gestes = 0;
 
 function defairePoses() {
   while (poses.length) {
@@ -388,6 +402,7 @@ function remplacer(node, debut, fin, fabrique) {
   node.after(...ajouts);
   node.data = origine.slice(0, debut);
   poses.push({ node, origine, avant: node.data, ajouts });
+  gestes++;
 }
 
 // Ponctuation de tête renvoyée seule en fin de ligne (« -- | dry-run », « (-- | fork-session ») : elle reste
@@ -500,7 +515,10 @@ function traiter({ node: origine, blocs }, range) {
     if (ilot) {
       // Une ponctuation seule n'est pas un mot à césurer (aucun nœud n'est touché dans un îlot).
       const ponctuation = !ALNUM.test(node.data.slice(debut, coupure)) || !ALNUM.test(node.data.slice(coupure, debut + texte.length));
-      if (motPur && !ponctuation) el.setAttribute('data-cesure', '');
+      if (motPur && !ponctuation && !el.hasAttribute('data-cesure')) {
+        el.setAttribute('data-cesure', '');
+        gestes++;
+      }
       continue;
     }
     if (el.hasAttribute('data-cesure-vu')) {
@@ -529,7 +547,10 @@ function traiter({ node: origine, blocs }, range) {
       }
       const p = positionDeRepli(data, k, plafond);
       if (p > 0) data = data.slice(0, p) + SHY + data.slice(p);
-      if (data !== node.data) node.data = data;
+      if (data !== node.data) {
+        node.data = data;
+        gestes++;
+      }
       continue;
     }
     // Un nombre soudé à son voisin par une insécable (« 149 888 ») qui tient seul : il passe entier à la
@@ -578,14 +599,21 @@ export function marquerCesures(racine = document.body) {
   const range = document.createRange();
   // Un mot césuré change les lignes de son élément (et parfois la largeur d'une colonne voisine) ; un nom
   // découpé à sa ponctuation peut garder un morceau trop large, que le dictionnaire peut ne pas couper : on
-  // recommence, borné.
-  for (let passe = 0; passe < 8; passe++) {
+  // recommence, borné. Une passe qui ne change rien arrête la boucle : ce qui reste coupé est hors de portée
+  // du script (le texte d'un îlot Vue, déjà marqué ; un nom sans frontière de syllabe), les passes suivantes
+  // le retrouveraient à l'identique (revue de code r4 : /ecosystem allait toujours au plafond).
+  let passe = 0;
+  while (passe < 8) {
     const signes = signesSeuls(racine, range);
     const coupes = blocsCoupes(racine, range, signes.blocs);
     if (!coupes.length && !signes.colles.length && !signes.bornes.length) break;
+    const avant = gestes;
     for (const c of coupes) traiter(c, range);
     poserDansLeCode(signes);
+    passe++;
+    if (gestes === avant) break;
   }
+  return passe;
 }
 
 export function installerCesure() {
@@ -595,7 +623,8 @@ export function installerCesure() {
   const lancer = () => {
     cancelAnimationFrame(image);
     image = requestAnimationFrame(() => {
-      marquerCesures(document.body);
+      // Nombre de passes du dernier calcul : un test sait ainsi que la boucle converge avant sa borne.
+      document.documentElement.dataset.cesurePasses = String(marquerCesures(document.body));
       const r = document.body.getBoundingClientRect();
       taille = `${r.width}x${r.height}`;
       // Taille du <body> au dernier calcul : un test sait ainsi que la césure suit la mise en page.

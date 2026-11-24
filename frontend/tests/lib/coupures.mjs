@@ -95,6 +95,9 @@ export function releverCoupures() {
     const [a, b] = [mot[j - 1].c, mot[j].c];
     return (/[\p{P}\p{S}]/u.test(a) && !/['’«“‘([{<]/u.test(a)) || /[([{<_.~/]/.test(b)
       || (/\p{Ll}/u.test(a) && /\p{Lu}/u.test(b))
+      // Fin d'un sigle en capitales devant un mot capitalisé (« JDBC|Store », « MCP|Servers ») : la coupure
+      // tombe avant la dernière capitale, qui ouvre le mot ; jamais « UR|Ls » (2 minuscules au moins).
+      || (/\p{Lu}/u.test(a) && /\p{Lu}/u.test(b) && /^\p{Ll}{2}/u.test((mot[j + 1]?.c ?? '') + (mot[j + 2]?.c ?? '')))
       || (((/\p{L}/u.test(a) && /\p{N}/u.test(b)) || (/\p{N}/u.test(a) && /\p{L}/u.test(b))) && borneChiffres(mot, j));
   };
   // Frontière de syllabe (revue r2, M3-bis), jugée sur les lettres de part et d'autre de la coupure : une
@@ -103,14 +106,21 @@ export function releverCoupures() {
   // n'est jamais coupé en son milieu. Ainsi « to|kens », « model|context », « context|protocol » sont des
   // frontières ; « tok|ens », « prot|ocol », « contextp|rotocol » n'en sont pas.
   // Un sigle sans voyelle (3 lettres au moins : « jdbc », « html ») ne forme pas de syllabe : la coupure
-  // entre lui et la syllabe qui le suit est une frontière (« jdbc|config », revue r3, M3-ter).
+  // entre lui et la syllabe qui le suit est une frontière (« jdbc|config », revue r3, M3-ter) ; pas quand elle
+  // prend au mot suivant son « s » (« jdbcs|tore », revue r4).
   const V = 'aeiouyàâäéèêëîïôöùûüÿæœ';
   const groupe = /^(?:[bcdfgkptv][lr]|[cpst]h|gn)/i;
+  // Après un sigle, le mot qui suit garde son « s » d'attaque (revue r4 : « jdbc|store », jamais
+  // « jdbcs|tore » ni « wmss|tore ») : mots anglais courants des noms et identifiants.
+  const MOTS_EN_S = /^s(?:tores?|tack|tart|tate|tatus|tream|tring|tyle|cripts?|cope|pec|kills?|napshot|witch|plit|print|moke)/;
   const syllabe = (gauche, droite) => {
     const g = gauche.toLowerCase();
     const d = droite.toLowerCase();
     if (![...d].some((x) => V.includes(x))) return false;
-    if (![...g].some((x) => V.includes(x)) && g.length < 3) return false;
+    const sigle = ![...g].some((x) => V.includes(x));
+    if (sigle && g.length < 3) return false;
+    if (sigle && g.endsWith('s') && g.length > 3 && MOTS_EN_S.test(`s${d}`)) return false;
+    if (sigle && MOTS_EN_S.test(d)) return true;
     const ouvre = new RegExp(`^(?:[bcdfgkptv][lr]|[cpst]h|gn|[^${V}])[${V}]`, 'u');
     if (!ouvre.test(d)) return false;
     return !groupe.test(g.slice(-1) + d[0]);

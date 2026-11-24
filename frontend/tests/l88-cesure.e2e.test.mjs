@@ -170,6 +170,18 @@ test('l\'oracle voit une coupure sans trait, une césure trop courte, une césur
   assert.deepEqual(await juger(bloc('', 'jdbc­config.', await ligne('jdbc­config.'))), [], 'sigle détaché de la syllabe suivante');
   const f10 = await juger(bloc('', 'jd­bcconfig', await ligne('jd­bcconfig')));
   assert.ok(f10.length > 0, `sigle coupé en son milieu : ${f10}`);
+  // Revue de code r4 : après un sigle, le mot qui suit garde son « s » d'attaque (« jdbc-store »,
+  // « JDBC|Store » à la casse), jamais « jdbcs-tore », « wmss-tore » ni « JDBCS|tore ».
+  for (const texte of ['jdbcs\u00adtore', 'JDBCS\u00adtore', 'wmss\u00adtore']) {
+    const f = await juger(bloc('', texte, await ligne(texte)));
+    assert.ok(f.some((x) => /^césure hors syllabe/.test(x)), `${texte} : ${f}`);
+  }
+  for (const texte of ['jdbc\u00adstore', 'wms\u00adstore']) {
+    assert.deepEqual(await juger(bloc('', texte, await ligne(texte))), [], `${texte} : sigle détaché du mot suivant`);
+  }
+  assert.deepEqual(await juger(bloc('', 'JDBC<wbr>Store', await largeur('JDBCSt'))), [], 'JDBC|Store : coupure à la casse');
+  const f11 = await juger(bloc('', 'JDBCS<wbr>tore', await largeur('JDBCS')));
+  assert.ok(f11.length > 0, `JDBCS|tore sans trait : ${f11}`);
   // Revue r3, m-a-bis : signe seul après une insécable, après un <code>, « -- » d'une option dans un <code>.
   const code = (t) => `<code style="font:inherit;overflow-wrap:anywhere">${t}</code>`;
   const seul = async (corps, l, quoi) => {
@@ -471,4 +483,22 @@ test('navigation interne (transitions Astro) : la césure suit la nouvelle page'
     assert.deepEqual(await verifierCoupures(page), [], `${cible} après navigation interne`);
   }
   await context.close();
+});
+
+// Revue de code r4 (mineur) : sur /ecosystem, chaque calcul allait au plafond de 8 passes (les blocs coupés
+// d'un îlot Vue, que le script ne peut pas changer, revenaient à chaque passe). Une passe qui ne change rien
+// arrête la boucle : le calcul converge avant sa borne, au réglage normal comme en texte agrandi.
+test('la césure converge avant sa borne de 8 passes — /ecosystem, 320 et 1440 px, texte 100 et 200 %', { timeout: 120_000 }, async (t) => {
+  const env = await setupBrowser(t);
+  if (!env) return;
+  for (const width of [320, 1440]) {
+    const page = await env.browser.newPage({ viewport: { width, height: 844 } });
+    await ouvrir(page, `${env.base}/ecosystem/`);
+    for (const n of [100, 200]) {
+      await taille(page, n);
+      const passes = Number(await page.evaluate(() => document.documentElement.dataset.cesurePasses));
+      assert.ok(passes < 8, `${width} px, ${n} % : ${passes} passes`);
+    }
+    await page.close();
+  }
 });
