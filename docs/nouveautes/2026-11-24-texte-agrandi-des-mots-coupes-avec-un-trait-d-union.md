@@ -11,9 +11,9 @@ Sur un petit téléphone, avec le texte du navigateur agrandi jusqu'à deux fois
 
 - **Un mot trop long pour sa ligne** se coupe à une syllabe, avec un trait d'union, en gardant au moins trois lettres de chaque côté. Seul ce mot-là est coupé : ses voisins qui tiennent restent entiers.
 - **Un nom, une adresse ou une commande** se coupe d'abord à sa ponctuation, à sa casse ou à ses chiffres (« warhammer|40k », « JDBC|Store ») ; s'il faut le couper au milieu, c'est à une syllabe et avec un trait.
-- **La ponctuation ne reste jamais seule** au début ou à la fin d'une ligne : virgule, parenthèse, guillemet fermant, « % » d'un pourcentage, « -- » d'une option.
+- **Certains signes ne restent plus seuls** au début ou à la fin d'une ligne : la virgule, la parenthèse, le guillemet fermant, le « % » d'un pourcentage et le « -- » d'une option.
 - **Les grands titres** grandissent maintenant avec le texte, au lieu de rester bloqués par la largeur de l'écran.
 - **Le texte copié et la lecture à voix haute** ne changent pas : aucun trait ajouté ne s'y glisse.
-- **Au réglage normal**, rien ne change à l'écran.
+- **Au réglage normal**, seuls quelques noms et options se coupent à un meilleur endroit.
 
 Un test refait ces mesures sur toutes les pages construites, à trois largeurs d'écran et cinq tailles de texte ; il échouait sur l'ancienne version.
