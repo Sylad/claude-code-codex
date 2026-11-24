@@ -963,11 +963,14 @@ lots:
     created: 2026-11-24
   - id: L96
     title: "Suites de la revue UX de L93 : « Ne répond à aucune des cinq causes » (le « ne » manque) avec l'explication dans le corps du texte, et l'entrée Nouveautés L93 qui cite les cinq décisions (le budget de lignes manque)"
-    status: doing
+    status: done
     estimate: 0.25
     visible: true
     created: 2026-11-24
     started: 2026-11-24
+    review: { date: 2026-11-24, verdict: "conforme (lead, diff de 124e170 relu : libellé fixe, champ horsCauses retiré, R11 et R13 ajoutés ; 54 tests ciblés verts)", commit: 124e170fdcf24ef720f3e79b17bcc7c4635d2936 }
+    ux: { date: 2026-11-24, verdict: "conforme (lead, captures 320/390/1440 du run : ligne « Ne répond à aucune des cinq causes » sur 1 à 2 lignes, explication dans le corps, 0 défilement de côté ; l'entrée Nouveautés L93 décrit ce chapitre, pas d'entrée propre)" }
+    finished: 2026-11-24
   - id: L97
     title: "Le mot « undefined » s'affiche dans le texte rendu de /case-studies/aetherwx-encyclopedia/ (absent du HTML statique : vient d'un script au chargement ; relevé par la QA de L93 le 24-11)"
     status: todo
