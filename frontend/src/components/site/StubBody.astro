@@ -8,8 +8,8 @@ interface Props {
 const { status, bullets, sources = [] } = Astro.props;
 ---
 
-<section class="mx-auto max-w-4xl px-5 sm:px-8 py-16">
-  <div class="rounded-xl border border-white/10 bg-paper-elevated p-6 sm:p-8">
+<section class="mx-auto max-w-4xl px-[min(1.25rem,20px)] sm:px-8 py-16">
+  <div class="rounded-xl border border-white/10 bg-paper-elevated p-[min(1.5rem,24px)] sm:p-8">
     <div class="flex items-center gap-2 mb-4">
       <span class="inline-block w-2 h-2 rounded-full bg-claude animate-pulse"></span>
       <p class="font-mono text-xs uppercase tracking-wider text-ink-muted">

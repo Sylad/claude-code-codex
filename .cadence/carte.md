@@ -59,6 +59,24 @@
 - `tests/lib/e2e-dist.mjs` `worstPixelContrast` amène l'élément dans la vue avant de le capturer (L21 : le bloc de
   revue pousse le premier bouton « copier » de `/ecosystem/` sous le pli de 900 px).
 
+- L88 (24-11, WCAG 1.4.10) — aucun mot coupé sans trait d'union à 320, 390 et 768 px, texte de 100 à 200 % :
+  - césure française seulement là où un mot ne tient pas sur sa ligne : `src/lib/cesure.mjs` (chargé par
+    BaseLayout, servi en fichier `_astro/BaseLayout…js` via `assetsInlineLimit`) pose `data-cesure` sur ces
+    éléments (`[data-cesure] { hyphens: auto }` dans global.css), recalculé à chaque changement de taille du
+    <body> et après navigation ; `<html data-cesure-mesure>` = taille du <body> au dernier calcul.
+  - Chromium ne césure pas un mot soudé par une insécable (« 23 novembre », « « influenceurs ») : pour ces
+    seuls mots, le script pose des U+00AD aux points de césure du navigateur (jamais dans un îlot Vue).
+  - Le dictionnaire français de Chromium ne coupe pas « changé », « confiance », « échéance » : les marges
+    horizontales ne grandissent plus avec le texte. Toute gouttière ou carte `p-4/5/6`, `px-4/5/6` (sans
+    préfixe) est écrite `p-[min(1.5rem,24px)]` etc., les marges négatives qui les compensent aussi
+    (`-mx-[min(1.25rem,20px)]`, BookSchema) ; titres h1 de /nouveautes, /livre-de-bord, /plan-de-travail
+    et de l'accueil bornés en vw comme PageHero ; retrait des listes de /nouveautes borné ; chiffres de
+    RtkStats bornés en vw. CodeBlock : la langue passe sous le nom quand le nom aurait moins de 12 ch.
+  - Rendu au réglage normal : captures pleine page identiques au pixel avant/après à 390, 768 et 1440 px
+    (39 pages, polices web bloquées) ; à 320 px seul « L'encyclopédi|e » change (devient « encyclopé-die »).
+  - Un identifiant (camelCase, lettres et chiffres mêlés) ou un chemin n'est pas un mot : jamais césuré,
+    sa coupure reste permise.
+
 ## Tests
 
 - `frontend/tests/l73-pourquoi-cadence.e2e.test.mjs` (lit `dist`) : besoins, définition, chiffres datés et sourcés,
@@ -76,3 +94,7 @@
   datées et sourcées) et `l21-revue-contenu.e2e.test.mjs` (lit `dist` : bloc de revue de chaque page, actualités,
   contenus mis à jour, pas de débordement à 320/390, avertissement de retard dans le navigateur avec date simulée).
 - L56/L58/L59 suivent le relevé du 22-11 (étoiles, minimums de cache, Fable 5.2).
+- `frontend/tests/l88-cesure.e2e.test.mjs` (lit `dist`, ~1 min) : mots cassés (`tests/lib/mots-casses.mjs`,
+  points de césure relevés au dictionnaire du navigateur par balayage de largeur) sur toutes les pages à
+  320/390/768 px × texte 100/125/150/175/200 %, `<details>` ouverts ; aucune césure posée à 100 % de 390 à
+  1440 px ; césure posée à 200 % et retirée au retour à 100 % ; `hyphens: auto` seulement sous `[data-cesure]`.

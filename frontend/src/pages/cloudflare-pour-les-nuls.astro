@@ -108,7 +108,7 @@ const DEPOTS = ["developpeur-gitops"];
         <li><strong>L'IP dynamique n'est plus un sujet</strong> : c'est cloudflared qui appelle, peu importe d'où.</li>
         <li><strong>TLS géré par Cloudflare</strong> : ton service interne peut parler HTTP tout nu, le visiteur voit un cadenas.</li>
       </ul>
-      <p class="rounded-lg border border-claude/30 bg-claude/[0.06] p-4 text-sm">
+      <p class="rounded-lg border border-claude/30 bg-claude/[0.06] p-[min(1rem,16px)] text-sm">
         Le tunnel est identifié par un <strong>token</strong> (le long
         <code class="font-mono text-[0.9em]">eyJhbGci...</code> que le
         dashboard te fait copier à la création). Ce token est la seule
@@ -254,7 +254,7 @@ Page de login exposée     → il manque le portier       → Zero Trust → Acc
 "DNS record already       → un CNAME fantôme d'un      → zone DNS : supprimer les records
   exists" à la création     ancien tunnel traîne          pointant sur l'ancien tunnel`}
       />
-      <p class="rounded-lg border border-claude/30 bg-claude/[0.06] p-4 text-sm">
+      <p class="rounded-lg border border-claude/30 bg-claude/[0.06] p-[min(1rem,16px)] text-sm">
         <strong>Vécu, épisode 2</strong> : à la création du nouveau
         tunnel, impossible de publier
         <code class="font-mono text-[0.9em]">aetherwx</code> — « A DNS
@@ -355,7 +355,7 @@ spec:
         Trente minutes, en comprenant chaque clic — c'est tout l'enjeu
         de cette page.
       </p>
-      <p class="rounded-lg border border-claude/30 bg-claude/[0.06] p-4 text-sm">
+      <p class="rounded-lg border border-claude/30 bg-claude/[0.06] p-[min(1rem,16px)] text-sm">
         <strong>Piège d'interface (2026)</strong> : dans le nouveau
         dashboard « Cloudflare One », les Public Hostnames s'appellent
         désormais <strong>Published applications</strong>. L'onglet

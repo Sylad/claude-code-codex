@@ -50,7 +50,7 @@ const lessons = [
     intro="Framework d'orchestration multi-agent qui se greffe sur Claude Code — 32 plugins, swarms hiérarchiques, mémoire vectorielle, fédération multi-machines. Testé en sandbox sur la 3.7.0-alpha.17 puis sur la 3.6.30 stable."
   />
 
-  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12">
+  <section class="mx-auto max-w-3xl px-[min(1.25rem,20px)] sm:px-8 py-12">
     <div class="space-y-12">
       <EtudeFraicheur depots={[{ nom: "ruvnet/ruflo", href: "https://github.com/ruvnet/ruflo" }]} date="2026-05-08" nature="testé" />
 
@@ -155,7 +155,7 @@ const lessons = [
         </h2>
         <div class="grid gap-4 sm:grid-cols-2">
           <div
-            class="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-5"
+            class="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-[min(1.25rem,20px)]"
           >
             <p
               class="font-mono text-xs uppercase tracking-wider text-emerald-400 mb-2"
@@ -171,7 +171,7 @@ const lessons = [
             </ul>
           </div>
           <div
-            class="rounded-xl border border-rose-500/20 bg-rose-500/5 p-5"
+            class="rounded-xl border border-rose-500/20 bg-rose-500/5 p-[min(1.25rem,20px)]"
           >
             <p
               class="font-mono text-xs uppercase tracking-wider text-rose-400 mb-2"
@@ -189,7 +189,7 @@ const lessons = [
         </div>
 
         <div
-          class="rounded-xl border border-claude/20 bg-claude/5 p-5 sm:p-6 mt-2"
+          class="rounded-xl border border-claude/20 bg-claude/5 p-[min(1.25rem,20px)] sm:p-6 mt-2"
         >
           <p
             class="font-mono text-xs uppercase tracking-wider text-claude mb-2"
@@ -223,7 +223,7 @@ const lessons = [
         <ol class="grid gap-3 sm:grid-cols-2">
           {lessons.map((l, i) => (
             <li
-              class="rounded-xl border border-white/10 bg-paper-elevated p-5"
+              class="rounded-xl border border-white/10 bg-paper-elevated p-[min(1.25rem,20px)]"
             >
               <p
                 class="font-mono text-xs text-claude mb-2"
@@ -241,7 +241,7 @@ const lessons = [
 
       <article class="space-y-4 pt-2">
         <div
-          class="rounded-xl border border-white/10 bg-paper-elevated p-6 sm:p-8"
+          class="rounded-xl border border-white/10 bg-paper-elevated p-[min(1.5rem,24px)] sm:p-8"
         >
           <p
             class="font-mono text-xs uppercase tracking-wider text-claude mb-3"

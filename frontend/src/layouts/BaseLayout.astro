@@ -91,6 +91,9 @@ const newsIndex = newsData.entries.map(({ slug, date }) => ({ slug, date }));
     </main>
     <Footer />
     <script>
+      import { installerCesure } from "@/lib/cesure.mjs";
+      // L88 — césure française seulement là où un mot ne tient pas sur sa ligne (WCAG 1.4.10).
+      installerCesure();
       // Après une navigation interne (transitions Astro), le focus restait
       // sur le lien cliqué dans la barre persistée ou retombait sur <body> :
       // on le place sur le contenu, comme un chargement complet suivi du

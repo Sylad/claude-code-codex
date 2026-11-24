@@ -4,7 +4,7 @@ interface Props { titre: string }
 const { titre } = Astro.props;
 ---
 
-<aside data-encadre class="rounded-xl border border-claude/40 bg-paper-elevated p-5 text-sm leading-relaxed">
+<aside data-encadre class="rounded-xl border border-claude/40 bg-paper-elevated p-[min(1.25rem,20px)] text-sm leading-relaxed">
   <p class="font-mono text-xs uppercase tracking-[0.15em] text-claude mb-2">{titre}</p>
   <div class="text-ink space-y-2"><slot /></div>
 </aside>

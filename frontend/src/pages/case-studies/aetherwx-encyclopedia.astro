@@ -191,7 +191,7 @@ const tokenFlow = `flowchart LR
     intro="« 12 ans que je fais du GeoServer et de l'OpenLayers, je ne comprends rien aux technos que tu utilises. » — Sylvain, 14 mai 2026, 22h, juste avant que la tour Big-Blue arrête de clignoter. Cette page part de ce qui a été déployé pendant 14h de marathon — une vingtaine de services, GitOps complet, et pourquoi des dizaines de tokens ont été générés — et décrit l'infrastructure telle qu'elle tourne au 3 novembre 2026, après deux déménagements depuis ce marathon."
   />
 
-  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12 space-y-12">
+  <section class="mx-auto max-w-3xl px-[min(1.25rem,20px)] sm:px-8 py-12 space-y-12">
 
     <EtudeFraicheur depots={["maritime-atlas", "aetherwx-gitops"]} />
 
@@ -417,7 +417,7 @@ const tokenFlow = `flowchart LR
       />
 
       <div class="space-y-6 my-6">
-        <div class="rounded-lg border border-white/10 bg-paper-elevated p-5">
+        <div class="rounded-lg border border-white/10 bg-paper-elevated p-[min(1.25rem,20px)]">
           <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">Token #1 · GHCR_TOKEN</p>
           <p class="text-sm text-ink-muted leading-relaxed">
             <strong class="text-ink">Type :</strong> GitHub Personal
@@ -436,7 +436,7 @@ const tokenFlow = `flowchart LR
           </p>
         </div>
 
-        <div class="rounded-lg border border-white/10 bg-paper-elevated p-5">
+        <div class="rounded-lg border border-white/10 bg-paper-elevated p-[min(1.25rem,20px)]">
           <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">Token #2 · ArgoCD webhook secret</p>
           <p class="text-sm text-ink-muted leading-relaxed">
             <strong class="text-ink">Type :</strong> chaîne hex 32 bytes
@@ -454,7 +454,7 @@ const tokenFlow = `flowchart LR
           </p>
         </div>
 
-        <div class="rounded-lg border border-white/10 bg-paper-elevated p-5">
+        <div class="rounded-lg border border-white/10 bg-paper-elevated p-[min(1.25rem,20px)]">
           <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">Token #3 · Cloudflare tunnel token</p>
           <p class="text-sm text-ink-muted leading-relaxed">
             <strong class="text-ink">Type :</strong> JWT long-lived émis
@@ -472,7 +472,7 @@ const tokenFlow = `flowchart LR
           </p>
         </div>
 
-        <div class="rounded-lg border border-white/10 bg-paper-elevated p-5">
+        <div class="rounded-lg border border-white/10 bg-paper-elevated p-[min(1.25rem,20px)]">
           <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">Token #4 · Google OAuth client_secret</p>
           <p class="text-sm text-ink-muted leading-relaxed">
             <strong class="text-ink">Type :</strong> string fournie par
@@ -491,7 +491,7 @@ const tokenFlow = `flowchart LR
           </p>
         </div>
 
-        <div class="rounded-lg border border-white/10 bg-paper-elevated p-5">
+        <div class="rounded-lg border border-white/10 bg-paper-elevated p-[min(1.25rem,20px)]">
           <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">Token #5 · Resend API key</p>
           <p class="text-sm text-ink-muted leading-relaxed">
             <strong class="text-ink">Type :</strong> API key SaaS Resend
@@ -506,7 +506,7 @@ const tokenFlow = `flowchart LR
           </p>
         </div>
 
-        <div class="rounded-lg border border-white/10 bg-paper-elevated p-5">
+        <div class="rounded-lg border border-white/10 bg-paper-elevated p-[min(1.25rem,20px)]">
           <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">Token #6 · Anthropic API key (côté apps perso)</p>
           <p class="text-sm text-ink-muted leading-relaxed">
             <strong class="text-ink">Type :</strong> sk-ant-XXX clé API
@@ -619,7 +619,7 @@ const tokenFlow = `flowchart LR
       </p>
 
       <div class="space-y-5 my-6">
-        <div class="rounded-lg border border-rose-500/20 bg-rose-500/[0.04] p-5">
+        <div class="rounded-lg border border-rose-500/20 bg-rose-500/[0.04] p-[min(1.25rem,20px)]">
           <p class="font-mono text-xs uppercase tracking-wider text-rose-400 mb-2">Piège #1 · WSL2 mount propagation (45 min)</p>
           <p class="text-sm text-ink-muted leading-relaxed">
             Longhorn (le stockage distribué K8s) a besoin que la racine
@@ -633,7 +633,7 @@ const tokenFlow = `flowchart LR
           </p>
         </div>
 
-        <div class="rounded-lg border border-rose-500/20 bg-rose-500/[0.04] p-5">
+        <div class="rounded-lg border border-rose-500/20 bg-rose-500/[0.04] p-[min(1.25rem,20px)]">
           <p class="font-mono text-xs uppercase tracking-wider text-rose-400 mb-2">Piège #2 · undici + Alpine musl libc (60 min)</p>
           <p class="text-sm text-ink-muted leading-relaxed">
             Node 22 sur Alpine déclenche un bug undici (fetch côté
@@ -647,7 +647,7 @@ const tokenFlow = `flowchart LR
           </p>
         </div>
 
-        <div class="rounded-lg border border-rose-500/20 bg-rose-500/[0.04] p-5">
+        <div class="rounded-lg border border-rose-500/20 bg-rose-500/[0.04] p-[min(1.25rem,20px)]">
           <p class="font-mono text-xs uppercase tracking-wider text-rose-400 mb-2">Piège #3 · OpenLayers multi-projection (2 h)</p>
           <p class="text-sm text-ink-muted leading-relaxed">
             L'option <code>projection</code> sur une source WMS
@@ -671,7 +671,7 @@ const tokenFlow = `flowchart LR
           </p>
         </div>
 
-        <div class="rounded-lg border border-rose-500/20 bg-rose-500/[0.04] p-5">
+        <div class="rounded-lg border border-rose-500/20 bg-rose-500/[0.04] p-[min(1.25rem,20px)]">
           <p class="font-mono text-xs uppercase tracking-wider text-rose-400 mb-2">Piège #4 · GeoServer JDBCConfig SLD disk drift (1 h)</p>
           <p class="text-sm text-ink-muted leading-relaxed">
             Quand GeoServer tourne en mode JDBCConfig (catalog stocké
@@ -686,7 +686,7 @@ const tokenFlow = `flowchart LR
           </p>
         </div>
 
-        <div class="rounded-lg border border-rose-500/20 bg-rose-500/[0.04] p-5">
+        <div class="rounded-lg border border-rose-500/20 bg-rose-500/[0.04] p-[min(1.25rem,20px)]">
           <p class="font-mono text-xs uppercase tracking-wider text-rose-400 mb-2">Piège #5 · Plugin Java IDW + raster origin (90 min)</p>
           <p class="text-sm text-ink-muted leading-relaxed">
             Le plugin custom Java IDW (interpolation inverse distance
@@ -713,12 +713,12 @@ const tokenFlow = `flowchart LR
       </p>
 
       <div class="my-6 grid grid-cols-1 sm:grid-cols-2 gap-4 font-mono text-sm">
-        <div class="rounded-lg border border-white/10 bg-paper-elevated p-4">
+        <div class="rounded-lg border border-white/10 bg-paper-elevated p-[min(1rem,16px)]">
           <p class="text-claude text-xs uppercase tracking-wider mb-2">dark-blue (always-on)</p>
           <p class="text-ink"><strong>~60-90 W</strong> · 24h/24, prod + Plex</p>
           <p class="text-ink-muted text-xs mt-1">≈ 50 kWh/mois → ~€10</p>
         </div>
-        <div class="rounded-lg border border-white/10 bg-paper-elevated p-4">
+        <div class="rounded-lg border border-white/10 bg-paper-elevated p-[min(1rem,16px)]">
           <p class="text-claude text-xs uppercase tracking-wider mb-2">Big-Blue (dev, intermittent)</p>
           <p class="text-ink"><strong>~80 W</strong> · ON quand sylvain code</p>
           <p class="text-ink-muted text-xs mt-1">ne sert plus rien publiquement</p>

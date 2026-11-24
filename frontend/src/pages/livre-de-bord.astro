@@ -39,11 +39,11 @@ const external = (href: string) => href.startsWith("https://");
   description="Une entrée par semaine sur le développement avec l'IA : ce que nous avons appris, les outils que nous fabriquons, les outils que nous avons testés."
 >
   <section class="book-hero relative codex-grid border-b border-white/5">
-    <div class="mx-auto max-w-6xl px-5 sm:px-8 py-20 sm:py-28">
+    <div class="mx-auto max-w-6xl px-[min(1.25rem,20px)] sm:px-8 py-20 sm:py-28">
       <p class="book-eyebrow inline-block rounded bg-paper/85 px-2 py-1 font-mono text-xs uppercase tracking-[0.2em] text-claude-soft">
         Développement avec l’IA
       </p>
-      <h1 class="mt-3 text-4xl sm:text-5xl font-semibold tracking-tight text-ink">
+      <h1 class="mt-3 text-[length:min(2.25rem,max(1.375rem,12vw))] max-sm:leading-(--text-4xl--line-height) sm:text-5xl font-semibold tracking-tight text-ink">
         Livre de bord
       </h1>
       <p class="book-lede mt-5 max-w-2xl text-base sm:text-lg text-ink leading-relaxed">
@@ -54,8 +54,8 @@ const external = (href: string) => href.startsWith("https://");
     </div>
   </section>
 
-  <div class="mx-auto max-w-3xl px-5 sm:px-8 py-16">
-    <nav aria-label="Les semaines" class="book-weeks mb-8 rounded-lg border border-white/10 bg-paper-elevated px-4 py-3 text-sm">
+  <div class="mx-auto max-w-3xl px-[min(1.25rem,20px)] sm:px-8 py-16">
+    <nav aria-label="Les semaines" class="book-weeks mb-8 rounded-lg border border-white/10 bg-paper-elevated px-[min(1rem,16px)] py-3 text-sm">
       <ul class="flex flex-wrap gap-x-5 gap-y-1">
         {ENTRIES.map((e) => (
           <li>
@@ -68,7 +68,7 @@ const external = (href: string) => href.startsWith("https://");
     </nav>
 
     {ENTRIES.map((e) => (
-      <article class="book-entry mb-8 rounded-xl border border-white/10 bg-paper-elevated p-6 sm:p-8" id={entryId(e)} data-semaine={e.semaine} aria-labelledby={`titre-${entryId(e)}`}>
+      <article class="book-entry mb-8 rounded-xl border border-white/10 bg-paper-elevated p-[min(1.5rem,24px)] sm:p-8" id={entryId(e)} data-semaine={e.semaine} aria-labelledby={`titre-${entryId(e)}`}>
         <h2 id={`titre-${entryId(e)}`} class="text-xl sm:text-2xl font-semibold text-ink">
           {e.theme ?? `Semaine ${e.semaine.slice(-2)}`}
         </h2>

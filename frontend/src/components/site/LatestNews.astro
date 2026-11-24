@@ -78,7 +78,7 @@ const totalItems = allItems.length;
 ---
 
 {recentItems.length > 0 && (
-  <section class="mx-auto max-w-6xl px-5 sm:px-8 pt-4 pb-16">
+  <section class="mx-auto max-w-6xl px-[min(1.25rem,20px)] sm:px-8 pt-4 pb-16">
     <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-8">
       <div>
         <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
@@ -113,7 +113,7 @@ const totalItems = allItems.length;
         const summaryLang = guessLang(cleanSummary) === "en" ? "en" : undefined;
         const date = formatDate(item.publishedAt);
         return (
-          <li class="rounded-xl border border-white/10 bg-paper-elevated p-5 transition-colors hover:border-claude/30 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-claude/10 transition-[colors,transform,box-shadow] duration-200">
+          <li class="rounded-xl border border-white/10 bg-paper-elevated p-[min(1.25rem,20px)] transition-colors hover:border-claude/30 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-claude/10 transition-[colors,transform,box-shadow] duration-200">
             <div class="flex items-center gap-2 flex-wrap mb-3">
               <span
                 class={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider border ${meta.pill}`}

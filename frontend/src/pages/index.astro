@@ -80,12 +80,12 @@ const columns: { eyebrow: string; title: string; rows: SommaireRow[] }[] = [
       class="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-paper"
     >
     </div>
-    <div class="relative mx-auto max-w-6xl px-5 sm:px-8 pt-20 sm:pt-28 pb-12 sm:pb-14">
+    <div class="relative mx-auto max-w-6xl px-[min(1.25rem,20px)] sm:px-8 pt-20 sm:pt-28 pb-12 sm:pb-14">
       <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
         Codex Claude Code · guides · projets
       </p>
       <h1
-        class="mt-4 text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight text-ink leading-[1.05]"
+        class="mt-4 text-[length:min(2.25rem,max(1.375rem,12vw))] sm:text-[length:min(3rem,9vw)] md:text-[length:min(3.75rem,10vw)] font-semibold tracking-tight text-ink leading-[1.05]"
       >
         Un codex pour comprendre, utiliser<br class="hidden md:inline" />
         et builder avec
@@ -120,13 +120,13 @@ const columns: { eyebrow: string; title: string; rows: SommaireRow[] }[] = [
       <div class="mt-8 flex flex-wrap gap-3">
         <a
           href="/start"
-          class="inline-flex items-center gap-2 min-h-11 px-5 py-2.5 rounded-md bg-claude text-paper font-medium hover:bg-claude-soft transition-colors motion-safe:active:scale-95"
+          class="inline-flex items-center gap-2 min-h-11 px-[min(1.25rem,20px)] py-2.5 rounded-md bg-claude text-paper font-medium hover:bg-claude-soft transition-colors motion-safe:active:scale-95"
         >
           Démarrer (débutants) →
         </a>
         <a
           href="/case-studies"
-          class="inline-flex items-center gap-2 min-h-11 px-5 py-2.5 rounded-md border border-white/15 bg-paper/80 text-ink hover:bg-paper-elevated transition-colors motion-safe:active:scale-95"
+          class="inline-flex items-center gap-2 min-h-11 px-[min(1.25rem,20px)] py-2.5 rounded-md border border-white/15 bg-paper/80 text-ink hover:bg-paper-elevated transition-colors motion-safe:active:scale-95"
         >
           Voir les projets →
         </a>
@@ -136,7 +136,7 @@ const columns: { eyebrow: string; title: string; rows: SommaireRow[] }[] = [
           rel="noopener"
           title="Profil GitHub de Sylvain Ladoire — pour me contacter"
           aria-label="GitHub — profil de Sylvain Ladoire, pour me contacter (nouvel onglet)"
-          class="inline-flex items-center gap-2 min-h-11 px-5 py-2.5 rounded-md border border-claude/40 bg-paper/80 text-claude hover:bg-paper-elevated transition-colors motion-safe:active:scale-95"
+          class="inline-flex items-center gap-2 min-h-11 px-[min(1.25rem,20px)] py-2.5 rounded-md border border-claude/40 bg-paper/80 text-claude hover:bg-paper-elevated transition-colors motion-safe:active:scale-95"
         >
           GitHub <span aria-hidden="true">↗</span>
         </a>
@@ -144,10 +144,10 @@ const columns: { eyebrow: string; title: string; rows: SommaireRow[] }[] = [
     </div>
   </section>
 
-  <nav aria-label="Sommaire" class="mx-auto max-w-6xl px-5 sm:px-8 pb-16">
+  <nav aria-label="Sommaire" class="mx-auto max-w-6xl px-[min(1.25rem,20px)] sm:px-8 pb-16">
     <div class="grid gap-4 md:grid-cols-2">
       {columns.map((col) => (
-        <div class="rounded-xl border border-white/10 bg-paper-elevated p-5 sm:p-6">
+        <div class="rounded-xl border border-white/10 bg-paper-elevated p-[min(1.25rem,20px)] sm:p-6">
           <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
             {col.eyebrow}
           </p>
@@ -181,7 +181,7 @@ const columns: { eyebrow: string; title: string; rows: SommaireRow[] }[] = [
     </div>
     <!-- L17 — suivre le site depuis l'accueil, à toutes les largeurs : « Plan de travail »
          n'est pas dans la barre du bureau. Écart du flex, pas de séparateur. -->
-    <div class="home-follow mt-4 rounded-xl border border-white/10 bg-paper-elevated px-5 py-3 sm:px-6 flex flex-wrap items-center gap-x-8 gap-y-1">
+    <div class="home-follow mt-4 rounded-xl border border-white/10 bg-paper-elevated px-[min(1.25rem,20px)] py-3 sm:px-6 flex flex-wrap items-center gap-x-8 gap-y-1">
       <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">Suivre le site</p>
       <a href="/nouveautes" class="inline-flex flex-wrap items-baseline gap-x-2 min-h-11 py-2.5 text-ink hover:text-claude underline-offset-4 hover:underline transition-colors">
         Nouveautés <span class="text-sm text-ink-muted">ce qui a changé</span>
@@ -192,9 +192,9 @@ const columns: { eyebrow: string; title: string; rows: SommaireRow[] }[] = [
     </div>
   </nav>
 
-  <section class="mx-auto max-w-4xl px-5 sm:px-8 py-12">
+  <section class="mx-auto max-w-4xl px-[min(1.25rem,20px)] sm:px-8 py-12">
     <div
-      class="rounded-xl border border-claude/20 bg-claude/5 p-6 sm:p-8 text-center"
+      class="rounded-xl border border-claude/20 bg-claude/5 p-[min(1.5rem,24px)] sm:p-8 text-center"
     >
       <p class="text-sm font-mono uppercase tracking-wider text-claude mb-3">
         Note de l'auteur

@@ -17,13 +17,13 @@ import { learningEntries } from "@/data/learning";
     intro="Une sélection courte de blogs, newsletters et podcasts qui parlent vraiment de Claude Code, des agents et de l'AI engineering — pas des AI-influencers génériques."
   />
 
-  <div class="mx-auto max-w-6xl px-5 sm:px-8 pt-8">
+  <div class="mx-auto max-w-6xl px-[min(1.25rem,20px)] sm:px-8 pt-8">
     <RevueContenu page="learning" />
   </div>
 
   <LatestNews />
 
-  <section class="mx-auto max-w-6xl px-5 sm:px-8 py-12">
+  <section class="mx-auto max-w-6xl px-[min(1.25rem,20px)] sm:px-8 py-12">
     <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude mb-2">
       Catalogue des sources
     </p>
@@ -38,7 +38,7 @@ import { learningEntries } from "@/data/learning";
     <LearningCatalog entries={learningEntries} client:load />
 
     <div
-      class="mt-12 rounded-xl border border-claude/20 bg-claude/5 p-6 sm:p-8"
+      class="mt-12 rounded-xl border border-claude/20 bg-claude/5 p-[min(1.5rem,24px)] sm:p-8"
     >
       <p class="font-mono text-xs uppercase tracking-wider text-claude mb-3">
         Filtres de sélection

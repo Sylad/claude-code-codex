@@ -76,8 +76,8 @@ const stats = [
 ];
 ---
 
-<section class="relative mx-auto max-w-6xl px-5 sm:px-8 py-16">
-  <div class="rounded-xl border border-white/10 bg-paper p-5 sm:p-8">
+<section class="relative mx-auto max-w-6xl px-[min(1.25rem,20px)] sm:px-8 py-16">
+  <div class="rounded-xl border border-white/10 bg-paper p-[min(1.25rem,20px)] sm:p-8">
   <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-8">
     <div>
       <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
@@ -107,7 +107,7 @@ const stats = [
   <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
     {stats.map((s) => (
       <div
-        class={`rounded-xl border p-5 ${
+        class={`rounded-xl border p-[min(1.25rem,20px)] ${
           s.accent
             ? "border-claude/40 bg-paper-elevated"
             : "border-white/10 bg-paper-elevated"
@@ -120,7 +120,7 @@ const stats = [
         >
           {s.label}
         </p>
-        <p class="text-3xl sm:text-4xl font-semibold text-ink tracking-tight">
+        <p class="text-[length:min(1.875rem,max(1.375rem,10vw))] leading-(--text-3xl--line-height) sm:text-[length:min(2.25rem,5.625vw)] sm:leading-(--text-4xl--line-height) font-semibold text-ink tracking-tight">
           {s.value}
         </p>
         <p class="text-xs text-ink-muted mt-1">{s.sub}</p>

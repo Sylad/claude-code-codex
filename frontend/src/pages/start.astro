@@ -16,7 +16,7 @@ import { APP_COUNT } from "@/data/apps";
     intro="Si t'arrives ici, c'est peut-être qu'on t'a imposé l'outil au taff sans tutoriel, et que t'as passé ta semaine en daily à entendre « agents », « skills », « hooks », « LLM », « MCP » comme si c'était évident. Spoiler : c'est pas évident. On reprend tout depuis le début."
   />
 
-  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12 space-y-14">
+  <section class="mx-auto max-w-3xl px-[min(1.25rem,20px)] sm:px-8 py-12 space-y-14">
 
     <!-- Empathie d'intro -->
     <CaseStudySection eyebrow="Avant de commencer">
@@ -83,41 +83,41 @@ import { APP_COUNT } from "@/data/apps";
         <table class="w-full text-sm">
           <thead>
             <tr class="border-b border-white/10 bg-white/[0.02]">
-              <th class="text-left px-4 py-3 font-mono text-xs uppercase tracking-wider text-ink-muted">Aspect</th>
-              <th class="text-left px-4 py-3 font-mono text-xs uppercase tracking-wider text-claude">Copilot mode agent</th>
-              <th class="text-left px-4 py-3 font-mono text-xs uppercase tracking-wider text-claude">Claude Code</th>
+              <th class="text-left px-[min(1rem,16px)] py-3 font-mono text-xs uppercase tracking-wider text-ink-muted">Aspect</th>
+              <th class="text-left px-[min(1rem,16px)] py-3 font-mono text-xs uppercase tracking-wider text-claude">Copilot mode agent</th>
+              <th class="text-left px-[min(1rem,16px)] py-3 font-mono text-xs uppercase tracking-wider text-claude">Claude Code</th>
             </tr>
           </thead>
           <tbody class="text-ink-muted">
             <tr class="border-b border-white/5">
-              <td class="px-4 py-3 text-ink">Où ça vit</td>
-              <td class="px-4 py-3">Dans ton IDE (VS Code)</td>
-              <td class="px-4 py-3">Dans le terminal — tu l'invoques avec <code class="font-mono text-claude-soft">claude</code></td>
+              <td class="px-[min(1rem,16px)] py-3 text-ink">Où ça vit</td>
+              <td class="px-[min(1rem,16px)] py-3">Dans ton IDE (VS Code)</td>
+              <td class="px-[min(1rem,16px)] py-3">Dans le terminal — tu l'invoques avec <code class="font-mono text-claude-soft">claude</code></td>
             </tr>
             <tr class="border-b border-white/5">
-              <td class="px-4 py-3 text-ink">Conversation</td>
-              <td class="px-4 py-3">Sidebar étroite à côté du code</td>
-              <td class="px-4 py-3">Pleine fenêtre terminal, on peut respirer</td>
+              <td class="px-[min(1rem,16px)] py-3 text-ink">Conversation</td>
+              <td class="px-[min(1rem,16px)] py-3">Sidebar étroite à côté du code</td>
+              <td class="px-[min(1rem,16px)] py-3">Pleine fenêtre terminal, on peut respirer</td>
             </tr>
             <tr class="border-b border-white/5">
-              <td class="px-4 py-3 text-ink">Contexte</td>
-              <td class="px-4 py-3">Voit le fichier actif + sélection</td>
-              <td class="px-4 py-3">Voit tout ton dossier projet, peut explorer</td>
+              <td class="px-[min(1rem,16px)] py-3 text-ink">Contexte</td>
+              <td class="px-[min(1rem,16px)] py-3">Voit le fichier actif + sélection</td>
+              <td class="px-[min(1rem,16px)] py-3">Voit tout ton dossier projet, peut explorer</td>
             </tr>
             <tr class="border-b border-white/5">
-              <td class="px-4 py-3 text-ink">Mémoire</td>
-              <td class="px-4 py-3">Oublie après chaque session</td>
-              <td class="px-4 py-3">Garde un fichier <code class="font-mono text-claude-soft">CLAUDE.md</code> qui se relit à chaque ouverture</td>
+              <td class="px-[min(1rem,16px)] py-3 text-ink">Mémoire</td>
+              <td class="px-[min(1rem,16px)] py-3">Oublie après chaque session</td>
+              <td class="px-[min(1rem,16px)] py-3">Garde un fichier <code class="font-mono text-claude-soft">CLAUDE.md</code> qui se relit à chaque ouverture</td>
             </tr>
             <tr class="border-b border-white/5">
-              <td class="px-4 py-3 text-ink">Style</td>
-              <td class="px-4 py-3">Suggestions inline dans ton fichier</td>
-              <td class="px-4 py-3">Conversation : tu décris, il fait, tu valides</td>
+              <td class="px-[min(1rem,16px)] py-3 text-ink">Style</td>
+              <td class="px-[min(1rem,16px)] py-3">Suggestions inline dans ton fichier</td>
+              <td class="px-[min(1rem,16px)] py-3">Conversation : tu décris, il fait, tu valides</td>
             </tr>
             <tr>
-              <td class="px-4 py-3 text-ink">Modèle</td>
-              <td class="px-4 py-3">GPT-* (OpenAI) par défaut</td>
-              <td class="px-4 py-3">Claude (Anthropic) — différent caractère, plus prudent en général</td>
+              <td class="px-[min(1rem,16px)] py-3 text-ink">Modèle</td>
+              <td class="px-[min(1rem,16px)] py-3">GPT-* (OpenAI) par défaut</td>
+              <td class="px-[min(1rem,16px)] py-3">Claude (Anthropic) — différent caractère, plus prudent en général</td>
             </tr>
           </tbody>
         </table>
@@ -140,7 +140,7 @@ import { APP_COUNT } from "@/data/apps";
       </p>
 
       <div class="space-y-4">
-        <div class="rounded-lg border border-white/10 bg-paper-elevated p-4">
+        <div class="rounded-lg border border-white/10 bg-paper-elevated p-[min(1rem,16px)]">
           <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">Prompt 1 · L'explorateur</p>
           <CodeBlock language="prompt" wrap code={`Lis le fichier src/auth/login.ts et explique-moi en 5 lignes ce qu'il fait.`} />
           <p class="text-sm text-ink-muted">
@@ -150,7 +150,7 @@ import { APP_COUNT } from "@/data/apps";
           </p>
         </div>
 
-        <div class="rounded-lg border border-white/10 bg-paper-elevated p-4">
+        <div class="rounded-lg border border-white/10 bg-paper-elevated p-[min(1rem,16px)]">
           <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">Prompt 2 · Le détective</p>
           <CodeBlock language="prompt" wrap code={`Trouve où on appelle la fonction logUserAction et liste tous les call sites.`} />
           <p class="text-sm text-ink-muted">
@@ -159,7 +159,7 @@ import { APP_COUNT } from "@/data/apps";
           </p>
         </div>
 
-        <div class="rounded-lg border border-white/10 bg-paper-elevated p-4">
+        <div class="rounded-lg border border-white/10 bg-paper-elevated p-[min(1rem,16px)]">
           <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">Prompt 3 · La modif chirurgicale</p>
           <CodeBlock language="prompt" wrap code={`Dans src/components/Button.tsx, ajoute un prop "loading" qui affiche un spinner et désactive le bouton. Garde le même style que les autres props.`} />
           <p class="text-sm text-ink-muted">
@@ -169,7 +169,7 @@ import { APP_COUNT } from "@/data/apps";
           </p>
         </div>
 
-        <div class="rounded-lg border border-white/10 bg-paper-elevated p-4">
+        <div class="rounded-lg border border-white/10 bg-paper-elevated p-[min(1rem,16px)]">
           <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">Prompt 4 · Le débuggueur</p>
           <CodeBlock language="prompt" wrap code={`Lance "npm test", regarde l'erreur, et propose un fix. Ne modifie rien sans me demander.`} />
           <p class="text-sm text-ink-muted">
@@ -179,7 +179,7 @@ import { APP_COUNT } from "@/data/apps";
           </p>
         </div>
 
-        <div class="rounded-lg border border-white/10 bg-paper-elevated p-4">
+        <div class="rounded-lg border border-white/10 bg-paper-elevated p-[min(1rem,16px)]">
           <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">Prompt 5 · Le réfacteur prudent</p>
           <CodeBlock language="prompt" wrap code={`Refactor src/utils/format.ts pour extraire les fonctions liées aux dates dans un nouveau fichier src/utils/dates.ts. Update tous les imports. Lance les tests à la fin.`} />
           <p class="text-sm text-ink-muted">
@@ -368,52 +368,52 @@ import { APP_COUNT } from "@/data/apps";
         <table class="w-full text-sm">
           <thead>
             <tr class="border-b border-white/10 bg-white/[0.02]">
-              <th class="text-left px-4 py-3 font-mono text-xs uppercase tracking-wider text-claude w-1/2">
+              <th class="text-left px-[min(1rem,16px)] py-3 font-mono text-xs uppercase tracking-wider text-claude w-1/2">
                 💻 Sur ta machine (local)
               </th>
-              <th class="text-left px-4 py-3 font-mono text-xs uppercase tracking-wider text-claude">
+              <th class="text-left px-[min(1rem,16px)] py-3 font-mono text-xs uppercase tracking-wider text-claude">
                 ☁️ Chez Anthropic
               </th>
             </tr>
           </thead>
           <tbody class="text-ink-muted align-top">
             <tr class="border-b border-white/5">
-              <td class="px-4 py-3">
+              <td class="px-[min(1rem,16px)] py-3">
                 Le binaire Claude Code lui-même
                 (<code class="font-mono text-claude-soft">claude</code>)
               </td>
-              <td class="px-4 py-3">Le modèle Claude (le LLM, le « cerveau »)</td>
+              <td class="px-[min(1rem,16px)] py-3">Le modèle Claude (le LLM, le « cerveau »)</td>
             </tr>
             <tr class="border-b border-white/5">
-              <td class="px-4 py-3">
+              <td class="px-[min(1rem,16px)] py-3">
                 Tous les outils : <code class="font-mono text-claude-soft">Read</code>,
                 <code class="font-mono text-claude-soft">Edit</code>,
                 <code class="font-mono text-claude-soft">Bash</code>,
                 <code class="font-mono text-claude-soft">Grep</code>…
               </td>
-              <td class="px-4 py-3">
+              <td class="px-[min(1rem,16px)] py-3">
                 La décision : "quel outil appeler ensuite ?", "comment
                 rédiger ce code ?"
               </td>
             </tr>
             <tr class="border-b border-white/5">
-              <td class="px-4 py-3">Tes fichiers (ne quittent jamais le disque)</td>
-              <td class="px-4 py-3">
+              <td class="px-[min(1rem,16px)] py-3">Tes fichiers (ne quittent jamais le disque)</td>
+              <td class="px-[min(1rem,16px)] py-3">
                 <strong>Les extraits</strong> que Claude a lus + tes
                 prompts (le contexte de la conversation)
               </td>
             </tr>
             <tr class="border-b border-white/5">
-              <td class="px-4 py-3">Hooks, skills, sub-agents, MCP servers locaux</td>
-              <td class="px-4 py-3">Les réponses du modèle (texte + tool calls)</td>
+              <td class="px-[min(1rem,16px)] py-3">Hooks, skills, sub-agents, MCP servers locaux</td>
+              <td class="px-[min(1rem,16px)] py-3">Les réponses du modèle (texte + tool calls)</td>
             </tr>
             <tr>
-              <td class="px-4 py-3">
+              <td class="px-[min(1rem,16px)] py-3">
                 Tes secrets, ton <code class="font-mono text-claude-soft">.env</code>,
                 ton historique git
                 <span class="text-ink/50 italic">(sauf si tu les fais lire explicitement)</span>
               </td>
-              <td class="px-4 py-3">
+              <td class="px-[min(1rem,16px)] py-3">
                 <em>Ce que Claude a lu</em> reste dans le contexte de la
                 session — Anthropic n'entraîne pas par défaut sur les
                 conversations API
@@ -434,7 +434,7 @@ import { APP_COUNT } from "@/data/apps";
         <em>agentic loop</em>.
       </p>
 
-      <div class="rounded-lg border border-white/10 bg-paper-elevated p-4 text-sm space-y-2">
+      <div class="rounded-lg border border-white/10 bg-paper-elevated p-[min(1rem,16px)] text-sm space-y-2">
         <p class="font-mono text-xs uppercase tracking-wider text-claude">
           Pour bien doser ce que tu envoies
         </p>
@@ -471,7 +471,7 @@ import { APP_COUNT } from "@/data/apps";
         pages :
       </p>
       <ul class="grid gap-3 sm:grid-cols-2">
-        <li class="rounded-lg border border-white/10 bg-paper-elevated p-4">
+        <li class="rounded-lg border border-white/10 bg-paper-elevated p-[min(1rem,16px)]">
           <a href="/theory" class="inline-block py-1 text-claude hover:text-claude-soft font-medium">
             → Théorie
           </a>
@@ -481,7 +481,7 @@ import { APP_COUNT } from "@/data/apps";
             ça marche.
           </p>
         </li>
-        <li class="rounded-lg border border-white/10 bg-paper-elevated p-4">
+        <li class="rounded-lg border border-white/10 bg-paper-elevated p-[min(1rem,16px)]">
           <a href="/ecosystem" class="inline-block py-1 text-claude hover:text-claude-soft font-medium">
             → Écosystème
           </a>
@@ -492,7 +492,7 @@ import { APP_COUNT } from "@/data/apps";
             trucs en plus.
           </p>
         </li>
-        <li class="rounded-lg border border-white/10 bg-paper-elevated p-4">
+        <li class="rounded-lg border border-white/10 bg-paper-elevated p-[min(1rem,16px)]">
           <a href="/case-studies" class="inline-block py-1 text-claude hover:text-claude-soft font-medium">
             → Case studies
           </a>
@@ -504,7 +504,7 @@ import { APP_COUNT } from "@/data/apps";
             8 leçons à reprendre).
           </p>
         </li>
-        <li class="rounded-lg border border-white/10 bg-paper-elevated p-4">
+        <li class="rounded-lg border border-white/10 bg-paper-elevated p-[min(1rem,16px)]">
           <a href="/learning" class="inline-block py-1 text-claude hover:text-claude-soft font-medium">
             → Learning
           </a>
@@ -515,7 +515,7 @@ import { APP_COUNT } from "@/data/apps";
             blogs/podcasts à suivre. Mis à jour chaque lundi.
           </p>
         </li>
-        <li class="rounded-lg border border-white/10 bg-paper-elevated p-4">
+        <li class="rounded-lg border border-white/10 bg-paper-elevated p-[min(1rem,16px)]">
           <a href="/videos" class="inline-block py-1 text-claude hover:text-claude-soft font-medium">
             → Vidéos
           </a>
@@ -525,7 +525,7 @@ import { APP_COUNT } from "@/data/apps";
             qu'on regarde vraiment pour progresser.
           </p>
         </li>
-        <li class="rounded-lg border border-white/10 bg-paper-elevated p-4">
+        <li class="rounded-lg border border-white/10 bg-paper-elevated p-[min(1rem,16px)]">
           <a href="/about" class="inline-block py-1 text-claude hover:text-claude-soft font-medium">
             → À propos
           </a>
@@ -540,7 +540,7 @@ import { APP_COUNT } from "@/data/apps";
 
     <!-- CTA final -->
     <div
-      class="rounded-xl border border-claude/20 bg-claude/5 p-6 sm:p-8 text-center"
+      class="rounded-xl border border-claude/20 bg-claude/5 p-[min(1.5rem,24px)] sm:p-8 text-center"
     >
       <p class="font-mono text-xs uppercase tracking-wider text-claude mb-3">
         Action concrète

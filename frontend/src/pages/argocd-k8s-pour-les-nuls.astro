@@ -54,7 +54,7 @@ const DEPOTS = ["maritime-atlas", "aetherwx-gitops"];
         l'API K8s par coeur — pour que demain matin, quand tu rouvres
         ArgoCD, tu comprennes ce que tu lis.
       </p>
-      <p class="rounded-lg border border-claude/30 bg-claude/[0.06] p-4 text-sm">
+      <p class="rounded-lg border border-claude/30 bg-claude/[0.06] p-[min(1rem,16px)] text-sm">
         <strong class="text-ink">Hypothèse de base :</strong> tu as déjà
         utilisé Docker (<code class="font-mono text-[0.9em]">docker run</code>,
         <code class="font-mono text-[0.9em]">docker-compose</code>) et tu sais
@@ -474,7 +474,7 @@ kubectl logs -n maritime job/maritime-retention-cleanup-29384567
         <code class="font-mono text-[0.9em]">apk add coreutils</code> avant
         d'invoquer date.
       </p>
-      <p class="rounded-lg border border-amber-500/30 bg-amber-500/[0.06] p-4 text-sm">
+      <p class="rounded-lg border border-amber-500/30 bg-amber-500/[0.06] p-[min(1rem,16px)] text-sm">
         <strong class="text-ink">Leçon transversale :</strong> en
         Docker/K8s, "ça marche sur ma machine" inclut la libc et les
         coreutils. Alpine (musl + BusyBox) ≠ Debian (glibc + GNU). Si
@@ -515,7 +515,7 @@ kubectl logs -n maritime job/maritime-retention-cleanup-29384567
         sur GitHub Actions pour relancer les builds, puis bump SHA dans
         values.yaml pour pointer sur les nouvelles images.
       </p>
-      <p class="rounded-lg border border-amber-500/30 bg-amber-500/[0.06] p-4 text-sm">
+      <p class="rounded-lg border border-amber-500/30 bg-amber-500/[0.06] p-[min(1rem,16px)] text-sm">
         <strong class="text-ink">Leçon transversale :</strong> GitOps
         introduit un découplage entre "le code est buildé" et "le code
         est déployé". Les deux peuvent se désynchroniser. Toujours
@@ -650,7 +650,7 @@ argocd app set maritime --sync-policy automated --auto-prune --self-heal`}
         Après ça, l'API K8s ce n'est plus qu'un manuel à feuilleter
         quand tu en as besoin.
       </p>
-      <p class="mt-6 rounded-lg border border-claude/30 bg-claude/[0.06] p-4 text-sm">
+      <p class="mt-6 rounded-lg border border-claude/30 bg-claude/[0.06] p-[min(1rem,16px)] text-sm">
         <strong class="text-ink">Pour aller plus loin :</strong>
         <a href="/k8s-for-java-developers">K8s pour développeurs Java</a>
         (mêmes concepts mais via les analogies Spring), et

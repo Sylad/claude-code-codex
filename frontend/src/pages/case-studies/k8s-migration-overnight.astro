@@ -109,11 +109,11 @@ const lessons = [
     intro="13 mai 2026, 22h. Confirmation : la boîte ferme, recherche d'emploi en cours. Le portfolio doit rester debout quand un recruteur clique. 14 mai, 00h30 : 5 apps en K8s, 5 ArgoCD Applications Synced + Healthy, 1 repo GitOps public. ~24 commits, ~10 builds Docker, 0 ligne de code humaine. Voici le récit, les pièges, et les leçons."
   />
 
-  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12 space-y-12">
+  <section class="mx-auto max-w-3xl px-[min(1.25rem,20px)] sm:px-8 py-12 space-y-12">
     <EtudeFraicheur depots={["developpeur-gitops"]} date="2026-10-31" />
 
 
-    <div class="rounded-lg border border-amber-500/25 bg-amber-500/[0.05] p-5">
+    <div class="rounded-lg border border-amber-500/25 bg-amber-500/[0.05] p-[min(1.25rem,20px)]">
       <p class="font-mono text-xs uppercase tracking-wider text-caution mb-2">
         Récit daté · 13-14 mai 2026
       </p>
@@ -161,7 +161,7 @@ const lessons = [
 
     <CaseStudySection eyebrow="Avant / Après">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="border border-white/10 rounded-lg p-6 bg-gradient-to-b from-rose-500/5 to-transparent">
+        <div class="border border-white/10 rounded-lg p-[min(1.5rem,24px)] bg-gradient-to-b from-rose-500/5 to-transparent">
           <h3 class="text-sm font-mono uppercase tracking-wider text-rose-400 mb-4">Avant — Docker Swarm sur NAS (état au 13 mai 2026)</h3>
           <ul class="space-y-2 text-sm">
             {before_after.before.map((item) => (
@@ -172,7 +172,7 @@ const lessons = [
             ))}
           </ul>
         </div>
-        <div class="border border-white/10 rounded-lg p-6 bg-gradient-to-b from-emerald-500/5 to-transparent">
+        <div class="border border-white/10 rounded-lg p-[min(1.5rem,24px)] bg-gradient-to-b from-emerald-500/5 to-transparent">
           <h3 class="text-sm font-mono uppercase tracking-wider text-emerald-400 mb-4">Après — k3s + GitOps (état au 14 mai 2026)</h3>
           <ul class="space-y-2 text-sm">
             {before_after.after.map((item) => (
@@ -378,7 +378,7 @@ const lessons = [
 
       <div class="space-y-6 my-6">
         {pitfalls.map((p) => (
-          <div class="border border-white/10 rounded-lg p-5 bg-gradient-to-br from-amber-500/5 to-transparent [overflow-wrap:anywhere]">
+          <div class="border border-white/10 rounded-lg p-[min(1.25rem,20px)] bg-gradient-to-br from-amber-500/5 to-transparent [overflow-wrap:anywhere]">
             <div class="flex items-start gap-3 mb-3">
               <span class="shrink-0 whitespace-nowrap text-2xl font-mono text-amber-400 leading-none">{p.n}.</span>
               <h3 class="text-lg font-semibold"><CodeEnLigne texte={p.title} /></h3>
@@ -428,7 +428,7 @@ const lessons = [
     <CaseStudySection eyebrow="Smoke tests terminal">
       <p>Les 3 commandes que je voulais voir vertes à la fin de la nuit :</p>
 
-      <div tabindex="0" role="region" aria-label="Sortie : applications ArgoCD" class="my-4 rounded-lg border border-white/10 bg-black/40 p-4 font-mono text-xs overflow-x-auto">
+      <div tabindex="0" role="region" aria-label="Sortie : applications ArgoCD" class="my-4 rounded-lg border border-white/10 bg-black/40 p-[min(1rem,16px)] font-mono text-xs overflow-x-auto">
         <p class="text-emerald-300 mb-1">$ kubectl get app -n argocd -o custom-columns='NAME:.metadata.name,SYNC:.status.sync.status,HEALTH:.status.health.status'</p>
         <pre class="text-ink whitespace-pre">NAME                SYNC     HEALTH
 finance-tracker     Synced   Healthy
@@ -438,7 +438,7 @@ ol-companion        Synced   Healthy
 warhammer40k        Synced   Healthy</pre>
       </div>
 
-      <div tabindex="0" role="region" aria-label="Sortie : pods du namespace" class="my-4 rounded-lg border border-white/10 bg-black/40 p-4 font-mono text-xs overflow-x-auto">
+      <div tabindex="0" role="region" aria-label="Sortie : pods du namespace" class="my-4 rounded-lg border border-white/10 bg-black/40 p-[min(1rem,16px)] font-mono text-xs overflow-x-auto">
         <p class="text-emerald-300 mb-1">$ kubectl get pods -n maritime</p>
         <pre class="text-ink whitespace-pre">NAME                                READY   STATUS    RESTARTS   AGE
 ais-decoder-6549dc648c-j7p56        1/1     Running   0          51m
@@ -452,7 +452,7 @@ rmq-server-0                        1/1     Running   0          95m
 track-builder-856676fd85-l9gl6      1/1     Running   0          20m</pre>
       </div>
 
-      <div tabindex="0" role="region" aria-label="Sortie : réponses HTTP" class="my-4 rounded-lg border border-white/10 bg-black/40 p-4 font-mono text-xs overflow-x-auto">
+      <div tabindex="0" role="region" aria-label="Sortie : réponses HTTP" class="my-4 rounded-lg border border-white/10 bg-black/40 p-[min(1rem,16px)] font-mono text-xs overflow-x-auto">
         <p class="text-emerald-300 mb-1">$ for u in ol finance warhammer maritime argocd ; do curl -sI -L "https://$u.dev.local" | head -1 ; done</p>
         <pre class="text-ink whitespace-pre">HTTP/2 200
 HTTP/2 200
@@ -686,7 +686,7 @@ HTTP/2 200</pre>
       <p>
         Le workflow devient <strong>3 lignes</strong> :
       </p>
-      <pre tabindex="0" role="region" aria-label="Commandes de déploiement" class="bg-zinc-900 border border-zinc-700 rounded p-4 text-sm font-mono overflow-x-auto"><code>{`docker push ghcr.io/sylad/maritime-X:vY
+      <pre tabindex="0" role="region" aria-label="Commandes de déploiement" class="bg-zinc-900 border border-zinc-700 rounded p-[min(1rem,16px)] text-sm font-mono overflow-x-auto"><code>{`docker push ghcr.io/sylad/maritime-X:vY
 ./scripts/upgrade-app.sh maritime vY
 # → 2 clusters synchronisés en ~60s, zéro touche humaine`}</code></pre>
       <p>

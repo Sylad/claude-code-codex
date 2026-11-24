@@ -169,7 +169,7 @@ const panelId = (label: string) => `panneau-${label.toLowerCase()}`;
          14,25em, seuil à 14,75em. Requête de
          conteneur en em (police de la barre) : elle suit le texte agrandi, par la police par défaut
          du navigateur comme par la taille du texte de la page. -->
-    <nav class="@container mx-auto max-w-6xl px-5 sm:px-8 h-16 flex items-center justify-between gap-3">
+    <nav class="@container mx-auto max-w-6xl px-[min(1.25rem,20px)] sm:px-8 h-16 flex items-center justify-between gap-3">
       <a
         href="/"
         class="flex min-w-0 lg:shrink-0 items-center gap-2.5 whitespace-nowrap group"
@@ -309,7 +309,7 @@ const panelId = (label: string) => `panneau-${label.toLowerCase()}`;
         id="mobile-menu"
         class="lg:hidden border-t border-white/5 bg-paper max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain"
       >
-        <ul class="px-5 py-4 flex flex-col gap-1">
+        <ul class="px-[min(1.25rem,20px)] py-4 flex flex-col gap-1">
           <template v-for="link in links" :key="link.label">
             <li v-if="'href' in link">
               <a
@@ -345,7 +345,7 @@ const panelId = (label: string) => `panneau-${label.toLowerCase()}`;
                 :href="child.href"
                 :aria-current="isActive(child.href, props.pathname) ? 'page' : undefined"
                 :class="[
-                  'block px-6 py-3 rounded-md text-base transition-colors',
+                  'block px-[min(1.5rem,24px)] py-3 rounded-md text-base transition-colors',
                   isActive(child.href, props.pathname)
                     ? 'text-claude bg-claude/10'
                     : 'text-ink-muted hover:text-ink hover:bg-white/5',

@@ -81,7 +81,7 @@ const variants = [
     intro="Pas un binaire à installer, pas une commande à exécuter. Juste un CLAUDE.md à copier-coller, qui code en 7 règles l'anti-verbosity attendue de Claude Code. 6.1k★ pour 7 lignes de texte. On l'a pas adopté en l'état mais on a piqué l'ensemble — et ajouté nos variantes maison."
   />
 
-  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12">
+  <section class="mx-auto max-w-3xl px-[min(1.25rem,20px)] sm:px-8 py-12">
     <div class="space-y-12">
       <EtudeFraicheur depots={[{ nom: "drona23/claude-token-efficient", href: "https://github.com/drona23/claude-token-efficient" }]} date="2026-10-31" nature="testé" />
 
@@ -115,7 +115,7 @@ const variants = [
         </p>
         <ol class="grid gap-3 sm:grid-cols-2">
           {rules.map((r) => (
-            <li class="rounded-xl border border-white/10 bg-paper-elevated p-5">
+            <li class="rounded-xl border border-white/10 bg-paper-elevated p-[min(1.25rem,20px)]">
               <p class="font-mono text-xs text-claude mb-2">
                 {String(r.n).padStart(2, "0")}
               </p>
@@ -137,7 +137,7 @@ const variants = [
           Verdict
         </h2>
         <div class="grid gap-4 sm:grid-cols-2">
-          <div class="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-5">
+          <div class="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-[min(1.25rem,20px)]">
             <p class="font-mono text-xs uppercase tracking-wider text-emerald-400 mb-2">
               Ce qui marche
             </p>
@@ -149,7 +149,7 @@ const variants = [
               <li>• Licence MIT, scope minuscule, projet sain</li>
             </ul>
           </div>
-          <div class="rounded-xl border border-amber-500/20 bg-amber-500/5 p-5">
+          <div class="rounded-xl border border-amber-500/20 bg-amber-500/5 p-[min(1.25rem,20px)]">
             <p class="font-mono text-xs uppercase tracking-wider text-amber-400 mb-2">
               Caveats
             </p>
@@ -161,7 +161,7 @@ const variants = [
           </div>
         </div>
 
-        <div class="rounded-xl border border-claude/20 bg-claude/5 p-5 sm:p-6 mt-2">
+        <div class="rounded-xl border border-claude/20 bg-claude/5 p-[min(1.25rem,20px)] sm:p-6 mt-2">
           <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">
             Décision
           </p>
@@ -186,7 +186,7 @@ const variants = [
         </p>
         <ol class="grid gap-3">
           {variants.map((v, i) => (
-            <li class="rounded-xl border border-white/10 bg-paper-elevated p-5">
+            <li class="rounded-xl border border-white/10 bg-paper-elevated p-[min(1.25rem,20px)]">
               <p class="font-mono text-xs text-claude mb-2">
                 {String(i + 1).padStart(2, "0")}
               </p>
@@ -198,7 +198,7 @@ const variants = [
       </article>
 
       <article class="space-y-4 pt-2">
-        <div class="rounded-xl border border-white/10 bg-paper-elevated p-6 sm:p-8">
+        <div class="rounded-xl border border-white/10 bg-paper-elevated p-[min(1.5rem,24px)] sm:p-8">
           <p class="font-mono text-xs uppercase tracking-wider text-claude mb-3">
             Méta-observation
           </p>

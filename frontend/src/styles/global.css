@@ -193,6 +193,13 @@
     display: inline-block;
     max-width: 100%;
   }
+  /* L88 — un mot plus large que sa ligne (320 px, texte 200 %) se coupe à une syllabe, avec un trait,
+     plutôt qu'au hasard par overflow-wrap. `data-cesure` n'est posé que sur ces éléments
+     (src/lib/cesure.mjs) : au réglage normal, rien n'est césuré, le rendu ne change pas. */
+  [data-cesure] {
+    -webkit-hyphens: auto;
+    hyphens: auto;
+  }
   main :where(.flex, .inline-flex, .grid) > *,
   body > footer :where(.flex, .grid) > * {
     min-width: 0;

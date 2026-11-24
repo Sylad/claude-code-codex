@@ -55,7 +55,7 @@ const autres = GUIDES.filter((g) => g.href !== ici);
 
       <slot />
 
-      <nav aria-labelledby="autres-guides" class="mt-16 rounded-xl border border-white/10 bg-paper p-6">
+      <nav aria-labelledby="autres-guides" class="mt-16 rounded-xl border border-white/10 bg-paper p-[min(1.5rem,24px)]">
         <h2 id="autres-guides" class="text-xl font-semibold tracking-tight text-ink">Les autres guides</h2>
         <ul class="mt-4 space-y-3">
           {autres.map((g) => (

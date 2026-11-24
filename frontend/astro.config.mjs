@@ -13,5 +13,10 @@ export default defineConfig({
   integrations: [vue()],
   vite: {
     plugins: [tailwindcss()],
+    build: {
+      // L88 — le script de la mise en page (césure, src/lib/cesure.mjs) est servi en fichier, partagé et mis
+      // en cache, plutôt que recopié dans chaque page ; le reste suit la règle par défaut (4 Kio).
+      assetsInlineLimit: (fichier) => (/BaseLayout\.astro_astro_type_script/.test(fichier) ? false : undefined),
+    },
   },
 });

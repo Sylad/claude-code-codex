@@ -173,7 +173,7 @@ const echecs = [
     intro="Cadence est la méthode de travail derrière les projets de ce codex : un plan versionné à côté du code, des sessions Claude Code courtes lancées par un programme, des livraisons prouvées par leur effet. Né le 28 septembre 2026, il a un mois d’existence — et ses propres mesures disent où il se trompe encore."
   />
 
-  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12 space-y-12">
+  <section class="mx-auto max-w-3xl px-[min(1.25rem,20px)] sm:px-8 py-12 space-y-12">
     <EtudeFraicheur depots={[{ nom: "Sylad/cadence", href: "https://github.com/Sylad/cadence" }]} date="2026-11-19" />
 
     <CaseStudySection eyebrow="Le problème de départ">
@@ -211,7 +211,7 @@ const echecs = [
       </p>
       <ol class="grid gap-3 sm:grid-cols-2">
         {pieces.map((p, i) => (
-          <li class="rounded-xl border border-white/10 bg-paper-elevated p-5">
+          <li class="rounded-xl border border-white/10 bg-paper-elevated p-[min(1.25rem,20px)]">
             <p class="font-mono text-xs text-claude mb-2">
               {String(i + 1).padStart(2, "0")}
             </p>
@@ -228,7 +228,7 @@ const echecs = [
         Tout part du plan : un lot a un numéro, et chaque commit qui travaille
         dessus le cite. Le lien se lit dans les deux sens, sans base de données.
       </p>
-      <div class="-mx-5 sm:mx-0">
+      <div class="-mx-[min(1.25rem,20px)] sm:mx-0">
       <Schema id="plan-commits" legende="Le plan (un fichier YAML) liste des lots ; chaque commit cite son lot dans son message ; trois commandes lisent ce lien.">
         <svg viewBox="0 0 420 372" role="img" aria-labelledby="sch-plan-commits-t sch-plan-commits-d" xmlns="http://www.w3.org/2000/svg">
           <title id="sch-plan-commits-t">Le plan relié aux commits</title>
@@ -272,7 +272,7 @@ const echecs = [
         verrouillés rouges : l'implémentation doit les faire passer sans les
         toucher.
       </p>
-      <div class="-mx-5 sm:mx-0">
+      <div class="-mx-[min(1.25rem,20px)] sm:mx-0">
       <Schema id="parcours-lot" legende="Les six étapes d'un lot. La revue peut renvoyer le lot en correction, puis le relire : la boucle en pointillés.">
         <StepChain
           id="parcours-lot"
@@ -298,7 +298,7 @@ const echecs = [
         le lead regarde les captures et décide.
         Les lots visibles se lisent dans le panneau du plan publié sur ce site.
       </p>
-      <div class="-mx-5 sm:mx-0">
+      <div class="-mx-[min(1.25rem,20px)] sm:mx-0">
       <Schema id="chaine-livreur" legende="La chaîne du livreur, du lot prêt à la ligne rendue au lead. Une étape qui échoue arrête la chaîne.">
         <StepChain
           id="chaine-livreur"
@@ -332,7 +332,7 @@ const echecs = [
       </p>
       <dl class="grid gap-3 sm:grid-cols-2">
         {chiffres.map((c) => (
-          <div class="rounded-xl border border-white/10 bg-paper-elevated p-5">
+          <div class="rounded-xl border border-white/10 bg-paper-elevated p-[min(1.25rem,20px)]">
             <dt class="font-mono text-lg text-claude">{c.valeur}</dt>
             <dd class="mt-2 text-sm text-ink-muted leading-relaxed [overflow-wrap:anywhere]">
               <span class={CODE} set:html={inlineCodeHtml(c.legende)} />
@@ -341,7 +341,7 @@ const echecs = [
           </div>
         ))}
       </dl>
-      <p class="text-sm text-ink-muted rounded-xl border border-white/10 bg-paper-elevated p-5">
+      <p class="text-sm text-ink-muted rounded-xl border border-white/10 bg-paper-elevated p-[min(1.25rem,20px)]">
         Limite assumée : le classement des causes est celui d'un modèle local de
         24 milliards de paramètres. Le relevé du 10 octobre a été relu à la main sur
         un échantillon (17 passes sur 24 d'accord) ; le relevé du 30 octobre, d'où
@@ -358,7 +358,7 @@ const echecs = [
       </p>
       <ul class="space-y-4 list-none">
         {echecs.map((e) => (
-          <li data-echec={e.id} class="rounded-xl border border-white/10 bg-paper-elevated p-5">
+          <li data-echec={e.id} class="rounded-xl border border-white/10 bg-paper-elevated p-[min(1.25rem,20px)]">
             <h3 class="text-base font-medium text-ink mb-1.5">{e.titre}</h3>
             <p class={`text-sm text-ink-muted leading-relaxed [overflow-wrap:anywhere] ${CODE}`} set:html={inlineCodeHtml(e.corps)} />
             <p class="mt-3 text-sm text-ink leading-relaxed">
@@ -398,7 +398,7 @@ const echecs = [
         <a href={`${CADENCE}/blob/main/CHANGELOG.md`} target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">↗ CHANGELOG</a>
         <a href={`${CADENCE}/blob/main/docs/quickstart.md`} target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">↗ Démarrage en 10 minutes</a>
       </div>
-      <p class="text-center text-xs text-ink-muted font-mono rounded-xl border border-white/10 bg-paper-elevated p-4">
+      <p class="text-center text-xs text-ink-muted font-mono rounded-xl border border-white/10 bg-paper-elevated p-[min(1rem,16px)]">
         Chiffres relevés dans le dépôt cadence au 30 octobre 2026.
       </p>
     </CaseStudySection>

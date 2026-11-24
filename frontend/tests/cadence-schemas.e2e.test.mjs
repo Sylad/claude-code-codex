@@ -169,7 +169,8 @@ test('R13 — le nom accessible du parcours (title + desc du svg role=img) nomme
 
 test('R14 — au téléphone chaque schéma déborde de la gouttière et son plus petit texte reste lisible (≥ 11 px rendus)', async (t) => {
   for (const id of IDS) {
-    assert.match(html(), new RegExp(`<div class="[^"]*-mx-5 sm:mx-0[^"]*">\\s*<figure[^>]*data-schema="${id}"`), `${id} : sans débord au téléphone`);
+    // L88 : la marge négative suit la gouttière bornée de la page (px-[min(1.25rem,20px)]), texte agrandi compris.
+    assert.match(html(), new RegExp(`<div class="[^"]*-mx-\\[min\\(1\\.25rem,20px\\)\\] sm:mx-0[^"]*">\\s*<figure[^>]*data-schema="${id}"`), `${id} : sans débord au téléphone`);
   }
   const env = await setupBrowser(t);
   if (!env) return;

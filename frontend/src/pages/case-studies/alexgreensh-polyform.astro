@@ -54,7 +54,7 @@ const screeningRules = [
     intro="On n'a même pas cloné. La license PolyForm Noncommercial est un deal-breaker pour usage pro futur (même perso peut basculer). Cas d'école sur le screening license en amont du test."
   />
 
-  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-12">
+  <section class="mx-auto max-w-3xl px-[min(1.25rem,20px)] sm:px-8 py-12">
     <div class="space-y-12">
       <EtudeFraicheur depots={[{ nom: "alexgreensh/token-optimizer", href: "https://github.com/alexgreensh/token-optimizer" }]} date="2026-05-20" nature="testé" />
 
@@ -84,7 +84,7 @@ const screeningRules = [
         <h2 class="font-mono text-xs font-normal uppercase tracking-[0.2em] text-claude">
           Le deal-breaker
         </h2>
-        <div class="rounded-xl border border-rose-500/30 bg-rose-500/10 p-5 sm:p-6">
+        <div class="rounded-xl border border-rose-500/30 bg-rose-500/10 p-[min(1.25rem,20px)] sm:p-6">
           <div class="flex items-baseline gap-3 mb-3">
             <span class="shrink-0 whitespace-nowrap font-mono text-xs uppercase tracking-wider text-rose-400">License</span>
             <code class="font-mono text-base text-rose-300">PolyForm Noncommercial 1.0.0</code>
@@ -103,7 +103,7 @@ const screeningRules = [
 
         <ol class="grid gap-3">
           {polyformBlockers.map((b, i) => (
-            <li class="min-w-0 [overflow-wrap:anywhere] rounded-xl border border-white/10 bg-paper-elevated p-5">
+            <li class="min-w-0 [overflow-wrap:anywhere] rounded-xl border border-white/10 bg-paper-elevated p-[min(1.25rem,20px)]">
               <p class="font-mono text-xs text-negative mb-2">
                 {String(i + 1).padStart(2, "0")}
               </p>
@@ -118,7 +118,7 @@ const screeningRules = [
         <h2 class="font-mono text-xs font-normal uppercase tracking-[0.2em] text-claude">
           Verdict
         </h2>
-        <div class="rounded-xl border border-claude/20 bg-claude/5 p-5 sm:p-6">
+        <div class="rounded-xl border border-claude/20 bg-claude/5 p-[min(1.25rem,20px)] sm:p-6">
           <p class="font-mono text-xs uppercase tracking-wider text-claude mb-2">
             Décision
           </p>
@@ -145,7 +145,7 @@ const screeningRules = [
 
         <ol class="grid gap-3 sm:grid-cols-2">
           {screeningRules.map((r, i) => (
-            <li class="min-w-0 [overflow-wrap:anywhere] rounded-xl border border-white/10 bg-paper-elevated p-5">
+            <li class="min-w-0 [overflow-wrap:anywhere] rounded-xl border border-white/10 bg-paper-elevated p-[min(1.25rem,20px)]">
               <p class="font-mono text-xs text-claude mb-2">
                 {String(i + 1).padStart(2, "0")}
               </p>
@@ -157,7 +157,7 @@ const screeningRules = [
       </article>
 
       <article class="space-y-4 pt-2">
-        <div class="rounded-xl border border-white/10 bg-paper-elevated p-6 sm:p-8">
+        <div class="rounded-xl border border-white/10 bg-paper-elevated p-[min(1.5rem,24px)] sm:p-8">
           <p class="font-mono text-xs uppercase tracking-wider text-claude mb-3">
             Bilan
           </p>
