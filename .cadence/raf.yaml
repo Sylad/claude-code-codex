@@ -966,6 +966,7 @@ lots:
     status: done
     estimate: 0.25
     visible: true
+    delivered: { date: 2026-11-24, sha: 124e170fdcf24ef720f3e79b17bcc7c4635d2936 }
     created: 2026-11-24
     started: 2026-11-24
     review: { date: 2026-11-24, verdict: "conforme (lead, diff de 124e170 relu : libellé fixe, champ horsCauses retiré, R11 et R13 ajoutés ; 54 tests ciblés verts)", commit: 124e170fdcf24ef720f3e79b17bcc7c4635d2936 }
