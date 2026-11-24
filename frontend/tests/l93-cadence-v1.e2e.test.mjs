@@ -253,7 +253,9 @@ test('R11 — chaque décision de cadence 2 dit à quelle cause (C1 à C5) elle 
         couvertes.add(c);
       }
     } else {
-      assert.match(dit, /aucune des cinq/, `${id} : sans cause et sans le dire`);
+      // ligne courte et correcte (« ne … aucune »), parallèle aux autres ; l'explication va dans le corps
+      assert.equal(dit, 'Ne répond à aucune des cinq causes', `${id} : sans cause et sans le dire (« ${dit} »)`);
+      assert.match(plain(bloc), /document de conception/, `${id} : le corps n'explique pas pourquoi aucune cause`);
     }
   }
   // la phrase d'intro ne prétend pas que chaque décision répond à une cause si l'une n'en a pas
@@ -265,4 +267,10 @@ test('R12 — chaque lien du chapitre qui ouvre un nouvel onglet le signale par 
   const liens = [...chapitre(page()).matchAll(/<a [^>]*target="_blank"[^>]*>([\s\S]*?)<\/a>/g)];
   assert.ok(liens.length >= 16, `${liens.length} liens en nouvel onglet`);
   assert.deepEqual(liens.map((m) => plain(m[1]).trim()).filter((t) => !t.startsWith('↗')), []);
+});
+
+test('R13 — l’entrée Nouveautés de L93 cite les cinq décisions de cadence 2', () => {
+  const md = readFileSync(join(ROOT, 'docs', 'nouveautes', '2026-11-24-cadence-ce-que-coutait-la-v1-et-ce-qui-a-change.md'), 'utf8');
+  for (const d of ['une session par demande', 'un banc avant tout mécanisme', 'un modèle pour chaque rôle', 'un contexte de départ allégé', 'un budget de lignes'])
+    assert.ok(md.includes(d), `décision absente : ${d}`);
 });
