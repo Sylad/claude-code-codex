@@ -1,0 +1,14 @@
+{
+  "id": "D-3",
+  "texte": "dans claude codex, il faudrait préciser que les temps mesurer de cadence concerne la V1, sinon c'est pas très vendeur. D'ailleurs j'espère aussi qu'il y a un chapitre sur le pb de la V1, les mesure et les décisions prise pour fixer nos pb de perf de temps/consommations de tockens",
+  "date": "2026-11-24",
+  "etat": "ouverte",
+  "preuve": null,
+  "lots": ["L93"],
+  "precisions": [
+    {
+      "date": "2026-11-24",
+      "texte": "Constat du lead : /case-studies/cadence (« La méthode », « Les chiffres mesurés », « Les échecs ») présente les vagues orchestrate et des chiffres d'octobre (versions 1.x) sans dire qu'ils sont de la première génération ; /case-studies/pourquoi-cadence cite l'échec ×3,8 de la 1.62 en une carte, mais aucun chapitre ne raconte le problème de la V1, ses mesures (temps, jetons) et les décisions de la refonte 2 (cadence run, banc, modèles par rôle)."
+    }
+  ]
+}
