@@ -2,9 +2,11 @@
   "id": "D-3",
   "texte": "dans claude codex, il faudrait préciser que les temps mesurer de cadence concerne la V1, sinon c'est pas très vendeur. D'ailleurs j'espère aussi qu'il y a un chapitre sur le pb de la V1, les mesure et les décisions prise pour fixer nos pb de perf de temps/consommations de tockens",
   "date": "2026-11-24",
-  "etat": "ouverte",
-  "preuve": null,
-  "lots": ["L93"],
+  "etat": "livrée",
+  "preuve": "L93 (5cb768d … e6b7ab5) : /case-studies/cadence date ses chiffres de la V1 et ajoute « Le problème de la V1 » ; revues de code r3 et UX r2 conformes (tmp/revue-codex-L93-r3.md, tmp/ux-codex-L93-r2.md), livré le 24-11",
+  "lots": [
+    "L93"
+  ],
   "precisions": [
     {
       "date": "2026-11-24",

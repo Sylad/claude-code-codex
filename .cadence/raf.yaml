@@ -941,13 +941,14 @@ lots:
       - { date: 2026-11-24, text: "Mineurs de la revue L88 r5 (tmp/revue-codex-L88-r5.md) à reprendre ici : règle « s d'attaque » en liste fermée recopiée dans l'oracle (htmls|pan), règle « fin de sigle » trop large ; l'oracle doit juger sans reprendre la règle du script." }
   - id: L93
     title: "L93 D-3 : /case-studies/cadence dit que ses chiffres et sa méthode (vagues orchestrate, relevés d'octobre, versions 1.x) sont ceux de la V1, et ajoute un chapitre « Le problème de la V1 » : ce qui était lent et coûteux (×3,8 en temps contre Claude seul sur 8 demandes, jetons par lot), les mesures, et les décisions de cadence 2 pour le temps et la consommation de jetons (cadence run, banc, modèles par rôle, contexte allégé), chaque chiffre sourcé dans le dépôt cadence ; lien avec /case-studies/pourquoi-cadence sans recopier"
-    status: doing
+    status: done
     estimate: 1
     visible: true
     created: 2026-11-24
     started: 2026-11-24
-    review: { date: 2026-11-24, verdict: "conforme (r2 : 3b8020a et 85e908d corrigent les 3 constats de la r1 ; 106/106 tests ciblés ; rapport tmp/revue-codex-L93-r2.md)", commit: 85e908d27933207c21aa0984e650c7a0f1cd05e5 }
+    review: { date: 2026-11-24, verdict: "conforme (r3 sur e6b7ab5 : R10/R11/R12 échouent sur l'ancien état, causes conformes au design §0 ; note : R11 ne lit pas la source ; rapport tmp/revue-codex-L93-r3.md)", commit: e6b7ab5db98923477a9a375c155c643ead6309d6 }
     ux: { date: 2026-11-24, verdict: "conforme (r2 : les 3 constats de la r1 corrigés à e6b7ab5 ; mineurs en note : « Répond à aucune » sans « ne », entrée Nouveautés qui cite 4 décisions sur 5 ; rapport tmp/ux-codex-L93-r2.md)" }
+    finished: 2026-11-24
   - id: L94
     title: "D-31 du registre parent : adopter cadence analyse (L801, cadence ≥ 2.0.18) — déclarer analyse: dans cadence.yaml avec les outils de la pile du projet (JS/TS : ESLint + typescript-eslint + eslint-plugin-sonarjs avec les seuils de cadence : max-lines 400, max-lines-per-function 80, max-depth 4, max-params 5, complexity 15, cognitive-complexity 15, plus tsc ; Python : ruff), base figée à l'existant (cadence analyse --init), aucune correction de l'existant ; la porte de cadence run le joue ensuite à chaque lot. Mesurer le temps ajouté à la porte (cible < 1 min) et le nombre de violations figées par outil, à rendre dans le rapport"
     status: todo
