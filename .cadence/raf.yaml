@@ -941,9 +941,10 @@ lots:
       - { date: 2026-11-24, text: "Mineurs de la revue L88 r5 (tmp/revue-codex-L88-r5.md) à reprendre ici : règle « s d'attaque » en liste fermée recopiée dans l'oracle (htmls|pan), règle « fin de sigle » trop large ; l'oracle doit juger sans reprendre la règle du script." }
   - id: L93
     title: "L93 D-3 : /case-studies/cadence dit que ses chiffres et sa méthode (vagues orchestrate, relevés d'octobre, versions 1.x) sont ceux de la V1, et ajoute un chapitre « Le problème de la V1 » : ce qui était lent et coûteux (×3,8 en temps contre Claude seul sur 8 demandes, jetons par lot), les mesures, et les décisions de cadence 2 pour le temps et la consommation de jetons (cadence run, banc, modèles par rôle, contexte allégé), chaque chiffre sourcé dans le dépôt cadence ; lien avec /case-studies/pourquoi-cadence sans recopier"
-    status: todo
+    status: doing
     estimate: 1
     created: 2026-11-24
+    started: 2026-11-24
   - id: L94
     title: "D-31 du registre parent : adopter cadence analyse (L801, cadence ≥ 2.0.18) — déclarer analyse: dans cadence.yaml avec les outils de la pile du projet (JS/TS : ESLint + typescript-eslint + eslint-plugin-sonarjs avec les seuils de cadence : max-lines 400, max-lines-per-function 80, max-depth 4, max-params 5, complexity 15, cognitive-complexity 15, plus tsc ; Python : ruff), base figée à l'existant (cadence analyse --init), aucune correction de l'existant ; la porte de cadence run le joue ensuite à chaque lot. Mesurer le temps ajouté à la porte (cible < 1 min) et le nombre de violations figées par outil, à rendre dans le rapport"
     status: todo
