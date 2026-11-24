@@ -947,7 +947,7 @@ lots:
     created: 2026-11-24
     started: 2026-11-24
     review: { date: 2026-11-24, verdict: "conforme (r2 : 3b8020a et 85e908d corrigent les 3 constats de la r1 ; 106/106 tests ciblés ; rapport tmp/revue-codex-L93-r2.md)", commit: 85e908d27933207c21aa0984e650c7a0f1cd05e5 }
-    ux: { date: 2026-11-24, verdict: "non conforme : le texte annonce « cinq causes, chacune mesurée » alors que C2 n'a aucune mesure (Nielsen 2) ; mineurs : sources à 11 px fixes (WCAG 1.4.4, déjà en prod), liens de source sans ↗ (Nielsen 4), décisions qui ne citent pas leur cause C1-C5 ; rapport tmp/ux-codex-L93.md" }
+    ux: { date: 2026-11-24, verdict: "conforme (r2 : les 3 constats de la r1 corrigés à e6b7ab5 ; mineurs en note : « Répond à aucune » sans « ne », entrée Nouveautés qui cite 4 décisions sur 5 ; rapport tmp/ux-codex-L93-r2.md)" }
   - id: L94
     title: "D-31 du registre parent : adopter cadence analyse (L801, cadence ≥ 2.0.18) — déclarer analyse: dans cadence.yaml avec les outils de la pile du projet (JS/TS : ESLint + typescript-eslint + eslint-plugin-sonarjs avec les seuils de cadence : max-lines 400, max-lines-per-function 80, max-depth 4, max-params 5, complexity 15, cognitive-complexity 15, plus tsc ; Python : ruff), base figée à l'existant (cadence analyse --init), aucune correction de l'existant ; la porte de cadence run le joue ensuite à chaque lot. Mesurer le temps ajouté à la porte (cible < 1 min) et le nombre de violations figées par outil, à rendre dans le rapport"
     status: todo
@@ -957,6 +957,12 @@ lots:
     title: "Textes de 11 px fixes (14 occurrences, dont les lignes Source des études de cas) qui ne grandissent pas avec la taille de police du navigateur : passer en rem (WCAG 1.4.4, relevé de la revue UX de L93)"
     status: todo
     estimate: 0.5
+    visible: true
+    created: 2026-11-24
+  - id: L96
+    title: "Suites de la revue UX de L93 : « Ne répond à aucune des cinq causes » (le « ne » manque) avec l'explication dans le corps du texte, et l'entrée Nouveautés L93 qui cite les cinq décisions (le budget de lignes manque)"
+    status: todo
+    estimate: 0.25
     visible: true
     created: 2026-11-24
 acknowledged:
