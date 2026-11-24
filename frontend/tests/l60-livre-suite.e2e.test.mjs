@@ -12,20 +12,23 @@ import { SCHEMAS } from '../src/data/livre-de-bord-schemas.ts';
 const IDS = Object.keys(SCHEMAS);
 
 // Chromium sans --hide-scrollbars : barre de défilement classique (≈ 15 px), le cas qui faisait défiler à 100vw.
-async function classicScrollbarPage(env, width) {
+// Fermé par t.after dès son lancement : si goto échouait (porte chargée), le navigateur restait ouvert et
+// gardait le fichier de test vivant jusqu'au délai de la porte (L93, porte rouge en ETIMEDOUT).
+async function classicScrollbarPage(t, env, width) {
   const require = createRequire(new URL('../package.json', import.meta.url));
   const { chromium } = require('playwright-core');
   const browser = await chromium.launch({ ignoreDefaultArgs: ['--hide-scrollbars'] });
+  t.after(() => browser.close());
   const page = await browser.newPage({ viewport: { width, height: 800 } });
-  await page.goto(`${env.base}/livre-de-bord/`);
+  await page.goto(`${env.base}/livre-de-bord/`, { timeout: 60_000 });
   return { page, close: () => browser.close() };
 }
 
 for (const width of [320, 360, 390]) {
-  test(`R1 — à ${width} px avec barre de défilement classique, aucun schéma ne fait défiler la page ni ne sort à gauche`, async (t) => {
+  test(`R1 — à ${width} px avec barre de défilement classique, aucun schéma ne fait défiler la page ni ne sort à gauche`, { timeout: 180_000 }, async (t) => {
     const env = await setupBrowser(t);
     if (!env) return;
-    const { page, close } = await classicScrollbarPage(env, width);
+    const { page, close } = await classicScrollbarPage(t, env, width);
     try {
       const m = await page.evaluate(() => {
         const de = document.documentElement;
@@ -46,10 +49,10 @@ for (const width of [320, 360, 390]) {
   });
 }
 
-test('R2 — à 360 px (barre classique), le plus petit texte de chaque schéma est rendu à 11 px ou plus et reste dans sa boîte', async (t) => {
+test('R2 — à 360 px (barre classique), le plus petit texte de chaque schéma est rendu à 11 px ou plus et reste dans sa boîte', { timeout: 180_000 }, async (t) => {
   const env = await setupBrowser(t);
   if (!env) return;
-  const { page, close } = await classicScrollbarPage(env, 360);
+  const { page, close } = await classicScrollbarPage(t, env, 360);
   try {
     const res = await page.evaluate((ids) => ids.map((id) => {
       const svg = document.querySelector(`.book-entry figure[data-schema="${id}"] svg`);
