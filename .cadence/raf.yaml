@@ -944,6 +944,7 @@ lots:
     status: done
     estimate: 1
     visible: true
+    delivered: { date: 2026-11-24, sha: 85d5ca2c9b40f1d9b39259ab617c68b82c795ddd }
     created: 2026-11-24
     started: 2026-11-24
     review: { date: 2026-11-24, verdict: "conforme (r3 sur e6b7ab5 : R10/R11/R12 échouent sur l'ancien état, causes conformes au design §0 ; note : R11 ne lit pas la source ; rapport tmp/revue-codex-L93-r3.md)", commit: e6b7ab5db98923477a9a375c155c643ead6309d6 }
