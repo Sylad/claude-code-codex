@@ -87,26 +87,97 @@ test('R6 — chaque chiffre du chapitre garde sa source et sa date', () => {
   }
 });
 
-// Chaque nombre d'un élément du chapitre est cherché dans le fichier du dépôt cadence qu'il cite, quand ce
-// dépôt est à côté (CADENCE_REPO, sinon ../cadence ou ../../cadence depuis la racine du dépôt).
+// R7 — chaque nombre est vérifié À SA PLACE, des deux côtés (correction r1 de la revue L93 : l'ancien R7
+// cherchait un chiffre isolé n'importe où dans le fichier source, « 0 » ou « 4 » y figurent toujours) :
+//  - côté page : dans le texte de l'élément qui l'affiche (la carte V1, la cause, ou pour une ligne
+//    « Source » la carte de décision qui la contient, lignes « Source » exclues) ;
+//  - côté source : dans l'un des `data-passages` de l'élément, extraits recopiés mot pour mot du fichier du
+//    dépôt cadence (CADENCE_REPO, sinon ../cadence ou ../../cadence depuis la racine du dépôt), chacun
+//    retrouvé tel quel dans ce fichier.
+// Un nombre se lit entier : « 4 » ne se trouve ni dans « 4,6 » ni dans « 24 » ni dans « 2.0.4 ».
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const CADENCE_REPO = [process.env.CADENCE_REPO, join(ROOT, '..', 'cadence'), join(ROOT, '..', '..', 'cadence')]
   .find((d) => d && existsSync(join(d, 'docs', 'v2')));
 
-test('R7 — chaque nombre cité figure dans le fichier source du dépôt cadence', (t) => {
-  if (!CADENCE_REPO) { t.skip('dépôt cadence absent à côté'); return; }
-  const html = chapitre(page());
-  const el = [...html.matchAll(/data-nombres="([^"]+)"[^>]*data-source="([^"]+)"/g)];
-  assert.ok(el.length >= 8, `${el.length} éléments avec nombres et source`);
-  for (const [, nombres, source] of el) {
-    const f = join(CADENCE_REPO, source);
-    assert.ok(existsSync(f), `${source} introuvable dans le dépôt cadence`);
-    const src = readFileSync(f, 'utf8').replace(/(\d)[\s  ](?=\d{3}\b)/g, '$1');
-    for (const n of nombres.split(' ')) {
-      const re = new RegExp(`(^|[^\\d,.])${n.replace(/[.,]/g, '[.,]')}(?![\\d])`);
-      assert.match(src, re, `${n} absent de ${source}`);
-    }
+const entites = (s) => s.replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+  .replace(/&amp;/g, '&');
+/** Même forme des deux côtés : sans gras markdown, espaces et retours à la ligne réduits, milliers collés. */
+export const normalise = (s) => s.replace(/\*\*/g, '').replace(/[  ]/g, ' ').replace(/\s+/g, ' ')
+  .replace(/(\d) (?=\d{3}\b)/g, '$1').trim();
+/** Le nombre `n`, entier : ni chiffre ni décimale collés avant ou après. */
+export const nombreRe = (n) => new RegExp(`(^|[^\\d,.]|[.,](?!\\d))${n.replace(/[.,]/g, '[.,]')}(?![\\d]|[.,]\\d)`);
+
+/** Les éléments du chapitre qui portent des nombres : { nombres, source, passages, lieu } (lieu = texte affiché). */
+export function elementsChiffres(html) {
+  const sansSources = (b) => b.replace(/<li data-nombres[\s\S]*?<\/li>|<li data-source[\s\S]*?<\/li>/g, ' ');
+  const attrs = (tag) => Object.fromEntries([...tag.matchAll(/data-(nombres|source|passages)="([^"]*)"/g)]
+    .map(([, k, v]) => [k, entites(v)]));
+  const out = [];
+  // cartes V1 et causes : l'élément est son propre lieu
+  for (const m of html.matchAll(/<(div|li) (data-v1-(?:chiffre|cause)="[^"]+"[^>]*)>([\s\S]*?)<\/\1>/g)) {
+    const a = attrs(m[2]);
+    if (a.nombres) out.push({ ...a, lieu: plain(m[3]) });
   }
+  // décisions : chaque ligne « Source » a pour lieu le texte de la décision qui la contient
+  for (const [bloc] of html.matchAll(/data-v2-decision="[^"]+"[\s\S]*?(?=<li data-v2-decision=|$)/g)) {
+    const lieu = plain(sansSources(bloc.replace(/^[^>]*>/, '')));
+    for (const m of bloc.matchAll(/<li (data-nombres="[^"]+"[^>]*)>/g)) out.push({ ...attrs(m[1]), lieu });
+  }
+  return out;
+}
+
+/** Les écarts d'un élément contre le texte de son fichier source (liste vide = conforme). */
+export function ecartsNombres({ nombres, source, passages, lieu }, texteSource) {
+  const src = normalise(texteSource);
+  const pas = JSON.parse(passages || '[]').map(normalise);
+  const ecarts = pas.filter((p) => !src.includes(p)).map((p) => `${source} : passage introuvable « ${p} »`);
+  const lieuN = normalise(lieu);
+  for (const n of nombres.split(' ')) {
+    if (!nombreRe(n).test(lieuN)) ecarts.push(`${n} : absent du texte affiché de l'élément`);
+    if (!pas.some((p) => nombreRe(n).test(p))) ecarts.push(`${n} : dans aucun passage cité de ${source}`);
+  }
+  return ecarts;
+}
+
+test('R7 — chaque nombre cité est à sa place : dans sa carte, et dans un passage mot pour mot de sa source', (t) => {
+  if (!CADENCE_REPO) { t.skip('dépôt cadence absent à côté'); return; }
+  const el = elementsChiffres(chapitre(page()));
+  assert.ok(el.length >= 12, `${el.length} éléments avec nombres et source`);
+  const ecarts = [];
+  for (const e of el) {
+    const f = join(CADENCE_REPO, e.source);
+    assert.ok(existsSync(f), `${e.source} introuvable dans le dépôt cadence`);
+    ecarts.push(...ecartsNombres(e, readFileSync(f, 'utf8')));
+  }
+  assert.deepEqual(ecarts, []);
+});
+
+test('R7b — la règle de R7 rougit sur l’ancienne phrase « plus aucun rouge de temps (la 2.0.10) »', () => {
+  // L'ancienne carte du banc (avant r1) : « 0 » déclaré, cherché n'importe où dans le CHANGELOG. Même avec
+  // le passage exact du CHANGELOG (étape L737), le « 0 » n'est dit nulle part dans la carte : rouge.
+  const ancienne = {
+    nombres: '1,5 4 9 0',
+    source: 'CHANGELOG.md',
+    passages: JSON.stringify(['replayed on the 9 identical-arm reports, 0 time reds (4 before)', '"total time ≤ 1.5 × A" flagged red 4 passes out of 9']),
+    lieu: "Le critère « temps total ≤ 1,5 × Claude seul » sortait rouge 4 fois sur 9 entre deux bras identiques : l'écart naturel de chaque banc est maintenant compté, et ces 9 passages ne donnent plus aucun rouge de temps (la 2.0.10). Un vrai ×2 sur un banc stable reste rouge.",
+  };
+  const source = '"total time ≤ 1.5 × A" flagged red 4 passes out of 9 where both arms were identical. replayed on the 9 identical-arm reports, 0 time reds (4 before), while a real × 2';
+  assert.deepEqual(ecartsNombres(ancienne, source), ['0 : absent du texte affiché de l\'élément']);
+  // et sans passage, comme l'ancien R7 qui cherchait dans tout le fichier : chaque nombre est rouge
+  assert.equal(ecartsNombres({ ...ancienne, passages: '[]' }, source).filter((e) => /aucun passage/.test(e)).length, 4);
+  // un chiffre ne se trouve plus à l'intérieur d'un autre nombre
+  for (const [n, s] of [['4', '4,6 fois'], ['4', '24 min'], ['0', 'la 2.0.10'], ['11', '11,1 %'], ['5', '−5,0 %']]) {
+    assert.equal(nombreRe(n).test(s), false, `« ${n} » trouvé dans « ${s} »`);
+  }
+  for (const [n, s] of [['4', '4 fois sur 9'], ['11,9', '11.9 min'], ['5,0', '(−5,0 %)'], ['2.0.0', 'la 2.0.0 (10']]) {
+    assert.equal(nombreRe(n).test(s), true, `« ${n} » non trouvé dans « ${s} »`);
+  }
+});
+
+test('R7c — la carte du banc dit ce que la 2.0.10 laisse vraiment : 3 rouges de temps sur 9, pas 0', () => {
+  const t = plain(chapitre(page()));
+  assert.doesNotMatch(t, /plus aucun rouge de temps/);
+  assert.match(t, /ces 9 passages donnent encore 3 rouges de temps/);
 });
 
 test('R8 — lien vers /case-studies/pourquoi-cadence, sans en recopier les phrases', () => {
