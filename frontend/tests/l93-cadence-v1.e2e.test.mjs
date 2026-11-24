@@ -196,3 +196,73 @@ test('R9 — ton honnête : ce qui n’est pas encore mesuré est dit', () => {
   assert.match(t, /Pas encore mesuré\./);
   assert.match(t, /n'a pas été refait pour cadence run/);
 });
+
+// R10 — le texte n'affirme que ce que les cartes montrent (revue UX L93, constat 1 : « Cinq causes, chacune
+// mesurée » alors que la carte C2 n'a aucun nombre). Le nombre de causes que le texte dit mesurées doit être
+// celui des cartes de cause qui portent un nombre sourcé ; « chacune mesurée » ou « chacune avec sa mesure »
+// exige que toutes en portent un.
+const MOTS = { une: 1, deux: 2, trois: 3, quatre: 4, cinq: 5, six: 6, sept: 7 };
+/** Les écarts entre ce que le texte affirme des mesures des causes et les cartes de cause (vide = conforme). */
+export function ecartsCausesMesurees(html) {
+  const cartes = [...html.matchAll(/<li (data-v1-cause="[^"]+"[^>]*)>/g)].map((m) => m[1]);
+  const mesurees = cartes.filter((a) => /data-nombres="[^"]+"/.test(a)).length;
+  const t = plain(html).toLowerCase();
+  const ecarts = [];
+  if (/chacune (?:mesurée|avec sa mesure)/.test(t) && mesurees < cartes.length) {
+    ecarts.push(`« chacune mesurée » dit, mais ${cartes.length - mesurees} carte(s) de cause sans nombre`);
+  }
+  for (const m of t.matchAll(/\b(?:(une|deux|trois|quatre|cinq|six|sept) mesurées?|en mesure (une|deux|trois|quatre|cinq|six|sept))\b/g)) {
+    const n = MOTS[m[1] ?? m[2]];
+    if (n !== mesurees) ecarts.push(`« ${m[0]} » dit, mais ${mesurees} carte(s) de cause portent un nombre`);
+  }
+  return ecarts;
+}
+
+test('R10 — le chapitre ne dit pas plus de causes mesurées que de cartes chiffrées', () => {
+  const html = chapitre(page());
+  assert.deepEqual(ecartsCausesMesurees(html), []);
+  // une cause sans nombre le dit sur sa carte
+  for (const [, id, attrs, corps] of html.matchAll(/<li data-v1-cause="([^"]+)"([^>]*)>([\s\S]*?)<\/li>/g)) {
+    if (!/data-nombres=/.test(attrs)) assert.match(plain(corps), /Décrite, pas mesurée\./, `${id} sans nombre ne le dit pas`);
+  }
+});
+
+test('R10b — la règle de R10 rougit sur l’ancienne phrase « Cinq causes, chacune mesurée »', () => {
+  const carte = (id, n) => `<li data-v1-cause="${id}"${n ? ` data-nombres="${n}"` : ''} class="x"><p>${id}</p></li>`;
+  const cartes = [carte('C1', '101'), carte('C2', ''), carte('C3', '4'), carte('C4', '27'), carte('C5', '12')].join('');
+  const ancien = `<h3>Cinq causes, chacune mesurée</h3><p>cinq causes, chacune avec sa mesure :</p><ul>${cartes}</ul>`;
+  assert.equal(ecartsCausesMesurees(ancien).length, 1);
+  assert.equal(ecartsCausesMesurees(`<h3>Cinq causes, cinq mesurées</h3><ul>${cartes}</ul>`).length, 1);
+  assert.deepEqual(ecartsCausesMesurees(`<h3>Cinq causes, quatre mesurées</h3><p>Il en mesure quatre</p><ul>${cartes}</ul>`), []);
+});
+
+test('R11 — chaque décision de cadence 2 dit à quelle cause (C1 à C5) elle répond, ou qu’elle n’en vient pas', () => {
+  const html = chapitre(page());
+  const ids = new Set([...html.matchAll(/data-v1-cause="([^"]+)"/g)].map((m) => m[1]));
+  const blocs = [...html.matchAll(/<li data-v2-decision="([^"]+)" data-causes="([^"]*)"[\s\S]*?(?=<li data-v2-decision=|$)/g)];
+  assert.ok(blocs.length >= 4, `${blocs.length} décisions avec data-causes`);
+  const couvertes = new Set();
+  for (const [bloc, id, causes] of blocs) {
+    const repond = bloc.match(/<p data-repond[^>]*>([\s\S]*?)<\/p>/);
+    assert.ok(repond, `${id} : aucune ligne « Répond à »`);
+    const dit = plain(repond[1]).trim();
+    if (causes) {
+      for (const c of causes.split(' ')) {
+        assert.ok(ids.has(c), `${id} : cause ${c} inconnue`);
+        assert.ok(new RegExp(`\\b${c}\\b`).test(dit), `${id} : ${c} non affichée (« ${dit} »)`);
+        couvertes.add(c);
+      }
+    } else {
+      assert.match(dit, /aucune des cinq/, `${id} : sans cause et sans le dire`);
+    }
+  }
+  // la phrase d'intro ne prétend pas que chaque décision répond à une cause si l'une n'en a pas
+  if (blocs.some(([, , c]) => !c)) assert.doesNotMatch(plain(html), /Chaque décision répond à une cause/);
+  assert.deepEqual([...ids].filter((c) => !couvertes.has(c)), [], 'cause sans décision qui y répond');
+});
+
+test('R12 — chaque lien du chapitre qui ouvre un nouvel onglet le signale par ↗, comme les cartes « Sept pièces »', () => {
+  const liens = [...chapitre(page()).matchAll(/<a [^>]*target="_blank"[^>]*>([\s\S]*?)<\/a>/g)];
+  assert.ok(liens.length >= 16, `${liens.length} liens en nouvel onglet`);
+  assert.deepEqual(liens.map((m) => plain(m[1]).trim()).filter((t) => !t.startsWith('↗')), []);
+});

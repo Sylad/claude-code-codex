@@ -277,10 +277,13 @@ const v1Causes = [
 ];
 
 type Preuve = { fichier: string; quand: string; nombres: string; passages?: string[] };
-const v2Decisions: { id: string; titre: string; corps: string; effet: string; mesure: boolean; preuves: Preuve[] }[] = [
+// `causes` : les causes C1 à C5 auxquelles la décision répond, d'après la colonne « Contre-mesure v2 » du
+// tableau §0 du design (vide quand la décision vient d'une mesure postérieure, dit par `horsCauses`).
+const v2Decisions: { id: string; titre: string; causes: string[]; horsCauses?: string; corps: string; effet: string; mesure: boolean; preuves: Preuve[] }[] = [
   {
     id: "run",
     titre: "Une demande, une session : cadence run",
+    causes: ["C1", "C2", "C3"],
     corps:
       "Depuis la 2.0.0 (10 novembre 2026), `cadence run` remplace les vagues pour faire une demande : un seul responsable, dans sa copie de travail, écrit le code et les tests, et corrige dans la même session. La demande, gardée mot pour mot, sert de référence : plus de fiche ni de test scellé. La suite complète tourne une fois, avant l'intégration.",
     effet:
@@ -294,6 +297,7 @@ const v2Decisions: { id: string; titre: string; corps: string; effet: string; me
   {
     id: "banc",
     titre: "Un banc avant tout mécanisme, en trois niveaux",
+    causes: ["C4", "C5"],
     corps:
       "Aucun mécanisme n'entre sans un banc où il gagne contre Claude seul. Le banc de la semaine avait duré plus de 5 h le 13 novembre : il est découpé en trois niveaux. Le micro (environ 8 min) sert pendant un changement ; le mécanique, sans juge IA (environ 30 min visées), est la garde de publication depuis la 2.0.9 ; le complet, avec juges, tourne le samedi.",
     effet:
@@ -327,6 +331,7 @@ const v2Decisions: { id: string; titre: string; corps: string; effet: string; me
   {
     id: "modeles",
     titre: "Un modèle choisi pour chaque rôle",
+    causes: ["C2"],
     corps:
       "En V1, le code s'écrivait en Sonnet et la revue se faisait en Opus, dans des sessions séparées. Cadence 2 confie toute la demande à un seul responsable Opus ; après deux tours de correction sans succès, Fable reprend. Les agents qui ne jugent rien descendent : depuis la 2.0.13 (17 novembre), le livreur tourne sur Sonnet au lieu d'hériter d'Opus.",
     effet:
@@ -341,6 +346,8 @@ const v2Decisions: { id: string; titre: string; corps: string; effet: string; me
   {
     id: "contexte",
     titre: "Un contexte de départ allégé",
+    causes: [],
+    horsCauses: "aucune des cinq : un coût en jetons relevé le 11 novembre, après le document de conception",
     corps:
       "Avant son premier geste, chaque session de `cadence run` recevait environ 62 k jetons de contexte, relevés poste par poste le 11 novembre. Une partie ne servait à rien dans une session de travail : extensions de l'utilisateur, connecteurs du compte, mémoire automatique. Depuis la 2.0.4, ils sont coupés pour la session, comme les vagues coupaient déjà les extensions.",
     effet:
@@ -363,6 +370,7 @@ const v2Decisions: { id: string; titre: string; corps: string; effet: string; me
   {
     id: "code",
     titre: "Un budget de lignes, et le code des vagues à retirer",
+    causes: ["C4"],
     corps:
       "Le code de cadence 2 a un budget de lignes vérifié par la CI. Une étude du 15 novembre compte 11 404 lignes (36 % du code hors cadence 2) et 3 444 cas de test sur 9 013 qui ne servent qu'aux vagues : leur retrait est proposé pour une version majeure.",
     effet: "Pas encore d'effet à mesurer : au 24 novembre, rien n'est retiré.",
@@ -609,16 +617,17 @@ const v2Decisions: { id: string; titre: string; corps: string; effet: string; me
             <p class="mt-1 font-mono text-xs text-ink-muted">{insecable(m.quand)}</p>
             <p class="mt-2 text-sm text-ink-muted leading-relaxed">{insecable(m.legende)}</p>
             <p class="mt-2 font-mono text-[11px] text-ink-muted [overflow-wrap:anywhere]">
-              Source : <a href={doc(m.source)} target="_blank" rel="noopener">{m.source}</a>
+              Source : <a href={doc(m.source)} target="_blank" rel="noopener">↗ {m.source}</a>
             </p>
           </div>
         ))}
       </div>
 
-      <h3 data-intertitre class={H3}>Cinq causes, chacune mesurée</h3>
+      <h3 data-intertitre class={H3}>Cinq causes, quatre mesurées</h3>
       <p>
-        Le document de conception de cadence 2 (<a href={doc(DESIGN)} target="_blank" rel="noopener" class="[overflow-wrap:anywhere]">{DESIGN}</a>,
-        7 novembre 2026) attribue la défaite à cinq causes, chacune avec sa mesure :
+        Le document de conception de cadence 2 (<a href={doc(DESIGN)} target="_blank" rel="noopener" class="[overflow-wrap:anywhere]">↗ {DESIGN}</a>,
+        7 novembre 2026) attribue la défaite à cinq causes. Il en mesure quatre ; la deuxième,
+        C2, n'y est que décrite, sans chiffre :
       </p>
       <ul class="space-y-3 list-none">
         {v1Causes.map((c) => (
@@ -626,6 +635,7 @@ const v2Decisions: { id: string; titre: string; corps: string; effet: string; me
             <p class="font-mono text-xs text-claude mb-2">{c.id}</p>
             <h4 class="text-base font-medium text-ink mb-1.5">{c.titre}</h4>
             <p class="text-sm text-ink-muted leading-relaxed">{insecable(c.corps)}</p>
+            {!c.nombres && <p class="mt-2 text-xs text-ink-muted"><strong>Décrite, pas mesurée.</strong></p>}
           </li>
         ))}
       </ul>
@@ -640,13 +650,16 @@ const v2Decisions: { id: string; titre: string; corps: string; effet: string; me
 
       <h3 data-intertitre class={H3}>Les décisions de cadence 2</h3>
       <p>
-        Chaque décision répond à une cause. Quand son effet est mesuré, la mesure
-        est dite ; quand il ne l'est pas encore, c'est dit aussi.
+        Chaque décision dit à quelle cause elle répond. Quand son effet est mesuré,
+        la mesure est dite ; quand il ne l'est pas encore, c'est dit aussi.
       </p>
       <ul class="space-y-4 list-none">
         {v2Decisions.map((d) => (
-          <li data-v2-decision={d.id} class="rounded-xl border border-white/10 bg-paper-elevated p-borne-5">
-            <h4 class="text-base font-medium text-ink mb-1.5">{d.titre}</h4>
+          <li data-v2-decision={d.id} data-causes={d.causes.join(" ")} class="rounded-xl border border-white/10 bg-paper-elevated p-borne-5">
+            <h4 class="text-base font-medium text-ink mb-1">{d.titre}</h4>
+            <p data-repond class="font-mono text-xs text-claude mb-2">
+              {d.causes.length ? `Répond à ${d.causes.join(", ")}` : `Répond à ${d.horsCauses}`}
+            </p>
             <p class={`text-sm text-ink-muted leading-relaxed [overflow-wrap:anywhere] ${CODE}`} set:html={inlineCodeHtml(insecable(d.corps))} />
             <p class="mt-3 text-sm text-ink leading-relaxed">
               <strong>{d.mesure ? "Effet mesuré." : "Pas encore mesuré."}</strong>{" "}
@@ -656,7 +669,7 @@ const v2Decisions: { id: string; titre: string; corps: string; effet: string; me
             <ul class="mt-2 space-y-1 list-none">
               {d.preuves.map((pr) => (
                 <li data-nombres={pr.nombres || undefined} data-source={pr.fichier} data-passages={pr.nombres ? JSON.stringify(pr.passages ?? []) : undefined} class="font-mono text-[11px] text-ink-muted [overflow-wrap:anywhere]">
-                  Source : <a href={doc(pr.fichier)} target="_blank" rel="noopener">{pr.fichier}</a> ({insecable(pr.quand)})
+                  Source : <a href={doc(pr.fichier)} target="_blank" rel="noopener">↗ {pr.fichier}</a> ({insecable(pr.quand)})
                 </li>
               ))}
             </ul>
