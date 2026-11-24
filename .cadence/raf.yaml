@@ -906,7 +906,7 @@ lots:
       - { date: 2026-11-23, text: "ajout 23-11 (UX L86) : /learning h2 « …podcasts sélectionnés » coupé « sélectionn|és » à 320 px texte 200 % (overflow-wrap:anywhere) ; « newsletters » idem — piste hyphens:auto avec lang fr" }
     started: 2026-11-24
     review: { date: 2026-11-24, verdict: "r2 conforme (lead d'après cadence:code-reviewer) : 4 demandes r1 tenues, 26/26 tests ciblés ; mineur : noms sans trait dans les îlots Vue de /ecosystem, exemptés du test (sous-tâche)", commit: 9848a48884d3b7cf451ce06c075639265516806d }
-    ux: { date: 2026-11-24, verdict: "r3 non conforme (lead d'après cadence:ux-reviewer, tmp/ux-codex-L88-r3.md) : M3-bis, m-b, M1, M2, M4, m1 tenus ; majeur M3-ter régression de 0006c97 : « jdbccon|fig. » coupé sans trait au h3 de k8s-migration-overnight à 320 px 200 % ; mineur : options dans un <code> sans data-opt coupées après « -- » (117 cas) ; écarts à 100 % actés par le lead" }
+    ux: { date: 2026-11-24, verdict: "conforme r4 (lead d'après cadence:ux-reviewer, tmp/ux-codex-L88-r4.md) : M3-ter et m-a-bis corrigés, M3-bis, m-b, M1, M2, M4, m1 tenus ; mineurs en notes : m-d « Document|ation » sans trait dans l'îlot Vue de /learning (Chrome sans dictionnaire), m-e « (Anthro-|pic) » césuré alors qu'il tient (headless), m-f marge RTK 8 px même dans une carte large, m-g « : ; ? » seuls en tête de ligne (antérieur, lot séparé) ; entrée Nouveautés de L88 absente" }
   - id: L89
     title: "Anglicismes restants sur /learning, hors périmètre de L86 : « tooling », « tag », « issue », « repo », « AI engineering », « patterns », « Pair-bien »… — réécrire en français courant comme L82/L86 (relevé du run L86, 23-11)"
     status: todo
@@ -930,6 +930,11 @@ lots:
     estimate: 1
     visible: true
     created: 2026-11-23
+  - id: L92
+    title: "L92 Espace insécable avant « : ; ? ! » à la construction : 406 cas en local (516 en prod) où le signe passe seul en tête de ligne après une espace ordinaire, dès 100 % à 390 px (revue UX L88 r4, m-g, tmp/ux-codex-L88-r4.md du dossier parent) ; avec m-d : « Document|ation » coupé sans trait dans l'îlot Vue LearningCatalog de /learning à 320 px 175-200 % et 768 px 200 %"
+    status: todo
+    estimate: 1
+    created: 2026-11-24
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
