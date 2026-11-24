@@ -19,7 +19,7 @@ classe et une source, décomptes exacts).
 | faux | 7 |
 | dépassé | 30 |
 | non sourcé | 22 |
-| ok | 52 |
+| ok | 56 |
 
 ## Ce qui a été vérifié, et ce qui ne l'a pas été
 
@@ -103,6 +103,10 @@ classe et une source, décomptes exacts).
 - **ok** — « Depuis la 1.26, le lead confie la livraison … à l'agent `livreur` » (`cadence.astro` l. 82) : la formule reste vraie, la page ne prétend pas nommer la version courante (1.29.0) (source : `cadence/package.json` (version 1.29.0))
 - **ok** — chiffres des mesures (61 % · 29 %, 1 h 53 min, accord 17 sur 24) : chacun renvoie à un fichier `docs/mesures/…` du dépôt cadence, relevés au 30 octobre 2026 (source : bloc « Chiffres relevés dans le dépôt cadence au 30 octobre 2026 » de la page)
 - **ok** — quatre tags partis sans atteindre npm (1.5.0, 1.14.0, 1.16.0, 1.25.0) : récit daté du CHANGELOG de cadence (source : CHANGELOG de cadence)
+- **ok** — (L93) méthode des vagues et chiffres d'octobre présentés comme ceux de la V1 (versions 1.x) : `orchestrate` jusqu'à la 1.62 du 07-11, `cadence run` depuis la 2.0.0 du 10-11 (source : CHANGELOG de cadence, entrées 1.62.1 et 2.0.0)
+- **ok** — (L93) « Le problème de la V1 » : ×3,8 en temps (199 contre 52 min) et ×4,5 en jetons (5,7 M contre 1,27 M), 12 interventions contre 0, causes C1 à C5 et leurs mesures (source : `cadence/docs/v2/2026-11-07-cadence-2-design.md` §0)
+- **ok** — (L93) lot moyen de la V1 : 25 min et 266 k jetons sur 721 lots, tests 62 % d'une session, suite 4,6 fois par lot, revue 42 % et corrections 41 % des jetons (source : `cadence/docs/mesures/temps-d-un-lot.md`, relevé du 01-11-2026)
+- **ok** — (L93) décisions de cadence 2 et effets : banc en trois niveaux (plus de 5 h le 13-11, micro ≈ 8 min, mécanique ≈ 30 min visées), critère de temps 4 rouges sur 9 entre bras identiques puis 0 (2.0.10), contexte allégé 64 844 → 57 653 jetons (−11 %, 0,12 $ par lot), livreur sur Sonnet sans résultat publié, 11 404 lignes des vagues (source : `cadence/docs/v2/banc.md`, CHANGELOG 2.0.10, `docs/mesures/socle-session-2026-11-11.md`, `docs/mesures/modele-agents-l757.md`, `docs/etudes/retrait-vagues.md` ; nombres vérifiés par `tests/l93-cadence-v1.e2e.test.mjs`)
 
 ## `/case-studies/ccproxy`
 

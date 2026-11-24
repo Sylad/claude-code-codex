@@ -1,12 +1,14 @@
 ---
 interface Props {
   eyebrow: string;
+  /** Ancre facultative (lien direct vers un chapitre, L93). */
+  id?: string;
 }
 
-const { eyebrow } = Astro.props;
+const { eyebrow, id } = Astro.props;
 ---
 
-<article class="space-y-4">
+<article id={id} class="space-y-4 scroll-mt-20">
   <h2 class="font-mono text-xs font-normal uppercase tracking-[0.2em] text-claude">
     {eyebrow}
   </h2>

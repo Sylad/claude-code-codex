@@ -5,6 +5,11 @@
   y a sa source, nommée dans la section « Les chiffres mesurés ». Le détail semaine par semaine vit
   dans le Livre de bord (/livre-de-bord/), les changements visibles dans /nouveautes/ : cette page
   y renvoie, elle ne les recopie pas. Rien de privé : pas de machine, pas de chemin, pas de compte pro.
+  L93 (D-3) : la méthode des vagues et les chiffres d'octobre sont ceux de la V1 (versions 1.x), dit
+  comme tel ; le chapitre « Le problème de la V1 » raconte l'essai perdu, ses mesures et les décisions
+  de cadence 2, chaque chiffre avec son fichier, sa date et sa version (data-nombres / data-source,
+  vérifiés contre le dépôt cadence par tests/l93-cadence-v1.e2e.test.mjs). Les preuves du banc de
+  cadence 2 vivent dans /case-studies/pourquoi-cadence : on y renvoie sans les recopier.
 */
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
@@ -40,6 +45,11 @@ const livreur = [
 ];
 
 const CADENCE = "https://github.com/Sylad/cadence";
+const doc = (chemin: string) => `${CADENCE}/blob/main/${chemin}`;
+// Un nombre ne se sépare ni de ses milliers ni de son unité en fin de ligne (règle du site, L88).
+const NBSP = "\u00a0";
+const insecable = (s: string) =>
+  s.replace(/(\d) (?=\d{3}(?!\d))/g, `$1${NBSP}`).replace(/(\d) (?=(?:s|min|k|M|px|j)(?!\p{L})|%)/gu, `$1${NBSP}`);
 
 const pieces = [
   {
@@ -71,6 +81,7 @@ const pieces = [
     corps:
       "Un programme, sans modèle, lance des sessions Claude Code courtes et neuves, une par étape : contrôle préalable, fiche et maquette pour un écran, tests d'acceptation rouges et verrouillés, implémentation, revue, passe UX, corrections. Chaque session lit un brief, rend un résultat structuré et disparaît ; le journal de la vague garde la trace.",
     doc: "docs/orchestrate.md",
+    v1: true,
   },
   {
     nom: "Le lead et les sous-agents",
@@ -86,7 +97,7 @@ const pieces = [
   },
 ];
 
-const chiffres = [
+const chiffres: { valeur: string; legende: string; source: string }[] = [
   {
     valeur: "61 % · 29 %",
     legende:
@@ -161,20 +172,165 @@ const echecs = [
       "Le protocole de mesure date maintenant la mise en service, ne compte que les vagues créées après, et mesure les deux mécanismes ensemble sur deux fenêtres de sept jours. Tant que ces fenêtres ne sont pas relevées, la page n'annonce aucun gain.",
   },
 ];
+
+// L93 (D-3) — « Le problème de la V1 ». Chaque nombre de `nombres` figure tel quel dans le fichier
+// `source` du dépôt cadence (test l93-cadence-v1, comme R12 de pourquoi-cadence).
+const DESIGN = "docs/v2/2026-11-07-cadence-2-design.md";
+const TEMPS_LOT = "docs/mesures/temps-d-un-lot.md";
+
+const v1Mesures = [
+  {
+    id: "essai",
+    valeur: "×3,8 · ×4,5",
+    quand: "7 novembre 2026 · la 1.62, dernière de la V1",
+    legende:
+      "Contre Claude seul, sur les mêmes 8 vraies demandes : 199 min contre 52 min, et 5,7 M de jetons contre 1,27 M. Le lead a dû intervenir 12 fois, contre 0 pour Claude seul.",
+    nombres: "3,8 4,5 8 199 52 5,7 1,27 12 1.62",
+    source: DESIGN,
+  },
+  {
+    id: "lot",
+    valeur: "25 min · 266 k",
+    quand: "1er novembre 2026 · vagues des versions 1.8 à 1.36",
+    legende:
+      "Le coût moyen d'un lot, sur 721 lots des vagues du 17 octobre au 1er novembre : 25 minutes de temps écoulé dans la vague et 266 k jetons comptés, plus 19 minutes en moyenne où le lot attendait le lead, le budget ou la nuit.",
+    nombres: "25 266 721 19",
+    source: TEMPS_LOT,
+  },
+  {
+    id: "tests",
+    valeur: "62 % · 4,6 fois",
+    quand: "1er novembre 2026 · mêmes vagues",
+    legende:
+      "Les tests prenaient 62 % du temps d'une session d'écriture : la suite complète d'un lot tournait 4,6 fois en moyenne, lancée par la session puis rejouée par la porte de la vague après chaque session. Écrire le code lui-même : 6 %.",
+    nombres: "62 4,6 6",
+    source: TEMPS_LOT,
+  },
+  {
+    id: "revue",
+    valeur: "42 % · 41 %",
+    quand: "1er novembre 2026 · mêmes vagues",
+    legende:
+      "Les jetons comptés partaient d'abord dans la revue (42 %) et dans les passes de correction (41 %) : 620 passes, chacune 11,9 min et 126 k jetons, porte et nouvelle revue comprises.",
+    nombres: "42 41 620 11,9 126",
+    source: TEMPS_LOT,
+  },
+];
+
+const v1Causes = [
+  {
+    id: "C1",
+    titre: "Juger contre une fiche figée, pas contre la demande",
+    corps: "Fiche, maquette et tests d'acceptation scellés servaient de référence : 101 rescellements et 13 lots rendus pour un verrou en 30 jours.",
+    nombres: "101 13 30",
+  },
+  {
+    id: "C2",
+    titre: "Un contexte découpé entre sessions",
+    corps: "Le code s'écrivait en Sonnet, en plusieurs sessions successives par lot : chaque étape repartait d'une session neuve.",
+    nombres: "",
+  },
+  {
+    id: "C3",
+    titre: "Des portes empilées",
+    corps: "Sur une retouche, 4 portes : 24 min de porte pour 4 min de travail. La porte « fin de lot » n'avait jamais trouvé seule un rouge.",
+    nombres: "4 24",
+  },
+  {
+    id: "C4",
+    titre: "Des mécanismes ajoutés sans mesure",
+    corps: "Le code est passé de 6 400 à 39 300 lignes en un mois, avec 27 options pour lancer une vague.",
+    nombres: "6400 39300 27",
+  },
+  {
+    id: "C5",
+    titre: "Un lead qui rattrape la machine",
+    corps: "12 interventions du lead sur 8 demandes, là où Claude seul n'en demandait aucune.",
+    nombres: "12 8",
+  },
+];
+
+type Preuve = { fichier: string; quand: string; nombres: string };
+const v2Decisions: { id: string; titre: string; corps: string; effet: string; mesure: boolean; preuves: Preuve[] }[] = [
+  {
+    id: "run",
+    titre: "Une demande, une session : cadence run",
+    corps:
+      "Depuis la 2.0.0 (10 novembre 2026), `cadence run` remplace les vagues pour faire une demande : un seul responsable, dans sa copie de travail, écrit le code et les tests, et corrige dans la même session. La demande, gardée mot pour mot, sert de référence : plus de fiche ni de test scellé. La suite complète tourne une fois, avant l'intégration.",
+    effet:
+      "Mesuré au banc contre Claude seul, sur quelques demandes : les résultats, favorables et défavorables, sont sur la page Pourquoi cadence.",
+    mesure: true,
+    preuves: [
+      { fichier: "docs/v2/2026-11-09-cadence-run.md", quand: "9 novembre 2026", nombres: "" },
+      { fichier: "docs/v2/publications/2.0.0.md", quand: "10 novembre 2026 · la 2.0.0", nombres: "2.0.0" },
+    ],
+  },
+  {
+    id: "banc",
+    titre: "Un banc avant tout mécanisme, en trois niveaux",
+    corps:
+      "Aucun mécanisme n'entre sans un banc où il gagne contre Claude seul. Le banc de la semaine avait duré plus de 5 h le 13 novembre : il est découpé en trois niveaux. Le micro (environ 8 min) sert pendant un changement ; le mécanique, sans juge IA (environ 30 min visées), est la garde de publication depuis la 2.0.9 ; le complet, avec juges, tourne le samedi.",
+    effet:
+      "Le critère « temps total ≤ 1,5 × Claude seul » sortait rouge 4 fois sur 9 entre deux bras identiques : l'écart naturel de chaque banc est maintenant compté, et ces 9 passages ne donnent plus aucun rouge de temps (la 2.0.10). Un vrai ×2 sur un banc stable reste rouge.",
+    mesure: true,
+    preuves: [
+      { fichier: "docs/v2/banc.md", quand: "13 au 15 novembre 2026 · de la 2.0.5 à la 2.0.9", nombres: "5 8 30" },
+      { fichier: "CHANGELOG.md", quand: "15 novembre 2026 · la 2.0.10", nombres: "1,5 4 9 0" },
+    ],
+  },
+  {
+    id: "modeles",
+    titre: "Un modèle choisi pour chaque rôle",
+    corps:
+      "En V1, le code s'écrivait en Sonnet et la revue se faisait en Opus, dans des sessions séparées. Cadence 2 confie toute la demande à un seul responsable Opus ; après deux tours de correction sans succès, Fable reprend. Les agents qui ne jugent rien descendent : depuis la 2.0.13 (17 novembre), le livreur tourne sur Sonnet au lieu d'hériter d'Opus.",
+    effet:
+      "Pas encore publié : la mesure avant et après (jetons Opus par livraison, sur 5 livraisons de chaque côté, sans livraison ratée de plus) est écrite, son résultat n'est pas encore dans le dépôt.",
+    mesure: false,
+    preuves: [
+      { fichier: "docs/perf/goulot-2026-10-18.md", quand: "18 octobre 2026 · V1", nombres: "" },
+      { fichier: DESIGN, quand: "7 novembre 2026", nombres: "" },
+      { fichier: "docs/mesures/modele-agents-l757.md", quand: "17 novembre 2026 · la 2.0.13", nombres: "5" },
+    ],
+  },
+  {
+    id: "contexte",
+    titre: "Un contexte de départ allégé",
+    corps:
+      "Avant son premier geste, chaque session de `cadence run` recevait environ 62 k jetons de contexte, relevés poste par poste le 11 novembre. Une partie ne servait à rien dans une session de travail : extensions de l'utilisateur, connecteurs du compte, mémoire automatique. Depuis la 2.0.4, ils sont coupés pour la session, comme les vagues coupaient déjà les extensions.",
+    effet:
+      "Premier tour de 64 844 à 57 653 jetons (−11 %), soit environ 0,12 $ par lot (−5 %). Mesuré avec Haiku sur une consigne minimale ; l'effet sur la qualité n'est pas mesuré.",
+    mesure: true,
+    preuves: [
+      { fichier: "docs/mesures/socle-session-2026-11-11.md", quand: "11 et 12 novembre 2026 · la 2.0.4", nombres: "62 64844 57653 11 0,12 5" },
+    ],
+  },
+  {
+    id: "code",
+    titre: "Un budget de lignes, et le code des vagues à retirer",
+    corps:
+      "Le code de cadence 2 a un budget de lignes vérifié par la CI. Une étude du 15 novembre compte 11 404 lignes (36 % du code hors cadence 2) et 3 444 cas de test sur 9 013 qui ne servent qu'aux vagues : leur retrait est proposé pour une version majeure.",
+    effet: "Pas encore d'effet à mesurer : au 24 novembre, rien n'est retiré.",
+    mesure: false,
+    preuves: [
+      { fichier: DESIGN, quand: "7 novembre 2026", nombres: "" },
+      { fichier: "docs/etudes/retrait-vagues.md", quand: "15 novembre 2026", nombres: "11404 36 3444 9013" },
+    ],
+  },
+];
 ---
 
 <BaseLayout
   title="Cadence"
-  description="Étude de cas de cadence, la méthode de travail et l'outil de ce codex : un plan versionné relié aux commits, des vagues de sessions IA pilotées par un programme, des livraisons prouvées par leur effet. Le problème, la méthode, les chiffres mesurés, les échecs."
+  description="Étude de cas de cadence, la méthode de travail et l'outil de ce codex : un plan versionné relié aux commits, des sessions IA lancées par un programme, des livraisons prouvées par leur effet. Le problème, la méthode et les chiffres de la V1 (vagues de sessions, versions 1.x), ses échecs, et pourquoi cadence 2 l'a remplacée : mesures de temps et de jetons, décisions prises."
 >
   <PageHero
     eyebrow="Case study · cadence"
-    title="Un plan relié aux commits et des vagues de sessions IA"
-    intro="Cadence est la méthode de travail derrière les projets de ce codex : un plan versionné à côté du code, des sessions Claude Code courtes lancées par un programme, des livraisons prouvées par leur effet. Né le 28 septembre 2026, il a un mois d’existence — et ses propres mesures disent où il se trompe encore."
+    title="Un plan relié aux commits, des sessions IA mesurées"
+    intro="Cadence est la méthode de travail derrière les projets de ce codex : un plan versionné à côté du code, des sessions Claude Code lancées par un programme, des livraisons prouvées par leur effet. Né le 28 septembre 2026, il a connu deux générations. La V1 (versions 1.x) faisait passer chaque lot par une vague de sessions courtes ; cadence 2, depuis le 10 novembre, confie chaque demande à une seule session. La méthode des vagues et les chiffres d’octobre ci-dessous sont ceux de la V1 ; le dernier chapitre dit ce qu’elle coûtait et ce qui a changé."
   />
 
   <section class="mx-auto max-w-3xl px-borne-5 sm:px-8 py-12 space-y-12">
-    <EtudeFraicheur depots={[{ nom: "Sylad/cadence", href: "https://github.com/Sylad/cadence" }]} date="2026-11-19" />
+    <EtudeFraicheur depots={[{ nom: "Sylad/cadence", href: "https://github.com/Sylad/cadence" }]} date="2026-11-24" />
 
     <CaseStudySection eyebrow="Le problème de départ">
       <h3 data-intertitre class={H3}>Deux questions qui reviennent sans cesse</h3>
@@ -209,11 +365,18 @@ const echecs = [
         commande est dans la documentation du dépôt ; ici, ce que chacune
         règle.
       </p>
+      <p data-v1-note>
+        Six d'entre elles restent dans cadence 2. La cinquième, les vagues
+        orchestrate, est celle de la <strong>V1 (versions 1.x)</strong> : depuis
+        le 10 novembre 2026, une demande se fait avec <code>cadence run</code>,
+        une seule session (chapitre <a href="#le-probleme-de-la-v1">« Le problème de la V1 »</a>).
+      </p>
       <ol class="grid gap-3 sm:grid-cols-2">
         {pieces.map((p, i) => (
           <li class="rounded-xl border border-white/10 bg-paper-elevated p-borne-5">
             <p class="font-mono text-xs text-claude mb-2">
               {String(i + 1).padStart(2, "0")}
+              {p.v1 && <span data-v1-badge class="ml-2 rounded border border-white/15 px-1.5 py-0.5 text-ink-muted">V1 seulement</span>}
             </p>
             <h3 class="text-base font-medium text-ink mb-1.5">{p.nom}</h3>
             <p class={`text-sm text-ink-muted leading-relaxed [overflow-wrap:anywhere] ${CODE}`} set:html={inlineCodeHtml(p.corps)} />
@@ -265,9 +428,9 @@ const echecs = [
       </Schema>
       </div>
 
-      <h3 data-intertitre class={H3}>Le parcours d'un lot dans une vague</h3>
+      <h3 data-intertitre class={H3}>Le parcours d'un lot dans une vague (V1)</h3>
       <p>
-        Dans une vague, un lot passe de session en session, chacune courte et
+        En V1, dans une vague, un lot passe de session en session, chacune courte et
         neuve. Les tests d'acceptation sont écrits par une session à part et
         verrouillés rouges : l'implémentation doit les faire passer sans les
         toucher.
@@ -323,7 +486,11 @@ const echecs = [
       </figure>
     </CaseStudySection>
 
-    <CaseStudySection eyebrow="Les chiffres mesurés">
+    <CaseStudySection eyebrow="Les chiffres mesurés de la V1">
+      <p data-v1-note>
+        Ces relevés datent d'octobre 2026 et portent sur les vagues de la
+        <strong>V1 (versions 1.x)</strong> : ils ne mesurent pas <code>cadence run</code>.
+      </p>
       <p>
         Cadence se mesure lui-même : <code>cadence perf</code> affiche chaque
         indicateur de vitesse à côté de son jumeau de qualité (« vite <em>et</em>
@@ -336,7 +503,7 @@ const echecs = [
             <dt class="font-mono text-lg text-claude">{c.valeur}</dt>
             <dd class="mt-2 text-sm text-ink-muted leading-relaxed [overflow-wrap:anywhere]">
               <span class={CODE} set:html={inlineCodeHtml(c.legende)} />
-              <span class="mt-2 block font-mono text-[11px] text-ink-muted">Source : {c.source}</span>
+              <span class="mt-2 block font-mono text-[11px] text-ink-muted">V1 · source : {c.source}</span>
             </dd>
           </div>
         ))}
@@ -354,7 +521,7 @@ const echecs = [
     <CaseStudySection eyebrow="Les échecs et ce qu'ils ont changé">
       <p>
         Une méthode qui ne raconte pas ses ratés n'est qu'une plaquette. Cinq
-        épisodes, tirés du journal des versions et des relevés du dépôt :
+        épisodes de la V1, tirés du journal des versions et des relevés du dépôt :
       </p>
       <ul class="space-y-4 list-none">
         {echecs.map((e) => (
@@ -367,6 +534,85 @@ const echecs = [
           </li>
         ))}
       </ul>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Le problème de la V1" id="le-probleme-de-la-v1">
+      <h3 data-intertitre class={H3}>Un essai perdu, le 7 novembre</h3>
+      <p>
+        La V1 donnait des lots revus, testés et livrés, mais à un prix que ses
+        propres relevés montraient. Le 7 novembre 2026, la 1.62, dernière version
+        de la V1, a refait 8 vraies demandes déjà livrées, contre Claude Code seul,
+        depuis le même commit. Elle a perdu sur le temps et sur les jetons ; ce qu'en
+        ont dit le juge à l'aveugle et les tests cachés est sur la page
+        <a href="/case-studies/pourquoi-cadence/">Pourquoi cadence</a>.
+      </p>
+      <div class="grid gap-3 sm:grid-cols-2">
+        {v1Mesures.map((m) => (
+          <div data-v1-chiffre={m.id} data-nombres={m.nombres} data-source={m.source} class="rounded-xl border border-white/10 bg-paper-elevated p-borne-5">
+            <p class="font-mono text-lg text-claude">{insecable(m.valeur)}</p>
+            <p class="mt-1 font-mono text-xs text-ink-muted">{insecable(m.quand)}</p>
+            <p class="mt-2 text-sm text-ink-muted leading-relaxed">{insecable(m.legende)}</p>
+            <p class="mt-2 font-mono text-[11px] text-ink-muted [overflow-wrap:anywhere]">
+              Source : <a href={doc(m.source)} target="_blank" rel="noopener">{m.source}</a>
+            </p>
+          </div>
+        ))}
+      </div>
+
+      <h3 data-intertitre class={H3}>Cinq causes, chacune mesurée</h3>
+      <p>
+        Le document de conception de cadence 2 (<a href={doc(DESIGN)} target="_blank" rel="noopener" class="[overflow-wrap:anywhere]">{DESIGN}</a>,
+        7 novembre 2026) attribue la défaite à cinq causes, chacune avec sa mesure :
+      </p>
+      <ul class="space-y-3 list-none">
+        {v1Causes.map((c) => (
+          <li data-v1-cause={c.id} data-nombres={c.nombres || undefined} data-source={DESIGN} class="rounded-xl border border-white/10 bg-paper-elevated p-borne-5">
+            <p class="font-mono text-xs text-claude mb-2">{c.id}</p>
+            <h4 class="text-base font-medium text-ink mb-1.5">{c.titre}</h4>
+            <p class="text-sm text-ink-muted leading-relaxed">{insecable(c.corps)}</p>
+          </li>
+        ))}
+      </ul>
+      <Callout titre="Ce que la V1 laisse">
+        <p>
+          Cadence 2 garde ce que la V1 apportait vraiment : le plan relié aux
+          commits, la porte de tests, la livraison vérifiée, la revue courte du
+          diff, la revue sur captures des écrans et le contrôle dans le
+          navigateur après livraison.
+        </p>
+      </Callout>
+
+      <h3 data-intertitre class={H3}>Les décisions de cadence 2</h3>
+      <p>
+        Chaque décision répond à une cause. Quand son effet est mesuré, la mesure
+        est dite ; quand il ne l'est pas encore, c'est dit aussi.
+      </p>
+      <ul class="space-y-4 list-none">
+        {v2Decisions.map((d) => (
+          <li data-v2-decision={d.id} class="rounded-xl border border-white/10 bg-paper-elevated p-borne-5">
+            <h4 class="text-base font-medium text-ink mb-1.5">{d.titre}</h4>
+            <p class={`text-sm text-ink-muted leading-relaxed [overflow-wrap:anywhere] ${CODE}`} set:html={inlineCodeHtml(insecable(d.corps))} />
+            <p class="mt-3 text-sm text-ink leading-relaxed">
+              <strong>{d.mesure ? "Effet mesuré." : "Pas encore mesuré."}</strong>{" "}
+              {insecable(d.effet)}
+              {d.id === "run" && <> <a href="/case-studies/pourquoi-cadence/">Lire les preuves du banc</a>.</>}
+            </p>
+            <ul class="mt-2 space-y-1 list-none">
+              {d.preuves.map((pr) => (
+                <li data-nombres={pr.nombres || undefined} data-source={pr.fichier} class="font-mono text-[11px] text-ink-muted [overflow-wrap:anywhere]">
+                  Source : <a href={doc(pr.fichier)} target="_blank" rel="noopener">{pr.fichier}</a> ({insecable(pr.quand)})
+                </li>
+              ))}
+            </ul>
+          </li>
+        ))}
+      </ul>
+      <p class="text-sm text-ink-muted rounded-xl border border-white/10 bg-paper-elevated p-borne-5">
+        Ce qui manque encore : le relevé du temps d'un lot (25 min et 266 k jetons
+        en V1) n'a pas été refait pour <code>cadence run</code>. La comparaison de
+        la V1 et de cadence 2 sur le travail réel reste à faire ; les preuves qui
+        existent viennent du banc, sur quelques demandes.
+      </p>
     </CaseStudySection>
 
     <CaseStudySection eyebrow="Pour aller plus loin">
@@ -399,7 +645,7 @@ const echecs = [
         <a href={`${CADENCE}/blob/main/docs/quickstart.md`} target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">↗ Démarrage en 10 minutes</a>
       </div>
       <p class="text-center text-xs text-ink-muted font-mono rounded-xl border border-white/10 bg-paper-elevated p-borne-4">
-        Chiffres relevés dans le dépôt cadence au 30 octobre 2026.
+        Chiffres relevés dans le dépôt cadence : ceux de la V1 au 30 octobre 2026, ceux du chapitre « Le problème de la V1 » au 24 novembre 2026.
       </p>
     </CaseStudySection>
   </section>
