@@ -905,7 +905,7 @@ lots:
     notes:
       - { date: 2026-11-23, text: "ajout 23-11 (UX L86) : /learning h2 « …podcasts sélectionnés » coupé « sélectionn|és » à 320 px texte 200 % (overflow-wrap:anywhere) ; « newsletters » idem — piste hyphens:auto avec lang fr" }
     started: 2026-11-24
-    review: { date: 2026-11-24, verdict: "conforme r6 — relu par le lead (6514f44) : les deux phrases de l'entrée Nouveautés sont exactes, JSON régénéré, rien d'autre touché", commit: 6514f441580b38a8fba32e889a7a079ece36eb53 }
+    review: { date: 2026-11-24, verdict: "conforme — verdict r6 reposé après rebase sur 471b30f (rafraîchissement du flux par le bot) : contenu des commits de L88 inchangé, seul simon-willison.json diffère", commit: ecc3b68fadc8e0123c05e3c6ed49a55c9edac7e1 }
     ux: { date: 2026-11-24, verdict: "conforme r4 (lead d'après cadence:ux-reviewer, tmp/ux-codex-L88-r4.md) : M3-ter et m-a-bis corrigés, M3-bis, m-b, M1, M2, M4, m1 tenus ; mineurs en notes : m-d « Document|ation » sans trait dans l'îlot Vue de /learning (Chrome sans dictionnaire), m-e « (Anthro-|pic) » césuré alors qu'il tient (headless), m-f marge RTK 8 px même dans une carte large, m-g « : ; ? » seuls en tête de ligne (antérieur, lot séparé) ; entrée Nouveautés de L88 absente" }
     finished: 2026-11-24
   - id: L89
