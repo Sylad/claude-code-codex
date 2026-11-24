@@ -78,8 +78,10 @@ const stats = [
 
 <section class="relative mx-auto max-w-6xl px-borne-5 sm:px-8 py-16">
   <div class="rounded-xl border border-white/10 bg-paper p-borne-5 sm:p-8">
-  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-8">
-    <div>
+  <!-- L88 (revue r2) : le titre garde au moins 28 rem de large (au réglage normal, la date tient à côté dès 640 px) ; avec le texte agrandi, la date passe dessous
+       au lieu de serrer le titre dans une colonne de 182 px (« tok-|ens » à 768 px, texte 200 %). -->
+  <div class="flex flex-col sm:flex-row sm:flex-wrap sm:items-end sm:justify-between gap-3 mb-8">
+    <div class="sm:flex-1 sm:basis-[28rem]">
       <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
         Preuve de collab · relevé daté
       </p>

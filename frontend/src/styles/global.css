@@ -217,22 +217,23 @@
     hyphens: auto;
     hyphenate-limit-chars: 6 3 3;
   }
-  /* L88 — repli pour un nom que rien ne permet de couper : le texte vu porte la césure, sa copie (hors
-     écran, comme sr-only) donne le nom accessible et le texte copié, sans U+00AD. */
+  /* L88 — repli pour un nom que rien ne permet de couper : le texte vu porte la césure, sa copie donne le
+     nom accessible et le texte copié, sans U+00AD. La copie reste EN LIGNE, de taille nulle : en position
+     absolue, Chromium la lisait comme un bloc et ajoutait des espaces au nom accessible
+     (« postgresql .parameters », revue r2, m-b). */
   [data-cesure-vu] {
     -webkit-user-select: none;
     user-select: none;
   }
-  [data-cesure-copie] {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip-path: inset(50%);
+  /* L88 — ponctuation de tête (« -- » d'une option) collée au caractère qui la suit (revue r2, m-a). */
+  [data-cesure-colle] {
     white-space: nowrap;
-    border-width: 0;
+  }
+  [data-cesure-copie] {
+    font-size: 0;
+    line-height: 0;
+    letter-spacing: 0;
+    white-space: nowrap;
   }
   main :where(.flex, .inline-flex, .grid) > *,
   body > footer :where(.flex, .grid) > * {

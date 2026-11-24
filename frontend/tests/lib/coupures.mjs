@@ -9,12 +9,16 @@
 //      - après un trait d'union ou une barre oblique écrits ;
 //      - à la ponctuation d'un nom : après un signe (« : », « _ », « . », « ) »… mais ni une apostrophe ni
 //        un signe ouvrant), avant « ( », « _ », « . », « ~ », « / » (usage des URL et identifiants), entre
-//        minuscule et majuscule (camelCase), entre lettres et chiffres (revue r1, M3).
+//        minuscule et majuscule (camelCase), entre lettres et chiffres avec 3 caractères au moins de chaque
+//        côté (revue r1, M3 ; revue r2, M3-bis).
+//    Toute coupure, même permise, qui laisse sur sa ligne un morceau du mot sans lettre ni chiffre
+//    (« , utiliser », « ) », « pas / ») est une faute (revue r2, m-a).
 //    Toute autre coupure doit montrer un trait d'union dessiné : elle est renvoyée avec la zone de l'écran
 //    qui suit la dernière lettre de la ligne.
 // 2. Dans le test (`verifierCoupures`) : chaque zone est capturée deux fois, texte visible puis texte
 //    transparent ; la différence est l'encre du texte. Sans encre après la dernière lettre, le mot est coupé
-//    sans trait. Avec un trait : au moins 3 lettres de chaque côté (M2), pas plus de 2 lignes à trait de
+//    sans trait. Avec un trait : à une frontière de syllabe (revue r2, M3-bis : pas « tok-ens »,
+//    « modelcontextp-rotocol »), au moins 3 lettres de chaque côté (M2), pas plus de 2 lignes à trait de
 //    suite dans un même bloc (M2), et le mot ne tient pas sur une ligne entière de son bloc (M1).
 
 export function releverCoupures() {
@@ -70,9 +74,37 @@ export function releverCoupures() {
   chars.push(null);
   // Ponctuation après laquelle un mot ou un nom peut passer à la ligne sans trait (pas après une apostrophe
   // ni un signe ouvrant) ; avant un signe ouvrant.
-  const permise = (a, b) => (/[\p{P}\p{S}]/u.test(a) && !/['’«“‘([{<]/u.test(a)) || /[([{<_.~/]/.test(b)
-    || (/\p{Ll}/u.test(a) && /\p{Lu}/u.test(b))
-    || (/\p{L}/u.test(a) && /\p{N}/u.test(b)) || (/\p{N}/u.test(a) && /\p{L}/u.test(b));
+  // Entre lettres et chiffres : au moins 3 caractères de chaque côté dans la suite de lettres et de chiffres
+  // (revue r2, M3-bis : « warhammer|40k », jamais « warhammer40|k »).
+  const alnum = (m) => m && m.c !== '\u00AD' && /[\p{L}\p{N}]/u.test(m.c);
+  const borneChiffres = (mot, j) => {
+    let g = j;
+    while (g > 0 && (alnum(mot[g - 1]) || mot[g - 1].c === '\u00AD')) g--;
+    let d = j;
+    while (d < mot.length && (alnum(mot[d]) || mot[d].c === '\u00AD')) d++;
+    return mot.slice(g, j).filter(alnum).length >= 3 && mot.slice(j, d).filter(alnum).length >= 3;
+  };
+  const permise = (mot, j) => {
+    const [a, b] = [mot[j - 1].c, mot[j].c];
+    return (/[\p{P}\p{S}]/u.test(a) && !/['’«“‘([{<]/u.test(a)) || /[([{<_.~/]/.test(b)
+      || (/\p{Ll}/u.test(a) && /\p{Lu}/u.test(b))
+      || (((/\p{L}/u.test(a) && /\p{N}/u.test(b)) || (/\p{N}/u.test(a) && /\p{L}/u.test(b))) && borneChiffres(mot, j));
+  };
+  // Frontière de syllabe (revue r2, M3-bis), jugée sur les lettres de part et d'autre de la coupure : une
+  // voyelle de chaque côté ; à droite, la syllabe s'ouvre sur une consonne suivie d'une voyelle, ou sur un
+  // groupe qu'on ne sépare pas (consonne + l ou r, ch, ph, th, sh, gn) suivi d'une voyelle ; et ce groupe
+  // n'est jamais coupé en son milieu. Ainsi « to|kens », « model|context », « context|protocol » sont des
+  // frontières ; « tok|ens », « prot|ocol », « contextp|rotocol » n'en sont pas.
+  const V = 'aeiouyàâäéèêëîïôöùûüÿæœ';
+  const groupe = /^(?:[bcdfgkptv][lr]|[cpst]h|gn)/i;
+  const syllabe = (gauche, droite) => {
+    const g = gauche.toLowerCase();
+    const d = droite.toLowerCase();
+    if (![...g].some((x) => V.includes(x)) || ![...d].some((x) => V.includes(x))) return false;
+    const ouvre = new RegExp(`^(?:[bcdfgkptv][lr]|[cpst]h|gn|[^${V}])[${V}]`, 'u');
+    if (!ouvre.test(d)) return false;
+    return !groupe.test(g.slice(-1) + d[0]);
+  };
   const lettre = (x) => x && /[\p{L}\p{M}\u00AD]/u.test(x.c);
   const lettres = (ms) => ms.filter((m) => m.c !== '\u00AD').length;
   const lignesDuBloc = new Map();
@@ -103,11 +135,20 @@ export function releverCoupures() {
     const tous = mot.map((m) => rectsDe(m.n, m.i));
     const rects = tous.map((r) => r.at(-1));
     const texte = mot.map((m) => m.c).join('');
+    // Endroits où le mot passe à la ligne.
+    const sauts = [];
     for (let j = 1; j < mot.length; j++) {
-      if (!rects[j] || !rects[j - 1] || rects[j].top - rects[j - 1].top < rects[j - 1].height / 2) continue;
-      if (permise(mot[j - 1].c, mot[j].c)) continue;
+      if (rects[j] && rects[j - 1] && rects[j].top - rects[j - 1].top >= rects[j - 1].height / 2) sauts.push(j);
+    }
+    const bornes = [0, ...sauts, mot.length];
+    for (let s = 0; s < sauts.length; s++) {
+      const j = sauts[s];
       // Une coupure dans une suite de signes (« »…). ») ne coupe aucun mot.
-      if (!mot.slice(0, j).some((m) => /[\p{L}\p{N}]/u.test(m.c)) || !mot.slice(j).some((m) => /[\p{L}\p{N}]/u.test(m.c))) continue;
+      if (!mot.some(alnum)) continue;
+      // Ponctuation seule sur sa ligne, même à une coupure permise : « , utiliser », « ) », « pas / »
+      // (revue r2, m-a).
+      const ponctuation = !mot.slice(bornes[s], j).some(alnum) || !mot.slice(j, bornes[s + 2]).some(alnum);
+      if (!ponctuation && permise(mot, j)) continue;
       // Lettres de part et d'autre de la coupure, et largeur du mot (la suite de lettres coupée).
       let g = j;
       while (g > 0 && lettre(mot[g - 1])) g--;
@@ -129,6 +170,9 @@ export function releverCoupures() {
       const titre = mot[j - 1].n.parentElement.closest('h1, h2, h3');
       const sans = texte.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, '').replace(/\u00AD/g, '');
       out.push({
+        ponctuation,
+        syllabe: syllabe(mot.slice(g, j).map((m) => m.c).join('').replace(/\u00AD/g, ''),
+          mot.slice(j, d).map((m) => m.c).join('').replace(/\u00AD/g, '')),
         // Un nom ou un identifiant (chemin, commande, camelCase, chiffres), et non un mot de la langue.
         nom: !/^[\p{L}\p{M}'’\-‐]+$/u.test(sans) || /\p{Ll}\p{Lu}/u.test(sans),
         titre: Boolean(titre),
@@ -230,8 +274,10 @@ export async function verifierCoupures(page, { exempter = () => false, exemptees
   const blocs = new Map();
   coupures.forEach((c, k) => {
     const ou = `« ${c.vu} » (${c.el})`;
+    if (c.ponctuation) { fautes.push(`ponctuation seule sur sa ligne ${ou}`); return; }
     if (pixels[k] < 3) { fautes.push(`sans trait ${ou}`); return; }
     if (c.gauche < 3 || c.droite < 3) fautes.push(`moins de 3 lettres ${ou}`);
+    if (!c.syllabe) fautes.push(`césure hors syllabe ${ou}`);
     if (c.largeurMot < c.largeurLigne - 1) fautes.push(`césure d'un mot qui tient (${Math.round(c.largeurMot)} < ${Math.round(c.largeurLigne)} px) ${ou}`);
     if (!traits.has(c.bloc)) traits.set(c.bloc, new Set());
     blocs.set(c.bloc, c.el);

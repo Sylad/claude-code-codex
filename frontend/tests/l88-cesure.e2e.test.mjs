@@ -127,6 +127,39 @@ test('l\'oracle voit une coupure sans trait, une césure trop courte, une césur
   assert.ok(f3.some((x) => /^césure d'un mot qui tient/.test(x)), `mot qui tient sur une ligne : ${f3}`);
   const f4 = await juger(bloc('', 'abc­def­ghi­jkl­mno', 60));
   assert.ok(f4.some((x) => /^3 lignes à trait de suite/.test(x)), `suite de traits : ${f4}`);
+  // Revue r2, M3-bis : un nom coupé hors syllabe, même avec son trait (« modelcontextp-rotocol », « tok-ens »,
+  // « prot-ocol ») ; une borne lettre/chiffre qui laisse moins de 3 caractères (« warhammer40|k »).
+  // Largeur d'un texte dans la police du bloc (+ 4 px) : la ligne tient ce texte et pas plus.
+  const largeur = async (texte) => Math.ceil(await page.evaluate((t) => {
+    const s = document.createElement('span');
+    s.style.cssText = 'font:20px/1.4 sans-serif;white-space:pre';
+    s.textContent = t;
+    document.body.append(s);
+    const w = s.getBoundingClientRect().width;
+    s.remove();
+    return w;
+  }, texte)) + 4;
+  // Ligne qui tient chaque morceau d'un mot césuré à son U+00AD, trait compris.
+  const ligne = async (texte) => {
+    const [g, d] = texte.split('­');
+    return Math.max(await largeur(`${g}-`), await largeur(d));
+  };
+  for (const texte of ['modelcontextp­rotocol', 'tok­ens', 'modelcontextprot­ocol']) {
+    const f = await juger(bloc('', texte, await ligne(texte)));
+    assert.ok(f.some((x) => /^césure hors syllabe/.test(x)), `${texte} : ${f}`);
+  }
+  for (const texte of ['modelcontext­protocol', 'proto­col', 'post­gresql']) {
+    assert.deepEqual(await juger(bloc('', texte, await ligne(texte))), [], `${texte} : frontière de syllabe`);
+  }
+  const f5 = await juger(bloc('', 'warhammer40<wbr>k', await largeur('warhammer40')));
+  assert.ok(f5.length > 0, `borne lettre/chiffre à 1 caractère : ${f5}`);
+  // Revue r2, m-a : ponctuation seule en début de ligne (« , utiliser », « ) ») ou en fin de ligne (« / »).
+  const f6 = await juger(bloc('', 'comprendre<wbr>, utiliser', await largeur('comprendre')));
+  assert.ok(f6.some((x) => /^ponctuation seule/.test(x)), `virgule seule en début de ligne : ${f6}`);
+  const f7 = await juger(bloc('', '(NousResearch<wbr>)', await largeur('(NousResearch')));
+  assert.ok(f7.some((x) => /^ponctuation seule/.test(x)), `parenthèse seule : ${f7}`);
+  const f8 = await juger(bloc('', 'pas /<wbr>geoserver/web/', await largeur('geoserver/web/')));
+  assert.ok(f8.some((x) => /^ponctuation seule/.test(x)), `barre seule en fin de ligne : ${f8}`);
   await page.close();
 });
 
@@ -144,9 +177,10 @@ test('aucun mot coupé sans trait, aucune césure inutile ni trop courte, aucun 
         await taille(page, n);
         const ici = `${route} @${width}px ${n} %`;
         // Un nom (commande, chemin) dans un îlot Vue hors titre : le script n'y touche pas au DOM (Vue le
-        // réécrit), sa coupure reste celle d'overflow-wrap. Compté à part, pas jugé.
+        // réécrit), sa coupure reste celle d'overflow-wrap ; de même pour une ponctuation seule (« -- » d'une
+        // option) dans un îlot, hors du champ de la revue r2. Compté à part, pas jugé.
         const ex = [];
-        const f = await verifierCoupures(page, { exempter: (c) => c.nom && c.ilot && !c.titre, exemptees: ex });
+        const f = await verifierCoupures(page, { exempter: (c) => (c.nom || c.ponctuation) && c.ilot && !c.titre, exemptees: ex });
         for (const x of ex) exemptees.add(`${route} ${x}`);
         if (f.length) fautes.push(`${ici} : ${f.slice(0, 5).join(' ; ')}${f.length > 5 ? ` (+${f.length - 5})` : ''}`);
         const shy = await page.evaluate(shyLisibles);
@@ -274,6 +308,16 @@ test('m1 : texte copié et nom accessible sans U+00AD, texte agrandi (320 px, 20
     const { nodes } = await cdp.send('Accessibility.getFullAXTree');
     const noms = nodes.map((n) => n.name?.value ?? '').filter((v) => v.includes('­'));
     assert.deepEqual(noms, [], `${route} : U+00AD dans un nom accessible`);
+    // Revue r2, m-b : la copie d'un mot doublé ne coupe pas le nom accessible (« postgresql .parameters »,
+    // « warhammer 40k ») : le nom d'un titre qui en contient une est son texte, sans espace ajoutée.
+    const titres = await page.evaluate(() => [...document.querySelectorAll('main :is(h1, h2, h3):has([data-cesure-vu])')].map((h) => {
+      const c = h.cloneNode(true);
+      c.querySelectorAll('[data-cesure-vu]').forEach((v) => v.remove());
+      return c.textContent.replace(/\s+/g, ' ').trim();
+    }));
+    for (const nom of titres) {
+      assert.ok(await page.getByRole('heading', { name: nom, exact: true }).count() > 0, `${route} : nom accessible du titre « ${nom} » altéré`);
+    }
   }
   if (!(await page.evaluate(() => document.querySelector('[data-cesure-vu]')))) t.diagnostic('aucun mot doublé sur la dernière page');
   await context.close();
