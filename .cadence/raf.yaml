@@ -901,6 +901,7 @@ lots:
     status: done
     estimate: 1
     visible: true
+    delivered: { date: 2026-11-24, sha: 7d0cd4fadd39a90ddb5305fc9412eb866d31de63 }
     created: 2026-11-23
     notes:
       - { date: 2026-11-23, text: "ajout 23-11 (UX L86) : /learning h2 « …podcasts sélectionnés » coupé « sélectionn|és » à 320 px texte 200 % (overflow-wrap:anywhere) ; « newsletters » idem — piste hyphens:auto avec lang fr" }
