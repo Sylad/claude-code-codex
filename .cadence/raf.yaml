@@ -906,7 +906,7 @@ lots:
       - { date: 2026-11-23, text: "ajout 23-11 (UX L86) : /learning h2 « …podcasts sélectionnés » coupé « sélectionn|és » à 320 px texte 200 % (overflow-wrap:anywhere) ; « newsletters » idem — piste hyphens:auto avec lang fr" }
     started: 2026-11-24
     review: { date: 2026-11-24, verdict: "r2 conforme (lead d'après cadence:code-reviewer) : 4 demandes r1 tenues, 26/26 tests ciblés ; mineur : noms sans trait dans les îlots Vue de /ecosystem, exemptés du test (sous-tâche)", commit: 9848a48884d3b7cf451ce06c075639265516806d }
-    ux: { date: 2026-11-24, verdict: "r2 non conforme (lead d'après cadence:ux-reviewer, tmp/ux-codex-L88-r2.md) : M1 M2 M4 m1 corrigés ; M3-bis majeur : la césure de repli coupe des noms hors syllabe (modelcontextp-rotocol, tok-ens, warhammer40|k sans trait) ; mineurs : ponctuation seule en début/fin de ligne, espaces dans le nom accessible des mots doublés" }
+    ux: { date: 2026-11-24, verdict: "r3 non conforme (lead d'après cadence:ux-reviewer, tmp/ux-codex-L88-r3.md) : M3-bis, m-b, M1, M2, M4, m1 tenus ; majeur M3-ter régression de 0006c97 : « jdbccon|fig. » coupé sans trait au h3 de k8s-migration-overnight à 320 px 200 % ; mineur : options dans un <code> sans data-opt coupées après « -- » (117 cas) ; écarts à 100 % actés par le lead" }
   - id: L89
     title: "Anglicismes restants sur /learning, hors périmètre de L86 : « tooling », « tag », « issue », « repo », « AI engineering », « patterns », « Pair-bien »… — réécrire en français courant comme L82/L86 (relevé du run L86, 23-11)"
     status: todo
