@@ -40,11 +40,26 @@ export function retirerElements(html, ouvrante) {
     balise.lastIndex = m.index + m[0].length;
     let profondeur = 1;
     let fin = out.length;
-    for (let b; (b = balise.exec(out)); ) {
+    let b = balise.exec(out);
+    while (b) {
       profondeur += b[1] ? -1 : 1;
       if (profondeur === 0) { fin = b.index + b[0].length; break; }
+      b = balise.exec(out);
     }
     out = out.slice(0, m.index) + ' ' + out.slice(fin);
+  }
+}
+
+/** Remplace par `par` chaque segment qui va de `debut` au `fin` suivant (parcours linéaire, sans expression régulière). */
+function remplacerEntre(texte, debut, fin, par) {
+  let out = '';
+  let i = 0;
+  for (;;) {
+    const a = texte.indexOf(debut, i);
+    const b = a < 0 ? -1 : texte.indexOf(fin, a + 1);
+    if (b < 0) return out + texte.slice(i);
+    out += texte.slice(i, a) + par;
+    i = b + 1;
   }
 }
 
@@ -52,13 +67,11 @@ export function texteAdresse(html) {
   let h = html.replace(/<(script|style|pre|code|svg)\b[\s\S]*?<\/\1>/gi, ' ');
   h = retirerElements(h, /<([a-z][\w-]*)\b[^>]*\sdata-texte-tiers\b[^>]*>/i);
   h = retirerElements(h, /<([a-z][\w-]*)\b[^>]*\slang="en"[^>]*>/i);
-  return h
-    .replace(/<[^>]+>/g, ' ')
+  const texte = remplacerEntre(h, '<', '>', ' ')
     .replace(/&#39;|&#x27;/g, "'")
     .replace(/&nbsp;|&#160;|&#x202f;/gi, ' ')
-    .replace(/&amp;/g, '&')
-    .replace(/«[^»]*»/g, ' « » ')
-    .replace(/\s+/g, ' ');
+    .replace(/&amp;/g, '&');
+  return remplacerEntre(texte, '«', '»', ' « » ').replace(/\s+/g, ' ');
 }
 
 export function vouvoiements(texte) {
@@ -90,7 +103,7 @@ test('L18 — aucune page du site construit ne vouvoie le lecteur', () => {
 test('L18 — les pages principales tutoient bien (Démarrer, À propos, Nouveautés)', () => {
   for (const p of ['start/index.html', 'about/index.html', 'nouveautes/index.html']) {
     const t = texteAdresse(readFileSync(join(DIST, p), 'utf8'));
-    assert.match(t, /(?<![\p{L}'’])(tu|te|toi|ton|ta|tes)(?![\p{L}])/iu, `${p} : aucun tutoiement`);
+    assert.match(t, /(?<![\p{L}'’])(tu|te|toi|ton|ta|tes)(?!\p{L})/iu, `${p} : aucun tutoiement`);
   }
 });
 
