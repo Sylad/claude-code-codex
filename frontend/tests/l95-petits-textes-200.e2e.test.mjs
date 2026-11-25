@@ -104,10 +104,12 @@ test('aucune taille de police fixée en px sous 12 px dans les sources', () => {
   const src = fileURLToPath(new URL('../src/', import.meta.url));
   const fichiers = (d) => readdirSync(d, { withFileTypes: true }).flatMap((e) => (e.isDirectory()
     ? fichiers(join(d, e.name)) : /\.(css|astro|vue|ts|mjs)$/.test(e.name) ? [join(d, e.name)] : []));
-  const trouves = fichiers(src).flatMap((f) => [...readFileSync(f, 'utf8')
-    .matchAll(/text-\[(\d+(?:\.\d+)?)px\]|font-?size["']?\s*:\s*["']?(\d+(?:\.\d+)?)(?:px\b|(?![\w.%]))/gi)]
+  // Classe Tailwind `text-[Npx]` ; propriété CSS `font-size: N[px]` ou objet JS `fontSize: N` / `"Npx"`
+  // (une autre unité — rem, em, % — n'est pas relevée).
+  const MOTIFS = [/text-\[([\d.]+)px\]/g, /font-?size["']?\s*:\s*["']?([\d.]+)(?![\w.%]|px)/gi, /font-?size["']?\s*:\s*["']?([\d.]+)px/gi];
+  const trouves = fichiers(src).flatMap((f) => MOTIFS.flatMap((re) => [...readFileSync(f, 'utf8').matchAll(re)])
     // 0 masque un texte (copie de césure de global.css), ce n'est pas un texte à lire.
-    .filter((m) => { const v = Number(m[1] ?? m[2]); return v > 0 && v < 12; })
+    .filter((m) => Number(m[1]) > 0 && Number(m[1]) < 12)
     .map((m) => `${relative(src, f)}@${m.index} ${m[0]}`));
   assert.deepEqual(trouves, []);
 });
