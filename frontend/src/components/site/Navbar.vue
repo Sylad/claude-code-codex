@@ -47,6 +47,7 @@ const links: NavLink[] = [
       { href: "/k8s-for-java-developers", label: "K8s pour Java" },
       { href: "/argocd-k8s-pour-les-nuls", label: "ArgoCD pour les nuls" },
       { href: "/cloudflare-pour-les-nuls", label: "Cloudflare pour les nuls" },
+      { href: "/nouveau-projet", label: "Nouveau projet" },
     ],
   },
   {

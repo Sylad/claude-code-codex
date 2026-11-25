@@ -1,5 +1,5 @@
 /**
- * L9 — les trois guides longs (revue UX r0) : même mise en page (GuideLayout), sommaire, ancres,
+ * L9 — les guides longs (trois en L9, « Nouveau projet » ajouté en L20) (revue UX r0) : même mise en page (GuideLayout), sommaire, ancres,
  * date de mise à jour, et le bloc « Les autres guides » en bas de page.
  */
 export interface GuideSectionInfo {
@@ -32,6 +32,11 @@ export const GUIDES: Guide[] = [
     href: "/cloudflare-pour-les-nuls/",
     titre: "Cloudflare pour les nuls",
     resume: "Tunnel, DNS et Access, racontés à travers une panne de trois semaines.",
+  },
+  {
+    href: "/nouveau-projet/",
+    titre: "Nouveau projet : bien commencer",
+    resume: "CLAUDE.md de départ, skills, plan, garde-fous, tokens et liste de contrôle du premier jour.",
   },
 ];
 

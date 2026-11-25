@@ -3,6 +3,23 @@
   "generated": "2026-11-25 10:09",
   "entries": [
     {
+      "slug": "2026-11-25-nouveau-guide-bien-commencer-un-projet",
+      "title": "Nouveau guide : bien commencer un projet avec Claude Code",
+      "date": "2026-11-25",
+      "lots": [
+        "L20"
+      ],
+      "captures": [
+        "captures/L20-nouveau-projet-tokens-1440.png",
+        "captures/L20-nouveau-projet-premier-jour-390.png"
+      ],
+      "alts": [
+        "Sur grand écran, la section « Gérer les tokens sans y penser tout le temps » du guide Nouveau projet : six habitudes numérotées, de « Une session par chantier » à « Un index de mémoire sous sa limite », avec le sommaire du guide à gauche",
+        "Sur téléphone, la section « La liste de contrôle du premier jour » : une liste numérotée qui commence par le dépôt et son .gitignore, puis les commandes de construction et de test, le CLAUDE.md, le plan, les skills de session, l'intégration continue et le test de confidentialité"
+      ],
+      "html": "<p>Un quatrième guide rejoint le menu <strong>Guides</strong> : <strong>Nouveau projet : bien commencer</strong>. Il rassemble ce qu'on met en place le premier jour d'un projet mené avec Claude Code :</p>\n<ul><li>un <strong>CLAUDE.md de départ</strong>, court, avec un modèle à copier ;</li><li>les <strong>skills et agents</strong> utiles dès le début, et l'ordre dans lequel préférer un test, un hook, une règle ou un agent ;</li><li>le <strong>plan, les Nouveautés et la livraison</strong> avec cadence ;</li><li>les <strong>garde-fous</strong> : tests, revue UX au téléphone et sur grand écran, confidentialité de ce qui est publié ;</li><li>la <strong>gestion des tokens</strong> en six habitudes : une session par chantier, <code>/clear</code> en fin de lot, un contexte relu à chaque tour, la délégation aux sous-agents, des mémoires courtes et un index de mémoire qui reste sous sa limite ;</li><li>une <strong>liste de contrôle du premier jour</strong>, à suivre dans l'ordre.</li></ul>\n<p>Le guide est aussi listé sur l'accueil et dans « Les autres guides » en bas de chaque guide.</p>"
+    },
+    {
       "slug": "2026-11-25-texte-agrandi-etiquettes-learning-et-etudes-de-cas",
       "title": "Texte agrandi : les étiquettes de Learning et des études de cas suivent",
       "date": "2026-11-25",

@@ -18,8 +18,8 @@ classe et une source, décomptes exacts).
 |---|---|
 | faux | 7 |
 | dépassé | 30 |
-| non sourcé | 22 |
-| ok | 56 |
+| non sourcé | 23 |
+| ok | 59 |
 
 ## Ce qui a été vérifié, et ce qui ne l'a pas été
 
@@ -236,6 +236,13 @@ classe et une source, décomptes exacts).
 
 - **ok** — entrée 2026-W44 datée du 2026-10-30, dans la semaine ISO ; filtre de contenu appliqué au build qui fait échouer l'entrée fautive (source : `frontend/src/data/livre-de-bord.ts`, `src/lib/livre-de-bord.ts`)
 - **non sourcé** — les chiffres cités dans les entrées reprennent les notes de clôture et les verdicts d'outils ; ils n'ont pas été recoupés un à un avec le CHANGELOG de cadence (source : aucune)
+
+## `/nouveau-projet`
+
+- **ok** — `CLAUDE.md` chargé au début de chaque session, `/init` en propose un premier jet, `/clear` vide la conversation, `/context` montre ce qui occupe le contexte (source : documentation Claude Code, mémoire et commandes intégrées)
+- **non sourcé** — seul le début de l'index des mémoires est chargé ; au-delà de sa limite, les dernières entrées ne sont plus lues : la documentation de Claude Code n'a pas été rouverte dans cette passe (source : aucune)
+- **ok** — ordre de fiabilité test, hook, règle du CLAUDE.md, skill, mémoire, agent ; tests écrits d'après la demande ; revue UX à 390 et 1440 px (source : `CLAUDE.md` du dossier developpeur et de ce dépôt)
+- **ok** — plan versionné, lot cité dans chaque commit, entrée Nouveautés par lot visible, livraison vérifiée par son effet (source : README du dépôt public Sylad/cadence)
 
 ## `/nouveautes`
 

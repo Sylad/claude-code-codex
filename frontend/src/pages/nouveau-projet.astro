@@ -1,0 +1,222 @@
+---
+/**
+ * L20 — rubrique « Nouveau projet » : ce qu'on met en place le premier jour d'un projet mené avec
+ * Claude Code (CLAUDE.md de départ, skills et agents, cadence, garde-fous, gestion des tokens) et la
+ * liste de contrôle du premier jour. Leçons générales seulement : aucun nom de machine, de personne,
+ * d'employeur ni de client (tests/l20-nouveau-projet.e2e.test.mjs applique le filtre du livre de bord).
+ */
+import GuideLayout from "@/components/site/GuideLayout.astro";
+import GuideSection from "@/components/site/GuideSection.astro";
+import CodeBlock from "@/components/site/CodeBlock.astro";
+import Callout from "@/components/site/Callout.astro";
+import { sectionsParId } from "@/data/guides";
+
+const CADENCE = "https://github.com/Sylad/cadence";
+
+const sections = [
+  { id: "pourquoi", number: "00", title: "Pourquoi s'en occuper dès le premier jour" },
+  { id: "claude-md", number: "01", title: "Un CLAUDE.md de départ, court et vrai" },
+  { id: "skills-agents", number: "02", title: "Skills et agents : lesquels, et quand" },
+  { id: "cadence", number: "03", title: "Cadence : le plan, les Nouveautés, la livraison" },
+  { id: "garde-fous", number: "04", title: "Garde-fous : tests, revue UX, confidentialité" },
+  { id: "tokens", number: "05", title: "Gérer les tokens sans y penser tout le temps" },
+  { id: "premier-jour", number: "06", title: "La liste de contrôle du premier jour" },
+  { id: "plus-loin", number: "07", title: "Pour aller plus loin" },
+];
+const s = sectionsParId(sections);
+
+const CLAUDE_MD = `# mon-projet
+
+## Lancer, construire, tester
+- Installer : npm ci
+- Construire : npm run build
+- Tester : npm test   (doit passer avant tout commit)
+
+## Conventions
+- Un commit cite son lot : feat(L3): …, fix(L3): …
+- Les dates s'affichent avec un seul formateur : src/lib/format-date
+- Les fichiers temporaires vont dans tmp/, jamais à la racine
+
+## Pièges déjà vécus
+- La page X lit un JSON généré : le régénérer et le commiter
+- Les requêtes média sont en rem, jamais en px
+
+## Ne pas faire
+- Pas de secret dans le dépôt : variables d'environnement seulement
+- Ne pas modifier dist/ à la main`;
+
+const PLAN = `lots:
+  - id: L1
+    title: "Page d'accueil : titre, résumé, lien vers la doc"
+    status: todo
+    visible: true        # se voit à l'écran : revue UX et Nouveautés
+  - id: L2
+    title: "Tests du formulaire de contact"
+    status: todo`;
+---
+
+<GuideLayout
+  title="Nouveau projet : bien commencer"
+  description="Ce qu'on met en place le premier jour d'un projet mené avec Claude Code : un CLAUDE.md de départ, les skills et agents utiles, un plan avec cadence, des garde-fous (tests, revue UX, confidentialité), la gestion des tokens et une liste de contrôle."
+  eyebrow="Guide · premier jour d'un projet"
+  intro="Un projet mené avec Claude Code se joue beaucoup dans sa première heure : ce que l'agent lit à chaque tour, la façon dont on découpe le travail, les gardes qui l'empêchent de déraper. Cette page rassemble ce qu'on met en place dès le départ, tiré de plusieurs projets menés sur ce site, et finit par une liste de contrôle à suivre le premier jour. Lecture ~12 min."
+  sections={sections}
+  date="2026-11-25"
+  depots={[{ nom: "Sylad/cadence", href: CADENCE }]}
+>
+
+  <GuideSection section={s["pourquoi"]}>
+    <p>
+      Claude Code relit à chaque message tout ce qu'on lui a donné : les consignes du projet, la
+      conversation, les fichiers ouverts. Ce qu'on installe le premier jour, on le paie donc à chaque
+      tour, en temps et en tokens — et on en profite aussi à chaque tour.
+    </p>
+    <p>
+      Les habitudes qui manquent au départ se rattrapent mal : un dépôt sans tests se remplit de
+      changements que personne n'ose plus toucher, un plan absent se remplace par la mémoire de la
+      conversation, qui disparaît au prochain <code>/clear</code>. À l'inverse, trop de règles posées
+      d'emblée deviennent du bruit que l'agent relit sans en tirer parti.
+    </p>
+    <p>
+      La ligne suivie ici : <strong>peu de choses, mais vérifiables</strong>. Une consigne compte
+      quand une commande peut dire si elle est tenue.
+    </p>
+  </GuideSection>
+
+  <GuideSection section={s["claude-md"]}>
+    <p>
+      Le fichier <code>CLAUDE.md</code>, à la racine du dépôt, est chargé au début de chaque session.
+      C'est la mémoire du projet : ce qu'un nouveau venu doit savoir pour ne pas casser ce qui
+      marche. La commande <code>/init</code> en propose un premier jet à partir du code ; on le
+      raccourcit ensuite.
+    </p>
+    <p>Ce qui y a sa place :</p>
+    <ul class="list-disc list-inside space-y-2 ml-4">
+      <li><strong>Les commandes</strong> pour installer, construire et tester, exactes et copiables.</li>
+      <li><strong>Les conventions</strong> qui ne se devinent pas en lisant le code.</li>
+      <li><strong>Les pièges déjà vécus</strong>, en une ligne chacun, avec ce qu'il faut faire à la place.</li>
+      <li><strong>Ce qu'il ne faut pas toucher</strong> : fichiers générés, secrets, zones fragiles.</li>
+    </ul>
+    <CodeBlock language="markdown" filename="CLAUDE.md — un point de départ" code={CLAUDE_MD} />
+    <p>
+      Ce qui n'y a pas sa place : l'histoire du projet, les explications longues, les règles que
+      les tests vérifient déjà. Chaque ligne est relue à chaque tour : un CLAUDE.md de 50 lignes
+      utiles vaut mieux qu'un de 500 où l'essentiel se perd.
+    </p>
+    <Callout titre="À retenir">
+      <p>
+        Quand une règle revient souvent dans la conversation, elle va dans le CLAUDE.md. Quand elle
+        peut devenir un test, elle devient un test : le test ne s'oublie pas, la règle écrite si.
+      </p>
+    </Callout>
+  </GuideSection>
+
+  <GuideSection section={s["skills-agents"]}>
+    <p>
+      Un <strong>skill</strong> est une procédure rangée dans un fichier, que Claude Code charge
+      seulement quand la tâche s'y prête : « ouvrir une session », « livrer », « clore la journée ».
+      Un <strong>agent</strong> (sous-agent) est une autre session, lancée pour une tâche bornée, qui
+      ne rend que sa conclusion.
+    </p>
+    <p>Ceux qui servent dès le premier jour :</p>
+    <ul class="list-disc list-inside space-y-2 ml-4">
+      <li><strong>Début et fin de session</strong> : un skill qui rassemble l'état du dépôt et du plan au démarrage, et un autre qui vérifie à la fermeture que rien n'est resté en plan (changements non commités, lots ouverts).</li>
+      <li><strong>Livraison</strong> : un skill qui attend l'intégration continue, déploie, puis vérifie l'effet en production.</li>
+      <li><strong>Relecture de code</strong> : un agent qui lit le diff d'un lot sans connaître le raisonnement de l'auteur.</li>
+      <li><strong>Revue UX</strong> : un agent qui regarde l'écran au téléphone et au grand écran et fonde chaque remarque sur une règle nommée.</li>
+      <li><strong>Recherche en lecture seule</strong> : un agent qui parcourt beaucoup de fichiers et ne rend que la réponse.</li>
+    </ul>
+    <p>
+      Avant d'en créer un, on se demande quel mécanisme est le plus fiable. L'ordre retenu ici :
+      <strong>un test</strong>, puis <strong>un hook</strong> (un script lancé à coup sûr par Claude
+      Code avant ou après une action), puis <strong>une règle du CLAUDE.md</strong>, puis
+      <strong>un skill</strong>, puis <strong>une mémoire</strong>, et enfin <strong>un agent</strong>,
+      réservé aux tâches bornées. Un mécanisme dont on ne mesure pas le gain est retiré.
+    </p>
+  </GuideSection>
+
+  <GuideSection section={s["cadence"]}>
+    <p>
+      <a href={CADENCE} target="_blank" rel="noopener">cadence</a> est l'outil de méthode utilisé sur
+      ce site : un plan versionné avec le code, et quelques commandes autour. Il n'est pas
+      indispensable, mais les trois idées qu'il outille le sont.
+    </p>
+    <p><strong>Un plan dans le dépôt.</strong> Le reste à faire vit dans un fichier, découpé en lots courts. Chaque commit cite son lot ; une commande dit quel lot vient ensuite et repère les commits sans lot. Le plan survit à la conversation.</p>
+    <CodeBlock language="yaml" filename=".cadence/raf.yaml — deux lots" code={PLAN} />
+    <p><strong>Des Nouveautés pour chaque lot qui se voit.</strong> Un lot qui change l'écran ajoute une entrée datée, écrite pour l'utilisateur, avec une capture. Elle oblige à regarder le résultat, et elle tient le journal du projet sans effort de plus.</p>
+    <p><strong>Une livraison vérifiée par son effet.</strong> Un déploiement n'est fini que lorsqu'une vérification sur l'application en ligne le confirme : la page répond, la donnée est là. « Le pipeline est vert » ne suffit pas.</p>
+    <p>
+      L'étude de cas <a href="/case-studies/cadence/">Cadence, la méthode de travail</a> raconte
+      comment l'outil est né et ce qu'il a changé, chiffres à l'appui.
+    </p>
+  </GuideSection>
+
+  <GuideSection section={s["garde-fous"]}>
+    <p>
+      Un agent écrit vite et se trompe avec assurance. Les garde-fous sont là pour qu'une erreur se
+      voie avant d'arriver chez l'utilisateur.
+    </p>
+    <p><strong>Les tests, d'abord.</strong> Une commande unique lance toute la suite, et le CLAUDE.md dit qu'elle doit passer avant tout commit. Les tests qui disent ce que l'écran doit faire s'écrivent d'après la demande, pas d'après le code : celui qui code teste ce qu'il a fait, pas forcément ce qui était voulu.</p>
+    <p><strong>La revue UX de chaque écran.</strong> Tout changement visible est regardé dans un vrai navigateur, à 390 px (un téléphone) et à 1440 px (un grand écran), avant d'être déclaré fini. Chaque remarque cite une règle (accessibilité WCAG, heuristiques de Nielsen) ou une mesure, jamais un goût.</p>
+    <p><strong>La confidentialité.</strong> Ce qui est publié ne doit rien révéler de privé :</p>
+    <ul class="list-disc list-inside space-y-2 ml-4">
+      <li>les secrets vivent dans des variables d'environnement, jamais dans le dépôt ni dans un message de commit ;</li>
+      <li>un test parcourt le site construit et échoue s'il y trouve un chemin de machine, une adresse e-mail, une clé ou un nom d'hôte interne ;</li>
+      <li>les données réelles restent en local, l'application publique n'a que des données de démonstration ;</li>
+      <li>ce qu'on demande à l'agent de publier, il le relit en entier avant.</li>
+    </ul>
+    <Callout titre="À retenir">
+      <p>
+        Un garde-fou qui dépend de la mémoire de l'agent finit par sauter. Le même garde-fou écrit en
+        test ou en hook tient à chaque fois.
+      </p>
+    </Callout>
+  </GuideSection>
+
+  <GuideSection section={s["tokens"]}>
+    <p>
+      Le coût d'une session ne vient pas surtout de ce qu'on écrit, mais de ce que l'agent relit :
+      <strong>tout le contexte est relu à chaque tour</strong>. Une conversation qui s'allonge coûte
+      un peu plus à chaque message, et un fichier lu en entier pour une seule ligne se paie jusqu'à
+      la fin de la session. Six habitudes suffisent à garder ce coût bas.
+    </p>
+    <ol class="list-decimal list-inside space-y-3 ml-4">
+      <li><strong>Une session par chantier.</strong> Un sujet, une session : le contexte d'un autre travail n'a rien à faire là, et il se paierait à chaque tour.</li>
+      <li><strong><code>/clear</code> en fin de lot.</strong> Le lot est commité, le plan est à jour : la conversation n'apporte plus rien, on repart d'un contexte vide. Ce qui doit survivre est dans le dépôt, pas dans la conversation.</li>
+      <li><strong>Un CLAUDE.md court.</strong> Il est relu à chaque tour de chaque session : chaque ligne inutile se paie des centaines de fois. On le relit de temps en temps pour en retirer ce qui ne sert plus.</li>
+      <li><strong>Déléguer aux sous-agents.</strong> Une recherche dans beaucoup de fichiers, une relecture, une vérification longue partent dans un sous-agent : il lit tout, la session principale ne garde que sa conclusion et reste légère.</li>
+      <li><strong>Des mémoires courtes et triées.</strong> Une mémoire tient en quelques lignes, dit un fait ou une règle, et sa date. On supprime celles qui sont périmées plutôt que d'en ajouter une qui les contredit.</li>
+      <li><strong>Un index de mémoire sous sa limite.</strong> Claude Code ne charge que le début du fichier d'index des mémoires : au-delà de sa limite, les dernières entrées ne sont plus lues du tout. On garde l'index court, une ligne par mémoire, et on fusionne avant qu'il déborde.</li>
+    </ol>
+    <p>
+      La commande <code>/context</code> montre ce qui occupe le contexte de la session : c'est le
+      premier réflexe quand une session devient lente ou chère.
+    </p>
+  </GuideSection>
+
+  <GuideSection section={s["premier-jour"]}>
+    <p>À cocher dans l'ordre, la première journée d'un projet :</p>
+    <ol class="list-decimal list-inside space-y-2 ml-4" data-liste-premier-jour>
+      <li>Le dépôt existe, avec un <code>.gitignore</code> qui écarte les secrets, les fichiers générés et un dossier <code>tmp/</code> pour les fichiers jetables.</li>
+      <li>Une commande construit le projet et une autre lance les tests ; un premier test passe.</li>
+      <li>Le <code>CLAUDE.md</code> donne ces commandes, les conventions et ce qu'il ne faut pas toucher, en moins d'une page.</li>
+      <li>Le plan existe dans le dépôt, avec les premiers lots ; les lots qui se voient à l'écran sont marqués.</li>
+      <li>Les skills de début et de fin de session sont installés.</li>
+      <li>L'intégration continue lance la même commande de test à chaque envoi.</li>
+      <li>Un test de confidentialité parcourt ce qui sera publié.</li>
+      <li>La revue UX est prévue pour chaque écran : largeurs, règles, qui la fait.</li>
+      <li>La page Nouveautés (ou un journal des changements) a sa première entrée.</li>
+      <li>La livraison a sa vérification : quelle page, quelle donnée prouvent qu'elle a marché.</li>
+      <li>Le premier lot est fini, commité, et la session se termine par <code>/clear</code>.</li>
+    </ol>
+  </GuideSection>
+
+  <GuideSection section={s["plus-loin"]}>
+    <ul class="list-disc list-inside space-y-2 ml-4">
+      <li><a href="/start/">Démarrer</a> : les premiers prompts et les réflexes de base, si Claude Code est encore nouveau pour toi.</li>
+      <li><a href="/atelier-ia/">Atelier IA</a> : comment le travail se répartit entre plusieurs sessions et agents.</li>
+      <li><a href="/theory/">Théorie</a> : contexte, outils, skills, hooks et sous-agents, expliqués pas à pas.</li>
+      <li><a href="/case-studies/pourquoi-cadence/">Pourquoi cadence</a> : ce que la méthode a mesuré, et ce qu'elle n'a pas encore prouvé.</li>
+    </ul>
+  </GuideSection>
+</GuideLayout>
