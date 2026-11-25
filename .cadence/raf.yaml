@@ -333,9 +333,10 @@ lots:
     finished: 2026-10-02
   - id: L18
     title: Choisir tu ou vous pour tout le site, puis harmoniser accueil, Démarrer, À propos et Nouveautés (revue UX de la barre) — décision de Sylvain d'abord
-    status: todo
+    status: doing
     estimate: 0.5
     created: 2026-10-02
+    started: 2026-11-25
   - id: L20
     title: "Rubrique « Nouveau projet » : skills et outils pour bien commencer — CLAUDE.md de départ, skills et agents utiles, cadence (plan, Nouveautés, livraison), garde-fous (tests, revue UX, confidentialité), liste de contrôle du premier jour (consigne Sylvain 02-10)"
     public: "Nouveau projet : les skills et les outils pour bien commencer"
