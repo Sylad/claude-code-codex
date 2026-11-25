@@ -99,7 +99,8 @@ const totalItems = allItems.length;
       </p>
     </div>
 
-    <ul class="grid gap-4 sm:grid-cols-2">
+    <!-- L18 : titres et résumés des flux = textes de tiers, hors contrôle du tutoiement. -->
+    <ul class="grid gap-4 sm:grid-cols-2" data-texte-tiers>
       {recentItems.map((item) => {
         const meta = SOURCE_META[item.source] ?? {
           label: item.source,

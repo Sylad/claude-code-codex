@@ -154,16 +154,16 @@ test('séparateur « Déjà vu » : avant la première entrée vue seulement si 
   assert.equal(seenSeparatorIndex([]), -1);
 });
 
-test('séparateur : « Déjà vu lors de votre visite du 1er octobre 2026 à 10 h 30 » ; mémoire de base : « Déjà en ligne lors de votre première visite, le … »', () => {
+test('séparateur : « Déjà vu lors de ta visite du 1er octobre 2026 à 10 h 30 » ; mémoire de base : « Déjà en ligne lors de ta première visite, le … »', () => {
   const nb = (s) => s.replaceAll(' ', ' ');
-  assert.equal(nb(seenSeparatorLabel({ at: '2026-10-01T08:30:00.000Z' }, 'Europe/Paris')), 'Déjà vu lors de votre visite du 1er octobre 2026 à 10 h 30');
-  assert.equal(nb(seenSeparatorLabel({ at: '2026-10-01T08:30:00.000Z', baseline: true }, 'Europe/Paris')), 'Déjà en ligne lors de votre première visite, le 1er octobre 2026 à 10 h 30');
+  assert.equal(nb(seenSeparatorLabel({ at: '2026-10-01T08:30:00.000Z' }, 'Europe/Paris')), 'Déjà vu lors de ta visite du 1er octobre 2026 à 10 h 30');
+  assert.equal(nb(seenSeparatorLabel({ at: '2026-10-01T08:30:00.000Z', baseline: true }, 'Europe/Paris')), 'Déjà en ligne lors de ta première visite, le 1er octobre 2026 à 10 h 30');
   assert.equal(seenSeparatorLabel(null), 'Déjà vu lors d’une visite précédente');
-  assert.equal(seenSeparatorLabel({ baseline: true }), 'Déjà en ligne lors de votre première visite');
+  assert.equal(seenSeparatorLabel({ baseline: true }), 'Déjà en ligne lors de ta première visite');
 });
 
 test('ligne d’annonce : accordée, « première visite du site » pour une mémoire de base', () => {
   assert.equal(sinceLabel(0, null), '');
-  assert.equal(sinceLabel(1, {}), '1 nouveauté depuis votre dernière visite');
-  assert.equal(sinceLabel(3, { baseline: true }), '3 nouveautés depuis votre première visite du site');
+  assert.equal(sinceLabel(1, {}), '1 nouveauté depuis ta dernière visite');
+  assert.equal(sinceLabel(3, { baseline: true }), '3 nouveautés depuis ta première visite du site');
 });

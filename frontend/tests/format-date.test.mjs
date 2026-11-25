@@ -1,5 +1,5 @@
 // L15 — une seule mise en forme des dates en français pour les Nouveautés, le séparateur
-// « Déjà vu lors de votre visite du … » et le Plan de travail : « 1er octobre 2026 »
+// « Déjà vu lors de ta visite du … » et le Plan de travail : « 1er octobre 2026 »
 // (jamais « 1 octobre 2026 »), heure « 20 h 42 », espaces insécables.
 import test from 'node:test';
 import assert from 'node:assert/strict';

@@ -535,7 +535,7 @@ test('pastille : premier visiteur sans pastille ; après une visite ancienne, no
   await context.close();
 });
 
-test('page : « N nouveautés depuis votre dernière visite », marque « Nouveau » ; premier visiteur sans marque', { timeout: 60_000 }, async (t) => {
+test('page : « N nouveautés depuis ta dernière visite », marque « Nouveau » ; premier visiteur sans marque', { timeout: 60_000 }, async (t) => {
   const env = await setupBrowser(t);
   if (!env) return;
   const context = await env.browser.newContext({ viewport: { width: 390, height: 844 } });
@@ -549,13 +549,13 @@ test('page : « N nouveautés depuis votre dernière visite », marque « Nouvea
   await page.locator('.news-new').first().waitFor();
   assert.equal(await page.locator('.news-new').count(), DATA.entries.length);
   const n = DATA.entries.length;
-  assert.equal((await page.locator('.news-since').textContent()).trim(), n === 1 ? '1 nouveauté depuis votre dernière visite' : `${n} nouveautés depuis votre dernière visite`);
+  assert.equal((await page.locator('.news-since').textContent()).trim(), n === 1 ? '1 nouveauté depuis ta dernière visite' : `${n} nouveautés depuis ta dernière visite`);
   assert.equal(await page.locator('.news-since').getAttribute('role'), 'status');
   assert.equal(await page.locator('.news-seen-sep').count(), 0, 'séparateur sans entrée déjà vue');
   await context.close();
 });
 
-test('séparateur « Déjà vu lors de votre visite du … » avant la première entrée déjà vue', { timeout: 60_000 }, async (t) => {
+test('séparateur « Déjà vu lors de ta visite du … » avant la première entrée déjà vue', { timeout: 60_000 }, async (t) => {
   if (DATA.entries.length < 2) { t.skip('il faut au moins deux nouveautés'); return; }
   const env = await setupBrowser(t);
   if (!env) return;
@@ -570,7 +570,7 @@ test('séparateur « Déjà vu lors de votre visite du … » avant la première
   const sep = page.locator('.news-seen-sep');
   await sep.waitFor();
   assert.equal(await sep.count(), 1);
-  assert.equal((await sep.textContent()).trim().replaceAll('\u00a0', ' '), 'Déjà vu lors de votre visite du 1er octobre 2026 à 10 h 30');
+  assert.equal((await sep.textContent()).trim().replaceAll('\u00a0', ' '), 'Déjà vu lors de ta visite du 1er octobre 2026 à 10 h 30');
   const next = await sep.evaluate((li) => li.nextElementSibling.querySelector('article').id);
   assert.equal(next, DATA.entries[1].slug);
   assert.equal(await page.locator('.news-new').count(), 1);
@@ -680,7 +680,7 @@ test('visionneuse au bureau (1440×900) : capture haute à sa largeur naturelle,
 // Revue d'evatosorus L27 : la mémoire de base est posée à la première page vue du site
 // (n'importe laquelle) ; une entrée publiée ensuite lève la pastille sans visite de
 // /nouveautes, et le séparateur dit « première visite », pas « vu ».
-test('mémoire de base : première page vue sans pastille ; une entrée parue ensuite lève la pastille ; séparateur « Déjà en ligne lors de votre première visite »', { timeout: 60_000 }, async (t) => {
+test('mémoire de base : première page vue sans pastille ; une entrée parue ensuite lève la pastille ; séparateur « Déjà en ligne lors de ta première visite »', { timeout: 60_000 }, async (t) => {
   if (DATA.entries.length < 2) { t.skip('il faut au moins deux nouveautés'); return; }
   const env = await setupBrowser(t);
   if (!env) return;
@@ -705,8 +705,8 @@ test('mémoire de base : première page vue sans pastille ; une entrée parue en
   await page.goto(`${env.base}/nouveautes/`, { waitUntil: 'load' });
   const sep = page.locator('.news-seen-sep');
   await sep.waitFor();
-  assert.equal((await sep.textContent()).trim().replaceAll(' ', ' '), 'Déjà en ligne lors de votre première visite, le 1er octobre 2026 à 10 h 30');
-  assert.equal((await page.locator('.news-since').textContent()).trim(), '1 nouveauté depuis votre première visite du site');
+  assert.equal((await sep.textContent()).trim().replaceAll(' ', ' '), 'Déjà en ligne lors de ta première visite, le 1er octobre 2026 à 10 h 30');
+  assert.equal((await page.locator('.news-since').textContent()).trim(), '1 nouveauté depuis ta première visite du site');
   const stored = await page.evaluate((k) => JSON.parse(localStorage.getItem(k)), SEEN_KEY);
   assert.equal(stored.baseline, undefined, 'la visite de /nouveautes remplace la mémoire de base');
   await context.close();

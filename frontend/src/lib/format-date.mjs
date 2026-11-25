@@ -1,6 +1,6 @@
 /**
  * L15 — mise en forme UNIQUE des dates en français (repris d'evatosorus, revue UX L27/L28) :
- * Nouveautés, séparateur « Déjà vu lors de votre visite du … », Plan de travail.
+ * Nouveautés, séparateur « Déjà vu lors de ta visite du … », Plan de travail.
  * Le premier du mois s'écrit « 1er » (« 1er octobre 2026 »), ce que Intl ne fait pas ;
  * l'heure s'écrit à la française, « 20 h 42 » (espaces insécables : courte, elle ne se coupe pas).
  * L81 : une date porte des espaces ORDINAIRES entre ses mots. Entièrement insécable, « 22 novembre

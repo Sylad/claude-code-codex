@@ -11,6 +11,6 @@ Une capture s'agrandit au clic ou avec la touche Entrée. Au téléphone, elle g
 
 Chaque nouveauté a un bouton **Copier le lien** : il copie l'adresse qui mène directement à cette nouveauté, pour la partager.
 
-Après votre première visite du site, une pastille sur le lien **Nouveautés** compte ce qui est paru depuis. Sur la page, une ligne indique combien de nouveautés sont apparues, les nouvelles portent la marque **Nouveau**, et un trait « Déjà vu lors de votre visite du … » les sépare de celles que vous aviez déjà lues.
+Après ta première visite du site, une pastille sur le lien **Nouveautés** compte ce qui est paru depuis. Sur la page, une ligne indique combien de nouveautés sont apparues, les nouvelles portent la marque **Nouveau**, et un trait « Déjà vu lors de ta visite du … » les sépare de celles que tu avais déjà lues.
 
 Sur un écran de moins de 1024 px de large, la navigation passe dans le menu, qui ne déborde plus de l'écran.

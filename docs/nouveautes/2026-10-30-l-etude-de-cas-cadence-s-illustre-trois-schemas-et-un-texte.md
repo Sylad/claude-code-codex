@@ -12,4 +12,4 @@ L'étude de cas Cadence se lit plus facilement : elle est découpée et illustr�
 - Un troisième suit la chaîne du livreur, du lot prêt à la ligne rendue.
 - Une capture du panneau des lots, tel que la page Plan de travail le publie, montre à quoi ressemble ce suivi.
 - Le texte est coupé en intertitres, et les idées à retenir sont mises dans des encadrés.
-- Les schémas restent lisibles que votre appareil soit réglé en thème clair ou sombre, et tiennent dans la largeur d'un téléphone.
+- Les schémas restent lisibles que ton appareil soit réglé en thème clair ou sombre, et tiennent dans la largeur d'un téléphone.

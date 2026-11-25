@@ -1,7 +1,8 @@
 // L82 — page /videos en français courant (Nielsen 2, correspondance avec le monde réel ; relevé par la
 // revue L10). Mesuré sur le site CONSTRUIT (`npx astro build` avant) : le texte visible du <main>, hors
 // titres de vidéos en anglais (lang="en", gardés tels quels), ne contient plus aucun des anglicismes
-// relevés, et n'emploie ni « tu » ni « vous » (choix du site non tranché, L18).
+// relevés, et reste impersonnel, ni « tu » ni « vous » (le site tutoie depuis L18 ; cette page garde
+// le style impersonnel choisi par L82, compatible avec ce choix).
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';

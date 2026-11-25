@@ -25,7 +25,7 @@ export interface NewsSeen {
   date: string;
   /** Slugs vus (tous si `all`, sinon ceux de `date` seulement — format de L13). */
   slugs: string[];
-  /** Instant de la visite (ISO), pour le séparateur « Déjà vu lors de votre visite du … ». */
+  /** Instant de la visite (ISO), pour le séparateur « Déjà vu lors de ta visite du … ». */
   at?: string;
   /** Vrai : `slugs` porte TOUS les slugs vus. */
   all?: true;
@@ -155,20 +155,20 @@ export function seenSeparatorIndex(fresh: readonly boolean[]): number {
 export function seenSeparatorLabel(seen: Pick<NewsSeen, "at" | "baseline"> | null, timeZone?: string): string {
   const at = seen?.at;
   if (!at || Number.isNaN(Date.parse(at))) {
-    return seen?.baseline ? "Déjà en ligne lors de votre première visite" : "Déjà vu lors d’une visite précédente";
+    return seen?.baseline ? "Déjà en ligne lors de ta première visite" : "Déjà vu lors d’une visite précédente";
   }
   const d = new Date(at);
   const when = `${formatLongDate(d, timeZone)} à ${formatTime(d, timeZone)}`;
   return seen?.baseline
-    ? `Déjà en ligne lors de votre première visite, le ${when}`
-    : `Déjà vu lors de votre visite du ${when}`;
+    ? `Déjà en ligne lors de ta première visite, le ${when}`
+    : `Déjà vu lors de ta visite du ${when}`;
 }
 
-/** Ligne d'annonce en tête de la page : « N nouveautés depuis votre dernière visite ». */
+/** Ligne d'annonce en tête de la page : « N nouveautés depuis ta dernière visite ». */
 export function sinceLabel(count: number, seen: Pick<NewsSeen, "baseline"> | null): string {
   if (count <= 0) return "";
   const what = count === 1 ? "1 nouveauté" : `${count} nouveautés`;
-  return `${what} depuis votre ${seen?.baseline ? "première visite du site" : "dernière visite"}`;
+  return `${what} depuis ta ${seen?.baseline ? "première visite du site" : "dernière visite"}`;
 }
 
 /** Libellé de la pastille : vide à zéro, « 9+ » au-delà de neuf. */
