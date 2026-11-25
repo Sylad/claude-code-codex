@@ -17,7 +17,33 @@ import { PRIVATE_PATTERNS } from '../src/lib/livre-de-bord.ts';
 const PAGE = 'nouveau-projet';
 const html = (p) => readFileSync(join(DIST, p, 'index.html'), 'utf8');
 const main = (h) => h.slice(h.indexOf('<main'), h.indexOf('</main>'));
-const texte = (h) => h.replace(/<(script|style)\b[\s\S]*?<\/\1>/g, ' ').replace(/<[^>]+>/g, ' ')
+/** Retire les blocs <script> et <style> (découpage par indexOf, sans expression à retour arrière). */
+function sansBlocs(h) {
+  let out = h;
+  for (const tag of ['script', 'style']) {
+    let debut = out.indexOf(`<${tag}`);
+    while (debut >= 0) {
+      const fin = out.indexOf(`</${tag}>`, debut);
+      if (fin < 0) break;
+      out = `${out.slice(0, debut)} ${out.slice(fin + tag.length + 3)}`;
+      debut = out.indexOf(`<${tag}`, debut);
+    }
+  }
+  return out;
+}
+/** Remplace chaque balise par une espace (découpage par indexOf). */
+function sansBalises(h) {
+  let out = '';
+  let i = 0;
+  for (let debut = h.indexOf('<'); debut >= 0; debut = h.indexOf('<', i)) {
+    const fin = h.indexOf('>', debut);
+    if (fin < 0) break;
+    out += `${h.slice(i, debut)} `;
+    i = fin + 1;
+  }
+  return out + h.slice(i);
+}
+const texte = (h) => sansBalises(sansBlocs(h))
   .replace(/&#39;|&#x27;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, '&')
   .replace(/&nbsp;| | /g, ' ').replace(/\s+/g, ' ');
 const section = (h, id) => {
