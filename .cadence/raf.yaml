@@ -966,6 +966,8 @@ lots:
     review: { date: 2026-11-25, verdict: "conforme Relu par le lead : 14 text-[11px] → text-[0.6875rem] (rendu identique à 100 %), test e2e au vrai réglage de police du navigateur, contre-épreuve rouge sur l'ancien code", commit: 01a22a67ef1c0a9290c804e44bfe2110102f03fd }
     ux: { date: 2026-11-25, verdict: "conforme Verdict du lead (lead.ux: lead) d'après la capture 200 % à 390 px : la ligne Source passe sur 3 lignes sans chevauchement ni coupure (WCAG 1.4.4) ; à 100 % inchangé ; intertitre de tableau de l'encyclopédie à 390 px dans un tableau qui défilait déjà, non bloquant" }
     finished: 2026-11-25
+    notes:
+      - { date: 2026-11-25, text: "QA en prod du 25-11 (Sonnet) : 0 défaut sur 7 pages × 1440/390 px × police normale et doublée (11 → 22 px, pas de défilement latéral, rien de tronqué, 0 erreur) ; chevauchement non mesuré en géométrie (couvert par la capture de la revue UX) ; rapport tmp/qa-codex-L95.md" }
   - id: L96
     title: "Suites de la revue UX de L93 : « Ne répond à aucune des cinq causes » (le « ne » manque) avec l'explication dans le corps du texte, et l'entrée Nouveautés L93 qui cite les cinq décisions (le budget de lignes manque)"
     status: done
