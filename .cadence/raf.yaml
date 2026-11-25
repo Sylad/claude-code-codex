@@ -1011,10 +1011,12 @@ lots:
     finished: 2026-11-25
   - id: L99
     title: "Garde des sources L95/L98 : relever aussi le raccourci font: Npx, l'attribut SVG font-size=\"N\" et fontSize={N} sous 12 px (suite de la revue de code de L98, 25-11)"
-    status: doing
+    status: done
     estimate: 1
     created: 2026-11-25
     started: 2026-11-25
+    review: { date: 2026-11-25, verdict: "conforme (revue 25-11 : chaque forme attrapée par un test, 4/6 rouges sans le correctif ; notes : « font: 1rem / 10px » et calc relevés à tort, public/ hors garde)", commit: 5847cb326fcf81af4eed91d3f1fd21cc421e610f }
+    finished: 2026-11-25
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
