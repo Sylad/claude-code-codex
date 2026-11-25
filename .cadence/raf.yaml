@@ -1032,6 +1032,7 @@ lots:
     status: done
     estimate: 0.5
     visible: true
+    delivered: { date: 2026-11-25, sha: a666ade82b94a0f52bcbb5b1072e7304fec1e82f }
     created: 2026-11-25
     started: 2026-11-25
     ux: { date: 2026-11-25, verdict: "conforme (lead) : changement de texte seul dans un encart existant ; capture 390 px lue — 5 lignes lisibles, aucun débordement, mise en page inchangée" }
