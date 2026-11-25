@@ -9,6 +9,9 @@
 //   - à 1440 et 390 px, rien ne se chevauche ni ne se coupe.
 // Oracle : tout élément porteur de texte qui mesure 11 px à 100 %, sur toutes les pages construites,
 // quel que soit son code. Lit le site CONSTRUIT : `npx astro build` avant.
+// L98 (même règle) — étendu aux textes de 10 px (`text-[10px]`, LearningCatalog.vue, LatestNews.astro,
+// case-studies.astro) : 10 px (0,625rem) à 100 %, 20 px à 200 %. Plus aucune taille de police fixée en px
+// sous 12 px dans frontend/src (garde de sources ci-dessous).
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readdirSync, existsSync, readFileSync } from 'node:fs';
@@ -30,7 +33,11 @@ const LARGEURS = [1440, 390];
 const CITEES = [
   '/case-studies/cadence/', '/case-studies/pourquoi-cadence/', '/case-studies/aetherwx-encyclopedia/',
   '/theory/', '/argocd-k8s-pour-les-nuls/',
+  // L98 : textes de 10 px
+  '/case-studies/', '/learning/',
 ];
+// Tailles d'origine surveillées (px à 100 %) : 10 (L98) et 11 (L95). À 200 % : le double.
+const PETITES = ['10px', '11px'];
 
 async function police(cdp, page, px) {
   await cdp.send('Page.setFontSizes', { fontSizes: { standard: px, fixed: Math.round(px * 13 / 16) } });
@@ -38,13 +45,15 @@ async function police(cdp, page, px) {
   await page.evaluate(async () => { for (let i = 0; i < 2; i++) await new Promise((r) => requestAnimationFrame(r)); });
 }
 
-// Marque les éléments qui portent eux-mêmes du texte et mesurent 11 px ; renvoie leur nombre.
-function marquer() {
+// Marque les éléments qui portent eux-mêmes du texte et mesurent 10 ou 11 px (leur taille d'origine est
+// gardée dans data-l95-px) ; renvoie leur nombre.
+function marquer(petites) {
   let n = 0;
   for (const el of document.body.querySelectorAll('*')) {
     if (el.closest('script, style, svg')) continue;
     const texte = [...el.childNodes].some((c) => c.nodeType === 3 && c.data.trim());
-    if (texte && getComputedStyle(el).fontSize === '11px') { el.dataset.l95 = String(n++); }
+    const taille = getComputedStyle(el).fontSize;
+    if (texte && petites.includes(taille)) { el.dataset.l95 = String(n++); el.dataset.l95Px = taille; }
   }
   return n;
 }
@@ -58,7 +67,7 @@ function mesurer() {
   const nom = (el) => `${el.tagName.toLowerCase()} « ${el.textContent.trim().slice(0, 40)} »`;
   return [...document.querySelectorAll('[data-l95]')].map((el) => {
     const r = el.getBoundingClientRect();
-    const res = { nom: nom(el), taille: getComputedStyle(el).fontSize, visible: r.width > 0 && r.height > 0, defauts: [] };
+    const res = { nom: nom(el), taille: getComputedStyle(el).fontSize, origine: el.dataset.l95Px, visible: r.width > 0 && r.height > 0, defauts: [] };
     if (!res.visible) return res;
     const cs = getComputedStyle(el);
     if (cs.display !== 'inline' && el.scrollWidth > el.clientWidth + 1) res.defauts.push(`déborde (${el.scrollWidth} > ${el.clientWidth})`);
@@ -91,16 +100,19 @@ test('les pages citées sont dans dist', () => {
   for (const r of CITEES) assert.ok(ROUTES.includes(r), `${r} absent de dist : lancer astro build`);
 });
 
-test('aucune taille de police fixée à 11 px dans les sources', () => {
+test('aucune taille de police fixée en px sous 12 px dans les sources', () => {
   const src = fileURLToPath(new URL('../src/', import.meta.url));
   const fichiers = (d) => readdirSync(d, { withFileTypes: true }).flatMap((e) => (e.isDirectory()
     ? fichiers(join(d, e.name)) : /\.(css|astro|vue|ts|mjs)$/.test(e.name) ? [join(d, e.name)] : []));
-  const trouves = fichiers(src).flatMap((f) => [...readFileSync(f, 'utf8').matchAll(/text-\[11px\]|font-size\s*:\s*11px/g)]
-    .map((m) => `${relative(src, f)}@${m.index}`));
+  const trouves = fichiers(src).flatMap((f) => [...readFileSync(f, 'utf8')
+    .matchAll(/text-\[(\d+(?:\.\d+)?)px\]|font-?size["']?\s*:\s*["']?(\d+(?:\.\d+)?)(?:px\b|(?![\w.%]))/gi)]
+    // 0 masque un texte (copie de césure de global.css), ce n'est pas un texte à lire.
+    .filter((m) => { const v = Number(m[1] ?? m[2]); return v > 0 && v < 12; })
+    .map((m) => `${relative(src, f)}@${m.index} ${m[0]}`));
   assert.deepEqual(trouves, []);
 });
 
-test('textes de 11 px : 22 px à 200 %, ni chevauchés ni coupés, à 1440 et 390 px', { timeout: 600_000 }, async (t) => {
+test('textes de 10 et 11 px : 20 et 22 px à 200 %, ni chevauchés ni coupés, à 1440 et 390 px', { timeout: 600_000 }, async (t) => {
   const env = await setupBrowser(t);
   if (!env) return;
   const echecs = [];
@@ -112,18 +124,19 @@ test('textes de 11 px : 22 px à 200 %, ni chevauchés ni coupés, à 1440 et 39
       await page.goto(`${env.base}${route}`, { waitUntil: 'load' });
       await pageReady(page);
       await page.evaluate(() => document.querySelectorAll('details').forEach((d) => { d.open = true; }));
-      const n = await page.evaluate(marquer);
+      const n = await page.evaluate(marquer, PETITES);
       if (largeur === 1440) parPage[route] = n;
       if (!n) continue;
       await police(cdp, page, 32);
       for (const m of await page.evaluate(mesurer)) {
-        if (m.taille !== '22px') echecs.push(`${route} @${largeur} : ${m.nom} reste à ${m.taille} à 200 %`);
+        const attendu = `${parseFloat(m.origine) * 2}px`;
+        if (m.taille !== attendu) echecs.push(`${route} @${largeur} : ${m.nom} (${m.origine} à 100 %) à ${m.taille} à 200 %, ${attendu} attendus`);
         for (const d of m.defauts) echecs.push(`${route} @${largeur} : ${m.nom} ${d}`);
       }
     }
     await context.close();
   }
-  for (const r of CITEES) assert.ok(parPage[r] > 0, `${r} : aucun texte de 11 px trouvé à 100 %`);
+  for (const r of CITEES) assert.ok(parPage[r] > 0, `${r} : aucun texte de 10 ou 11 px trouvé à 100 %`);
   assert.deepEqual(echecs, []);
 });
 

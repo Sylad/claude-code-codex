@@ -141,7 +141,7 @@ function clearFilters() {
           <div class="flex items-start justify-between gap-2">
             <div>
               <p
-                class="font-mono text-[10px] uppercase tracking-wider text-claude"
+                class="font-mono text-[0.625rem] uppercase tracking-wider text-claude"
               >
                 {{ KIND_LABELS[entry.kind] }} · {{ entry.author }}
               </p>
@@ -179,7 +179,7 @@ function clearFilters() {
               :href="entry.feed"
               target="_blank"
               rel="noopener"
-              class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono text-claude bg-claude/10 hover:bg-claude/20 transition-colors"
+              class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[0.625rem] font-mono text-claude bg-claude/10 hover:bg-claude/20 transition-colors"
               :title="'Flux RSS'"
             >
               <Rss :size="10" />
@@ -188,7 +188,7 @@ function clearFilters() {
             <span
               v-for="tag in entry.tags"
               :key="tag"
-              class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono text-ink-muted bg-white/5"
+              class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[0.625rem] font-mono text-ink-muted bg-white/5"
             >
               <Tag :size="10" />
               {{ tag }}

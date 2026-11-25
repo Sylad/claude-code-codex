@@ -94,7 +94,7 @@ const totalItems = allItems.length;
           MCP). Mis à jour chaque lundi via le batch hebdo.
         </p>
       </div>
-      <p class="font-mono text-[10px] uppercase tracking-wider text-ink-muted shrink-0">
+      <p class="font-mono text-[0.625rem] uppercase tracking-wider text-ink-muted shrink-0">
         {totalItems} entrées
       </p>
     </div>
@@ -116,16 +116,16 @@ const totalItems = allItems.length;
           <li class="rounded-xl border border-white/10 bg-paper-elevated p-borne-5 transition-colors hover:border-claude/30 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lg motion-safe:hover:shadow-claude/10 transition-[colors,transform,box-shadow] duration-200">
             <div class="flex items-center gap-2 flex-wrap mb-3">
               <span
-                class={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider border ${meta.pill}`}
+                class={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[0.625rem] font-mono uppercase tracking-wider border ${meta.pill}`}
               >
                 {meta.label}
               </span>
               {meta.isFr && (
-                <span class="font-mono text-[10px] uppercase tracking-wider text-ink-muted">
+                <span class="font-mono text-[0.625rem] uppercase tracking-wider text-ink-muted">
                   FR
                 </span>
               )}
-              <span class="ml-auto font-mono text-[10px] text-ink-muted">
+              <span class="ml-auto font-mono text-[0.625rem] text-ink-muted">
                 {date}
               </span>
             </div>

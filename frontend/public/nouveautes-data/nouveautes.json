@@ -1,7 +1,24 @@
 {
   "project": "claude-code-codex",
-  "generated": "2026-11-25 09:05",
+  "generated": "2026-11-25 10:09",
   "entries": [
+    {
+      "slug": "2026-11-25-texte-agrandi-etiquettes-learning-et-etudes-de-cas",
+      "title": "Texte agrandi : les étiquettes de Learning et des études de cas suivent",
+      "date": "2026-11-25",
+      "lots": [
+        "L98"
+      ],
+      "captures": [
+        "captures/L98-learning-200-avant-390.png",
+        "captures/L98-learning-200-apres-390.png"
+      ],
+      "alts": [
+        "Avant, sur un téléphone avec le texte du navigateur agrandi deux fois : dans Learning, le titre et la description du blog de Simon Willison sont en grand, mais la ligne « Blog · Simon Willison » et les étiquettes RSS, claude, agents, llm, tools sont restées minuscules",
+        "Après, même réglage : la ligne « Blog · Simon Willison » et les étiquettes ont doublé comme le reste du texte, sans se chevaucher"
+      ],
+      "html": "<p>Quand on agrandit le texte dans les réglages du navigateur, les plus petites étiquettes de deux pages restaient à leur taille d'origine. Elles suivent maintenant le réglage, comme le reste du site.</p>\n<ul><li><strong>Learning</strong> : la ligne qui donne le type et l'auteur de chaque ressource, ses étiquettes (RSS, sujets), et les étiquettes des dernières nouveautés en haut de page.</li><li><strong>Études de cas</strong> : les liens « Lire le récit », « Case study » et « GitHub » sous chaque étude.</li></ul>\n<p>Avec le texte agrandi deux fois, ces étiquettes doublent elles aussi, sur grand écran comme sur téléphone, sans chevaucher ni couper le texte voisin. Au réglage normal, rien ne change.</p>"
+    },
     {
       "slug": "2026-11-25-texte-agrandi-les-petites-lignes-grandissent-aussi",
       "title": "Texte agrandi : les petites lignes grandissent aussi",

@@ -21,7 +21,7 @@ test('L4 — articles des sources anglophones marqués lang="en" (WCAG 3.1.2)', 
   const h = html();
   assert.ok((h.match(/<h3[^>]*lang="en"/g) ?? []).length >= 1, 'aucun titre d’article en anglais marqué');
   // Chaque carte du fil : lang="en" si et seulement si la source n'est pas marquée FR.
-  const cartes = h.split('<li').filter((c) => /rounded-full text-\[10px\]/.test(c) && /<h3/.test(c));
+  const cartes = h.split('<li').filter((c) => /rounded-full text-\[0\.625rem\]/.test(c) && /<h3/.test(c));
   assert.ok(cartes.length >= 1, 'aucune carte d’article');
   for (const c of cartes) {
     const fr = /uppercase tracking-wider text-ink-muted[^>]*>\s*FR\s*</.test(c);
