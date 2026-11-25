@@ -995,12 +995,23 @@ lots:
     finished: 2026-11-24
   - id: L98
     title: "Textes de 10 px fixes (9 occurrences, LearningCatalog.vue et case-studies.astro) qui ne grandissent pas avec la police du navigateur : passer en rem (WCAG 1.4.4, suite de L95)"
-    status: doing
+    status: done
     estimate: 1
     visible: true
     created: 2026-11-25
     started: 2026-11-25
     ux: { date: 2026-11-25, verdict: "conforme (lead, 25-11) : captures 390 px à 200 % — étiquettes BLOG et pastilles RSS/claude/agents passent de 10 à 20 px, se replient sur deux lignes sans chevauchement ni coupe ; rendu à 100 % identique (comparaison au pixel du run)" }
+    review: { date: 2026-11-25, verdict: "compliant (2 notes minor : garde aveugle au raccourci font: Npx / attribut SVG, Nouveauté incomplète sur case-studies)", commit: 6f1d3334fa1035cd5dd46828bc51a8bd640c2a78 }
+    tasks:
+      - { id: t1, title: "Garde des sources L95/L98 : relever aussi le raccourci font: Npx, l'attribut SVG font-size=\"N\" et fontSize={N} sous 12 px", status: dropped }
+    notes:
+      - { date: 2026-11-25, text: "[L98/t1] abandonné : déplacée en lot à part (suite de la revue L98)" }
+    finished: 2026-11-25
+  - id: L99
+    title: "Garde des sources L95/L98 : relever aussi le raccourci font: Npx, l'attribut SVG font-size=\"N\" et fontSize={N} sous 12 px (suite de la revue de code de L98, 25-11)"
+    status: todo
+    estimate: 1
+    created: 2026-11-25
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
