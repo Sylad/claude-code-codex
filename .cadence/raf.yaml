@@ -960,6 +960,7 @@ lots:
     status: done
     estimate: 0.5
     visible: true
+    delivered: { date: 2026-11-25, sha: 77de522a400b8f5c16c256d563ab7e65ce385310 }
     created: 2026-11-24
     started: 2026-11-25
     review: { date: 2026-11-25, verdict: "conforme Relu par le lead : 14 text-[11px] → text-[0.6875rem] (rendu identique à 100 %), test e2e au vrai réglage de police du navigateur, contre-épreuve rouge sur l'ancien code", commit: 01a22a67ef1c0a9290c804e44bfe2110102f03fd }
