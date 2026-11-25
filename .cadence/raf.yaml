@@ -352,10 +352,12 @@ lots:
     finished: 2026-11-25
   - id: L22
     title: "Nettoyage récurrent des fichiers de travail devenus inutiles (consigne Sylvain 02-10) : dossier tmp partagé (captures, scripts de mesure, builds de démonstration), documents périmés (specs et plans de lots livrés, audits dépassés), scripts jetables, captures non référencées, dépendances et fichiers générés orphelins — lister avant de supprimer, ne rien effacer hors tmp sans l'avoir regardé, garder ce que les Nouveautés ou la doc référencent ; à refaire à chaque clôture de vague, rouvrir ce lot ou en créer un nouveau"
-    status: doing
+    status: done
     estimate: 0.25
     created: 2026-10-02
     started: 2026-11-25
+    review: { date: 2026-11-25, verdict: "conforme (relu par le lead 25-11 : 3 familles retirées, aucune référence restante, clsx ne reste que comme dépendance transitive ; build et 808 tests verts)", commit: f65c9b28a7e147660d38aae0a54e2ea449feca74 }
+    finished: 2026-11-25
   - id: L23
     title: "En-tête de page : PageHero seule source (prop class ou data-* pour garder les sélecteurs news-*/plan-*), utilisé par nouveautes.astro et plan-de-travail.astro — 3 copies, une dérive déjà vécue en L16"
     status: todo
@@ -1024,6 +1026,12 @@ lots:
     started: 2026-11-25
     review: { date: 2026-11-25, verdict: "conforme (revue 25-11 : chaque forme attrapée par un test, 4/6 rouges sans le correctif ; notes : « font: 1rem / 10px » et calc relevés à tort, public/ hors garde)", commit: 5847cb326fcf81af4eed91d3f1fd21cc421e610f }
     finished: 2026-11-25
+  - id: L100
+    title: "Stack annoncée fausse : README, /about, apps.ts et l'étude de cas claude-code-codex citent shadcn-vue et reka-ui, que le site n'utilise pas (reka-ui importée nulle part, vu par L22 le 25-11) — corriger les textes publics et retirer reka-ui"
+    status: todo
+    estimate: 0.5
+    visible: true
+    created: 2026-11-25
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
