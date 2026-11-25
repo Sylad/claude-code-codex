@@ -1029,12 +1029,14 @@ lots:
     finished: 2026-11-25
   - id: L100
     title: "Stack annoncée fausse : README, /about, apps.ts et l'étude de cas claude-code-codex citent shadcn-vue et reka-ui, que le site n'utilise pas (reka-ui importée nulle part, vu par L22 le 25-11) — corriger les textes publics et retirer reka-ui"
-    status: doing
+    status: done
     estimate: 0.5
     visible: true
     created: 2026-11-25
     started: 2026-11-25
     ux: { date: 2026-11-25, verdict: "conforme (lead) : changement de texte seul dans un encart existant ; capture 390 px lue — 5 lignes lisibles, aucun débordement, mise en page inchangée" }
+    review: { date: 2026-11-25, verdict: conforme (3 notes mineures sur la portée du test l100-stack-annoncee) — rapport codex-L100-code.md, commit: 4d93df857f5c891e012c00227c9e47ce889bf97c }
+    finished: 2026-11-25
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
