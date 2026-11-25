@@ -339,12 +339,13 @@ lots:
   - id: L20
     title: "Rubrique « Nouveau projet » : skills et outils pour bien commencer — CLAUDE.md de départ, skills et agents utiles, cadence (plan, Nouveautés, livraison), garde-fous (tests, revue UX, confidentialité), liste de contrôle du premier jour (consigne Sylvain 02-10)"
     public: "Nouveau projet : les skills et les outils pour bien commencer"
-    status: todo
+    status: doing
     estimate: 1.5
     visible: true
     created: 2026-10-02
     notes:
       - { date: 2026-10-02, text: "Consigne Sylvain 02-10 : y inclure la gestion des tokens — une session par chantier, /clear en fin de lot, coût du contexte relu à chaque tour, délégation aux sous-agents pour garder la session principale légère, mémoires courtes et triées, index de mémoire sous sa limite. Leçons générales uniquement : rien de personnel, de contractuel ni de propre à un employeur." }
+    started: 2026-11-25
   - id: L22
     title: "Nettoyage récurrent des fichiers de travail devenus inutiles (consigne Sylvain 02-10) : dossier tmp partagé (captures, scripts de mesure, builds de démonstration), documents périmés (specs et plans de lots livrés, audits dépassés), scripts jetables, captures non référencées, dépendances et fichiers générés orphelins — lister avant de supprimer, ne rien effacer hors tmp sans l'avoir regardé, garder ce que les Nouveautés ou la doc référencent ; à refaire à chaque clôture de vague, rouvrir ce lot ou en créer un nouveau"
     status: todo
