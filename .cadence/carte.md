@@ -107,3 +107,13 @@
   chargées ; aucun U+00AD lisible, pas de défilement latéral ; aucune césure posée à 100 % de 390 à 1440 px (des <wbr> seulement là où la prod coupait sans trait) ; page
   rendue à son DOM servi au retour à 100 % ; h1 « alexgreensh/|token-optimizer » ; copie et arbre
   d'accessibilité sans U+00AD ; h1 ×2 à 200 % ; navigation interne (clic, ClientRouter).
+
+## Analyse statique (L94, D-31)
+
+- `analyse:` de `cadence.yaml` : deux outils, lancés dans `frontend/` via `scripts/avec-node.sh` — `eslint`
+  (`eslint-json`, config `frontend/eslint.config.mjs` : typescript-eslint recommended, vue flat/essential, sonarjs
+  recommended, plus les seuils de cadence) et `tsc` (`--noEmit`, config `frontend/tsconfig.json`). Pas de ruff : aucun
+  Python. Les `.astro` ne sont pas lus par ESLint ; tsc a besoin de `.astro/` (build ou `npx astro sync`).
+- Base figée par le lead (`cadence analyse --init`, `.cadence/analyse/*.json`) ; aucune correction de l'existant. Mesure
+  du 25-11 : eslint 187 violations dans 70 des 135 fichiers lus (~7 s), tsc 0 erreur après build (~3 s).
+- Changer un seuil ou une exclusion = lot `config: true` du plan.
