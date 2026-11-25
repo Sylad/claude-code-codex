@@ -18,6 +18,7 @@ import { readdirSync, existsSync, readFileSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { DIST, setupBrowser, pageReady } from './lib/e2e-dist.mjs';
+import { petitesPolices } from './lib/petites-polices.mjs';
 
 function pages(dir) {
   if (!existsSync(dir)) return [];
@@ -102,15 +103,14 @@ test('les pages citées sont dans dist', () => {
 
 test('aucune taille de police fixée en px sous 12 px dans les sources', () => {
   const src = fileURLToPath(new URL('../src/', import.meta.url));
-  const fichiers = (d) => readdirSync(d, { withFileTypes: true }).flatMap((e) => (e.isDirectory()
-    ? fichiers(join(d, e.name)) : /\.(css|astro|vue|ts|mjs)$/.test(e.name) ? [join(d, e.name)] : []));
-  // Classe Tailwind `text-[Npx]` ; propriété CSS `font-size: N[px]` ou objet JS `fontSize: N` / `"Npx"`
-  // (une autre unité — rem, em, % — n'est pas relevée).
-  const MOTIFS = [/text-\[([\d.]+)px\]/g, /font-?size["']?\s*:\s*["']?([\d.]+)(?![\w.%]|px)/gi, /font-?size["']?\s*:\s*["']?([\d.]+)px/gi];
-  const trouves = fichiers(src).flatMap((f) => MOTIFS.flatMap((re) => [...readFileSync(f, 'utf8').matchAll(re)])
-    // 0 masque un texte (copie de césure de global.css), ce n'est pas un texte à lire.
-    .filter((m) => Number(m[1]) > 0 && Number(m[1]) < 12)
-    .map((m) => `${relative(src, f)}@${m.index} ${m[0]}`));
+  const SOURCE = /\.(css|astro|vue|ts|tsx|js|jsx|mjs|svg)$/;
+  const fichiers = (d) => readdirSync(d, { withFileTypes: true }).flatMap((e) => {
+    if (e.isDirectory()) return fichiers(join(d, e.name));
+    return SOURCE.test(e.name) ? [join(d, e.name)] : [];
+  });
+  // Formes relevées (tests/lib/petites-polices.mjs, une par test dans l99-garde-petites-polices.test.mjs) :
+  // text-[Npx], font-size / fontSize (CSS, objet JS), raccourci font:, attribut font-size="N", fontSize={N}.
+  const trouves = fichiers(src).flatMap((f) => petitesPolices(readFileSync(f, 'utf8')).map((t) => `${relative(src, f)}${t}`));
   assert.deepEqual(trouves, []);
 });
 
