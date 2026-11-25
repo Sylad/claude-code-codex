@@ -335,6 +335,7 @@ lots:
     title: Choisir tu ou vous pour tout le site, puis harmoniser accueil, Démarrer, À propos et Nouveautés (revue UX de la barre) — décision de Sylvain d'abord
     status: done
     estimate: 0.5
+    delivered: { date: 2026-11-25, sha: 9b7ecb9c8c44a1f43fe879f190966d2795ed263d }
     created: 2026-10-02
     started: 2026-11-25
     ux: { date: 2026-11-25, verdict: "conforme (lead) : changement de texte seul ; captures À propos et Nouveautés à 1440 et 390 px lues — tutoiement, aucun débordement, mise en page inchangée" }
