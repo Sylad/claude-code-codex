@@ -957,10 +957,11 @@ lots:
     created: 2026-11-24
   - id: L95
     title: "Textes de 11 px fixes (14 occurrences, dont les lignes Source des études de cas) qui ne grandissent pas avec la taille de police du navigateur : passer en rem (WCAG 1.4.4, relevé de la revue UX de L93)"
-    status: todo
+    status: doing
     estimate: 0.5
     visible: true
     created: 2026-11-24
+    started: 2026-11-25
   - id: L96
     title: "Suites de la revue UX de L93 : « Ne répond à aucune des cinq causes » (le « ne » manque) avec l'explication dans le corps du texte, et l'entrée Nouveautés L93 qui cite les cinq décisions (le budget de lignes manque)"
     status: done
