@@ -333,11 +333,13 @@ lots:
     finished: 2026-10-02
   - id: L18
     title: Choisir tu ou vous pour tout le site, puis harmoniser accueil, Démarrer, À propos et Nouveautés (revue UX de la barre) — décision de Sylvain d'abord
-    status: doing
+    status: done
     estimate: 0.5
     created: 2026-10-02
     started: 2026-11-25
     ux: { date: 2026-11-25, verdict: "conforme (lead) : changement de texte seul ; captures À propos et Nouveautés à 1440 et 390 px lues — tutoiement, aucun débordement, mise en page inchangée" }
+    review: { date: 2026-11-25, verdict: "conforme, 3 notes mineures (résumés Learning exemptés à tort comme textes de tiers, détecteur aveugle à « n'hésitez » / « allez-y ») — rapport codex-L18-code.md", commit: dc7f0aa2e2a2b05f5b5ae5938e34a5e1496f7e90 }
+    finished: 2026-11-25
   - id: L20
     title: "Rubrique « Nouveau projet » : skills et outils pour bien commencer — CLAUDE.md de départ, skills et agents utiles, cadence (plan, Nouveautés, livraison), garde-fous (tests, revue UX, confidentialité), liste de contrôle du premier jour (consigne Sylvain 02-10)"
     public: "Nouveau projet : les skills et les outils pour bien commencer"
@@ -1042,6 +1044,11 @@ lots:
     finished: 2026-11-25
   - id: L101
     title: "Tools tested : ajouter unslop (heydamir/unslop, 21,6 k étoiles, CC BY 4.0) — verdict skillify le 25-11 : skill seul, propre (aucun hook, aucun MCP, aucun réglage touché), mais son mode refonte (« direction », « monde », un élément brillant) est du goût et contredit la règle « jamais un style de catalogue sur une app à charte » ; 4 signes mesurables repris dans les tics d'IA de cadence"
+    status: todo
+    estimate: 1
+    created: 2026-11-25
+  - id: L102
+    title: "Tutoiement, suites de la revue de L18 : le prompt du batch Learning (scripts/lib/claude.ts:15-36) tutoie ou reste impersonnel et data-texte-tiers ne couvre que les titres (LatestNews.astro:103, « vos données » publié sur /learning) ; le test l18 attrape « N'hésitez », « Allez-y », « Notez-le » (l.22) et n'exempte plus un libellé d'interface entre « » (l.72)"
     status: todo
     estimate: 1
     created: 2026-11-25
