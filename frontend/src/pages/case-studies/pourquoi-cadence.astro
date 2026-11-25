@@ -249,7 +249,7 @@ const limites = [
             <p class="font-mono text-lg text-claude">{insecable(c.valeur)}</p>
             <p class="mt-1 font-mono text-xs text-ink-muted">{c.date}</p>
             <p class="mt-2 text-sm text-ink-muted leading-relaxed">{insecable(c.legende)}</p>
-            <p class="mt-2 font-mono text-[11px] text-ink-muted [overflow-wrap:anywhere]">
+            <p class="mt-2 font-mono text-[0.6875rem] text-ink-muted [overflow-wrap:anywhere]">
               Source : <a href={doc(c.source)} target="_blank" rel="noopener">{c.source}</a>
             </p>
           </div>
@@ -267,7 +267,7 @@ const limites = [
           <li data-limite={l.id} data-nombres={l.nombres || undefined} data-source={l.source} class="rounded-xl border border-white/10 bg-paper-elevated p-borne-5">
             <h3 class="text-base font-medium text-ink mb-1.5">{insecable(l.titre)}</h3>
             <p class="text-sm text-ink-muted leading-relaxed">{insecable(l.corps)}</p>
-            <p class="mt-2 font-mono text-[11px] text-ink-muted [overflow-wrap:anywhere]">
+            <p class="mt-2 font-mono text-[0.6875rem] text-ink-muted [overflow-wrap:anywhere]">
               Source : <a href={doc(l.source)} target="_blank" rel="noopener">{l.source}</a>
             </p>
           </li>

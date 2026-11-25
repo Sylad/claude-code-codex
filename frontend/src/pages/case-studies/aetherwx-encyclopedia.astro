@@ -368,26 +368,26 @@ const tokenFlow = `flowchart LR
             </tr>
           </thead>
           <tbody class="divide-y divide-white/5 text-ink-muted">
-            <tr class="bg-claude/[0.04]"><td colspan="3" class="py-2 px-3 font-mono text-[11px] uppercase text-claude">Ingestion data temps réel</td></tr>
+            <tr class="bg-claude/[0.04]"><td colspan="3" class="py-2 px-3 font-mono text-[0.6875rem] uppercase text-claude">Ingestion data temps réel</td></tr>
             <tr><td class="py-2 pr-3 font-mono">ais-ingester</td><td class="py-2 pr-3">Reçoit le flux AIS TCP brut (11k msg/min)</td><td class="py-2">1</td></tr>
             <tr><td class="py-2 pr-3 font-mono">ais-decoder</td><td class="py-2 pr-3">Décode NMEA → JSON → Postgres</td><td class="py-2">1</td></tr>
             <tr><td class="py-2 pr-3 font-mono">lightning-fetcher</td><td class="py-2 pr-3">WebSocket Blitzortung (foudre live)</td><td class="py-2">1</td></tr>
-            <tr class="bg-claude/[0.04]"><td colspan="3" class="py-2 px-3 font-mono text-[11px] uppercase text-claude">Ingestion data périodique (cron)</td></tr>
+            <tr class="bg-claude/[0.04]"><td colspan="3" class="py-2 px-3 font-mono text-[0.6875rem] uppercase text-claude">Ingestion data périodique (cron)</td></tr>
             <tr><td class="py-2 pr-3 font-mono">weather-fetcher (GFS)</td><td class="py-2 pr-3">NOAA GFS 4×/jour → 65 GeoTIFF</td><td class="py-2">1</td></tr>
             <tr><td class="py-2 pr-3 font-mono">weather-fetcher-arome</td><td class="py-2 pr-3">Météo-France AROME (haute résolution)</td><td class="py-2">1</td></tr>
             <tr><td class="py-2 pr-3 font-mono">weather-fetcher-arpege</td><td class="py-2 pr-3">Météo-France ARPEGE (Europe élargie)</td><td class="py-2">1</td></tr>
             <tr><td class="py-2 pr-3 font-mono">sst-fetcher</td><td class="py-2 pr-3">NOAA OISST quotidien (température mer)</td><td class="py-2">1</td></tr>
             <tr><td class="py-2 pr-3 font-mono">buoy-fetcher</td><td class="py-2 pr-3">EMODnet WFS 1×/jour (612 plateformes)</td><td class="py-2">1</td></tr>
             <tr><td class="py-2 pr-3 font-mono">track-builder</td><td class="py-2 pr-3">Agrège trajets AIS journaliers</td><td class="py-2">1</td></tr>
-            <tr class="bg-claude/[0.04]"><td colspan="3" class="py-2 px-3 font-mono text-[11px] uppercase text-claude">API + orchestration</td></tr>
+            <tr class="bg-claude/[0.04]"><td colspan="3" class="py-2 px-3 font-mono text-[0.6875rem] uppercase text-claude">API + orchestration</td></tr>
             <tr><td class="py-2 pr-3 font-mono">maritime-api</td><td class="py-2 pr-3">NestJS · endpoints REST + orchestrator USGS/METAR/Hubeau/FIRMS</td><td class="py-2">1</td></tr>
             <tr><td class="py-2 pr-3 font-mono">alerts-engine</td><td class="py-2 pr-3">Croise positions + vent + foudre → alertes RMQ</td><td class="py-2">1</td></tr>
-            <tr class="bg-claude/[0.04]"><td colspan="3" class="py-2 px-3 font-mono text-[11px] uppercase text-claude">Stockage + rendering</td></tr>
+            <tr class="bg-claude/[0.04]"><td colspan="3" class="py-2 px-3 font-mono text-[0.6875rem] uppercase text-claude">Stockage + rendering</td></tr>
             <tr><td class="py-2 pr-3 font-mono">postgres (CNPG)</td><td class="py-2 pr-3">PostgreSQL + PostGIS · 2 clusters (pg-data, pg-catalog)</td><td class="py-2">1 primary chacun</td></tr>
             <tr><td class="py-2 pr-3 font-mono">geoserver</td><td class="py-2 pr-3">GeoServer 3.0.1 · WMS + cascade · 3 plugins Java maison · cluster Hazelcast</td><td class="py-2">3 (HA)</td></tr>
             <tr><td class="py-2 pr-3 font-mono">rabbitmq</td><td class="py-2 pr-3">Bus alerts engine · RabbitMQ 4.3.0</td><td class="py-2">1</td></tr>
             <tr><td class="py-2 pr-3 font-mono">seaweedfs</td><td class="py-2 pr-3">Object storage S3 · cache de tuiles GWC partagé</td><td class="py-2">1</td></tr>
-            <tr class="bg-claude/[0.04]"><td colspan="3" class="py-2 px-3 font-mono text-[11px] uppercase text-claude">Frontend + expo</td></tr>
+            <tr class="bg-claude/[0.04]"><td colspan="3" class="py-2 px-3 font-mono text-[0.6875rem] uppercase text-claude">Frontend + expo</td></tr>
             <tr><td class="py-2 pr-3 font-mono">maritime-frontend</td><td class="py-2 pr-3">Angular 19 · globe MapLibre + particules WebGL</td><td class="py-2">2</td></tr>
             <tr><td class="py-2 pr-3 font-mono">cloudflared</td><td class="py-2 pr-3">Tunnel Cloudflare (4 connexions QUIC)</td><td class="py-2">1</td></tr>
           </tbody>

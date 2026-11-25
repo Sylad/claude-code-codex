@@ -1,7 +1,24 @@
 {
   "project": "claude-code-codex",
-  "generated": "2026-11-24 16:59",
+  "generated": "2026-11-25 09:05",
   "entries": [
+    {
+      "slug": "2026-11-25-texte-agrandi-les-petites-lignes-grandissent-aussi",
+      "title": "Texte agrandi : les petites lignes grandissent aussi",
+      "date": "2026-11-25",
+      "lots": [
+        "L95"
+      ],
+      "captures": [
+        "captures/L95-source-200-avant-390.png",
+        "captures/L95-source-200-apres-390.png"
+      ],
+      "alts": [
+        "Avant, sur un téléphone avec le texte du navigateur agrandi deux fois : dans l'étude cadence, le paragraphe est en grand mais la ligne « Source : docs/v2/2026-11-07-cadence-2-design.md » en dessous est restée minuscule",
+        "Après, même réglage : la ligne « Source » a doublé comme le reste du texte et passe sur trois lignes, sans rien chevaucher"
+      ],
+      "html": "<p>Quand on agrandit le texte dans les réglages du navigateur, quelques petites lignes restaient à leur taille d'origine, illisibles à côté du reste. Elles suivent maintenant le réglage, comme tout le texte du site.</p>\n<ul><li><strong>Les lignes « Source »</strong> des études de cas (cadence, « Pourquoi cadence ») et la mention « V1 · source ».</li><li><strong>Les intertitres du tableau des services</strong> dans l'encyclopédie AetherWX.</li><li><strong>Les numéros des sommaires</strong> de la page Theory et des guides.</li><li><strong>Le titre « Architecture · plein écran »</strong> d'un schéma ouvert en grand.</li></ul>\n<p>Avec le texte agrandi deux fois, ces lignes doublent elles aussi, sur grand écran comme sur téléphone, sans chevaucher ni couper le texte voisin. Au réglage normal, rien ne change.</p>"
+    },
     {
       "slug": "2026-11-24-cadence-ce-que-coutait-la-v1-et-ce-qui-a-change",
       "title": "Cadence : ce que coûtait la V1, et ce qui a changé depuis",

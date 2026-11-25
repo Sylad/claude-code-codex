@@ -371,7 +371,7 @@ onBeforeUnmount(() => {
           <div class="flex items-center gap-2">
             <span class="inline-block w-2 h-2 rounded-full bg-claude/70"></span>
             <span
-              class="font-mono text-[11px] uppercase tracking-wider text-ink-muted"
+              class="font-mono text-[0.6875rem] uppercase tracking-wider text-ink-muted"
             >
               Architecture · plein écran
             </span>
