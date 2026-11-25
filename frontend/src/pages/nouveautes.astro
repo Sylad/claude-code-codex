@@ -11,6 +11,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import DateLongue from "@/components/site/DateLongue.astro";
+import PageHero from "@/components/site/PageHero.astro";
 import news from "../../public/nouveautes-data/nouveautes.json";
 
 interface NewsEntry {
@@ -38,19 +39,15 @@ const pngSize = (rel: string) => {
   title="Nouveautés"
   description="Ce qui a changé sur claude-code-codex, la nouveauté la plus récente en premier."
 >
-  <section class="news-hero relative codex-grid border-b border-white/5">
-    <div class="mx-auto max-w-6xl px-borne-5 sm:px-8 py-20 sm:py-28">
-      <p class="news-eyebrow inline-block rounded bg-paper/85 px-2 py-1 font-mono text-xs uppercase tracking-[0.2em] text-claude-soft">
-        Nouveautés
-      </p>
-      <h1 class="mt-3 text-4xl sm:text-5xl font-semibold tracking-tight text-ink">
-        Ce qui a changé
-      </h1>
-      <p class="news-lede mt-5 max-w-2xl text-base sm:text-lg text-ink leading-relaxed [text-shadow:0_1px_3px_rgb(0_0_0_/0.85)]">
-        Le journal des évolutions du site, la plus récente en premier.
-      </p>
-    </div>
-  </section>
+  <PageHero
+    class="news-hero"
+    eyebrowClass="news-eyebrow"
+    introClass="news-lede"
+    titleScale="text"
+    eyebrow="Nouveautés"
+    title="Ce qui a changé"
+    intro="Le journal des évolutions du site, la plus récente en premier."
+  />
 
   <section class="mx-auto max-w-3xl px-borne-5 sm:px-8 py-16">
     {entries.length === 0 ? (
