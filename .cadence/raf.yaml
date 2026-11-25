@@ -366,11 +366,13 @@ lots:
     finished: 2026-11-25
   - id: L23
     title: "En-tête de page : PageHero seule source (prop class ou data-* pour garder les sélecteurs news-*/plan-*), utilisé par nouveautes.astro et plan-de-travail.astro — 3 copies, une dérive déjà vécue en L16"
-    status: doing
+    status: done
     estimate: 1
+    delivered: { date: 2026-11-25, sha: 4d93a3cc209d258ba5c191dc4f385c7d9ca050aa }
     created: 2026-10-05
     started: 2026-11-25
     review: { date: 2026-11-25, verdict: "conforme — en-tête des deux pages par PageHero, sélecteurs news-*/plan-* conservés, 0 pixel d'écart à 1440/390/320 px (comparaison refaite sur builds c04560b et 4d93a3c), tests ciblés 48/48", commit: 4d93a3cc209d258ba5c191dc4f385c7d9ca050aa }
+    finished: 2026-11-25
   - id: L24
     title: "Tests e2e : factoriser la mesure de contraste de l'en-tête (6 largeurs × 3 défilements, sélecteur obligatoire, glyphes en haut de page) dans tests/lib/e2e-dist.mjs pour page-hero, nouveautes-page, plan-page"
     status: todo
