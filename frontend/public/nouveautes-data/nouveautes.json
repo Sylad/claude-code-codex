@@ -3,6 +3,21 @@
   "generated": "2026-11-25 10:09",
   "entries": [
     {
+      "slug": "2026-11-25-la-page-a-propos-annonce-les-vrais-outils-du-site",
+      "title": "La page À propos annonce les vrais outils du site",
+      "date": "2026-11-25",
+      "lots": [
+        "L100"
+      ],
+      "captures": [
+        "captures/L100-about-stack-390.png"
+      ],
+      "alts": [
+        "Sur téléphone, l'encart « Stack du site » de la page À propos : Frontend Astro 7 statique pur ; UI Vue 3 + Tailwind 4, icônes Lucide, schémas Mermaid ; Hosting Cloudflare Pages ; Batch GitHub Actions cron hebdo ; LLM Anthropic SDK"
+      ],
+      "html": "<p>La liste des outils qui font tourner le site disait qu'il était construit avec <strong>shadcn-vue</strong> et <strong>reka-ui</strong>, deux bibliothèques qu'il n'utilise pas. Elle est corrigée partout où elle apparaît : l'encart <strong>Stack du site</strong> de la page <strong>À propos</strong>, sa carte dans la liste des <strong>études de cas</strong> et l'étude de cas <strong>claude-code-codex</strong> (texte et schéma d'architecture). On y lit désormais ce qui sert vraiment : Vue 3, Tailwind 4, les icônes Lucide et les schémas Mermaid.</p>"
+    },
+    {
       "slug": "2026-11-25-nouveau-guide-bien-commencer-un-projet",
       "title": "Nouveau guide : bien commencer un projet avec Claude Code",
       "date": "2026-11-25",

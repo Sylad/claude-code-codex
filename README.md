@@ -37,9 +37,9 @@ officielle avec Anthropic.
 ## Stack
 
 - **Frontend** — Astro 7 (statique pur)
-- **UI** — Vue 3 + shadcn-vue + Tailwind 4
+- **UI** — îlots Vue 3 + Tailwind 4 (+ tw-animate-css), icônes Lucide, schémas Mermaid 12
 - **Hosting** — Cloudflare Pages
-- **Batch** — GitHub Actions cron hebdo (`scripts/batch-update.ts`)
+- **Batch** — GitHub Actions cron hebdo (`scripts/batch-update.ts`, TypeScript lancé par tsx)
 - **LLM** — Anthropic SDK (`claude-haiku-4-5` pour les résumés FR 140 chars)
 
 ## Skills custom inclus

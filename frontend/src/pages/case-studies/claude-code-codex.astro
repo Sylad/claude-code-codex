@@ -58,7 +58,7 @@ const NB_ETUDES = Object.keys(import.meta.glob("./*.astro")).length + 1;
         definition={`flowchart TB
   subgraph REPO["GitHub · Sylad/claude-code-codex (public, MIT)"]
     subgraph FE["frontend/ (Astro 7)"]
-      vue["Îlots Vue 3 + reka-ui<br/>Tailwind 4, Mermaid 12"]
+      vue["Îlots Vue 3, Tailwind 4<br/>icônes Lucide, Mermaid 12"]
       data["data/*.ts — catalogues,<br/>études, livre de bord"]
     end
     plan[".cadence/raf.yaml — plan<br/>docs/nouveautes — journal"]
@@ -96,8 +96,8 @@ const NB_ETUDES = Object.keys(import.meta.glob("./*.astro")).length + 1;
     <CaseStudySection eyebrow="Stack & data flow">
       <ul class="list-none space-y-1.5">
         <li>
-          <strong>Frontend</strong> — Astro 7.4 (Vite 8), îlots Vue 3 avec
-          reka-ui, Tailwind 4, schémas Mermaid 12. Node 22.23.5 épinglé
+          <strong>Frontend</strong> — Astro 7.4 (Vite 8), îlots Vue 3,
+          Tailwind 4, icônes Lucide, schémas Mermaid 12. Node 22.23.5 épinglé
           (Astro 7 refuse de démarrer sous 22.23.4) ; la montée depuis Astro 6
           date du 17 novembre 2026.
         </li>
@@ -240,7 +240,9 @@ const NB_ETUDES = Object.keys(import.meta.glob("./*.astro")).length + 1;
           <strong>Pivot stack Vue (vs React)</strong> — au moment du
           scaffold initial, le mémo de kickoff disait "shadcn-vue" alors
           que les sites cousins avato/evato étaient en React. Vérification
-          explicite avant scaffold a évité un coût de pivot tardif.
+          explicite avant scaffold a évité un coût de pivot tardif. Le
+          gabarit shadcn-vue n'a finalement servi à aucun composant : ses
+          restes et sa bibliothèque reka-ui ont été retirés en novembre 2026.
         </li>
         <li>
           <strong>Ruflo refusé, mais 8 leçons capturées</strong> — le

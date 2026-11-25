@@ -68,7 +68,7 @@ export const apps: CaseStudyApp[] = [
   {
     name: "claude-code-codex",
     tagline: "Ce site même — méta-codex sur Claude Code",
-    stack: "Astro 7 · Vue 3 · shadcn-vue · GitHub Actions cron",
+    stack: "Astro 7 · Vue 3 · Tailwind 4 · Mermaid · GitHub Actions cron",
     role: "Doc + écosystème + case studies, batch update hebdo via Claude",
     href: "/case-studies/claude-code-codex",
     repo: "https://github.com/Sylad/claude-code-codex",
