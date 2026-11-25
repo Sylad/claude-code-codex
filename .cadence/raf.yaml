@@ -1040,6 +1040,11 @@ lots:
     ux: { date: 2026-11-25, verdict: "conforme (lead) : changement de texte seul dans un encart existant ; capture 390 px lue — 5 lignes lisibles, aucun débordement, mise en page inchangée" }
     review: { date: 2026-11-25, verdict: conforme (3 notes mineures sur la portée du test l100-stack-annoncee) — rapport codex-L100-code.md, commit: 4d93df857f5c891e012c00227c9e47ce889bf97c }
     finished: 2026-11-25
+  - id: L101
+    title: "Tools tested : ajouter unslop (heydamir/unslop, 21,6 k étoiles, CC BY 4.0) — verdict skillify le 25-11 : skill seul, propre (aucun hook, aucun MCP, aucun réglage touché), mais son mode refonte (« direction », « monde », un élément brillant) est du goût et contredit la règle « jamais un style de catalogue sur une app à charte » ; 4 signes mesurables repris dans les tics d'IA de cadence"
+    status: todo
+    estimate: 1
+    created: 2026-11-25
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
