@@ -375,10 +375,12 @@ lots:
     finished: 2026-11-25
   - id: L24
     title: "Tests e2e : factoriser la mesure de contraste de l'en-tête (6 largeurs × 3 défilements, sélecteur obligatoire, glyphes en haut de page) dans tests/lib/e2e-dist.mjs pour page-hero, nouveautes-page, plan-page"
-    status: doing
+    status: done
     estimate: 1
     created: 2026-10-05
     started: 2026-11-26
+    review: { date: 2026-11-26, verdict: "conforme 26-11 lead : mesure de contraste factorisée dans e2e-dist.mjs (contrasteEntete), seuil 4,5:1, sélecteur obligatoire et glyphes en haut de page gardés ; témoin l24 rougit sur en-tête cassé, sélecteur absent, glyphes absents", commit: 38502d27d068efc04880a2041ff88ea994e37676 }
+    finished: 2026-11-26
   - id: L25
     title: "Accueil : sur-titre orange 12 px posé sur la vidéo de fond (index.astro:80) — le mesurer au pire pixel (6 largeurs × 3 défilements) et le passer sur la pastille sombre comme PageHero s'il est sous 4,5:1 — relevé en revue L16"
     public: "Accueil : sur-titre lisible sur la vidéo de fond"
