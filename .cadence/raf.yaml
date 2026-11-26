@@ -394,6 +394,8 @@ lots:
     review: { date: 2026-11-26, verdict: "conforme 26-11 lead : sur-titre de l'accueil sur la pastille de PageHero (bg-paper/85, text-claude-soft) ; contrasteEntete gagne ring (0 par défaut, L24 inchangé) ; test l25 rouge sans correctif (4,46:1 à 768 px) et témoin ; Nouveautés avec capture", commit: 04345485be5b0cecdb1f50e22dc9590a29ac21db }
     ux: { date: 2026-11-26, verdict: "conforme 26-11 revue UX (lead.ux) : contraste 9,33–9,59:1 aux 7 largeurs × 3 défilements, styles calculés identiques à PageHero, rien ne déborde ni ne chevauche, 200 % ok. Mineur → L-suivant (espaces insécables autour du « · » à 320–390). Rapport SP/revues/codex-L25-ux.md" }
     finished: 2026-11-26
+    notes:
+      - { date: 2026-11-26, text: "26-11 QA prod (15c20a9, Sonnet) CONFORME : /, /nouveautes/, /plan-de-travail/ à 1440 et 390, pastille du sur-titre, capture L25 chargée, 0 erreur console, 0 réponse non 2xx. Rapport SP/revues/codex-L25-qa.md" }
   - id: L26
     title: "Nouveauté L16 : écrire « mesuré à six largeurs, de 320 à 1920 px, et en faisant défiler » au lieu de « à toutes les largeurs » (les tests mesurent 6 largeurs × 3 défilements), puis npm run news et committer le JSON — mineur de la revue L16"
     status: done
