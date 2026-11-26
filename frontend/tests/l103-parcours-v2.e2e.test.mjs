@@ -13,32 +13,39 @@ import { join } from 'node:path';
 import { DIST, setupBrowser } from './lib/e2e-dist.mjs';
 
 const html = () => readFileSync(join(DIST, 'case-studies', 'cadence', 'index.html'), 'utf8');
-const plain = (s) => s.replace(/<[^>]+>/g, ' ').replace(/&#39;/g, "'").replace(/\s+/g, ' ');
+const plain = (s) => s.split('<').map((p, i) => (i === 0 ? p : p.slice(p.indexOf('>') + 1))).join(' ').replace(/&#39;/g, "'").replace(/\s+/g, ' ');
 const figure = (id) => {
-  const m = html().match(new RegExp(`<figure[^>]*data-schema="${id}"[^>]*>([\\s\\S]*?)</figure>`));
-  assert.ok(m, `figure « ${id} » absente`);
-  return m[1];
+  // découpe par indexOf plutôt qu'une expression à retour arrière (sonarjs/super-linear-regex)
+  const h = html();
+  const debut = h.indexOf(`data-schema="${id}"`);
+  assert.ok(debut >= 0, `figure « ${id} » absente`);
+  const fin = h.indexOf('</figure>', debut);
+  assert.ok(fin > debut, `figure « ${id} » non fermée`);
+  return h.slice(h.indexOf('>', debut) + 1, fin);
 };
 const nomAccessible = (f) => plain(`${f.match(/<title[^>]*>([^<]*)<\/title>/)[1]} ${f.match(/<desc[^>]*>([^<]*)<\/desc>/)[1]}`);
-const enOrdre = (t, mots, quoi) => {
+/** Les mots de `mots` absents de `t` ou hors ordre (liste vide : tout y est, dans l'ordre). */
+const horsOrdre = (t, mots) => {
   let from = 0;
+  const manquants = [];
   for (const w of mots) {
     const at = t.indexOf(w, from);
-    assert.ok(at >= 0, `${quoi} : « ${w} » absent ou hors ordre`);
-    from = at + w.length;
+    if (at < 0) manquants.push(w);
+    else from = at + w.length;
   }
+  return manquants;
 };
 
 test('R1 — le parcours V2 suit run → porte et intégration sur main → revue → livraison → QA, dans le dessin et le nom accessible', () => {
   const f = figure('parcours-v2');
   const etapes = ['cadence run', 'worktree', 'Porte', 'main', 'Revue', 'revue UX', 'Livraison', 'QA'];
-  enOrdre(plain(f), etapes, 'dessin');
-  enOrdre(nomAccessible(f), etapes, 'nom accessible');
+  assert.deepEqual(horsOrdre(plain(f), etapes), [], 'dessin : étapes absentes ou hors ordre');
+  assert.deepEqual(horsOrdre(nomAccessible(f), etapes), [], 'nom accessible : étapes absentes ou hors ordre');
 });
 
 test('R2 — le parcours V2 dit qui fait quoi : session Opus, Fable en escalade, revue et livraison par le lead', () => {
   const t = nomAccessible(figure('parcours-v2'));
-  enOrdre(t, ['lead', 'Opus', 'Fable', 'sans modèle', 'lead', 'lead', 'lead'], 'qui');
+  assert.deepEqual(horsOrdre(t, ['lead', 'Opus', 'Fable', 'sans modèle', 'lead', 'lead', 'lead']), [], 'qui : absent ou hors ordre');
   assert.doesNotMatch(t, /Sonnet|spec-writer|vague/, 'le parcours V2 ne doit rien garder de la V1');
 });
 
@@ -69,7 +76,7 @@ test('R5 — la V1 reste, datée, dans un bloc historique séparé placé après
   assert.match(date[1], /10\s+novembre\s+2026/u);
   assert.match(nomAccessible(figure('parcours-lot')), /V1/, 'le schéma V1 ne se dit pas V1');
   // le bloc historique a sa propre section, distincte de « La méthode »
-  const h2s = [...h.matchAll(/<h2[^>]*>\s*([^<]+?)\s*<\/h2>/g)].map((m) => [m.index, m[1]]);
+  const h2s = [...h.matchAll(/<h2[^>]*>([^<]*)<\/h2>/g)].map((m) => [m.index, m[1].trim()]);
   const sect = (pos) => h2s.filter(([i]) => i < pos).pop()[1];
   assert.equal(sect(v2), 'La méthode');
   assert.match(sect(v1), /point de départ/i);
