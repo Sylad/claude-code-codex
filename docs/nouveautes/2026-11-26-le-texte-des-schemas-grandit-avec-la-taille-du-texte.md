@@ -9,5 +9,6 @@ captures:
 Quand on agrandit le texte du navigateur, les schémas des études de cas et du Livre de bord suivent enfin.
 
 - **Au téléphone, texte agrandi**, chaque schéma s'affiche en liste d'étapes, une par cadre, reliées par des flèches : son texte double à 200 % comme le reste de la page, au lieu de rapetisser.
+- **Sur une tablette, texte agrandi à 200 %**, les schémas passent aussi en liste : dessinés, leur texte y resterait plus petit que celui de la page.
 - **La boucle de correction** y devient un cadre en pointillés qui dit de quelle étape elle repart et vers laquelle elle revient.
 - **Au réglage normal**, rien ne change : les schémas restent dessinés, sur téléphone comme sur grand écran.

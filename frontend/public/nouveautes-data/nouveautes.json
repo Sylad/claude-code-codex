@@ -15,7 +15,7 @@
       "alts": [
         "Le parcours d'un lot sur un téléphone, texte agrandi à 200 % : les étapes en colonne, chacune dans son cadre avec son titre, son détail et qui la fait, en grands caractères, reliées par des flèches"
       ],
-      "html": "<p>Quand on agrandit le texte du navigateur, les schémas des études de cas et du Livre de bord suivent enfin.</p>\n<ul><li><strong>Au téléphone, texte agrandi</strong>, chaque schéma s'affiche en liste d'étapes, une par cadre, reliées par des flèches : son texte double à 200 % comme le reste de la page, au lieu de rapetisser.</li><li><strong>La boucle de correction</strong> y devient un cadre en pointillés qui dit de quelle étape elle repart et vers laquelle elle revient.</li><li><strong>Au réglage normal</strong>, rien ne change : les schémas restent dessinés, sur téléphone comme sur grand écran.</li></ul>"
+      "html": "<p>Quand on agrandit le texte du navigateur, les schémas des études de cas et du Livre de bord suivent enfin.</p>\n<ul><li><strong>Au téléphone, texte agrandi</strong>, chaque schéma s'affiche en liste d'étapes, une par cadre, reliées par des flèches : son texte double à 200 % comme le reste de la page, au lieu de rapetisser.</li><li><strong>Sur une tablette, texte agrandi à 200 %</strong>, les schémas passent aussi en liste : dessinés, leur texte y resterait plus petit que celui de la page.</li><li><strong>La boucle de correction</strong> y devient un cadre en pointillés qui dit de quelle étape elle repart et vers laquelle elle revient.</li><li><strong>Au réglage normal</strong>, rien ne change : les schémas restent dessinés, sur téléphone comme sur grand écran.</li></ul>"
     },
     {
       "slug": "2026-11-26-l-etude-de-cas-montre-le-parcours-actuel-d-un-lot",

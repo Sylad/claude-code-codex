@@ -210,8 +210,8 @@ const limites = [
         <svg viewBox="0 0 340 330" style="max-width:26rem" role="img" aria-labelledby="sch-besoins-t sch-besoins-d" xmlns="http://www.w3.org/2000/svg">
           <title id="sch-besoins-t">Un mécanisme par besoin</title>
           <desc id="sch-besoins-d">Ne rien oublier : le registre des demandes. Lire les documents : la lecture obligatoire. Ne rien casser : la porte de tests. Rester cohérent : la revue. Travailler en équipe : le plan relié aux commits et le banc.</desc>
-          <text class="sch-a" x="8" y="20">Besoin</text>
-          <text class="sch-a" x="178" y="20">Pièce de cadence</text>
+          <text class="sch-a" data-sch-entete x="8" y="20">Besoin</text>
+          <text class="sch-a" data-sch-entete x="178" y="20">Pièce de cadence</text>
           {PIECES.map(([gauche, droite], i) => (
             <g>
               <rect class="sch-box" x="8" y={34 + i * 58} width="142" height="44" rx="8" />

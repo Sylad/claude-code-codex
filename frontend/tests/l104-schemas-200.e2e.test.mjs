@@ -6,7 +6,11 @@
 //     schéma (texte visible : le dessin ou sa version en liste, celle qui est affichée) ;
 //   - aucun défilement latéral à 320 et 375 px (100 et 200 %) ;
 //   - à 1440 px et 100 %, le schéma reste le dessin SVG (rendu inchangé) ;
-//   - une seule des deux versions est affichée (jamais lue deux fois).
+//   - une seule des deux versions est affichée (jamais lue deux fois) ;
+//   - tablette (règle 2 de Schema.astro, écran ≥ 480 px et cadre < 25 em) : à 600 et 768 px, la liste
+//     remplace le dessin à 200 %, le dessin reste à 100 % ;
+//   - le dessin et sa liste disent la même chose : chaque texte du SVG se retrouve dans la liste (sauf un
+//     en-tête de colonne propre au dessin, marqué data-sch-entete : la liste dit le lien par sa flèche).
 // 200 % = police par défaut 32 px réglée par CDP (Page.setFontSizes), comme un vrai réglage du navigateur.
 // Lit le site CONSTRUIT : `npx astro build` avant.
 import test from 'node:test';
@@ -41,7 +45,10 @@ async function mesurer(env, path, largeur, police) {
         titre = px('.sch-titre');
         detail = px('.sch-detail') || px('.sch-qui') || titre;
       }
-      return { id: f.dataset.schema, montres, titre, detail, aListe: Boolean(liste) };
+      const norm = (x) => x.replace(/\s+/g, ' ').trim();
+      const textesSvg = svg ? [...svg.querySelectorAll('text:not([data-sch-entete])')].map((e) => norm(e.textContent)).filter(Boolean) : [];
+      const absents = liste ? textesSvg.filter((x) => !norm(liste.textContent).includes(x)) : [];
+      return { id: f.dataset.schema, montres, titre, detail, aListe: Boolean(liste), absents };
     });
     return { schemas, scroll: document.documentElement.scrollWidth - document.documentElement.clientWidth };
   });
@@ -80,8 +87,37 @@ test('L104 R2 — à 1440 px et 100 %, chaque schéma reste le dessin SVG ; à 2
     const b = await mesurer(env, path, 1440, 32);
     for (const [i, s] of a.schemas.entries()) {
       assert.deepEqual(s.montres, ['svg'], `${path} ${s.id} : à 1440 px et 100 %, le dessin attendu`);
-      assert.ok(b.schemas[i].titre > s.titre * 1.2, `${path} ${s.id} : à 1440 px, titre ${s.titre.toFixed(1)} → ${b.schemas[i].titre.toFixed(1)} px à 200 %`);
+      assert.ok(b.schemas[i].titre >= s.titre * 1.8, `${path} ${s.id} : à 1440 px, titre ${s.titre.toFixed(1)} → ${b.schemas[i].titre.toFixed(1)} px à 200 %`);
     }
     assert.ok(b.scroll <= 0, `${path} 1440 px 200 % : la page défile`);
+  }
+});
+
+test('L104 R3 — tablette (600 et 768 px) : à 200 % la liste remplace le dessin, à 100 % le dessin reste', { timeout: 120_000 }, async (t) => {
+  const env = await setupBrowser(t);
+  if (!env) return;
+  for (const path of PAGES) {
+    for (const largeur of [600, 768]) {
+      const a = await mesurer(env, path, largeur, 16);
+      const b = await mesurer(env, path, largeur, 32);
+      assert.ok(a.schemas.length > 0, `${path} : aucun schéma`);
+      for (const s of a.schemas) assert.deepEqual(s.montres, ['svg'], `${path} ${largeur} px 100 % ${s.id} : le dessin attendu`);
+      for (const [i, s] of b.schemas.entries()) {
+        assert.deepEqual(s.montres, ['liste'], `${path} ${largeur} px 200 % ${s.id} : la liste attendue à la place du dessin`);
+        // le ×2 est un critère du téléphone ; ici le dessin à 100 % est déjà grand (20 px) : la liste doit
+        // au moins faire grandir le titre, et à la taille du texte (0,9375rem = 30 px à 32 px).
+        assert.ok(s.titre > a.schemas[i].titre && s.titre >= 0.9375 * 32 - 0.05, `${path} ${largeur} px ${s.id} : titre ${a.schemas[i].titre.toFixed(1)} → ${s.titre.toFixed(1)} px`);
+      }
+      assert.ok(b.scroll <= 0, `${path} ${largeur} px 200 % : la page défile de ${b.scroll} px`);
+    }
+  }
+});
+
+test('L104 R4 — chaque texte du dessin se retrouve dans sa version en liste (une seule source)', { timeout: 60_000 }, async (t) => {
+  const env = await setupBrowser(t);
+  if (!env) return;
+  for (const path of PAGES) {
+    const r = await mesurer(env, path, 1440, 16);
+    for (const s of r.schemas) assert.deepEqual(s.absents, [], `${path} ${s.id} : textes du dessin absents de la liste`);
   }
 });
