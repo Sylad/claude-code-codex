@@ -1059,10 +1059,11 @@ lots:
     created: 2026-11-25
   - id: L103
     title: "Étude de cas cadence : le schéma des six étapes (case-studies/cadence.astro:31, livre-de-bord-schemas.ts:29) décrit la V1 (vague orchestrate : spec-writer, code Sonnet, relecteur neuf, correction Fable, ux-reviewer). Le redessiner pour la V2 (cadence run : une session Opus fait le lot, porte, puis revues de code et UX lancées par le lead, passe de correction par un nouveau run, Fable dès la 3e passe) et garder la V1 comme historique daté. Vu par Sylvain dans le bilan du 25-11"
-    status: todo
+    status: doing
     estimate: 1
     visible: true
     created: 2026-11-25
+    started: 2026-11-26
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
