@@ -1065,6 +1065,13 @@ lots:
     created: 2026-11-25
     started: 2026-11-26
     review: { date: 2026-11-26, verdict: "conforme après 3 corrections mineures : 3e passe de correction (cadence.astro:41,516,527 + Nouveauté), avance rapide au lieu de fusion (cadence.astro:42), R3 sans sens de boucle (tests/l103-parcours-v2.e2e.test.mjs:52-56)", commit: 7f779b8436dc33258211b9551e786823c4c52a9d }
+    ux: { date: 2026-11-26, verdict: "compliant: 0 bloquant, 0 majeur du lot ; 4 mineurs (V1 non signalée dans la figure, accent sans légende, schéma plus haut que l'écran, cadre imbriqué) ; 1 majeur hors lot (texte des schémas à 200 %, WCAG 1.4.4) → lot à part" }
+  - id: L104
+    title: "Schémas : le texte grandit à 200 % et reste lisible au téléphone (Schema/StepChain, WCAG 1.4.4). Revue UX de L103 du 26-11 : à 390 px, titres 12,2 → 11,0 px et détails 10,6 → 9,6 px quand on passe de 100 à 200 %, alors que la légende passe à 26 px. Piste : sous ~40 rem, rendre les étapes en liste HTML (ol, mêmes jetons) ou mettre le texte SVG en rem ; garder le schéma dans un écran à 1440 px. Mesure : taille du texte à 200 % ≥ 2 × celle à 100 %, sans défilement latéral à 375 px."
+    status: todo
+    estimate: 1
+    visible: true
+    created: 2026-11-26
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
