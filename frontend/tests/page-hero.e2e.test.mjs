@@ -7,7 +7,7 @@ import assert from 'node:assert/strict';
 import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { DIST, setupBrowser, worstPixelContrast, pageReady, settleAfterScroll } from './lib/e2e-dist.mjs';
+import { DIST, setupBrowser, contexteEntete, contrasteEntete, LARGEURS_ENTETE as WIDTHS, ENTETE_PAGEHERO } from './lib/e2e-dist.mjs';
 
 const PAGES = fileURLToPath(new URL('../src/pages/', import.meta.url));
 const walk = (d) => readdirSync(d, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(join(d, e.name)) : [join(d, e.name)]));
@@ -16,9 +16,6 @@ const routes = walk(PAGES)
   .filter((f) => f.endsWith('.astro') && /<(PageHero|GuideLayout)\b/.test(readFileSync(f, 'utf8')))
   .map((f) => `/${relative(PAGES, f).split(sep).join('/').replace(/\.astro$/, '').replace(/index$/, '')}/`.replace('//', '/'));
 
-const WIDTHS = [320, 390, 768, 1024, 1440, 1920];
-const SCROLLS = [0, 60, 100];
-const SELECTORS = ['main section.codex-grid p:first-of-type', 'main section.codex-grid h1', 'main section.codex-grid h1 ~ p'];
 
 test('PageHero est utilisé par plusieurs pages (le test les trouve)', () => {
   assert.ok(routes.length >= 10, `${routes.length} pages trouvées`);
@@ -35,27 +32,13 @@ test('PageHero : sur-titre, titre et chapeau ≥ 4,5:1 au pire pixel (6 largeurs
   const env = await setupBrowser(t);
   if (!env) return;
   await Promise.all(WIDTHS.map((width) => t.test(`@${width}px`, async (tw) => {
-    const context = await env.browser.newContext({ viewport: { width, height: width > 1000 ? 900 : 844 }, deviceScaleFactor: 2 });
+    const context = await contexteEntete(env.browser, width);
     tw.after(() => context.close());
     const page = await context.newPage();
+    // L24 : mesure partagée (tests/lib/e2e-dist.mjs), même que Nouveautés et Plan de travail.
     for (const route of routes) {
       await tw.test(`${route} @${width}px`, { timeout: 180_000 }, async (tr) => {
-        const failures = [];
-        await page.goto(`${env.base}${route}`, { waitUntil: 'load' });
-        await pageReady(page);
-        for (const scroll of SCROLLS) {
-          await page.evaluate((y) => window.scrollTo(0, y), scroll);
-          await settleAfterScroll(page);
-          for (const sel of SELECTORS) {
-            // Un sélecteur qui ne trouve rien est un échec, pas un « rien à mesurer » silencieux.
-            assert.ok(await page.locator(sel).count(), `${route} ${sel} @${width}px : sélecteur sans résultat`);
-            const { worst, glyphs } = await worstPixelContrast(page, sel);
-            tr.diagnostic(`${route} ${sel.split(' ').pop()} @${width}px y${scroll} : ${worst.toFixed(2)}:1 (${glyphs} px)`);
-            // Défilé, le texte peut passer sous la barre fixe ; en haut de page, il doit être mesuré.
-            if (scroll === 0) assert.ok(glyphs > 20, `${route} ${sel} @${width}px : glyphes non détectés`);
-            if (glyphs > 20 && worst < 4.5) failures.push(`${route} ${sel} @${width}px y${scroll} : ${worst.toFixed(2)}:1`);
-          }
-        }
+        const failures = await contrasteEntete(page, { base: env.base, route, selectors: ENTETE_PAGEHERO, log: (m) => tr.diagnostic(m) });
         assert.deepEqual(failures, []);
       });
     }

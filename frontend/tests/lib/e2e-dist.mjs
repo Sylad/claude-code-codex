@@ -6,6 +6,7 @@ import { existsSync, readFileSync, statSync } from 'node:fs';
 import { extname, join, normalize } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
+import assert from 'node:assert/strict';
 
 export const DIST = fileURLToPath(new URL('../../dist/', import.meta.url));
 
@@ -175,4 +176,46 @@ export async function attendreCesure(page, timeout = 15_000) {
     const r = document.body.getBoundingClientRect();
     return document.documentElement.dataset.cesureMesure === `${r.width}x${r.height}`;
   }, null, { timeout });
+}
+
+// L24 — contraste de l'en-tête de page (PageHero : sur-titre, titre, chapeau posés sur l'image de fond
+// fixe du site). Une seule mesure pour page-hero, nouveautes-page et plan-page, qui la recopiaient :
+// 6 largeurs × 3 défilements, chaque sélecteur doit trouver un élément, et en haut de page ses glyphes
+// doivent être reconnus (sinon la mesure ne prouverait rien) ; seuil 4,5:1 au pire pixel.
+export const LARGEURS_ENTETE = [320, 390, 768, 1024, 1440, 1920];
+export const DEFILEMENTS_ENTETE = [0, 60, 100];
+export const SEUIL_ENTETE = 4.5;
+// Sélecteurs de chaque page, partagés avec le témoin (tests/l24-contraste-entete.e2e.test.mjs).
+export const ENTETE_PAGEHERO = ['main section.codex-grid p:first-of-type', 'main section.codex-grid h1', 'main section.codex-grid h1 ~ p'];
+export const ENTETE_NOUVEAUTES = ['.news-hero .news-eyebrow', '.news-hero h1', '.news-hero .news-lede'];
+export const ENTETE_PLAN = ['.plan-hero .plan-eyebrow', '.plan-hero h1', '.plan-hero .plan-lede'];
+
+// Contexte d'une largeur : même hauteur et même densité de pixels pour les trois tests.
+export const contexteEntete = (browser, width) =>
+  browser.newContext({ viewport: { width, height: width > 1000 ? 900 : 844 }, deviceScaleFactor: 2 });
+
+// Mesure l'en-tête de `route` dans `page` (contexte créé par contexteEntete) aux défilements donnés.
+// Lève une erreur d'assertion si un sélecteur ne trouve rien ou si, en haut de page, ses glyphes ne sont
+// pas reconnus ; renvoie la liste des mesures sous le seuil (vide = conforme). `log` reçoit une ligne par
+// mesure (t.diagnostic). `avantMesure(page)` s'exécute après le chargement : le témoin y casse l'en-tête.
+export async function contrasteEntete(page, { base, route, selectors, log = () => {}, avantMesure, scrolls = DEFILEMENTS_ENTETE }) {
+  const width = page.viewportSize().width;
+  const failures = [];
+  await page.goto(`${base}${route}`, { waitUntil: 'load' });
+  await pageReady(page);
+  if (avantMesure) await avantMesure(page);
+  for (const scroll of scrolls) {
+    await page.evaluate((y) => window.scrollTo(0, y), scroll);
+    await settleAfterScroll(page);
+    for (const sel of selectors) {
+      // Un sélecteur qui ne trouve rien est un échec, pas un « rien à mesurer » silencieux.
+      if (!(await page.locator(sel).count())) throw new assert.AssertionError({ message: `${route} ${sel} @${width}px : sélecteur sans résultat` });
+      const { worst, glyphs } = await worstPixelContrast(page, sel);
+      log(`${route} ${sel} @${width}px y${scroll} : ${worst.toFixed(2)}:1 (${glyphs} px)`);
+      // Défilé, le texte peut passer sous la barre fixe ; en haut de page, il doit être mesuré.
+      if (scroll === 0 && !(glyphs > 20)) throw new assert.AssertionError({ message: `${route} ${sel} @${width}px : glyphes non détectés (${glyphs} px)` });
+      if (glyphs > 20 && worst < SEUIL_ENTETE) failures.push(`${route} ${sel} @${width}px y${scroll} : ${worst.toFixed(2)}:1`);
+    }
+  }
+  return failures;
 }

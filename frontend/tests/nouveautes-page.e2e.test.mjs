@@ -10,7 +10,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, mkdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { DIST, setupBrowser, worstPixelContrast } from './lib/e2e-dist.mjs';
+import { DIST, setupBrowser, contexteEntete, contrasteEntete, LARGEURS_ENTETE, ENTETE_NOUVEAUTES } from './lib/e2e-dist.mjs';
 import { badgeLabel } from '../src/lib/news-badge.ts';
 import { lierJourMois } from '../src/lib/jour-mois.mjs';
 
@@ -136,26 +136,20 @@ test('reflow 320/390/1440 px : aucun défilement horizontal, captures dans la la
 
 // L'en-tête (sur-titre, titre, chapeau) est posé sur l'image de fond du site : mesuré
 // au PIRE PIXEL sous les glyphes, pas sur la couleur de fond déclarée.
-test('en-tête de la page ≥ 4,5:1 au pire pixel de l’image de fond (320 à 1920 px, défilé ou non)', { timeout: 120_000 }, async (t) => {
+test('en-tête de la page ≥ 4,5:1 au pire pixel de l’image de fond (320 à 1920 px, défilé ou non)', { timeout: 180_000 }, async (t) => {
   const env = await setupBrowser(t);
   if (!env) return;
+  // L24 : mesure partagée (tests/lib/e2e-dist.mjs) — 6 largeurs × 3 défilements, sélecteur obligatoire,
+  // glyphes reconnus en haut de page, 4,5:1 au pire pixel.
   const failures = [];
-  for (const width of [320, 390, 768, 1024, 1440, 1920]) {
-    const context = await env.browser.newContext({ viewport: { width, height: width > 1000 ? 900 : 844 }, deviceScaleFactor: 2 });
-    const page = await context.newPage();
-    await page.goto(`${env.base}/nouveautes/`, { waitUntil: 'load' });
-    await page.evaluate(() => document.fonts.ready);
-    for (const scroll of [0, 60, 100]) {
-      await page.evaluate((y) => window.scrollTo(0, y), scroll);
-      for (const sel of ['.news-hero .news-eyebrow', '.news-hero h1', '.news-hero .news-lede']) {
-        const { worst, glyphs } = await worstPixelContrast(page, sel);
-        t.diagnostic(`${sel} @${width}px y${scroll} : ${worst.toFixed(2)}:1 (${glyphs} px)`);
-        // Défilé, le sur-titre peut passer sous la barre fixe : rien à mesurer. En haut de page, il doit l'être.
-        if (scroll === 0) assert.ok(glyphs > 20, `${sel} @${width}px : glyphes non détectés`);
-        if (glyphs > 20 && worst < 4.5) failures.push(`${sel} @${width}px y${scroll} : ${worst.toFixed(2)}:1`);
-      }
+  for (const width of LARGEURS_ENTETE) {
+    const context = await contexteEntete(env.browser, width);
+    try {
+      const page = await context.newPage();
+      failures.push(...await contrasteEntete(page, { base: env.base, route: '/nouveautes/', selectors: ENTETE_NOUVEAUTES, log: (m) => t.diagnostic(m) }));
+    } finally {
+      await context.close();
     }
-    await context.close();
   }
   assert.deepEqual(failures, []);
 });
