@@ -1101,10 +1101,13 @@ lots:
     finished: 2026-11-26
   - id: L106
     title: "Accueil : à 320–390 px le « · » du sur-titre reste en fin de ligne et la pastille garde toute la largeur — espaces insécables autour des « · » (revue UX de L25, 26-11, effort S)"
-    status: doing
+    status: done
     estimate: 1
     created: 2026-11-26
     started: 2026-11-26
+    review: { date: 2026-11-26, verdict: "conforme : relu 0f790d0 (epouser-lignes.mjs, mesure Range.getClientRects, largeur en em, rien sur une ligne), 864 tests verts", commit: 0f790d019cda2689987d283b590fdb35e8b8a348 }
+    ux: { date: 2026-11-26, verdict: "conforme : revue UX 77 cas (11 pages × 7 largeurs), écart 8,3–9,1 px ≤ 12, contraste 6,5:1, aucun débordement" }
+    finished: 2026-11-26
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
