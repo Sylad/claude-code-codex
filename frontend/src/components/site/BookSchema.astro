@@ -26,10 +26,13 @@ const s = SCHEMAS[id];
   .book-schema { margin-inline: calc(-1 * (var(--spacing-borne-5) + var(--spacing-borne-6)) - 1px); }
   .book-schema .schema { padding: 0.5rem 0; border-inline: 0; border-radius: 0; }
   .book-schema .schema figcaption { padding-inline: 1rem; }
+  /* L104 — la version en liste (texte agrandi) garde la marge de la légende : ses cadres ne touchent pas le bord. */
+  .book-schema .schema .sch-liste { padding-inline: 1rem; }
   .book-schema .sch-m, .book-schema .sch-a { font-size: 14px; }
   @media (min-width: 40rem) {
     .book-schema { margin-inline: auto; }
     .book-schema .schema figcaption { padding-inline: 0; }
+    .book-schema .schema .sch-liste { padding-inline: 0; }
     .book-schema .schema { padding: 1rem; border-inline: 1px solid var(--sch-line); border-radius: 0.75rem; }
   }
 </style>

@@ -15,6 +15,15 @@ import Schema from "@/components/site/Schema.astro";
 import Callout from "@/components/site/Callout.astro";
 import { inlineCodeHtml } from "@/lib/inline-code.mjs";
 
+// Les cinq besoins et leur pièce : dessinés en SVG, et en liste HTML quand le cadre est étroit (L104).
+const PIECES: [string, string][] = [
+  ["1 · Ne rien oublier", "Registre"],
+  ["2 · Lire les docs", "Lecture obligatoire"],
+  ["3 · Ne rien casser", "Porte de tests"],
+  ["4 · Rester cohérent", "Revue code et écran"],
+  ["5 · Faire équipe", "Plan et banc"],
+];
+
 const CODE = "[&_code]:font-mono [&_code]:text-claude-soft [&_code]:text-[0.9em] [&_code]:px-1 [&_code]:rounded [&_code]:bg-white/5";
 const H3 = "text-lg font-medium text-ink pt-2";
 const CADENCE = "https://github.com/Sylad/cadence";
@@ -197,19 +206,13 @@ const limites = [
         l'intégration. Chaque besoin a sa pièce :
       </p>
       <div class="-mx-borne-5 sm:mx-0">
-      <Schema id="besoins-mecanismes" legende="Les cinq besoins, à gauche, et la pièce de cadence qui répond à chacun, à droite.">
+      <Schema id="besoins-mecanismes" legende="Les cinq besoins et, au bout de la flèche, la pièce de cadence qui répond à chacun.">
         <svg viewBox="0 0 340 330" style="max-width:26rem" role="img" aria-labelledby="sch-besoins-t sch-besoins-d" xmlns="http://www.w3.org/2000/svg">
           <title id="sch-besoins-t">Un mécanisme par besoin</title>
           <desc id="sch-besoins-d">Ne rien oublier : le registre des demandes. Lire les documents : la lecture obligatoire. Ne rien casser : la porte de tests. Rester cohérent : la revue. Travailler en équipe : le plan relié aux commits et le banc.</desc>
           <text class="sch-a" x="8" y="20">Besoin</text>
           <text class="sch-a" x="178" y="20">Pièce de cadence</text>
-          {[
-            ["1 · Ne rien oublier", "Registre"],
-            ["2 · Lire les docs", "Lecture obligatoire"],
-            ["3 · Ne rien casser", "Porte de tests"],
-            ["4 · Rester cohérent", "Revue code et écran"],
-            ["5 · Faire équipe", "Plan et banc"],
-          ].map(([gauche, droite], i) => (
+          {PIECES.map(([gauche, droite], i) => (
             <g>
               <rect class="sch-box" x="8" y={34 + i * 58} width="142" height="44" rx="8" />
               <text class="sch-t" x="18" y={61 + i * 58} style="font-size:13px">{gauche}</text>
@@ -220,6 +223,13 @@ const limites = [
             </g>
           ))}
         </svg>
+        <div class="sch-liste" data-sch-liste="besoins-mecanismes">
+          <ul aria-label="Un mécanisme par besoin" class="sch-sous">
+            {PIECES.map(([gauche, droite]) => (
+              <li class="sch-etape-accent"><span class="sch-titre">{gauche}</span> <span class="sch-qui"><span aria-hidden="true">→ </span>{droite}</span></li>
+            ))}
+          </ul>
+        </div>
       </Schema>
       </div>
       <ul class="space-y-3 list-none">

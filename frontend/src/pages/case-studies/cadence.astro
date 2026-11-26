@@ -499,6 +499,31 @@ const v2Decisions: { id: string; titre: string; causes: string[]; corps: string;
           <text class="sch-t sch-mono" x="30" y="348">raf check</text>
           <text class="sch-m" x="190" y="348">commit sans lot, lot sans commit</text>
         </svg>
+        <div class="sch-liste" data-sch-liste="plan-commits">
+          <ul class="sch-suite" aria-label="Le plan relié aux commits">
+            <li class="sch-etape">
+              <span class="sch-qui">Le plan · fichier YAML versionné</span>
+              <ul class="sch-sous">
+                <li class="sch-etape-accent"><span class="sch-titre sch-mono">L4</span> <span class="sch-detail">lot en cours</span></li>
+                <li><span class="sch-titre sch-mono">L5</span> <span class="sch-detail">lot à faire</span></li>
+              </ul>
+            </li>
+            <li class="sch-etape">
+              <span class="sch-qui">Les commits · git (chacun cite son lot)</span>
+              <ul class="sch-sous">
+                <li class="sch-etape-accent"><span class="sch-titre sch-mono">fix(L4): …</span> <span class="sch-detail">cite le lot L4</span></li>
+                <li><span class="sch-titre sch-mono">feat(L5): …</span> <span class="sch-detail">cite le lot L5</span></li>
+              </ul>
+            </li>
+            <li class="sch-etape">
+              <ul class="sch-sous">
+                <li><span class="sch-titre sch-mono">raf commits L4</span> <span class="sch-detail">ce que le lot a produit</span></li>
+                <li><span class="sch-titre sch-mono">raf now</span> <span class="sch-detail">la suite du travail</span></li>
+                <li><span class="sch-titre sch-mono">raf check</span> <span class="sch-detail">commit sans lot, lot sans commit</span></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
       </Schema>
       </div>
 

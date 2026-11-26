@@ -1,7 +1,22 @@
 {
   "project": "claude-code-codex",
-  "generated": "2026-11-26 10:10",
+  "generated": "2026-11-26 12:16",
   "entries": [
+    {
+      "slug": "2026-11-26-le-texte-des-schemas-grandit-avec-la-taille-du-texte",
+      "title": "Le texte des schémas grandit avec la taille du texte",
+      "date": "2026-11-26",
+      "lots": [
+        "L104"
+      ],
+      "captures": [
+        "captures/L104-schema-texte-200-390.png"
+      ],
+      "alts": [
+        "Le parcours d'un lot sur un téléphone, texte agrandi à 200 % : les étapes en colonne, chacune dans son cadre avec son titre, son détail et qui la fait, en grands caractères, reliées par des flèches"
+      ],
+      "html": "<p>Quand on agrandit le texte du navigateur, les schémas des études de cas et du Livre de bord suivent enfin.</p>\n<ul><li><strong>Au téléphone, texte agrandi</strong>, chaque schéma s'affiche en liste d'étapes, une par cadre, reliées par des flèches : son texte double à 200 % comme le reste de la page, au lieu de rapetisser.</li><li><strong>La boucle de correction</strong> y devient un cadre en pointillés qui dit de quelle étape elle repart et vers laquelle elle revient.</li><li><strong>Au réglage normal</strong>, rien ne change : les schémas restent dessinés, sur téléphone comme sur grand écran.</li></ul>"
+    },
     {
       "slug": "2026-11-26-l-etude-de-cas-montre-le-parcours-actuel-d-un-lot",
       "title": "L'étude de cas montre le parcours actuel d'un lot",

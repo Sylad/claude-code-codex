@@ -1,6 +1,11 @@
 ---
 // L50 — cadre d'un schéma : <figure> à fond propre (lisible quoi que fasse le thème de la page),
 // jetons --sch-* en sombre par défaut et en clair sous prefers-color-scheme: light.
+// L104 (WCAG 1.4.4) — le texte d'un SVG suit la largeur du dessin, pas la taille de police : au téléphone,
+// texte agrandi à 200 %, il rapetissait (titres 12,2 → 11,0 px à 390 px). Un schéma peut donc porter, après
+// son <svg>, une version en HTML (`.sch-liste`, mêmes jetons, tailles en rem) : quand le cadre est trop étroit
+// en em pour que le dessin grandisse (texte agrandi ; règles @container plus bas), la liste remplace le dessin.
+// À 100 %, de 320 à 1440 px, c'est toujours le dessin. StepChain la produit seul ; un SVG écrit à la main la met dans le slot.
 interface Props {
   id: string;
   legende: string;
@@ -29,6 +34,8 @@ const { id, legende } = Astro.props;
     background: var(--sch-bg);
     color: var(--sch-text);
     text-shadow: none;
+    /* cadre interrogé par la règle @container ci-dessous (largeur mesurée en em du cadre) */
+    container-type: inline-size;
   }
   @media (prefers-color-scheme: light) {
     .schema {
@@ -52,5 +59,58 @@ const { id, legende } = Astro.props;
   .schema .sch-m { fill: var(--sch-muted); font: 400 13px/1 var(--font-sans, system-ui, sans-serif); }
   .schema .sch-mono { font-family: var(--font-mono, ui-monospace, monospace); }
   .schema .sch-a { fill: var(--sch-accent); font: 600 13px/1 var(--font-sans, system-ui, sans-serif); }
+  /* L104 — version HTML du schéma, affichée à la place du dessin quand le cadre est étroit en em. */
+  .schema .sch-liste { display: none; }
+  /* 1) écran étroit (téléphone) et texte agrandi : le cadre passe sous 16 em (390 px à 150 % et plus ;
+        à 100 %, 320 px donne 18 em : le dessin reste, décision de L54/L60). */
+  @container (width < 16em) {
+    .schema > svg:has(~ .sch-liste) { display: none; }
+    .schema > .sch-liste { display: block; }
+  }
+  /* 2) écran d'au moins 480 px (à 100 %, le cadre y fait toujours 26 em ou plus, Livre de bord compris) :
+        sous 25 em, le titre dessiné (15 unités sur 420) tomberait sous celui de la liste (0,9375rem) —
+        texte agrandi sur une tablette, par exemple 768 px à 200 % (22 em : titres dessinés à 25 px pour
+        un texte courant à 32 px ; liste à 30 px). */
+  @media (min-width: 480px) {
+    @container (width < 25em) {
+      .schema > svg:has(~ .sch-liste) { display: none; }
+      .schema > .sch-liste { display: block; }
+    }
+  }
+  .schema .sch-liste ol, .schema .sch-liste ul, .schema ol.sch-liste, .schema ul.sch-liste { list-style: none; margin: 0; padding: 0; }
+  .schema .sch-etape {
+    position: relative;
+    margin: 0 0 1.75rem;
+    padding: 0.625rem 0.875rem;
+    border: 1.5px solid var(--sch-line);
+    border-radius: 0.625rem;
+    background: var(--sch-box);
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+  .schema .sch-etape:last-child { margin-bottom: 0; }
+  .schema .sch-etape-accent { border: 2px solid var(--sch-accent); }
+  /* flèche vers l'étape suivante : un trait et une pointe, sans texte lu */
+  .schema .sch-suite > .sch-etape:not(:last-child)::before {
+    content: ""; position: absolute; left: 50%; top: 100%; width: 2px; height: 1.1rem;
+    margin-left: -1px; margin-top: 0.15rem; background: var(--sch-line);
+  }
+  .schema .sch-suite > .sch-etape:not(:last-child)::after {
+    content: ""; position: absolute; left: 50%; top: 100%; margin-left: -0.375rem; margin-top: 1.2rem;
+    border: 0.375rem solid transparent; border-top-color: var(--sch-line); border-bottom: 0;
+  }
+  .schema .sch-titre { display: block; color: var(--sch-text); font-weight: 600; font-size: 0.9375rem; }
+  .schema .sch-detail { display: block; color: var(--sch-muted); font-size: 0.8125rem; margin-top: 0.25rem; }
+  .schema .sch-qui { display: block; color: var(--sch-accent); font-weight: 600; font-size: 0.8125rem; margin-top: 0.25rem; }
+  /* besoins → pièce (pourquoi-cadence) : la pièce a la taille d'un titre, comme dans le dessin */
+  .schema .sch-sous .sch-titre + .sch-qui { font-size: 0.9375rem; }
+  .schema .sch-liste .sch-mono { font-family: var(--font-mono, ui-monospace, monospace); }
+  .schema .sch-sous { margin-top: 0.5rem; display: grid; gap: 0.5rem; }
+  .schema .sch-sous > li { line-height: 1.35; padding: 0.375rem 0.625rem; border: 1.5px solid var(--sch-line); border-radius: 0.5rem; }
+  .schema .sch-sous > li.sch-etape-accent { border: 2px solid var(--sch-accent); }
+  .schema .sch-boucle {
+    margin: 1rem 0 0; padding: 0.5rem 0.875rem; border: 2px dashed var(--sch-accent); border-radius: 0.625rem;
+    color: var(--sch-accent); font-weight: 600; font-size: 0.8125rem; line-height: 1.35;
+  }
   .schema figcaption { margin-top: 0.75rem; font-size: 0.8125rem; line-height: 1.5; color: var(--sch-muted); }
 </style>

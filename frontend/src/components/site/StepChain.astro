@@ -27,6 +27,11 @@ const descAccessible = [
   desc,
   ...steps.map((s, i) => `${i + 1}. ${s.titre} : ${s.detail}${s.qui ? ` ; qui : ${s.qui}` : ""}.`),
 ].join(" ");
+// L104 — la même chaîne en HTML (texte en rem : il grandit avec la police), montrée par Schema.astro à la
+// place du dessin quand le cadre est étroit en em. Une seule des deux est affichée, donc lue.
+const boucleTexte = boucle
+  ? `Boucle en pointillés de « ${boucle.de + 1}. ${steps[boucle.de].titre} » vers « ${boucle.vers + 1}. ${steps[boucle.vers].titre} » — ${boucle.mot}.`
+  : "";
 ---
 
 <svg viewBox={`0 0 ${largeur} ${height}`} role="img" aria-labelledby={`${uid}-t ${uid}-d`} xmlns="http://www.w3.org/2000/svg">
@@ -57,3 +62,15 @@ const descAccessible = [
     </g>
   )}
 </svg>
+<div class="sch-liste" data-sch-liste={id}>
+  <ol class="sch-suite" aria-label={titre}>
+    {steps.map((s, i) => (
+      <li class:list={["sch-etape", { "sch-etape-accent": s.accent }]}>
+        <span class="sch-titre">{`${i + 1}. ${s.titre}`}</span>
+        <span class="sch-detail">{s.detail}</span>
+        {s.qui && <span class="sch-qui">{`Qui : ${s.qui}`}</span>}
+      </li>
+    ))}
+  </ol>
+  {boucle && <p class="sch-boucle" data-boucle-liste={boucle.nom}><span aria-hidden="true">↺ </span>{boucleTexte}</p>}
+</div>
