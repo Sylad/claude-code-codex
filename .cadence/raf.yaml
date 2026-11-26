@@ -1103,6 +1103,7 @@ lots:
     title: "Accueil : à 320–390 px le « · » du sur-titre reste en fin de ligne et la pastille garde toute la largeur — espaces insécables autour des « · » (revue UX de L25, 26-11, effort S)"
     status: done
     estimate: 1
+    delivered: { date: 2026-11-26, sha: f38945464f5b87fe5235262ebefedb8a1ef2ebe7 }
     created: 2026-11-26
     started: 2026-11-26
     review: { date: 2026-11-26, verdict: "conforme : relu 0f790d0 (epouser-lignes.mjs, mesure Range.getClientRects, largeur en em, rien sur une ligne), 864 tests verts", commit: 0f790d019cda2689987d283b590fdb35e8b8a348 }
