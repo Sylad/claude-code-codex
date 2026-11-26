@@ -1070,13 +1070,14 @@ lots:
     finished: 2026-11-26
   - id: L104
     title: "Schémas : le texte grandit à 200 % et reste lisible au téléphone (Schema/StepChain, WCAG 1.4.4). Revue UX de L103 du 26-11 : à 390 px, titres 12,2 → 11,0 px et détails 10,6 → 9,6 px quand on passe de 100 à 200 %, alors que la légende passe à 26 px. Piste : sous ~40 rem, rendre les étapes en liste HTML (ol, mêmes jetons) ou mettre le texte SVG en rem ; garder le schéma dans un écran à 1440 px. Mesure : taille du texte à 200 % ≥ 2 × celle à 100 %, sans défilement latéral à 375 px."
-    status: doing
+    status: done
     estimate: 1
     visible: true
     created: 2026-11-26
     started: 2026-11-26
     ux: { date: 2026-11-26, verdict: "conforme (26-11, revue revues/codex-L104-ux.md) : 0 bloquant, 0 majeur ; ×2,2 à ×3,6 à 200 % au téléphone, 0 px de défilement latéral, SVG identiques à 1440/100 %, axe 0 sur 36 passes, un seul rendu exposé. Mineurs : 125 % au téléphone ne grandit pas (bascule à 16 em, cadre 18,8 em) ; liste besoins sans en-têtes Besoin/Pièce au lecteur d'écran ; « Boucle en pointillés de … » décrit le tracé ; « cité par » disparu en liste." }
-    review: { date: 2026-11-26, verdict: "conforme après 1 correctif (26-11, revues/codex-L104-code.md) : majeur — règle 2 de Schema.astro:74-78 (≥ 480 px, cadre < 25 em) sans test ; mineurs — plan-commits recopié à la main dans cadence.astro:474-526 et déjà divergent, seuil ×1,2 lâche à 1440 (mesuré ×1,86-2,0), correctif de césure annoncé absent de 14b051d. Correctif en cadence run.", commit: 14b051d901857e4d51e0537c74b2ee5de6ab21a5 }
+    review: { date: 2026-11-26, verdict: "conforme — correctif 44642d5 relu par le lead : R3 tablette testé (rouge sans Schema.astro:74-78), PLAN_COMMITS source unique + R4, seuil 1440 à ×1,8, césure 17/17 ; porte verte", commit: 44642d5404cc403b607dc4d2e2817ad2a5c08d4c }
+    finished: 2026-11-26
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
