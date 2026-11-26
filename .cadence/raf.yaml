@@ -1073,6 +1073,7 @@ lots:
     status: done
     estimate: 1
     visible: true
+    delivered: { date: 2026-11-26, sha: 3ffa39a7f42da365a094ebe0daa96e2cf1dbdf30 }
     created: 2026-11-26
     started: 2026-11-26
     ux: { date: 2026-11-26, verdict: "conforme (26-11, revue revues/codex-L104-ux.md) : 0 bloquant, 0 majeur ; ×2,2 à ×3,6 à 200 % au téléphone, 0 px de défilement latéral, SVG identiques à 1440/100 %, axe 0 sur 36 passes, un seul rendu exposé. Mineurs : 125 % au téléphone ne grandit pas (bascule à 16 em, cadre 18,8 em) ; liste besoins sans en-têtes Besoin/Pièce au lecteur d'écran ; « Boucle en pointillés de … » décrit le tracé ; « cité par » disparu en liste." }
