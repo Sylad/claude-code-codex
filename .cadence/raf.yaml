@@ -384,12 +384,14 @@ lots:
   - id: L25
     title: "Accueil : sur-titre orange 12 px posé sur la vidéo de fond (index.astro:80) — le mesurer au pire pixel (6 largeurs × 3 défilements) et le passer sur la pastille sombre comme PageHero s'il est sous 4,5:1 — relevé en revue L16"
     public: "Accueil : sur-titre lisible sur la vidéo de fond"
-    status: doing
+    status: done
     estimate: 1
     visible: true
     created: 2026-10-05
     started: 2026-11-26
     review: { date: 2026-11-26, verdict: "conforme 26-11 lead : sur-titre de l'accueil sur la pastille de PageHero (bg-paper/85, text-claude-soft) ; contrasteEntete gagne ring (0 par défaut, L24 inchangé) ; test l25 rouge sans correctif (4,46:1 à 768 px) et témoin ; Nouveautés avec capture", commit: 04345485be5b0cecdb1f50e22dc9590a29ac21db }
+    ux: { date: 2026-11-26, verdict: "conforme 26-11 revue UX (lead.ux) : contraste 9,33–9,59:1 aux 7 largeurs × 3 défilements, styles calculés identiques à PageHero, rien ne déborde ni ne chevauche, 200 % ok. Mineur → L-suivant (espaces insécables autour du « · » à 320–390). Rapport SP/revues/codex-L25-ux.md" }
+    finished: 2026-11-26
   - id: L26
     title: "Nouveauté L16 : écrire « mesuré à six largeurs, de 320 à 1920 px, et en faisant défiler » au lieu de « à toutes les largeurs » (les tests mesurent 6 largeurs × 3 défilements), puis npm run news et committer le JSON — mineur de la revue L16"
     status: done
@@ -1092,6 +1094,11 @@ lots:
     started: 2026-11-26
     review: { date: 2026-11-26, verdict: "conforme — relu par le lead : cause = mesure avant le premier calcul de césure ; attente partagée (e2e-dist.mjs), règle de détection inchangée, témoin d'un mot coupé exprès ; 10/10 rejeux verts", commit: e51dc8f8a9667f8b94efc629e181d39d844c86d2 }
     finished: 2026-11-26
+  - id: L106
+    title: "Accueil : à 320–390 px le « · » du sur-titre reste en fin de ligne et la pastille garde toute la largeur — espaces insécables autour des « · » (revue UX de L25, 26-11, effort S)"
+    status: todo
+    estimate: 1
+    created: 2026-11-26
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
