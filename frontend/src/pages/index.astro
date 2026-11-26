@@ -85,7 +85,9 @@ const columns: { eyebrow: string; title: string; rows: SommaireRow[] }[] = [
     >
     </div>
     <div class="relative mx-auto max-w-6xl px-borne-5 sm:px-8 pt-20 sm:pt-28 pb-12 sm:pb-14">
-      <p class="font-mono text-xs uppercase tracking-[0.2em] text-claude">
+      {/* L25 — même pastille que le sur-titre de PageHero : nu sur l'image de fond, il tombait à 4,46:1 à
+           768 px au bord des lettres (tests/l25-surtitre-accueil.e2e.test.mjs). */}
+      <p class="inline-block rounded bg-paper/85 px-2 py-1 font-mono text-xs uppercase tracking-[0.2em] text-claude-soft">
         Codex Claude Code · guides · projets
       </p>
       <h1

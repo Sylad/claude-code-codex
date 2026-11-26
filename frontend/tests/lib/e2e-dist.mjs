@@ -198,7 +198,9 @@ export const contexteEntete = (browser, width) =>
 // Lève une erreur d'assertion si un sélecteur ne trouve rien ou si, en haut de page, ses glyphes ne sont
 // pas reconnus ; renvoie la liste des mesures sous le seuil (vide = conforme). `log` reçoit une ligne par
 // mesure (t.diagnostic). `avantMesure(page)` s'exécute après le chargement : le témoin y casse l'en-tête.
-export async function contrasteEntete(page, { base, route, selectors, log = () => {}, avantMesure, scrolls = DEFILEMENTS_ENTETE }) {
+// `ring` (L25) : comme worstPixelContrast, compare aussi chaque glyphe au fond AUTOUR de lui (0 par défaut,
+// la mesure de L24) ; le sur-titre de l'accueil se mesure avec `ring: 2`, comme le texte orangé de L74.
+export async function contrasteEntete(page, { base, route, selectors, log = () => {}, avantMesure, scrolls = DEFILEMENTS_ENTETE, ring = 0 }) {
   const width = page.viewportSize().width;
   const failures = [];
   await page.goto(`${base}${route}`, { waitUntil: 'load' });
@@ -210,7 +212,7 @@ export async function contrasteEntete(page, { base, route, selectors, log = () =
     for (const sel of selectors) {
       // Un sélecteur qui ne trouve rien est un échec, pas un « rien à mesurer » silencieux.
       if (!(await page.locator(sel).count())) throw new assert.AssertionError({ message: `${route} ${sel} @${width}px : sélecteur sans résultat` });
-      const { worst, glyphs } = await worstPixelContrast(page, sel);
+      const { worst, glyphs } = await worstPixelContrast(page, sel, { ring });
       log(`${route} ${sel} @${width}px y${scroll} : ${worst.toFixed(2)}:1 (${glyphs} px)`);
       // Défilé, le texte peut passer sous la barre fixe ; en haut de page, il doit être mesuré.
       if (scroll === 0 && glyphs <= 20) throw new assert.AssertionError({ message: `${route} ${sel} @${width}px : glyphes non détectés (${glyphs} px)` });

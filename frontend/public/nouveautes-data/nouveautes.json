@@ -1,7 +1,22 @@
 {
   "project": "claude-code-codex",
-  "generated": "2026-11-26 12:16",
+  "generated": "2026-11-26 15:40",
   "entries": [
+    {
+      "slug": "2026-11-26-le-sur-titre-de-l-accueil-se-lit-sur-l-image-de-fond",
+      "title": "Le sur-titre de l'accueil se lit sur l'image de fond",
+      "date": "2026-11-26",
+      "lots": [
+        "L25"
+      ],
+      "captures": [
+        "captures/L25-surtitre-accueil-1440.png"
+      ],
+      "alts": [
+        "Haut de la page d'accueil sur grand écran : le sur-titre « Codex Claude Code · guides · projets » en petites capitales orangées sur une pastille sombre, au-dessus du grand titre, devant l'image de fond"
+      ],
+      "html": "<p>Sur la page d'accueil, la petite ligne orangée au-dessus du titre, « Codex Claude Code · guides · projets », est désormais posée sur une pastille sombre, comme le sur-titre des autres pages du site.</p>\n<ul><li><strong>Plus lisible</strong> : posée directement sur l'image de fond, elle manquait de contraste sur une tablette ; sur sa pastille, elle se lit à toutes les largeurs d'écran, en haut de page comme après un léger défilement.</li><li><strong>Au téléphone</strong>, la pastille passe sur deux lignes quand le texte ne tient pas sur une seule.</li></ul>"
+    },
     {
       "slug": "2026-11-26-le-texte-des-schemas-grandit-avec-la-taille-du-texte",
       "title": "Le texte des schémas grandit avec la taille du texte",
