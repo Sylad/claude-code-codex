@@ -45,22 +45,49 @@ test('R1 — le parcours V2 suit run → porte et intégration sur main → revu
 
 test('R2 — le parcours V2 dit qui fait quoi : session Opus, Fable en escalade, revue et livraison par le lead', () => {
   const t = nomAccessible(figure('parcours-v2'));
-  assert.deepEqual(horsOrdre(t, ['lead', 'Opus', 'Fable', 'sans modèle', 'lead', 'lead', 'lead']), [], 'qui : absent ou hors ordre');
+  assert.deepEqual(horsOrdre(t, ['lead', 'Opus', 'Fable', '3e passe de correction', 'cadence', 'même session', 'lead', 'lead', 'lead']), [], 'qui : absent ou hors ordre');
   assert.doesNotMatch(t, /Sonnet|spec-writer|vague/, 'le parcours V2 ne doit rien garder de la V1');
+  // revue de code du 26-11 : l'intégration est une avance rapide (rebase, fast-forward), pas une fusion ;
+  // une porte rouge est corrigée par la même session, donc pas « sans modèle »
+  assert.match(t, /avance rapide sur main/);
+  assert.doesNotMatch(plain(figure('parcours-v2')), /fusion|sans modèle/);
 });
 
 test('R3 — une revue non conforme ramène à un run de correction (boucle revue → cadence run)', () => {
   const f = figure('parcours-v2');
   assert.match(f, /data-boucle="revue-correction"/, 'boucle absente');
   assert.match(plain(f), /non conforme/);
+  // sens de la boucle : le chemin part de la boîte « Revue » et arrive à la boîte « cadence run »
+  // (StepChain : M<x> <yDépart> H… V<yArrivée> H…), pas seulement sa présence
+  const boites = [...f.matchAll(/<rect[^>]*\by="([\d.]+)"[^>]*\bheight="([\d.]+)"[^>]*><\/rect>\s*<text[^>]*>\d+\. ([^<]+)<\/text>/g)]
+    .map((m) => ({ y: Number(m[1]), h: Number(m[2]), titre: m[3] }));
+  const boite = (titre) => {
+    const b = boites.find((x) => x.titre === titre);
+    assert.ok(b, `boîte « ${titre} » introuvable`);
+    return b;
+  };
+  const d = f.match(/<g data-boucle="revue-correction">\s*<path[^>]*\bd="M[\d.]+ ([\d.]+) H[\d.]+ V([\d.]+) /);
+  assert.ok(d, 'chemin de la boucle illisible');
+  const dans = (y, b) => y > b.y && y < b.y + b.h;
+  assert.ok(dans(Number(d[1]), boite('Revue')), `la boucle part de y=${d[1]}, hors de la boîte « Revue »`);
+  assert.ok(dans(Number(d[2]), boite('cadence run')), `la boucle arrive à y=${d[2]}, hors de la boîte « cadence run »`);
 });
 
-test('R4 — la règle d’escalade est écrite en entier près du schéma : Fable dès la 3e passe ou après deux revues non conformes', () => {
+test('R4 — la règle d’escalade est écrite en entier près du schéma : Fable dès la 3e passe de correction ou après deux revues non conformes', () => {
   const h = html();
   const avant = plain(h.slice(h.indexOf("Le parcours d'un lot dans cadence 2"), h.indexOf('data-schema="parcours-v2"')));
-  assert.match(avant, /troisième passe/);
+  assert.match(avant, /troisième passe de correction/);
   assert.match(avant, /deux revues non conformes/);
   assert.match(avant, /Fable/);
+});
+
+test('R7 — les étapes encadrées d’orange (accent) sont expliquées par la légende du schéma V2', () => {
+  // revue UX du 26-11 (Nielsen 4) : un accent sans légende n'a pas de sens pour le lecteur
+  const f = figure('parcours-v2');
+  const accent = [...f.matchAll(/<rect class="sch-box-accent"[^>]*><\/rect>\s*<text[^>]*>\d+\. ([^<]+)<\/text>/g)].map((m) => m[1]);
+  assert.deepEqual(accent, ['Revue', 'QA']);
+  const legende = plain(f.match(/<figcaption[^>]*>([^<]*)<\/figcaption>/)[1]);
+  assert.match(legende, /Cadre orange : [^.]*la revue et la QA/, 'légende de l’accent absente');
 });
 
 test('R5 — la V1 reste, datée, dans un bloc historique séparé placé après la V2', () => {
@@ -75,6 +102,11 @@ test('R5 — la V1 reste, datée, dans un bloc historique séparé placé après
   assert.match(date[1], /V1/);
   assert.match(date[1], /10\s+novembre\s+2026/u);
   assert.match(nomAccessible(figure('parcours-lot')), /V1/, 'le schéma V1 ne se dit pas V1');
+  // revue UX du 26-11 : la figure elle-même se dit V1, en texte visible (pas seulement dans son nom accessible)
+  const titreVisible = figure('parcours-lot').match(/<p[^>]*data-schema-titre[^>]*>([^<]+)<\/p>/);
+  assert.ok(titreVisible, 'figure V1 sans titre visible');
+  assert.match(titreVisible[1], /^V1 · /);
+  assert.doesNotMatch(figure('parcours-v2'), /data-schema-titre/, 'le titre « V1 » ne doit pas marquer la V2');
   // le bloc historique a sa propre section, distincte de « La méthode »
   const h2s = [...h.matchAll(/<h2[^>]*>([^<]*)<\/h2>/g)].map((m) => [m.index, m[1].trim()]);
   const sect = (pos) => h2s.filter(([i]) => i < pos).pop()[1];

@@ -38,8 +38,8 @@ const parcours = [
 // parcours V1 ci-dessus reste affiché plus bas, comme historique daté (le point de départ).
 const parcoursV2 = [
   { titre: "Lot choisi", detail: "le lead écrit le brief et lance le run", qui: "le lead" },
-  { titre: "cadence run", detail: "une session fait tout le lot dans un worktree", qui: "session Opus (Fable dès la 3e passe)" },
-  { titre: "Porte et intégration", detail: "build et tests complets, puis fusion sur main", qui: "le programme cadence, sans modèle" },
+  { titre: "cadence run", detail: "une session fait tout le lot dans un worktree", qui: "Opus ; Fable dès la 3e passe de correction" },
+  { titre: "Porte et intégration", detail: "build et tests, puis avance rapide sur main", qui: "cadence ; si rouge, la même session corrige" },
   { titre: "Revue", detail: "revue de code ; revue UX si le lot a un écran", qui: "relecteurs neufs, lancés par le lead", accent: true },
   { titre: "Livraison", detail: "CI attendue, déploiement joué, effet vérifié", qui: "le lead, par le livreur" },
   { titre: "QA", detail: "les pages livrées, ouvertes dans un navigateur", qui: "le lead, par l'agent QA", accent: true },
@@ -507,24 +507,25 @@ const v2Decisions: { id: string; titre: string; causes: string[]; corps: string;
         Depuis le 10 novembre 2026, un lot se fait avec <code>cadence run</code> :
         une seule session Opus le prend de bout en bout, dans une copie de
         travail à part (un worktree). Le programme cadence rejoue ensuite la
-        porte complète (build et tests) et intègre le travail sur
-        <code>main</code>. Le lead lance alors la revue de code, et la revue
+        porte complète (build et tests) ; si elle est rouge, la même session
+        corrige et la repasse. Le travail arrive ensuite sur <code>main</code>
+        par avance rapide, sans commit de fusion. Le lead lance alors la revue de code, et la revue
         UX si le lot touche un écran.
       </p>
       <p>
         Une revue non conforme relance un <code>cadence run</code> de
-        correction, qui repasse la porte puis la revue. Dès la troisième passe,
-        ou après deux revues non conformes, la correction est confiée à Fable.
+        correction, qui repasse la porte puis la revue. Dès la troisième passe de
+        correction, ou après deux revues non conformes, la correction est confiée à Fable.
         Le lot revu, le lead le livre et fait vérifier les pages livrées (QA).
       </p>
       <div class="-mx-borne-5 sm:mx-0">
-      <Schema id="parcours-v2" legende="Les six étapes d'un lot dans cadence 2. Une revue non conforme relance un run de correction : la boucle en pointillés.">
+      <Schema id="parcours-v2" legende="Les six étapes d'un lot dans cadence 2. Une revue non conforme relance un run de correction : la boucle en pointillés. Cadre orange : les deux contrôles faits par un regard neuf, la revue et la QA.">
         <StepChain
           id="parcours-v2"
           steps={parcoursV2}
           boucle={{ de: 3, vers: 1, nom: "revue-correction", mot: "non conforme : correction" }}
           titre="Le parcours d'un lot dans cadence 2"
-          desc="Six étapes dans l'ordre, chacune avec qui la fait. Une boucle en pointillés ramène de la revue à un nouveau cadence run de correction tant que la revue n'est pas conforme ; dès la troisième passe, ou après deux revues non conformes, la correction passe à Fable."
+          desc="Six étapes dans l'ordre, chacune avec qui la fait. Une boucle en pointillés ramène de la revue à un nouveau cadence run de correction tant que la revue n'est pas conforme ; dès la troisième passe de correction, ou après deux revues non conformes, la correction passe à Fable."
         />
       </Schema>
       </div>
@@ -584,11 +585,12 @@ const v2Decisions: { id: string; titre: string; causes: string[]; corps: string;
         </p>
         <div class="-mx-borne-5 sm:mx-0">
         <Schema id="parcours-lot" legende="V1 · les six étapes d'un lot dans une vague. La revue pouvait renvoyer le lot en correction, puis le relire : la boucle en pointillés.">
+          <p data-schema-titre class="mb-3 text-sm font-semibold leading-snug text-[var(--sch-text)]">V1 · Le parcours d'un lot dans une vague</p>
           <StepChain
             id="parcours-lot"
             steps={parcours}
             boucle={{ de: 3, vers: 2, nom: "correction-revue", mot: "reprise" }}
-            titre="Le parcours d'un lot dans une vague (V1)"
+            titre="V1 · Le parcours d'un lot dans une vague"
             desc="Historique de la V1. Six étapes dans l'ordre, chacune avec qui la faisait. Une boucle en pointillés ramène de la correction à la revue tant que la revue trouve quelque chose."
           />
         </Schema>
