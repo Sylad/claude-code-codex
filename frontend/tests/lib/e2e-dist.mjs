@@ -213,7 +213,7 @@ export async function contrasteEntete(page, { base, route, selectors, log = () =
       const { worst, glyphs } = await worstPixelContrast(page, sel);
       log(`${route} ${sel} @${width}px y${scroll} : ${worst.toFixed(2)}:1 (${glyphs} px)`);
       // Défilé, le texte peut passer sous la barre fixe ; en haut de page, il doit être mesuré.
-      if (scroll === 0 && !(glyphs > 20)) throw new assert.AssertionError({ message: `${route} ${sel} @${width}px : glyphes non détectés (${glyphs} px)` });
+      if (scroll === 0 && glyphs <= 20) throw new assert.AssertionError({ message: `${route} ${sel} @${width}px : glyphes non détectés (${glyphs} px)` });
       if (glyphs > 20 && worst < SEUIL_ENTETE) failures.push(`${route} ${sel} @${width}px y${scroll} : ${worst.toFixed(2)}:1`);
     }
   }
