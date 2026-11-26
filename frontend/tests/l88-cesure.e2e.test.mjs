@@ -20,7 +20,7 @@ import assert from 'node:assert/strict';
 import { readdirSync, existsSync, readFileSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { DIST, setupBrowser } from './lib/e2e-dist.mjs';
+import { DIST, attendreCesure, setupBrowser } from './lib/e2e-dist.mjs';
 import { chargerImages, releverCoupures, releverSignesSeuls, verifierCoupures } from './lib/coupures.mjs';
 
 function pages(dir) {
@@ -38,14 +38,6 @@ const CITEES = ['/nouveautes/', '/livre-de-bord/', '/plan-de-travail/', '/learni
 // Ce que le script de césure peut poser dans la page.
 const POSE = '[data-cesure], [data-cesure-vu], [data-cesure-copie]';
 
-// La césure est recalculée à l'image qui suit un changement de taille du <body> (src/lib/cesure.mjs) :
-// on attend que son dernier calcul porte sur la mise en page courante.
-async function attendreCesure(page) {
-  await page.waitForFunction(() => {
-    const r = document.body.getBoundingClientRect();
-    return document.documentElement.dataset.cesureMesure === `${r.width}x${r.height}`;
-  }, null, { timeout: 15_000 });
-}
 
 async function ouvrir(page, url) {
   await page.goto(url, { waitUntil: 'load' });

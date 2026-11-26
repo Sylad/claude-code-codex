@@ -165,3 +165,14 @@ export async function worstPixelContrast(page, selector, { ring = 0 } = {}) {
     return { worst, glyphs };
   }, { bg: bg.toString('base64'), fg: fg.toString('base64'), color, opacity, ring });
 }
+
+// L88 — la césure (src/lib/cesure.mjs) est recalculée à l'image qui suit un changement de taille du <body> :
+// on attend que son dernier calcul porte sur la mise en page courante. Tout test qui mesure des coupures
+// de mots mesure la page qu'un visiteur voit, césure faite (L105 : mesurée avant son premier calcul, la
+// page de /nouveautes/ montrait « chang|é » coupé environ une fois sur trois).
+export async function attendreCesure(page, timeout = 15_000) {
+  await page.waitForFunction(() => {
+    const r = document.body.getBoundingClientRect();
+    return document.documentElement.dataset.cesureMesure === `${r.width}x${r.height}`;
+  }, null, { timeout });
+}
