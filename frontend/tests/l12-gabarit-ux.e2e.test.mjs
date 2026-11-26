@@ -72,7 +72,8 @@ test('L12 (4) — l’en-tête des pages de la barre reprend son libellé (et so
     const hero = html(route).split('<main')[1].split('</h1>')[0];
     const p = hero.match(/<p[^>]*tracking-\[0\.2em\][^>]*>\s*([\s\S]*?)\s*<\/p>/);
     assert.ok(p, `/${route}/ : surtitre introuvable`);
-    const texte = p[1].replace(/&#39;/g, "'").trim();
+    // L106 : le « · » est lié au mot suivant par une insécable ; le libellé lu reste le même.
+    const texte = p[1].replace(/&#39;/g, "'").replace(/\u00a0/g, ' ').trim();
     assert.doesNotMatch(texte, /^\d+\s*·/, `/${route}/ : surtitre numéroté « ${texte} »`);
     assert.equal(texte, eyebrow, `/${route}/`);
     // Chaque partie est un libellé réel de la barre (ou du pied, pour « Le site »).

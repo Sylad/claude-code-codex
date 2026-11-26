@@ -1,6 +1,8 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { APP_COUNT } from "@/data/apps";
+// L106 : « · » du sur-titre lié au mot suivant, jamais seul en fin de ligne.
+import { lierPoints } from "@/lib/lier-points.mjs";
 
 type SommaireLink = { href: string; label: string };
 type SommaireRow = { links: SommaireLink[]; hint: string };
@@ -88,7 +90,7 @@ const columns: { eyebrow: string; title: string; rows: SommaireRow[] }[] = [
       {/* L25 — même pastille que le sur-titre de PageHero : nu sur l'image de fond, il tombait à 4,46:1 à
            768 px au bord des lettres (tests/l25-surtitre-accueil.e2e.test.mjs). */}
       <p class="inline-block rounded bg-paper/85 px-2 py-1 font-mono text-xs uppercase tracking-[0.2em] text-claude-soft">
-        Codex Claude Code · guides · projets
+        {lierPoints("Codex Claude Code · guides · projets")}
       </p>
       <h1
         class="mt-4 text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight text-ink leading-[1.05]"
