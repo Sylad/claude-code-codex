@@ -389,6 +389,7 @@ lots:
     visible: true
     created: 2026-10-05
     started: 2026-11-26
+    review: { date: 2026-11-26, verdict: "conforme 26-11 lead : sur-titre de l'accueil sur la pastille de PageHero (bg-paper/85, text-claude-soft) ; contrasteEntete gagne ring (0 par défaut, L24 inchangé) ; test l25 rouge sans correctif (4,46:1 à 768 px) et témoin ; Nouveautés avec capture", commit: 04345485be5b0cecdb1f50e22dc9590a29ac21db }
   - id: L26
     title: "Nouveauté L16 : écrire « mesuré à six largeurs, de 320 à 1920 px, et en faisant défiler » au lieu de « à toutes les largeurs » (les tests mesurent 6 largeurs × 3 défilements), puis npm run news et committer le JSON — mineur de la revue L16"
     status: done
