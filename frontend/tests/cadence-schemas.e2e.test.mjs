@@ -13,9 +13,9 @@ const figure = (id) => {
   return m[1];
 };
 const plain = (s) => s.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
-const IDS = ['plan-commits', 'parcours-lot', 'chaine-livreur'];
+const IDS = ['plan-commits', 'parcours-v2', 'parcours-lot', 'chaine-livreur'];
 
-test('R1 — trois schémas SVG, chacun avec titre, description et légende', () => {
+test('R1 — chaque schéma SVG, chacun avec titre, description et légende', () => {
   for (const id of IDS) {
     const f = figure(id);
     assert.match(f, /<svg[^>]*role="img"[^>]*aria-labelledby="[^"]+"/, `${id} : svg sans role/aria-labelledby`);

@@ -1,0 +1,114 @@
+// L103 (D-4) — étude de cas cadence : le parcours d'un lot montré est celui de cadence 2 (cadence run),
+// et le parcours des vagues V1 reste affiché comme historique daté, à part. D'après la demande :
+//   - V2 : cadence run (une session Opus, worktree) → porte complète et intégration sur main → revue de
+//     code (+ UX si écran), lancée par le lead → livraison et QA par le lead ; une revue non conforme
+//     relance un run de correction ; Fable dès la 3e passe ou après deux revues non conformes ;
+//   - V1 gardée, datée, clairement séparée, placée après la V2 ;
+//   - lisible au téléphone (390 px) et texte agrandi à 200 % sans débordement.
+// Lit dist : `npx astro build` avant.
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { DIST, setupBrowser } from './lib/e2e-dist.mjs';
+
+const html = () => readFileSync(join(DIST, 'case-studies', 'cadence', 'index.html'), 'utf8');
+const plain = (s) => s.replace(/<[^>]+>/g, ' ').replace(/&#39;/g, "'").replace(/\s+/g, ' ');
+const figure = (id) => {
+  const m = html().match(new RegExp(`<figure[^>]*data-schema="${id}"[^>]*>([\\s\\S]*?)</figure>`));
+  assert.ok(m, `figure « ${id} » absente`);
+  return m[1];
+};
+const nomAccessible = (f) => plain(`${f.match(/<title[^>]*>([^<]*)<\/title>/)[1]} ${f.match(/<desc[^>]*>([^<]*)<\/desc>/)[1]}`);
+const enOrdre = (t, mots, quoi) => {
+  let from = 0;
+  for (const w of mots) {
+    const at = t.indexOf(w, from);
+    assert.ok(at >= 0, `${quoi} : « ${w} » absent ou hors ordre`);
+    from = at + w.length;
+  }
+};
+
+test('R1 — le parcours V2 suit run → porte et intégration sur main → revue → livraison → QA, dans le dessin et le nom accessible', () => {
+  const f = figure('parcours-v2');
+  const etapes = ['cadence run', 'worktree', 'Porte', 'main', 'Revue', 'revue UX', 'Livraison', 'QA'];
+  enOrdre(plain(f), etapes, 'dessin');
+  enOrdre(nomAccessible(f), etapes, 'nom accessible');
+});
+
+test('R2 — le parcours V2 dit qui fait quoi : session Opus, Fable en escalade, revue et livraison par le lead', () => {
+  const t = nomAccessible(figure('parcours-v2'));
+  enOrdre(t, ['lead', 'Opus', 'Fable', 'sans modèle', 'lead', 'lead', 'lead'], 'qui');
+  assert.doesNotMatch(t, /Sonnet|spec-writer|vague/, 'le parcours V2 ne doit rien garder de la V1');
+});
+
+test('R3 — une revue non conforme ramène à un run de correction (boucle revue → cadence run)', () => {
+  const f = figure('parcours-v2');
+  assert.match(f, /data-boucle="revue-correction"/, 'boucle absente');
+  assert.match(plain(f), /non conforme/);
+});
+
+test('R4 — la règle d’escalade est écrite en entier près du schéma : Fable dès la 3e passe ou après deux revues non conformes', () => {
+  const h = html();
+  const avant = plain(h.slice(h.indexOf("Le parcours d'un lot dans cadence 2"), h.indexOf('data-schema="parcours-v2"')));
+  assert.match(avant, /troisième passe/);
+  assert.match(avant, /deux revues non conformes/);
+  assert.match(avant, /Fable/);
+});
+
+test('R5 — la V1 reste, datée, dans un bloc historique séparé placé après la V2', () => {
+  const h = html();
+  const v2 = h.indexOf('data-schema="parcours-v2"');
+  const bloc = h.indexOf('data-historique="v1"');
+  const v1 = h.indexOf('data-schema="parcours-lot"');
+  assert.ok(v2 > 0 && bloc > v2 && v1 > bloc, 'ordre attendu : V2, puis bloc historique, puis schéma V1 dedans');
+  const date = h.slice(bloc).match(/data-historique-date[^>]*>([^<]+)</);
+  assert.ok(date, 'date de l’historique absente');
+  assert.match(date[1], /Historique/);
+  assert.match(date[1], /V1/);
+  assert.match(date[1], /10\s+novembre\s+2026/u);
+  assert.match(nomAccessible(figure('parcours-lot')), /V1/, 'le schéma V1 ne se dit pas V1');
+  // le bloc historique a sa propre section, distincte de « La méthode »
+  const h2s = [...h.matchAll(/<h2[^>]*>\s*([^<]+?)\s*<\/h2>/g)].map((m) => [m.index, m[1]]);
+  const sect = (pos) => h2s.filter(([i]) => i < pos).pop()[1];
+  assert.equal(sect(v2), 'La méthode');
+  assert.match(sect(v1), /point de départ/i);
+});
+
+test('R6 — 390 px et texte à 200 % : le schéma V2 et ses textes restent dans le cadre, lisibles', async (t) => {
+  const env = await setupBrowser(t);
+  if (!env) return;
+  for (const [largeur, police] of [[390, 16], [1440, 16], [390, 32], [1440, 32]]) {
+    const page = await env.browser.newPage({ viewport: { width: largeur, height: 900 } });
+    const cdp = await page.context().newCDPSession(page);
+    await cdp.send('Page.setFontSizes', { fontSizes: { standard: police, fixed: Math.round(police * 13 / 16) } });
+    await page.goto(`${env.base}/case-studies/cadence/`);
+    const r = await page.evaluate(() => {
+      const fig = document.querySelector('figure[data-schema="parcours-v2"]');
+      const svg = fig.querySelector('svg');
+      const scale = svg.getBoundingClientRect().width / svg.viewBox.baseVal.width;
+      const textes = [...svg.querySelectorAll('text')];
+      // chaque texte d'étape tient dans la boîte de son étape (rect du même groupe)
+      const debordeBoite = textes.filter((x) => {
+        const rect = x.parentNode.querySelector(':scope > rect');
+        if (!rect) return false;
+        const b = x.getBBox();
+        return b.x + b.width > rect.x.baseVal.value + rect.width.baseVal.value - 4;
+      }).map((x) => x.textContent);
+      return {
+        scroll: document.documentElement.scrollWidth - window.innerWidth,
+        figDroite: fig.getBoundingClientRect().right - window.innerWidth,
+        min: Math.min(...textes.map((x) => parseFloat(getComputedStyle(x).fontSize) * scale)),
+        debordeBoite,
+        vb: svg.viewBox.baseVal.width,
+        textesHors: textes.filter((x) => !x.closest('[data-boucle]')).filter((x) => { const b = x.getBBox(); return b.x + b.width > svg.viewBox.baseVal.width; }).length,
+      };
+    });
+    await page.close();
+    assert.ok(r.scroll <= 0, `${largeur} px, police ${police} : la page défile de ${r.scroll} px`);
+    assert.ok(r.figDroite <= 0.5, `${largeur} px, police ${police} : le schéma dépasse de ${r.figDroite} px`);
+    assert.deepEqual(r.debordeBoite, [], `${largeur} px, police ${police} : texte(s) hors de leur boîte`);
+    assert.equal(r.textesHors, 0, `${largeur} px, police ${police} : ${r.textesHors} texte(s) hors du viewBox`);
+    if (largeur === 390 && police === 16) assert.ok(r.min >= 11, `390 px : plus petit texte rendu à ${r.min.toFixed(1)} px`);
+  }
+});

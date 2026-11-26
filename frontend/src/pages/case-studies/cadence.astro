@@ -34,6 +34,17 @@ const parcours = [
   { titre: "Prêt", detail: "le lead regarde les captures et décide", qui: "le lead confie au livreur : porte, livraison", accent: true },
 ];
 
+// L103 (D-4) — le parcours d'un lot dans cadence 2, tel qu'il tourne aujourd'hui (`cadence run`). Le
+// parcours V1 ci-dessus reste affiché plus bas, comme historique daté (le point de départ).
+const parcoursV2 = [
+  { titre: "Lot choisi", detail: "le lead écrit le brief et lance le run", qui: "le lead" },
+  { titre: "cadence run", detail: "une session fait tout le lot dans un worktree", qui: "session Opus (Fable dès la 3e passe)" },
+  { titre: "Porte et intégration", detail: "build et tests complets, puis fusion sur main", qui: "le programme cadence, sans modèle" },
+  { titre: "Revue", detail: "revue de code ; revue UX si le lot a un écran", qui: "relecteurs neufs, lancés par le lead", accent: true },
+  { titre: "Livraison", detail: "CI attendue, déploiement joué, effet vérifié", qui: "le lead, par le livreur" },
+  { titre: "QA", detail: "les pages livrées, ouvertes dans un navigateur", qui: "le lead, par l'agent QA", accent: true },
+];
+
 const livreur = [
   { titre: "Lot prêt", detail: "revue passée, verdict UX enregistré" },
   { titre: "Porte de tests", detail: "tests et build rejoués sur le sha" },
@@ -389,7 +400,7 @@ const v2Decisions: { id: string; titre: string; causes: string[]; corps: string;
   <PageHero
     eyebrow="Case study · cadence"
     title="Un plan relié aux commits, des sessions IA mesurées"
-    intro="Cadence est la méthode de travail derrière les projets de ce codex : un plan versionné à côté du code, des sessions Claude Code lancées par un programme, des livraisons prouvées par leur effet. Né le 28 septembre 2026, il a connu deux générations. La V1 (versions 1.x) faisait passer chaque lot par une vague de sessions courtes ; cadence 2, depuis le 10 novembre, confie chaque demande à une seule session. La méthode des vagues et les chiffres d’octobre ci-dessous sont ceux de la V1 ; le dernier chapitre dit ce qu’elle coûtait et ce qui a changé."
+    intro="Cadence est la méthode de travail derrière les projets de ce codex : un plan versionné à côté du code, des sessions Claude Code lancées par un programme, des livraisons prouvées par leur effet. Né le 28 septembre 2026, il a connu deux générations. La V1 (versions 1.x) faisait passer chaque lot par une vague de sessions courtes ; cadence 2, depuis le 10 novembre, confie chaque demande à une seule session. Le parcours d’un lot décrit ci-dessous est celui de cadence 2 ; le parcours des vagues et les chiffres d’octobre sont ceux de la V1, gardés comme point de départ, et le dernier chapitre dit ce qu’elle coûtait et ce qui a changé."
   />
 
   <section class="mx-auto max-w-3xl px-borne-5 sm:px-8 py-12 space-y-12">
@@ -491,21 +502,29 @@ const v2Decisions: { id: string; titre: string; causes: string[]; corps: string;
       </Schema>
       </div>
 
-      <h3 data-intertitre class={H3}>Le parcours d'un lot dans une vague (V1)</h3>
+      <h3 data-intertitre class={H3}>Le parcours d'un lot dans cadence 2</h3>
       <p>
-        En V1, dans une vague, un lot passe de session en session, chacune courte et
-        neuve. Les tests d'acceptation sont écrits par une session à part et
-        verrouillés rouges : l'implémentation doit les faire passer sans les
-        toucher.
+        Depuis le 10 novembre 2026, un lot se fait avec <code>cadence run</code> :
+        une seule session Opus le prend de bout en bout, dans une copie de
+        travail à part (un worktree). Le programme cadence rejoue ensuite la
+        porte complète (build et tests) et intègre le travail sur
+        <code>main</code>. Le lead lance alors la revue de code, et la revue
+        UX si le lot touche un écran.
+      </p>
+      <p>
+        Une revue non conforme relance un <code>cadence run</code> de
+        correction, qui repasse la porte puis la revue. Dès la troisième passe,
+        ou après deux revues non conformes, la correction est confiée à Fable.
+        Le lot revu, le lead le livre et fait vérifier les pages livrées (QA).
       </p>
       <div class="-mx-borne-5 sm:mx-0">
-      <Schema id="parcours-lot" legende="Les six étapes d'un lot. La revue peut renvoyer le lot en correction, puis le relire : la boucle en pointillés.">
+      <Schema id="parcours-v2" legende="Les six étapes d'un lot dans cadence 2. Une revue non conforme relance un run de correction : la boucle en pointillés.">
         <StepChain
-          id="parcours-lot"
-          steps={parcours}
-          boucle={{ de: 3, vers: 2, nom: "correction-revue", mot: "reprise" }}
-          titre="Le parcours d'un lot dans une vague"
-          desc="Six étapes dans l'ordre, chacune avec qui la fait. Une boucle en pointillés ramène de la correction à la revue tant que la revue trouve quelque chose."
+          id="parcours-v2"
+          steps={parcoursV2}
+          boucle={{ de: 3, vers: 1, nom: "revue-correction", mot: "non conforme : correction" }}
+          titre="Le parcours d'un lot dans cadence 2"
+          desc="Six étapes dans l'ordre, chacune avec qui la fait. Une boucle en pointillés ramène de la revue à un nouveau cadence run de correction tant que la revue n'est pas conforme ; dès la troisième passe, ou après deux revues non conformes, la correction passe à Fable."
         />
       </Schema>
       </div>
@@ -547,6 +566,37 @@ const v2Decisions: { id: string; titre: string; causes: string[]; corps: string;
           Le panneau des lots tel que le publie la page Plan de travail : un titre par lot, rangé en cours, prévu ou livré.
         </figcaption>
       </figure>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow="Le point de départ : la V1" id="le-point-de-depart">
+      <div data-historique="v1" class="space-y-4 border-t border-dashed border-white/20 pt-borne-5 sm:rounded-xl sm:border sm:p-borne-5">
+        <p data-historique-date class="font-mono text-xs text-ink-muted">
+          Historique · V1 (versions 1.x), jusqu'au 10 novembre 2026
+        </p>
+        <h3 data-intertitre class={H3}>Le parcours d'un lot dans une vague (V1)</h3>
+        <p>
+          Ce parcours ne tourne plus : c'est celui d'où cadence 2 est parti. En
+          V1, dans une vague, un lot passait de session en session, chacune
+          courte et neuve. Les tests d'acceptation étaient écrits par une session
+          à part et verrouillés rouges : l'implémentation devait les faire passer
+          sans les toucher. Le chapitre <a href="#le-probleme-de-la-v1">« Le problème de la V1 »</a>
+          dit ce que ce parcours coûtait.
+        </p>
+        <div class="-mx-borne-5 sm:mx-0">
+        <Schema id="parcours-lot" legende="V1 · les six étapes d'un lot dans une vague. La revue pouvait renvoyer le lot en correction, puis le relire : la boucle en pointillés.">
+          <StepChain
+            id="parcours-lot"
+            steps={parcours}
+            boucle={{ de: 3, vers: 2, nom: "correction-revue", mot: "reprise" }}
+            titre="Le parcours d'un lot dans une vague (V1)"
+            desc="Historique de la V1. Six étapes dans l'ordre, chacune avec qui la faisait. Une boucle en pointillés ramène de la correction à la revue tant que la revue trouve quelque chose."
+          />
+        </Schema>
+        </div>
+        <p class="font-mono text-[0.6875rem] text-ink-muted">
+          <a href={doc("docs/orchestrate.md")} target="_blank" rel="noopener">↗ docs/orchestrate.md</a> · la documentation des vagues
+        </p>
+      </div>
     </CaseStudySection>
 
     <CaseStudySection eyebrow="Les chiffres mesurés de la V1">

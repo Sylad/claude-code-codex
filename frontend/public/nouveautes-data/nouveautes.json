@@ -1,7 +1,22 @@
 {
   "project": "claude-code-codex",
-  "generated": "2026-11-25 10:09",
+  "generated": "2026-11-26 10:10",
   "entries": [
+    {
+      "slug": "2026-11-26-l-etude-de-cas-montre-le-parcours-actuel-d-un-lot",
+      "title": "L'étude de cas montre le parcours actuel d'un lot",
+      "date": "2026-11-26",
+      "lots": [
+        "L103"
+      ],
+      "captures": [
+        "captures/L103-parcours-cadence-2-390.png"
+      ],
+      "alts": [
+        "Le nouveau schéma sur un téléphone : six étapes en colonne, du lot choisi par le lead au cadence run, à la porte et l'intégration, à la revue, à la livraison et à la QA, avec une boucle en pointillés « non conforme : correction » de la revue vers le cadence run"
+      ],
+      "html": "<p>L'étude de cas cadence montre maintenant le parcours d'un lot tel qu'il se fait aujourd'hui, avec cadence 2.</p>\n<ul><li><strong>Le schéma du parcours</strong> suit six étapes et dit qui fait chacune : le lead choisit le lot, une session Opus le fait de bout en bout avec <code>cadence run</code>, le programme rejoue la porte de tests et intègre le travail, puis viennent la revue (de code, et UX si le lot touche un écran), la livraison et la QA.</li><li><strong>La boucle de correction</strong> est dessinée : une revue non conforme relance un run de correction, confié à Fable dès la troisième passe ou après deux revues non conformes.</li><li><strong>Le parcours de la V1</strong>, celui des vagues de sessions, reste lisible dans un chapitre à part, « Le point de départ : la V1 », daté et marqué comme historique, avec un lien vers sa documentation.</li></ul>"
+    },
     {
       "slug": "2026-11-25-la-page-a-propos-annonce-les-vrais-outils-du-site",
       "title": "La page À propos annonce les vrais outils du site",
