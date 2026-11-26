@@ -89,7 +89,8 @@ const columns: { eyebrow: string; title: string; rows: SommaireRow[] }[] = [
     <div class="relative mx-auto max-w-6xl px-borne-5 sm:px-8 pt-20 sm:pt-28 pb-12 sm:pb-14">
       {/* L25 — même pastille que le sur-titre de PageHero : nu sur l'image de fond, il tombait à 4,46:1 à
            768 px au bord des lettres (tests/l25-surtitre-accueil.e2e.test.mjs). */}
-      <p class="inline-block rounded bg-paper/85 px-2 py-1 font-mono text-xs uppercase tracking-[0.2em] text-claude-soft">
+      {/* L106 — data-epouse : sur deux lignes, la pastille épouse sa ligne la plus longue (src/lib/epouser-lignes.mjs). */}
+      <p data-epouse class="inline-block max-w-full rounded bg-paper/85 px-2 py-1 font-mono text-xs uppercase tracking-[0.2em] text-claude-soft">
         {lierPoints("Codex Claude Code · guides · projets")}
       </p>
       <h1

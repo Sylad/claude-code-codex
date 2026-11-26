@@ -92,6 +92,10 @@ const newsIndex = newsData.entries.map(({ slug, date }) => ({ slug, date }));
     <Footer />
     <script>
       import { installerCesure } from "@/lib/cesure.mjs";
+      import { installerEpouse } from "@/lib/epouser-lignes.mjs";
+      // L106 — une pastille de sur-titre sur plusieurs lignes épouse sa ligne la plus longue. Avant la
+      // césure : ses rappels passent les premiers, la césure mesure la pastille déjà ajustée.
+      installerEpouse();
       // L88 — césure française seulement là où un mot ne tient pas sur sa ligne (WCAG 1.4.10).
       installerCesure();
       // Après une navigation interne (transitions Astro), le focus restait

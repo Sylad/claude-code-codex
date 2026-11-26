@@ -93,6 +93,11 @@ test('témoin L106 : sans insécables, le sur-titre de l\'accueil finit une lign
   const env = await setupBrowser(t);
   if (!env) return;
   const { fautes } = await verifier(env, '/', SURTITRE_ACCUEIL, 375, (page) =>
-    page.$eval(SURTITRE_ACCUEIL, (el) => { el.textContent = el.textContent.replace(/ /g, ' '); }));
+    page.$eval(SURTITRE_ACCUEIL, (el) => {
+      // Rendu d'avant L106 : pastille à pleine largeur (sans l'ajustement de epouser-lignes), espaces ordinaires.
+      el.removeAttribute('data-epouse');
+      el.style.width = '';
+      el.textContent = el.textContent.replace(/\u00a0/g, ' ');
+    }));
   assert.ok(fautes.length > 0, '« · » en fin de ligne non relevé sans insécables');
 });
