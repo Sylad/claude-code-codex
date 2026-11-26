@@ -1,13 +1,13 @@
 {
- "id": "D-4",
- "texte": "et oui claude  codex faudra revoir la partie cadence (peut-être la doc V1 pour expliquer le point de départ)",
- "date": "2026-11-25",
- "etat": "livrée",
- "preuve": "L103 livré le 2026-11-26 : 320bdd2 en ligne (meta version vérifiée par cadence deliver), schéma V2 du parcours d'un lot dans case-studies/cadence, V1 gardée comme historique daté ; revues de code et UX conformes.",
- "lots": [
-  "L103"
- ],
- "precisions": [
-  "2026-11-25 19 h 40, lead : vu dans le bilan du 25-11, le schéma des six étapes de case-studies/cadence.astro décrit la V1 ; L103 le redessine en V2 et garde la V1 comme point de départ daté, avec la raison de son échec (banc du 07-11)."
- ]
+  "id": "D-4",
+  "texte": "et oui claude  codex faudra revoir la partie cadence (peut-être la doc V1 pour expliquer le point de départ)",
+  "date": "2026-11-25",
+  "etat": "vérifiée",
+  "preuve": "L103 livré le 2026-11-26 : 320bdd2 en ligne (meta version vérifiée par cadence deliver), schéma V2 du parcours d'un lot dans case-studies/cadence, V1 gardée comme historique daté ; revues de code et UX conformes. — Vérifiée le 26-11 par la QA en prod (version 3ffa39a) : /case-studies/cadence/ sert ses 4 schémas V2, 0 constat à 1440/768/390 px, rapport scratchpad revues/codex-L104-qa.md.",
+  "lots": [
+    "L103"
+  ],
+  "precisions": [
+    "2026-11-25 19 h 40, lead : vu dans le bilan du 25-11, le schéma des six étapes de case-studies/cadence.astro décrit la V1 ; L103 le redessine en V2 et garde la V1 comme point de départ daté, avec la raison de son échec (banc du 07-11)."
+  ]
 }
