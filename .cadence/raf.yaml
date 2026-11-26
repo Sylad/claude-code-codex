@@ -1079,6 +1079,11 @@ lots:
     ux: { date: 2026-11-26, verdict: "conforme (26-11, revue revues/codex-L104-ux.md) : 0 bloquant, 0 majeur ; ×2,2 à ×3,6 à 200 % au téléphone, 0 px de défilement latéral, SVG identiques à 1440/100 %, axe 0 sur 36 passes, un seul rendu exposé. Mineurs : 125 % au téléphone ne grandit pas (bascule à 16 em, cadre 18,8 em) ; liste besoins sans en-têtes Besoin/Pièce au lecteur d'écran ; « Boucle en pointillés de … » décrit le tracé ; « cité par » disparu en liste." }
     review: { date: 2026-11-26, verdict: "conforme — correctif 44642d5 relu par le lead : R3 tablette testé (rouge sans Schema.astro:74-78), PLAN_COMMITS source unique + R4, seuil 1440 à ×1,8, césure 17/17 ; porte verte", commit: 44642d5404cc403b607dc4d2e2817ad2a5c08d4c }
     finished: 2026-11-26
+  - id: L105
+    title: "Test instable mots-coupes.e2e : « chang|é » coupé sur /nouveautes/ à 320 px (barre littérale dans l'entrée L88), échoue 1 fois sur 3 — rendre l'entrée ou le test déterministe (vu au run L104 du 26-11)"
+    status: todo
+    estimate: 1
+    created: 2026-11-26
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
