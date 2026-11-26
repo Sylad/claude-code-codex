@@ -1062,6 +1062,7 @@ lots:
     status: done
     estimate: 1
     visible: true
+    delivered: { date: 2026-11-26, sha: 320bdd2aa63a4eaf16c7908624bce5a0838bfcc7 }
     created: 2026-11-25
     started: 2026-11-26
     review: { date: 2026-11-26, verdict: "compliant: 320bdd2 corrige les 3 mineurs de code (3e passe de correction, avance rapide, R3 vérifie le sens de la boucle, mutation vue rouge) et 2 mineurs UX (titre V1 visible, légende de l'accent) ; relu par le lead", commit: 320bdd2aa63a4eaf16c7908624bce5a0838bfcc7 }
