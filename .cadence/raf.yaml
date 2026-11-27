@@ -473,6 +473,7 @@ lots:
     visible: true
     created: 2026-10-08
     started: 2026-11-27
+    review: { date: 2026-11-27, verdict: "conforme revue de code 27-11 (bilans/2026-11-27/L33-code.md) : 0 constat, 78 tests ciblés verts, rien de privé dans le HTML construit", commit: e1f9ecdda1db2d53df3fce8fe4f2eea78a723488 }
   - id: L35
     title: "/ecosystem : afficher la veille déjà récoltée — les skills d'anthropics/skills et les serveurs MCP des flux hebdo (data/feeds/github-anthropics-skills.json, github-mcp-servers.json) absents du catalogue, en « nouveautés à tester » (ex. 24-10 : academy-guide, discernment-nudge) ; date de relevé affichée. Constat 24-10 : la page sert le catalogue statique de 42 entrées inchangé depuis le 22-06, les flux sont récoltés chaque lundi mais aucune page ne les lit"
     public: "Écosystème : les nouveaux skills et serveurs MCP à tester"
