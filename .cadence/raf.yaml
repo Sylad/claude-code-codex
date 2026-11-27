@@ -483,6 +483,7 @@ lots:
     status: done
     estimate: 0.25
     visible: true
+    delivered: { date: 2026-11-27, sha: fe104e86aaf56e7ee757e37cf29689f04e035561 }
     created: 2026-10-24
     started: 2026-11-27
     review: { date: 2026-11-27, verdict: "conforme (passe 2, relue par le lead) : date du dernier passage du batch dans derniers-releves.json, repli « Dernière nouveauté relevée le » tant que le batch n'a pas tourné, test qui échoue avec l'ancien calcul ; README et branche flux vide testée", commit: 3bcc0ccf9e3031ff77927c407043f5414e4a26af }
