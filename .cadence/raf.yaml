@@ -1199,10 +1199,17 @@ lots:
     created: 2026-11-27
     started: 2026-11-27
     review: { date: 2026-11-27, verdict: "conforme revue de code : mesure réutilisée sans copie (tests/lib/libelles-schemas.mjs), 4/4 pages à schéma couvertes, l110+l113 6/6 ; mineur : ecartsDe en double (6 lignes). Rapport bilans/2026-11-27/L113-code.md", commit: b7d4e5bd917bc002c52267f594ba838f080f5b40 }
+    ux: { date: 2026-11-27, verdict: "conforme revue UX : aucun libellé hors boîte ni chevauchement (4 pages, 320/390/1440, clair et sombre), « 4 · Rester cohérent » sans resserrement en police de repli ; mineurs : flèches réduites à une pointe (→ L115), libellés à 10,4 px à 320 (antérieur). Rapport bilans/2026-11-27/L113-ux.md" }
   - id: L114
     title: "Catalogue Tools tested à 390 px : les bascules de filtre (Plugin, Serveur MCP, Skill) — après le second clic, ce qui change est hors de la vue (3 constats des sondes d'interaction de la revue UX de L109, 27-11, rapport bilans/2026-11-27/L109-ux.md) ; mesure : sondes à 390 sans constat sur ces bascules"
     status: todo
     estimate: 1
+    created: 2026-11-27
+  - id: L115
+    title: "pourquoi-cadence, schéma « 4 · Rester cohérent » : les flèches ne sont plus qu'une pointe (écart 28 → 12 unités, trait ≈ 2,6 px à 320) alors que les autres schémas gardent un trait ; prendre la place sur la marge intérieure (texte à x+6, boîte de 154) et garder un écart de 20. Vu à la revue UX de L113 le 27-11 ; aussi : libellés à 10,4 px à 320 px (annoncés ≥ 11)."
+    status: todo
+    estimate: 1
+    visible: true
     created: 2026-11-27
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
