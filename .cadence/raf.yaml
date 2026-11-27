@@ -418,10 +418,13 @@ lots:
     finished: 2026-10-07
   - id: L28
     title: "Route inexistante : servir un vrai 404 (aujourd'hui 200 + page d'accueil, 26 665 octets ; /404.html en 200) — QA prod 05-10"
-    status: doing
+    status: done
     estimate: 1
     created: 2026-10-05
     started: 2026-11-27
+    review: { date: 2026-11-27, verdict: "conforme (lead) : 404.astro + noindex dans BaseLayout, liens vers pages existantes, porte verify --gate 8e390c4 verte, e2e 404 à 1440/390", commit: 8e390c4dc4c539b3c77fc10ea4ad1f8b0c7c7b49 }
+    ux: { date: 2026-11-27, verdict: "conforme (lead) : lien Retour à l'accueil visible sans défiler, cible min-h-11, 4 pistes, pas de défilement latéral (test e2e 1440/390)" }
+    finished: 2026-11-27
   - id: L29
     title: "Console : « Hydration completed but contains mismatches » sur /atelier-ia/, /case-studies/maritime-atlas/, /cloudflare-pour-les-nuls/, /case-studies/claude-code-codex/ — QA prod 05-10"
     status: done
