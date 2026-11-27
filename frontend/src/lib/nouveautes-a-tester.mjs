@@ -49,7 +49,7 @@ const MOTS_EN = new Set('the and of to an is are for with when that this these u
  */
 export function langueDuTexte(texte) {
   const t = String(texte ?? '').toLowerCase();
-  const mots = t.split(/[^a-zà-ÿœæ]+/u).filter(Boolean);
+  const mots = t.split(/[^a-zà-ÿœ]+/u).filter(Boolean);
   // « l'utilisateur », « d'agir » : élisions propres au français (le découpage les a séparées).
   let fr = (t.match(/\b[ldjnstcq]['’][a-zà-ÿ]/gu) ?? []).length + (t.match(/[éèêàçùâîôûœ]/gu) ?? []).length;
   let en = 0;
@@ -154,10 +154,14 @@ export function fluxATester(cle, elements, catalogue, releves = {}) {
  * @param {{ nature: string, total: number, auCatalogue: number }} f
  */
 export function compteurFlux(f) {
-  const skill = f.nature === 'skill';
-  const releves = f.total > 1
-    ? `${f.total} ${skill ? 'skills relevées' : 'serveurs relevés'}`
-    : `${f.total} ${skill ? 'skill relevée' : 'serveur relevé'}`;
-  const deja = f.auCatalogue === 0 ? (skill ? 'aucune' : 'aucun') : String(f.auCatalogue);
+  const mots = f.nature === 'skill' ? MOTS_COMPTEUR.skill : MOTS_COMPTEUR.serveur;
+  const releves = `${f.total} ${f.total > 1 ? mots.pluriel : mots.singulier}`;
+  const deja = f.auCatalogue === 0 ? mots.aucun : String(f.auCatalogue);
   return `${releves}, ${deja} déjà au catalogue`;
 }
+
+/** Mots du compteur, accordés au genre de ce qui est compté (une skill, un serveur). */
+const MOTS_COMPTEUR = {
+  skill: { singulier: 'skill relevée', pluriel: 'skills relevées', aucun: 'aucune' },
+  serveur: { singulier: 'serveur relevé', pluriel: 'serveurs relevés', aucun: 'aucun' },
+};
