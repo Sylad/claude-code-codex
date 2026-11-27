@@ -418,9 +418,10 @@ lots:
     finished: 2026-10-07
   - id: L28
     title: "Route inexistante : servir un vrai 404 (aujourd'hui 200 + page d'accueil, 26 665 octets ; /404.html en 200) — QA prod 05-10"
-    status: todo
+    status: doing
     estimate: 1
     created: 2026-10-05
+    started: 2026-11-27
   - id: L29
     title: "Console : « Hydration completed but contains mismatches » sur /atelier-ia/, /case-studies/maritime-atlas/, /cloudflare-pour-les-nuls/, /case-studies/claude-code-codex/ — QA prod 05-10"
     status: done
