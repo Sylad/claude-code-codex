@@ -65,7 +65,7 @@ const boucleTexte = boucle && en
         d={`M${X + BOX_W} ${top(boucle.de) + H / 2} H${largeur - 16} V${top(boucle.vers) + H / 2} H${X + BOX_W + 8}`}
       />
       <path class="sch-arrow-accent" d={`M${X + BOX_W + 10} ${top(boucle.vers) + H / 2 - 6} L${X + BOX_W + 10} ${top(boucle.vers) + H / 2 + 6} L${X + BOX_W} ${top(boucle.vers) + H / 2} Z`} />
-      <text class="sch-a" x={largeur - 28} y={(top(boucle.de) + top(boucle.vers)) / 2 + H / 2} text-anchor="middle" transform={`rotate(-90 ${largeur - 28} ${(top(boucle.de) + top(boucle.vers)) / 2 + H / 2})`}>{boucle.mot}</text>
+      <text class="sch-a" x={largeur - 28} y={(top(boucle.de) + top(boucle.vers)) / 2 + H / 2} text-anchor="middle" data-sch-place={Math.abs(boucle.de - boucle.vers) * (H + GAP) - 16} transform={`rotate(-90 ${largeur - 28} ${(top(boucle.de) + top(boucle.vers)) / 2 + H / 2})`}>{boucle.mot}</text>
     </g>
   )}
 </svg>

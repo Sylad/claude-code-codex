@@ -98,7 +98,8 @@ test('R10 — le nombre d’apps de l’index ne bouge pas : cadence est un réc
 
 test('R11 — le code en ligne est rendu en <code> : aucun backtick littéral dans la page', () => {
   const html = read('case-studies', 'cadence', 'index.html');
-  assert.equal(main(html).includes('`'), false);
+  // le texte de la page, pas le code des <script> (L110 : le script des schémas, minifié, s'écrit avec des backticks)
+  assert.equal(main(html).replace(/<script\b[\s\S]*?<\/script>/g, '').includes('`'), false);
   assert.match(main(html), /<code[^>]*>raf now<\/code>/);
 });
 

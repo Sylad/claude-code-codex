@@ -19,6 +19,12 @@ const { id, legende } = Astro.props;
   <figcaption>{legende}</figcaption>
 </figure>
 
+<script>
+  // L110 — chaque libellé du dessin tient dans sa boîte, quelle que soit la police chargée (src/lib/ajuster-libelles.mjs).
+  import { suivreLibelles } from "@/lib/ajuster-libelles.mjs";
+  suivreLibelles();
+</script>
+
 <style is:global>
   .schema {
     --sch-bg: #1b1b1f;

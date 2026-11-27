@@ -136,7 +136,8 @@ test('R9 — l’étude de cas cadence renvoie vers la page', () => {
 });
 
 test('R10 — le code en ligne est rendu en <code> : aucun backtick littéral', () => {
-  assert.equal(main(page()).includes('`'), false);
+  // le texte de la page, pas le code des <script> (L110 : le script des schémas, minifié, s'écrit avec des backticks)
+  assert.equal(main(page()).replace(/<script\b[\s\S]*?<\/script>/g, '').includes('`'), false);
 });
 
 test('R11 — au téléphone (390 px) et au bureau (1440 px), aucun défilement latéral', { timeout: 120_000 }, async (t) => {
