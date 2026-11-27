@@ -1,7 +1,22 @@
 {
   "project": "claude-code-codex",
-  "generated": "2026-11-27 11:41",
+  "generated": "2026-11-27 17:23",
   "entries": [
+    {
+      "slug": "2026-11-27-schemas-etendre-la-mesure-de-l110-libelle-qui-deborde-ou-en",
+      "title": "Le schéma « Rester cohérent » de Pourquoi cadence se lit sans texte tassé",
+      "date": "2026-11-27",
+      "lots": [
+        "L113"
+      ],
+      "captures": [
+        "captures/l113-rester-coherent-390.png"
+      ],
+      "alts": [
+        "Schéma « 4 · Rester cohérent » de la page Pourquoi cadence à 390 px de large : chaque libellé tient dans sa boîte, sans resserrement"
+      ],
+      "html": "<p>Sur la page Pourquoi cadence, les libellés du schéma « 4 · Rester cohérent » étaient resserrés quand le navigateur n'avait pas la police du site. Ils tiennent maintenant dans leur boîte, sur téléphone comme sur grand écran. Tous les schémas du site, ceux du livre de bord compris, sont désormais contrôlés de la même façon à chaque construction : un libellé qui déborde ou en chevauche un autre fait échouer les tests.</p>"
+    },
     {
       "slug": "2026-11-27-les-nouveautes-a-tester-disent-ce-qu-elles-comptent",
       "title": "Les nouveautés à tester disent ce qu'elles comptent",
