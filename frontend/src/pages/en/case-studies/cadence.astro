@@ -62,17 +62,17 @@ const parcoursV2 = [
   { titre: "cadence run", detail: "one session does the whole lot in a worktree", qui: "Opus; Fable from the 3rd fix pass" },
   { titre: "Gate and integration", detail: "build and tests, then fast-forward onto main", qui: "cadence; if red, same session fixes" },
   { titre: "Review", detail: "code review; UX review if the lot has a screen", qui: "fresh reviewers, started by the lead", accent: true },
-  { titre: "Delivery", detail: "CI awaited, deployment played, effect checked", qui: "the lead, through the deliverer" },
+  { titre: "Delivery", detail: "CI awaited, deployment run, effect checked", qui: "the lead, through the deliverer" },
   { titre: "QA", detail: "the delivered pages, opened in a browser", qui: "the lead, through the QA agent", accent: true },
 ];
 
 const livreur = [
   { titre: "Lot ready", detail: "review passed, UX verdict recorded" },
-  { titre: "Test gate", detail: "tests and build replayed on the sha" },
+  { titre: "Test gate", detail: "tests and build rerun on the sha" },
   { titre: "UX verdict", detail: "read, not redone: otherwise the chain stops" },
   { titre: "Lot closed", detail: "the plan records the lot as delivered" },
   { titre: "Push", detail: "the commit goes to the remote repository" },
-  { titre: "Delivery verified", detail: "CI awaited, deployment played, effect checked" },
+  { titre: "Delivery verified", detail: "CI awaited, deployment run, effect checked" },
   { titre: "One line back", detail: "“L84 livré 3d6edf4, QA à lancer <url>”", accent: true },
 ];
 
@@ -126,7 +126,7 @@ const pieces = [
   {
     nom: "Verified delivery",
     corps:
-      "`cadence deliver` waits for the commit's CI, plays the deployment, then checks the effect: a URL that answers with the right sha, a command that exits with zero. A delivery is done when its checks pass, not when a tool prints “success”.",
+      "`cadence deliver` waits for the commit's CI, runs the deployment, then checks the effect: a URL that answers with the right sha, a command that exits with zero. A delivery is done when its checks pass, not when a tool prints “success”.",
     doc: "docs/deliver.md",
   },
   {
@@ -139,7 +139,7 @@ const pieces = [
   {
     nom: "The lead and the subagents",
     corps:
-      "A steering session keeps a small context: it reads summaries (`cadence lead tour`), decides with the human which lots to play, relays the sessions' questions and never answers in the human's place. The work is done by the wave's sessions and by specialized agents (code reviewer, UX reviewer, sheet writer).",
+      "A steering session keeps a small context: it reads summaries (`cadence lead tour`), decides with the human which lots to run, relays the sessions' questions and never answers in the human's place. The work is done by the wave's sessions and by specialized agents (code reviewer, UX reviewer, sheet writer).",
     doc: "docs/lead.md",
   },
   {
@@ -154,7 +154,7 @@ const chiffres: { valeur: string; legende: string; source: string }[] = [
   {
     valeur: "61% · 29%",
     legende:
-      "of the 263 lots of the first survey (October 10) had at least one, then at least two correction passes after the first writing.",
+      "of the 263 lots in the first measurement (October 10) had at least one, then at least two correction passes after the first writing.",
     source: "docs/mesures/corrections-2026-10-10.md",
   },
   {
@@ -166,7 +166,7 @@ const chiffres: { valeur: string; legende: string; source: string }[] = [
   {
     valeur: "−4,211 tokens",
     legende:
-      "on the first turn of each wave session (42,541 → 38,330, −9.9%) by turning off the user's plugins, which have no business in a session that reads, edits and runs commands.",
+      "on the first prompt of each wave session (42,541 → 38,330, −9.9%) by turning off the user's plugins, which have no business in a session that reads, edits and runs commands.",
     source: "docs/mesures/contexte-session-2026-10-28.md",
   },
   {
@@ -198,7 +198,7 @@ const echecs = [
     corps:
       "`cadence perf` on October 18 announced 51% fewer lots delivered and review times up by nearly 50%. Broken down by project and at equal effort, the increases dropped to +12% or 0% for implementation, and the drop in deliveries to −35% once working copies counted twice were set aside.",
     change:
-      "`cadence perf` no longer reads working-copy folders (`tmp/`), and the breakdown that brought these figures down is a versioned script that replays on the logs.",
+      "`cadence perf` no longer reads working-copy folders (`tmp/`), and the breakdown that brought these figures down is a versioned script that can be rerun on the logs.",
   },
   {
     id: "publication",
@@ -222,7 +222,7 @@ const echecs = [
     corps:
       "The first set of instructions against code bugs (implementation brief) was shipped without an “after” measurement: waves already started keep the brief they were created with.",
     change:
-      "The measurement protocol now dates the go-live, counts only the waves created after it, and measures both mechanisms together over two seven-day windows. Until those windows are surveyed, the page claims no gain.",
+      "The measurement protocol now dates the go-live, counts only the waves created after it, and measures both mechanisms together over two seven-day windows. Until those windows are measured, the page claims no gain.",
   },
 ];
 
@@ -251,7 +251,7 @@ const v1Mesures = [
     valeur: "62% · 4.6 times",
     quand: "November 1, 2026 · same waves",
     legende:
-      "Tests took 62% of a writing session's time: a lot's full suite ran 4.6 times on average, started by the session then replayed by the wave's gate after each session. Writing the code itself: 6%.",
+      "Tests took 62% of a writing session's time: a lot's full suite ran 4.6 times on average, started by the session then rerun by the wave's gate after each session. Writing the code itself: 6%.",
     source: TEMPS_LOT,
   },
   {
@@ -348,9 +348,9 @@ const v2Decisions: { id: string; titre: string; causes: string[]; corps: string;
     titre: "A lighter starting context",
     causes: [],
     corps:
-      "This decision does not come from the design document: it starts from a measurement made after it. Before its first move, each `cadence run` session received about 62 k tokens of context, surveyed item by item on November 11. Part of it was useless in a working session: the user's extensions, the account's connectors, automatic memory. Since 2.0.4, they are turned off for the session, as waves already turned off extensions.",
+      "This decision does not come from the design document: it starts from a measurement made after it. Before its first move, each `cadence run` session received about 62 k tokens of context, measured item by item on November 11. Part of it was useless in a working session: the user's extensions, the account's connectors, automatic memory. Since 2.0.4, they are turned off for the session, as waves already turned off extensions.",
     effet:
-      "First turn from 64,844 to 57,653 tokens (−11.1%), about $0.12 per lot (−5.0%). Measured with Haiku on a minimal instruction; the effect on quality is not measured.",
+      "Context at the first prompt down from 64,844 to 57,653 tokens (−11.1%), about $0.12 per lot (−5.0%). Measured with Haiku on a minimal prompt; the effect on quality is not measured.",
     mesure: true,
     preuves: [
       { fichier: "docs/mesures/socle-session-2026-11-11.md", quand: "November 11 and 12, 2026 · 2.0.4" },
@@ -406,7 +406,7 @@ const v2Decisions: { id: string; titre: string; causes: string[]; corps: string;
         <p>
           <strong>All the state lives in ordinary files next to the code</strong>,
           readable by the human as well as by the next session, and every
-          claim (“it's delivered”, “it's tested”) must be replayable.
+          claim (“it's delivered”, “it's tested”) must be checkable by running it again.
         </p>
       </Callout>
     </CaseStudySection>
@@ -457,7 +457,7 @@ const v2Decisions: { id: string; titre: string; causes: string[]; corps: string;
       <p>
         Since November 10, 2026, a lot is done with <code>cadence run</code>:
         a single Opus session takes it from start to finish, in a separate
-        working copy (a worktree). The cadence program then replays the
+        working copy (a worktree). The cadence program then reruns the
         full gate (build and tests); if it is red, the same session
         fixes it and runs it again. The work then lands on <code>main</code>
         by fast-forward, with no merge commit. The lead then starts the code review, and the UX
@@ -482,7 +482,7 @@ const v2Decisions: { id: string; titre: string; causes: string[]; corps: string;
       </div>
       <Callout titre="Key takeaway">
         <p>
-          The lead picks the lots to play, but no step is taken at its
+          The lead picks the lots to run, but no step is taken at its
           word: each one leaves a trace (sha, verdict, screenshot) that the
           next one reads again.
         </p>
@@ -491,7 +491,7 @@ const v2Decisions: { id: string; titre: string; causes: string[]; corps: string;
       <h3 data-intertitre class={H3}>Delivery, delegated</h3>
       <p>
         A ready lot is not delivered yet. The lead hands it to the deliverer,
-        who plays the gate and the delivery (chain below) and returns only one line or one question;
+        who runs the gate and the delivery (chain below) and returns only one line or one question;
         the lead looks at the screenshots and decides.
         The visible lots can be read in the plan panel published on this site.
       </p>
@@ -541,7 +541,7 @@ const v2Decisions: { id: string; titre: string; causes: string[]; corps: string;
         <a href="/case-studies/cadence-hud-bande-2026-10-08.png" target="_blank" rel="noopener" class="block">
           <img
             src="/case-studies/cadence-hud-bande-2026-10-08.png"
-            alt="The cadence-hud mod's strip on October 8, 2026, in French: first, the session context and the quotas; then two projects, each with the lot in progress, its step (review, implementation), the model playing it, the waiting lots, the token budget and “1 session/2”."
+            alt="The cadence-hud mod's strip on October 8, 2026, in French: first, the session context and the quotas; then two projects, each with the lot in progress, its step (review, implementation), the model running it, the waiting lots, the token budget and “1 session/2”."
             width="768"
             height="146"
             loading="lazy"
@@ -610,14 +610,14 @@ const v2Decisions: { id: string; titre: string; causes: string[]; corps: string;
 
     <CaseStudySection eyebrow="The measured figures of V1">
       <p data-v1-note>
-        These surveys date from October 2026 and cover the waves of
+        These measurements date from October 2026 and cover the waves of
         <strong>V1 (releases 1.x)</strong>: they do not measure <code>cadence run</code>.
       </p>
       <p>
         Cadence measures itself: <code>cadence perf</code> shows each speed
         indicator next to its quality twin (“fast <em>and</em>
-        good”), without counting output volume. The surveys below are in
-        the repository, with the command that replays them.
+        good”), without counting output volume. The measurements below are in
+        the repository, with the command that reproduces them.
       </p>
       <dl class="grid gap-3 sm:grid-cols-2">
         {chiffres.map((c) => (
@@ -632,8 +632,8 @@ const v2Decisions: { id: string; titre: string; causes: string[]; corps: string;
       </dl>
       <p class="text-sm text-ink-muted rounded-xl border border-white/10 bg-paper-elevated p-borne-5">
         Acknowledged limit: the classification of causes is made by a local model of
-        24 billion parameters. The October 10 survey was checked by hand on a
-        sample (17 passes out of 24 in agreement); the October 30 survey, where
+        24 billion parameters. The October 10 measurement was checked by hand on a
+        sample (17 passes out of 24 in agreement); the October 30 measurement, where
         the 136 and the 96 come from, was not checked: agreement is not computed for it. It
         is a starting point; the effect of the mechanism set against edge cases
         is not measured yet.
@@ -643,7 +643,7 @@ const v2Decisions: { id: string; titre: string; causes: string[]; corps: string;
     <CaseStudySection eyebrow="The failures and what they changed">
       <p>
         A method that does not tell its misses is only a brochure. Five
-        episodes of V1, taken from the release log and the repository's surveys:
+        episodes of V1, taken from the release log and the repository's measurements:
       </p>
       <ul class="space-y-4 list-none">
         {echecs.map((e) => (
@@ -662,7 +662,7 @@ const v2Decisions: { id: string; titre: string; causes: string[]; corps: string;
       <h3 data-intertitre class={H3}>A lost trial, on November 7</h3>
       <p>
         V1 delivered reviewed, tested and shipped lots, but at a price its
-        own surveys showed. On November 7, 2026, 1.62, the last release
+        own measurements showed. On November 7, 2026, 1.62, the last release
         of V1, redid 8 real requests already delivered, against Claude Code alone,
         from the same commit. It lost on time and on tokens; what the blind
         judge and the hidden tests said about it is on the page
@@ -735,7 +735,7 @@ const v2Decisions: { id: string; titre: string; causes: string[]; corps: string;
         ))}
       </ul>
       <p class="text-sm text-ink-muted rounded-xl border border-white/10 bg-paper-elevated p-borne-5">
-        What is still missing: the survey of a lot's time (25 min and 266 k tokens
+        What is still missing: the measurement of a lot's time (25 min and 266 k tokens
         in V1) has not been redone for <code>cadence run</code>. The comparison of
         V1 and cadence 2 on real work remains to be done; the evidence that
         exists comes from the bench, on a few requests.
