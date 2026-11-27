@@ -26,7 +26,9 @@ function pagesConstruites() {
   return out;
 }
 
-const plain = (frag) => frag.replace(/<[^>]*>/g, ' ').replace(/&#39;/g, "'").replace(/&amp;/g, '&').replace(/&nbsp;| /g, ' ').replace(/\s+/g, ' ').trim();
+// texte sans balises : chaque morceau après « < » perd sa balise (jusqu'au premier « > »), sans expression à retour arrière
+const sansBalises = (frag) => frag.split('<').map((m, i) => (i === 0 ? m : m.slice(m.indexOf('>') + 1))).join(' ');
+const plain = (frag) => sansBalises(frag).replace(/&#39;/g, "'").replace(/&amp;/g, '&').replace(/&nbsp;| /g, ' ').replace(/\s+/g, ' ').trim();
 const entre = (html, debut, fin) => html.slice(html.indexOf(debut), html.indexOf(fin, html.indexOf(debut)) + fin.length);
 
 /** Textes attendus d'une langue, dans l'ordre du HTML. */

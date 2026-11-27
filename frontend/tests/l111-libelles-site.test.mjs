@@ -8,17 +8,20 @@ import { LIBELLES, libelles, lienDans } from '../src/lib/libelles-site.mjs';
 import { ENTREE_EN, TRADUITES } from '../src/lib/langues.mjs';
 
 /** Squelette d'un jeu de libellés : clés et adresses, sans le texte. */
-const squelette = (v) =>
-  Array.isArray(v) ? v.map(squelette)
-  : typeof v === 'function' ? 'fn'
-  : v && typeof v === 'object' ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, k === 'href' || k === 'id' ? x : squelette(x)]))
-  : typeof v;
+const ADRESSE = new Set(['href', 'id']);
+function squelette(v) {
+  if (Array.isArray(v)) return v.map(squelette);
+  if (typeof v === 'function') return 'fn';
+  if (v && typeof v === 'object') return Object.fromEntries(Object.entries(v).map(([k, x]) => [k, ADRESSE.has(k) ? x : squelette(x)]));
+  return typeof v;
+}
 
 /** Tous les textes d'un jeu de libellés. */
-const textes = (v) =>
-  Array.isArray(v) ? v.flatMap(textes)
-  : v && typeof v === 'object' ? Object.entries(v).flatMap(([k, x]) => (k === 'href' || k === 'id' ? [] : textes(x)))
-  : typeof v === 'string' ? [v] : [];
+function textes(v) {
+  if (Array.isArray(v)) return v.flatMap(textes);
+  if (v && typeof v === 'object') return Object.entries(v).flatMap(([k, x]) => (ADRESSE.has(k) ? [] : textes(x)));
+  return typeof v === 'string' ? [v] : [];
+}
 
 test('R1 — les deux langues ont les mêmes entrées, dans le même ordre, vers les mêmes adresses', () => {
   assert.deepEqual(squelette(LIBELLES.en), squelette(LIBELLES.fr));

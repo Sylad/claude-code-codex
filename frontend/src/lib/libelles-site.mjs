@@ -9,12 +9,18 @@
  */
 import { TRADUITES, avecBarre } from './langues.mjs';
 
+/** Texte d'un compte : vide à zéro, singulier à un, pluriel au-delà. */
+function compte(n, un, plusieurs) {
+  if (n <= 0) return '';
+  return n === 1 ? un : plusieurs;
+}
+
 const FR = {
   accueil: 'Claude Code Codex — accueil',
   menuOuvrir: 'Ouvrir le menu',
   menuFermer: 'Fermer le menu',
   /** @param {number} n */
-  nonVues: (n) => (n <= 0 ? '' : n === 1 ? '1 nouveauté non vue' : `${n} nouveautés non vues`),
+  nonVues: (n) => compte(n, '1 nouveauté non vue', `${n} nouveautés non vues`),
   barre: [
     { href: '/start', label: 'Démarrer' },
     { href: '/atelier-ia', label: 'Atelier IA' },
@@ -76,7 +82,7 @@ const EN = {
   accueil: 'Claude Code Codex — home',
   menuOuvrir: 'Open the menu',
   menuFermer: 'Close the menu',
-  nonVues: (n) => (n <= 0 ? '' : n === 1 ? '1 unseen update' : `${n} unseen updates`),
+  nonVues: (n) => compte(n, '1 unseen update', `${n} unseen updates`),
   barre: [
     { href: '/start', label: 'Get started' },
     { href: '/atelier-ia', label: 'AI workshop' },
