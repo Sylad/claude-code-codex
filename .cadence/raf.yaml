@@ -480,10 +480,11 @@ lots:
   - id: L35
     title: "/ecosystem : afficher la veille déjà récoltée — les skills d'anthropics/skills et les serveurs MCP des flux hebdo (data/feeds/github-anthropics-skills.json, github-mcp-servers.json) absents du catalogue, en « nouveautés à tester » (ex. 24-10 : academy-guide, discernment-nudge) ; date de relevé affichée. Constat 24-10 : la page sert le catalogue statique de 42 entrées inchangé depuis le 22-06, les flux sont récoltés chaque lundi mais aucune page ne les lit"
     public: "Écosystème : les nouveaux skills et serveurs MCP à tester"
-    status: todo
+    status: doing
     estimate: 0.25
     visible: true
     created: 2026-10-24
+    started: 2026-11-27
   - id: L40
     title: "Plan déplacé vers .cadence/raf.yaml avec raf migrate (cadence L284, L305) : --dry-run d'abord, chaque lecteur du chemin (scripts plan-data, tests, CI, CLAUDE.md, skills) mis à jour ou signalé ; un lecteur non traité (chemin construit à la main) corrigé à la main dans le même lot ; tests, build et raf check verts ; l'avertissement « ancien emplacement » disparaît"
     status: done
