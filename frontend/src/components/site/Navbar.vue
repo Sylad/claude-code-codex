@@ -8,11 +8,13 @@ import {
   countUnseen,
   ensureBaseline,
   readSeen,
-  unseenLabel,
 } from "@/lib/news-badge";
+import { libelles, lienDans } from "@/lib/libelles-site.mjs";
 
 const props = defineProps<{
   pathname: string;
+  /** L111 : langue de la page (« en » sous /en/), celle des libellés. */
+  langue?: "fr" | "en";
   news?: { slug: string; date: string }[];
 }>();
 
@@ -22,48 +24,34 @@ const props = defineProps<{
 // lèvent la pastille même sans visite de /nouveautes.
 const unseen = ref(0);
 const badge = computed(() => badgeLabel(unseen.value));
-const unseenText = computed(() => unseenLabel(unseen.value));
 function refreshBadge() {
   unseen.value = countUnseen(props.news ?? [], readSeen(browserStorage()));
 }
 const NEWS_HREF = "/nouveautes";
 
-type Child = { href: string; label: string };
-type NavLink = { href: string; label: string } | { label: string; children: Child[] };
-
+// L111 — libellés d'une seule source par langue (src/lib/libelles-site.mjs, partagée avec le pied
+// de page) : sur une page /en/, la barre est en anglais. Les adresses restent les adresses françaises
+// (rubrique active comparée à l'adresse française de la page) ; `lien` mène à la version anglaise
+// quand elle existe, sinon à la page française, annoncée par hreflang="fr".
 // L17 — barre du bureau dès 64em (1024 px à la taille de police par défaut) : Learning et
 // Vidéos regroupés sous « Ressources ▾ », « Nouveautés » toujours visible (avec sa
 // pastille). « Plan de travail » et « À propos » ne tiennent pas dans la barre avec une
 // vraie marge (mesuré par tests/navbar.e2e.test.mjs) : pied de page et menu du téléphone.
-const links: NavLink[] = [
-  { href: "/start", label: "Démarrer" },
-  { href: "/atelier-ia", label: "Atelier IA" },
-  { href: "/theory", label: "Théorie" },
-  { href: "/ecosystem", label: "Écosystème" },
-  { href: "/case-studies", label: "Case studies" },
-  {
-    label: "Guides",
-    children: [
-      { href: "/k8s-for-java-developers", label: "K8s pour Java" },
-      { href: "/argocd-k8s-pour-les-nuls", label: "ArgoCD pour les nuls" },
-      { href: "/cloudflare-pour-les-nuls", label: "Cloudflare pour les nuls" },
-      { href: "/nouveau-projet", label: "Nouveau projet" },
-    ],
-  },
-  {
-    label: "Ressources",
-    children: [
-      { href: "/learning", label: "Learning" },
-      { href: "/videos", label: "Vidéos" },
-    ],
-  },
-  { href: NEWS_HREF, label: "Nouveautés" },
-];
+const L = computed(() => libelles(props.langue ?? "fr"));
+type Child = { href: string; label: string };
+type NavLink = { href: string; label: string } | { id: string; label: string; children: Child[] };
+const links = computed<NavLink[]>(() => L.value.barre as NavLink[]);
 /** Menu du téléphone seulement (et pied de page). */
-const phoneOnly: Child[] = [
-  { href: "/plan-de-travail", label: "Plan de travail" },
-  { href: "/about", label: "À propos" },
-];
+const phoneOnly = computed<Child[]>(() => L.value.telephone);
+const unseenText = computed(() => L.value.nonVues(unseen.value));
+function lien(href: string) {
+  return lienDans(href, props.langue ?? "fr");
+}
+/** Langue de la page visée, dite seulement quand elle n'est pas celle de la page (WCAG 3.1.2). */
+function hreflangDe(href: string) {
+  const l = lien(href).langue;
+  return l === (props.langue ?? "fr") ? undefined : l;
+}
 
 const open = ref(false);
 const scrolled = ref(false);
@@ -75,8 +63,8 @@ function onScroll() {
 }
 
 const menuToggle = ref<HTMLButtonElement | null>(null);
-const toggleOf = (label: string) =>
-  document.querySelector<HTMLButtonElement>(`[data-dropdown-toggle="${label}"]`);
+const toggleOf = (id: string) =>
+  document.querySelector<HTMLButtonElement>(`[data-dropdown="${id}"] > button`);
 
 // Échap ferme le panneau ouvert ou le menu du téléphone et rend le focus au bouton
 // qui l'a ouvert (WCAG 2.1.1 / 2.4.3).
@@ -146,7 +134,7 @@ function toggleDropdown(label: string) {
   openDropdown.value = openDropdown.value === label ? null : label;
 }
 
-const panelId = (label: string) => `panneau-${label.toLowerCase()}`;
+const panelId = (id: string) => `panneau-${id}`;
 </script>
 
 <template>
@@ -172,9 +160,9 @@ const panelId = (label: string) => `panneau-${label.toLowerCase()}`;
          du navigateur comme par la taille du texte de la page. -->
     <nav class="@container mx-auto max-w-6xl px-borne-5 sm:px-8 h-16 flex items-center justify-between gap-3">
       <a
-        href="/"
+        :href="lien('/').href"
         class="flex min-w-0 lg:shrink-0 items-center gap-2.5 whitespace-nowrap group"
-        aria-label="Claude Code Codex — accueil"
+        :aria-label="L.accueil"
       >
         <span
           class="grid shrink-0 place-items-center w-8 h-8 rounded-md border border-claude/40 bg-claude/10 text-claude transition-[colors,transform] duration-200 group-hover:bg-claude/20 motion-safe:group-hover:rotate-[-3deg] motion-safe:group-active:scale-95"
@@ -191,7 +179,8 @@ const panelId = (label: string) => `panneau-${label.toLowerCase()}`;
           <!-- Lien simple -->
           <li v-if="'href' in link">
             <a
-              :href="link.href"
+              :href="lien(link.href).href"
+                :hreflang="hreflangDe(link.href)"
               :aria-current="isActive(link.href, props.pathname) ? 'page' : undefined"
               :class="[
                 // Pointeur grossier (tablette en paysage, barre affichée) : cible de 44 px.
@@ -220,8 +209,8 @@ const panelId = (label: string) => `panneau-${label.toLowerCase()}`;
           <li
             v-else
             class="relative"
-            :data-dropdown="link.label"
-            @focusout="onFocusOut(link.label, $event)"
+            :data-dropdown="link.id"
+            @focusout="onFocusOut(link.id, $event)"
           >
             <button
               type="button"
@@ -232,9 +221,9 @@ const panelId = (label: string) => `panneau-${label.toLowerCase()}`;
                   : 'text-ink-muted hover:text-ink hover:bg-white/5',
               ]"
               :data-dropdown-toggle="link.label"
-              :aria-expanded="openDropdown === link.label"
-              :aria-controls="panelId(link.label)"
-              @click="toggleDropdown(link.label)"
+              :aria-expanded="openDropdown === link.id"
+              :aria-controls="panelId(link.id)"
+              @click="toggleDropdown(link.id)"
             >
               {{ link.label }}
               <ChevronDown
@@ -242,19 +231,20 @@ const panelId = (label: string) => `panneau-${label.toLowerCase()}`;
                 aria-hidden="true"
                 :class="[
                   'transition-transform duration-200',
-                  openDropdown === link.label ? 'rotate-180' : '',
+                  openDropdown === link.id ? 'rotate-180' : '',
                 ]"
               />
             </button>
             <div
-              v-show="openDropdown === link.label"
-              :id="panelId(link.label)"
+              v-show="openDropdown === link.id"
+              :id="panelId(link.id)"
               class="absolute left-0 mt-2 min-w-56 rounded-md border border-white/10 bg-paper/95 backdrop-blur-md shadow-xl py-1"
             >
               <a
                 v-for="child in link.children"
                 :key="child.href"
-                :href="child.href"
+                :href="lien(child.href).href"
+                :hreflang="hreflangDe(child.href)"
                 :aria-current="isActive(child.href, props.pathname) ? 'page' : undefined"
                 :class="[
                   'flex items-center min-h-11 px-3 text-sm transition-colors',
@@ -279,10 +269,10 @@ const panelId = (label: string) => `panneau-${label.toLowerCase()}`;
         aria-controls="mobile-menu"
         :aria-label="
           open
-            ? 'Fermer le menu'
+            ? L.menuFermer
             : unseenText
-              ? `Ouvrir le menu (${unseenText})`
-              : 'Ouvrir le menu'
+              ? `${L.menuOuvrir} (${unseenText})`
+              : L.menuOuvrir
         "
         @click="open = !open"
       >
@@ -314,7 +304,8 @@ const panelId = (label: string) => `panneau-${label.toLowerCase()}`;
           <template v-for="link in links" :key="link.label">
             <li v-if="'href' in link">
               <a
-                :href="link.href"
+                :href="lien(link.href).href"
+                :hreflang="hreflangDe(link.href)"
                 :aria-current="isActive(link.href, props.pathname) ? 'page' : undefined"
                 :class="[
                   'flex items-center gap-2 px-3 py-3 rounded-md text-base transition-colors',
@@ -343,7 +334,8 @@ const panelId = (label: string) => `panneau-${label.toLowerCase()}`;
               <a
                 v-for="child in link.children"
                 :key="child.href"
-                :href="child.href"
+                :href="lien(child.href).href"
+                :hreflang="hreflangDe(child.href)"
                 :aria-current="isActive(child.href, props.pathname) ? 'page' : undefined"
                 :class="[
                   'block px-borne-6 py-3 rounded-md text-base transition-colors',
@@ -359,7 +351,8 @@ const panelId = (label: string) => `panneau-${label.toLowerCase()}`;
           </template>
           <li v-for="item in phoneOnly" :key="item.href">
             <a
-              :href="item.href"
+              :href="lien(item.href).href"
+                :hreflang="hreflangDe(item.href)"
               :aria-current="isActive(item.href, props.pathname) ? 'page' : undefined"
               :class="[
                 'flex items-center gap-2 px-3 py-3 rounded-md text-base transition-colors',

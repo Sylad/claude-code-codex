@@ -98,7 +98,8 @@ test('C4 — hreflang fr, en et x-default réciproques sur les deux versions ; a
     assert.ok(html.includes(`<link rel="alternate" hreflang="x-default" href="${SITE}${FR}">`), `${url} : x-default`);
     assert.ok(html.includes(`<link rel="canonical" href="${SITE}${url}">`), `${url} : canonique sur elle-même`);
   }
-  assert.doesNotMatch(lire('/about/'), /hreflang=/);
+  // L111 : « No English yet » est un lien (hreflang="en") vers l'étude cadence ; pas de version alternative pour autant.
+  assert.doesNotMatch(lire('/about/'), /<link rel="alternate" hreflang=/);
 });
 
 test('C6 — sélecteur sur chaque page ; sans traduction il le dit, et aucun lien ne mène vers une page /en/ absente', () => {

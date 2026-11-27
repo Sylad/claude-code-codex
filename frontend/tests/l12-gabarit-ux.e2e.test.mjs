@@ -22,7 +22,8 @@ import { DIST, setupBrowser, pageReady } from './lib/e2e-dist.mjs';
 import { jetons } from './lib/contraste.mjs';
 
 const html = (route) => readFileSync(join(DIST, route, 'index.html'), 'utf8');
-const NAVBAR = readFileSync(new URL('../src/components/site/Navbar.vue', import.meta.url), 'utf8');
+// L111 : les libellés de la barre et du pied vivent dans une source unique par langue.
+const NAVBAR = readFileSync(new URL('../src/lib/libelles-site.mjs', import.meta.url), 'utf8').split('const EN =')[0];
 
 /** Les quatre configurations de la revue. `zoom` : texte de la page à 200 % (html font-size). */
 const CONFIGS = [
@@ -78,10 +79,10 @@ test('L12 (4) — l’en-tête des pages de la barre reprend son libellé (et so
     assert.equal(texte, eyebrow, `/${route}/`);
     // Chaque partie est un libellé réel de la barre (ou du pied, pour « Le site »).
     for (const part of texte.split(' · ').filter((x) => x !== 'Le site')) {
-      assert.match(NAVBAR, new RegExp(`label: "${part}"`), `« ${part} » n’est pas un libellé de la barre`);
+      assert.match(NAVBAR, new RegExp(`label: '${part}'`), `« ${part} » n’est pas un libellé de la barre`);
     }
   }
-  assert.match(readFileSync(new URL('../src/components/site/Footer.astro', import.meta.url), 'utf8'), /aria-label="Le site"/);
+  assert.match(html('about').split('<footer')[1], /^[^>]*>\s*<nav aria-label="Le site"/);
 });
 
 test('L12 (5) — tout lien du pied qui ouvre un nouvel onglet le dit (↗ visible et « nouvel onglet » lu)', () => {

@@ -15,6 +15,10 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { DIST, setupBrowser } from './lib/e2e-dist.mjs';
 import { badgeLabel } from '../src/lib/news-badge.ts';
+import { libelles } from '../src/lib/libelles-site.mjs';
+
+// L111 — la barre se mesure dans les deux langues : ses libellés anglais (/en/) n'ont pas la même largeur.
+const PAGES_MESUREES = [{ path: '/about/', langue: 'fr' }, { path: '/en/case-studies/cadence/', langue: 'en' }];
 
 const SEEN_KEY = 'ccc.news.seen-v1';
 const OLD_VISIT = { date: '2026-01-01', slugs: [], at: '2026-01-01T10:00:00.000Z' };
@@ -107,14 +111,17 @@ test('barre : mode attendu à chaque largeur et seuil ±1 px, six configurations
   const failures = [];
   const online = await fontHostsReachable(env.browser);
   if (!online) t.diagnostic('hôtes des polices web injoignables : les configurations « polices web » sont mesurées avec les polices de repli (même attente que « polices web bloquées »)');
-  for (const cfg of CONFIGS) {
+  for (const { path, langue } of PAGES_MESUREES) for (const cfg of CONFIGS) {
+    const L = libelles(langue);
+    const lib = (href) => L.barre.find((l) => l.href === href).label;
+    const groupe = (id) => L.barre.find((l) => l.id === id);
     for (const width of widths(cfg.fontSize)) {
-      const { context, page } = await openPage(env, { width, fontSize: cfg.fontSize, webFonts: cfg.webFonts });
+      const { context, page } = await openPage(env, { width, fontSize: cfg.fontSize, webFonts: cfg.webFonts, path });
       const fonts = await page.evaluate(() => [...document.fonts].some((f) => f.family.replace(/"/g, '') === 'Inter' && f.status === 'loaded'));
       const m = await measureBar(page);
       await context.close();
       const expected = width / cfg.fontSize >= BAR_EM ? 'barre' : 'menu';
-      rows.push({ cfg: cfg.webFonts && !online ? `${cfg.name} (hors ligne : repli)` : cfg.name, width, ...m, fonts });
+      rows.push({ cfg: `${langue} · ${cfg.webFonts && !online ? `${cfg.name} (hors ligne : repli)` : cfg.name}`, width, ...m, fonts });
       const bad = [];
       const expectFonts = cfg.webFonts && online;
       if (fonts !== expectFonts) bad.push(`Inter ${fonts ? 'chargée' : 'absente'}`);
@@ -126,11 +133,13 @@ test('barre : mode attendu à chaque largeur et seuil ±1 px, six configurations
       if (m.multi.length) bad.push(`sur deux lignes : ${m.multi.join(', ')}`);
       if (m.badge !== badgeLabel(JSON.parse(readFileSync(new URL('../public/nouveautes-data/nouveautes.json', import.meta.url), 'utf8')).entries.length)) bad.push(`pastille « ${m.badge} »`);
       if (m.mode === 'barre') {
-        if (!m.labels.includes('Nouveautés')) bad.push('Nouveautés absent');
-        if (!m.labels.includes('Ressources')) bad.push('Ressources absent');
-        for (const gone of ['Learning', 'Vidéos', 'À propos']) if (m.labels.includes(gone)) bad.push(`${gone} dans la barre`);
+        if (!m.labels.includes(lib('/nouveautes'))) bad.push(`${lib('/nouveautes')} absent`);
+        if (!m.labels.includes(groupe('ressources').label)) bad.push(`${groupe('ressources').label} absent`);
+        for (const gone of [...groupe('ressources').children.map((c) => c.label), L.telephone.find((c) => c.href === '/about').label]) {
+          if (m.labels.includes(gone)) bad.push(`${gone} dans la barre`);
+        }
       }
-      if (bad.length) failures.push(`${cfg.name} ${width}px : ${bad.join(' ; ')}`);
+      if (bad.length) failures.push(`${langue} ${cfg.name} ${width}px : ${bad.join(' ; ')}`);
     }
   }
   const table = ['| configuration | largeur | mode | écart logo→1er (px) | bord droit du dernier | débordement page/barre |', '|---|---|---|---|---|---|',

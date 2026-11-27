@@ -1,35 +1,38 @@
 ---
+import { libelles, lienDans } from "@/lib/libelles-site.mjs";
+import { adresseFr } from "@/lib/langues.mjs";
+
 const year = new Date().getFullYear();
 // L17 — Nouveautés, Plan de travail, Livre de bord (L44) et À propos à une action de toute page, à toutes les
 // largeurs (« Plan de travail » et « À propos » ne sont pas dans la barre du bureau).
 // Espacés par l'écart du flex, sans séparateur : rien d'orphelin quand la rangée passe
 // à la ligne à 320 px. Cibles de 44 px.
-const siteLinks = [
-  { href: "/nouveautes", label: "Nouveautés" },
-  { href: "/plan-de-travail", label: "Plan de travail" },
-  { href: "/livre-de-bord", label: "Livre de bord" },
-  { href: "/about", label: "À propos" },
-];
+// L111 — libellés d'une seule source par langue (src/lib/libelles-site.mjs, partagée avec la barre) : sur une
+// page /en/, le pied est en anglais ; un lien vers une page qui n'existe qu'en français le dit (hreflang).
+const langue = Astro.currentLocale === "en" ? "en" : "fr";
+const P = libelles(langue).pied;
+const lien = (href: string) => {
+  const l = lienDans(href, langue);
+  return { href: l.href, hreflang: l.langue === langue ? undefined : l.langue };
+};
 // Page courante marquée (aria-current + style actif) : rien dans la barre du bureau ne
 // l'est sur /plan-de-travail/ ni /about/. Le pied n'est donc plus persisté entre les pages
 // (transition:persist) : il est rendu à chaque page avec la bonne adresse.
-const pathname = Astro.url.pathname;
-// L108 : le pied n'existe qu'en français ; sur une page anglaise il le dit (lang, WCAG 3.1.2).
-const langPied = Astro.currentLocale === "en" ? "fr" : undefined;
+const pathname = adresseFr(Astro.url.pathname);
 const isCurrent = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 ---
 
-<footer lang={langPied} class="mt-24 border-t border-white/5 bg-paper">
-  <nav aria-label="Le site" class="site-links border-b border-white/5">
+<footer class="mt-24 border-t border-white/5 bg-paper">
+  <nav aria-label={P.navSite} class="site-links border-b border-white/5">
     <ul class="mx-auto max-w-6xl px-borne-5 sm:px-8 py-2 flex flex-wrap items-center gap-x-8 gap-y-0 text-sm">
-      {siteLinks.map((l) => (
+      {P.site.map((l) => (
         <li>
           <a
             class:list={[
               "inline-flex items-center min-h-11 underline-offset-4 hover:underline transition-colors",
               isCurrent(l.href) ? "text-claude underline decoration-2" : "text-ink hover:text-claude",
             ]}
-            href={l.href}
+            {...lien(l.href)}
             aria-current={isCurrent(l.href) ? "page" : undefined}
           >
             {l.label}
@@ -41,39 +44,35 @@ const isCurrent = (href: string) => pathname === href || pathname.startsWith(`${
   <div class="mx-auto max-w-6xl px-borne-5 sm:px-8 py-10 grid gap-6 md:grid-cols-3 text-sm text-ink-muted">
     <div>
       <p class="font-mono text-ink">claude-code-codex</p>
-      <p class="mt-1.5 text-xs">
-        Codex non-officiel sur Claude Code, l'écosystème Anthropic et
-        la collab IA × dev.
-      </p>
+      <p class="mt-1.5 text-xs">{P.resume}</p>
     </div>
 
     <div class="flex flex-col items-start">
-      <p class="text-xs uppercase tracking-wider text-ink/60 mb-1">Apprendre</p>
-      <a class="inline-flex items-center min-h-11 hover:text-ink transition-colors" href="/theory">Théorie</a>
-      <a class="inline-flex items-center min-h-11 hover:text-ink transition-colors" href="/ecosystem">Écosystème</a>
-      <a class="inline-flex items-center min-h-11 hover:text-ink transition-colors" href="/learning">Learning</a>
-      <a class="inline-flex items-center min-h-11 hover:text-ink transition-colors" href="/videos">Vidéos</a>
+      <p class="text-xs uppercase tracking-wider text-ink/60 mb-1">{P.apprendre}</p>
+      {P.apprendreLiens.map((l) => (
+        <a class="inline-flex items-center min-h-11 hover:text-ink transition-colors" {...lien(l.href)}>{l.label}</a>
+      ))}
     </div>
 
     <div class="flex flex-col items-start md:items-end">
-      <p class="text-xs uppercase tracking-wider text-ink/60 mb-1">Liens</p>
+      <p class="text-xs uppercase tracking-wider text-ink/60 mb-1">{P.liens}</p>
       <a
         class="inline-flex items-center min-h-11 hover:text-ink transition-colors"
         href="https://claude.com/claude-code"
         target="_blank"
         rel="noopener"
-        aria-label="Claude Code (Anthropic) (nouvel onglet)"
+        aria-label={`${P.claudeCode} (${P.nouvelOnglet})`}
       >
-        <span>Claude Code (Anthropic)&nbsp;<span aria-hidden="true">↗</span></span>
+        <span>{P.claudeCode}&nbsp;<span aria-hidden="true">↗</span></span>
       </a>
       <a
         class="inline-flex items-center min-h-11 hover:text-ink transition-colors"
         href="https://github.com/Sylad/claude-code-codex"
         target="_blank"
         rel="noopener"
-        aria-label="Repo GitHub (nouvel onglet)"
+        aria-label={`${P.depot} (${P.nouvelOnglet})`}
       >
-        <span>Repo GitHub&nbsp;<span aria-hidden="true">↗</span></span>
+        <span>{P.depot}&nbsp;<span aria-hidden="true">↗</span></span>
       </a>
     </div>
   </div>
@@ -82,18 +81,15 @@ const isCurrent = (href: string) => pathname === href || pathname.startsWith(`${
     <div
       class="mx-auto max-w-6xl px-borne-5 sm:px-8 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-x-2 text-xs text-ink-muted"
     >
-      <p>
-        © {year} — codex fan-site, sans affiliation officielle avec
-        Anthropic.
-      </p>
+      <p>© {year} — {P.mentions}</p>
       <p class="font-mono">
-        vibe coded with
+        {P.vibe}
         <a
           class="inline-flex items-center min-h-11 text-claude hover:text-claude-soft transition-colors"
           href="https://claude.com/claude-code"
           target="_blank"
           rel="noopener"
-          aria-label="Claude Code (nouvel onglet)"
+          aria-label={`Claude Code (${P.nouvelOnglet})`}
         >
           <span>Claude Code&nbsp;<span aria-hidden="true">↗</span></span>
         </a>

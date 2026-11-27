@@ -6,7 +6,10 @@
 // du flux : aucune page ne bouge d'un pixel. Quand la largeur, mesurée en em (texte agrandi, WCAG 1.4.4 et
 // 1.4.10), ne lui laisse plus une ligne, il revient dans le flux au lieu de recouvrir le titre (@container,
 // comme les schémas). Une pastille sombre, comme le sur-titre de PageHero, le garde lisible sur l'image.
-import { versions, NOMS } from "@/lib/langues.mjs";
+// L111 — sans traduction, « No English yet » mène à la page traduite (l'étude cadence) plutôt qu'à rien : le
+// visiteur anglophone a de quoi lire. Le nom accessible dit où mène le lien (WCAG 2.4.4) et commence par le
+// texte visible (2.5.3).
+import { versions, NOMS, ENTREE_EN } from "@/lib/langues.mjs";
 
 const v = versions(Astro.url.pathname);
 const langue = (Astro.currentLocale ?? v.langue) === "en" ? "en" : "fr";
@@ -25,7 +28,7 @@ const TEXTE = "inline-flex items-center min-h-11 px-2.5";
           ) : cible[l] ? (
             <a href={cible[l]} hreflang={l} lang={l} data-langue={l} class={LIEN}>{NOMS[l]}</a>
           ) : (
-            <span lang={l} data-langue-absente={l} class={`${TEXTE} text-ink-muted`}>No English yet</span>
+            <a href={ENTREE_EN} hreflang="en" lang="en" data-langue-absente={l} aria-label="No English yet: read the cadence case study in English" class={LIEN}>No English yet</a>
           )}
         </li>
       ))}

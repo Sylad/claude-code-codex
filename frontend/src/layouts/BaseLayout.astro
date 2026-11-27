@@ -95,9 +95,9 @@ const newsIndex = newsData.entries.map(({ slug, date }) => ({ slug, date }));
       >
       </div>
     </div>
-    {/* L108 : la barre n'est qu'en français ; sur une page anglaise elle le dit (lang, WCAG 3.1.2) et marque
-         la rubrique de la page française correspondante. */}
-    <Navbar client:load pathname={langue === "en" ? adresseFr(pathname) : pathname} news={newsIndex} lang={langue === "en" ? "fr" : undefined} transition:persist="navbar" />
+    {/* L111 : la barre parle la langue de la page (libellés de src/lib/libelles-site.mjs) et marque la rubrique
+         de la page française correspondante. Persistée par langue : passer de /x/ à /en/x/ la reconstruit. */}
+    <Navbar client:load pathname={adresseFr(pathname)} langue={langue} news={newsIndex} transition:persist={`navbar-${langue}`} />
     <main id="main" tabindex="-1" class="flex-1 pt-16 focus:outline-none">
       <SelecteurLangue />
       <slot />

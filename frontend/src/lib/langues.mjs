@@ -12,6 +12,9 @@ export const LANGUE_PAR_DEFAUT = 'fr';
 /** Adresses françaises (avec barre finale) qui ont leur version anglaise sous /en/. */
 export const TRADUITES = ['/case-studies/cadence/'];
 
+/** L111 — où mène « No English yet » sur une page sans traduction : une page qui existe en anglais. */
+export const ENTREE_EN = '/en/case-studies/cadence/';
+
 /** Nom de chaque langue, écrit dans cette langue (le sélecteur se lit des deux côtés). */
 export const NOMS = { fr: 'Français', en: 'English' };
 

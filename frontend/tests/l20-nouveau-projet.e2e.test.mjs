@@ -93,8 +93,9 @@ test('trouvable : menu Guides, « Les autres guides » des autres guides, accuei
   for (const g of ['k8s-for-java-developers', 'argocd-k8s-pour-les-nuls', 'cloudflare-pour-les-nuls']) {
     assert.match(html(g), /href="\/nouveau-projet\/"/, `${g} : « Les autres guides »`);
   }
-  const nav = readFileSync(new URL('../src/components/site/Navbar.vue', import.meta.url), 'utf8');
-  assert.match(nav, /href: "\/nouveau-projet", label: "Nouveau projet"/);
+  // L111 : libellés de la barre dans src/lib/libelles-site.mjs (source unique par langue).
+  const nav = readFileSync(new URL('../src/lib/libelles-site.mjs', import.meta.url), 'utf8');
+  assert.match(nav, /href: '\/nouveau-projet', label: 'Nouveau projet'/);
   // La page ne se liste pas elle-même parmi les autres guides.
   const autres = main(html(PAGE)).match(/<nav aria-labelledby="autres-guides"[\s\S]*?<\/nav>/)[0];
   assert.doesNotMatch(autres, /href="\/nouveau-projet\/"/);

@@ -54,7 +54,7 @@ dans la semaine, une seule entrée par semaine. Une entrée refusée fait échou
 anglaise sous `/en/` (i18n d'Astro dans `astro.config.mjs`, `prefixDefaultLocale: false`). Seule traduite à ce
 jour : `/en/case-studies/cadence/`. Le sélecteur de langue (`src/components/site/SelecteurLangue.astro`, posé
 par `BaseLayout.astro` sur chaque page) mène à l'autre version quand elle existe, sinon il dit « No English yet » ;
-la mise en page pose les liens `hreflang` (fr, en, x-default → français) des pages traduites. **Traduire une page** :
+la mise en page pose les liens `hreflang` (fr, en, x-default → français) des pages traduites. Sur une page sans traduction, « No English yet » est un lien vers `ENTREE_EN` (l'étude cadence en anglais). **Barre et pied** (L111) : leurs libellés vivent dans une source unique par langue, `frontend/src/lib/libelles-site.mjs` (jamais en dur dans `Navbar.vue` ni `Footer.astro`) ; sur /en/ ils sont en anglais, et un lien vers une page restée en français porte `hreflang="fr"` (`lienDans`). Tests : `tests/l111-libelles-site.test.mjs`, `tests/l111-barre-pied-langue.e2e.test.mjs` ; la barre anglaise est mesurée par `tests/navbar.e2e.test.mjs`. **Traduire une page** :
 ajouter son adresse française (barre finale) à `TRADUITES` dans `frontend/src/lib/langues.mjs`, puis créer la page
 sous `frontend/src/pages/en/` (mêmes chiffres, dates et sources, écrits à l'anglaise ; dates par `formatDayEn`).
 **Règle : une page française traduite qui change → sa page anglaise change dans le même lot.** Tests :
