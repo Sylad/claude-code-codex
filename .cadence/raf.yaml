@@ -1149,6 +1149,11 @@ lots:
     quickwin: true
     visible: true
     created: 2026-11-27
+  - id: L110
+    title: "Étude de cas cadence (FR et EN) : dans les schémas, plusieurs lignes « Qui : … » débordent de leur boîte (jusqu'à +49 unités pour « relecteur neuf (Opus), qui n'a pas écrit le code », mesuré polices web bloquées) ; seuls deux schémas sont couverts par un test — vu par le run de L108 le 27-11 ; mesure : aucun texte hors de sa boîte dans les trois schémas, test qui les couvre tous"
+    status: todo
+    estimate: 0.5
+    created: 2026-11-27
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
