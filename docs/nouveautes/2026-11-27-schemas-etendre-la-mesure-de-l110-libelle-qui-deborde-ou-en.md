@@ -1,5 +1,5 @@
 ---
-title: "Le schéma « Rester cohérent » de Pourquoi cadence se lit sans texte tassé"
+title: "Le schéma « Rester cohérent » se lit sans texte tassé"
 date: 2026-11-27
 created: 2026-11-27T17:15+01:00
 lots: [L113]
