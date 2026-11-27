@@ -1148,7 +1148,7 @@ lots:
     finished: 2026-11-27
   - id: L109
     title: "Suites UX de L35 : grille de « Nouveautés à tester » en items-start (carte MCP étirée, 230-294 px vides à 768-1440 px) ; compteur « 19 skills relevées, 17 déjà au catalogue » (Nielsen 1) ; langue de l'extrait déduite du texte, pas supposée française (risque lang=fr sur un résumé anglais) — revue UX L35 du 27-11"
-    status: doing
+    status: done
     estimate: 0.25
     quickwin: true
     visible: true
@@ -1158,6 +1158,7 @@ lots:
     notes:
       - { date: 2026-11-27, text: "revue de code conforme (27-11), mineur : langueDuTexte donne lang=fr à un résumé anglais court avec un mot accentué (« Generates a résumé »), chaque accent pèse autant qu'un mot-outil (nouveautes-a-tester.mjs:54) ; aucun extrait actuel touché" }
     ux: { date: 2026-11-27, verdict: compliant }
+    finished: 2026-11-27
   - id: L110
     title: "Étude de cas cadence (FR et EN) : dans les schémas, plusieurs lignes « Qui : … » débordent de leur boîte (jusqu'à +49 unités pour « relecteur neuf (Opus), qui n'a pas écrit le code », mesuré polices web bloquées) ; seuls deux schémas sont couverts par un test — vu par le run de L108 le 27-11 ; mesure : aucun texte hors de sa boîte dans les trois schémas, test qui les couvre tous"
     status: done
