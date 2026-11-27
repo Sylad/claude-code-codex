@@ -13,7 +13,7 @@ const figure = (id) => {
   return m[1];
 };
 const plain = (s) => s.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
-const IDS = ['plan-commits', 'parcours-v2', 'parcours-lot', 'chaine-livreur'];
+const IDS = ['plan-commits', 'parcours-v2', 'parcours-lot', 'chaine-livreur', 'lead-creneaux', 'memoire-fichiers'];
 
 test('R1 — chaque schéma SVG, chacun avec titre, description et légende', () => {
   for (const id of IDS) {

@@ -10,6 +10,8 @@
   de cadence 2, chaque chiffre avec son fichier, sa date et sa version (data-nombres / data-source,
   vérifiés contre le dépôt cadence par tests/l93-cadence-v1.e2e.test.mjs). Les preuves du banc de
   cadence 2 vivent dans /case-studies/pourquoi-cadence : on y renvoie sans les recopier.
+  L33 : le lead et ses créneaux, la mémoire en fichiers (deux schémas), la bande cadence-hud du
+  8 octobre 2026 (datée, V1) et le lien vers le paquet npm. Tests : tests/l33-cadence-lead-memoire.e2e.test.mjs.
 */
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
@@ -83,8 +85,32 @@ const livreur = [
   { titre: "Une ligne rendue", detail: "« L84 livré 3d6edf4, QA à lancer <url> »", accent: true },
 ];
 
+// L33 — le lead et ses créneaux : une seule source pour le dessin et sa version en liste (L104).
+const LEAD = {
+  haut: { qui: "Le lead · session de pilotage", titre: "Choisit le lot suivant", detail: "dans l'ordre des priorités, un run par dépôt" },
+  creneaux: [
+    { titre: "Créneau occupé", code: "cadence run", detail: "une session, un dépôt" },
+    { titre: "Créneau libre", code: "le lead le remplit", detail: "sans attendre", accent: true },
+  ],
+  bas: { qui: "Rendu au lead", titre: "Une ligne ou une question", detail: "le créneau se libère pour le lot suivant" },
+  boucle: "Le créneau libéré reçoit aussitôt le lot suivant (pointillés).",
+};
+
+// L33 — la mémoire partagée : des fichiers, jamais la conversation.
+const MEMOIRE = {
+  fichiers: [
+    { titre: "Le plan", code: "raf.yaml", detail: "lots et verdicts" },
+    { titre: "L'historique", code: "git log", detail: "commits et lots" },
+    { titre: "Les journaux", code: ".cadence/runs", detail: "brief et porte" },
+  ],
+  session: { qui: "Chaque session neuve", titre: "Lit ces fichiers au départ", detail: "rien ne vient d'une conversation passée" },
+  trace: { qui: "Ce qu'elle laisse", titre: "Un commit, un verdict, une note", detail: "écrits dans ces mêmes fichiers" },
+  boucle: "Ce qu'elle laisse est relu par la session suivante (pointillés).",
+};
+
 const CADENCE = "https://github.com/Sylad/cadence";
-const doc = (chemin: string) => `${CADENCE}/blob/main/${chemin}`;
+const NPM = "https://www.npmjs.com/package/@sylad/cadence";
+const doc =(chemin: string) => `${CADENCE}/blob/main/${chemin}`;
 // Un nombre ne se sépare ni de ses milliers ni de son unité en fin de ligne (règle du site, L88).
 const NBSP = "\u00a0";
 const insecable = (s: string) =>
@@ -432,7 +458,7 @@ const v2Decisions: { id: string; titre: string; causes: string[]; corps: string;
   />
 
   <section class="mx-auto max-w-3xl px-borne-5 sm:px-8 py-12 space-y-12">
-    <EtudeFraicheur depots={[{ nom: "Sylad/cadence", href: "https://github.com/Sylad/cadence" }]} date="2026-11-24" />
+    <EtudeFraicheur depots={[{ nom: "Sylad/cadence", href: "https://github.com/Sylad/cadence" }]} date="2026-11-27" />
 
     <CaseStudySection eyebrow="Le problème de départ">
       <h3 data-intertitre class={H3}>Deux questions qui reviennent sans cesse</h3>
@@ -614,6 +640,158 @@ const v2Decisions: { id: string; titre: string; causes: string[]; corps: string;
           Le panneau des lots tel que le publie la page Plan de travail : un titre par lot, rangé en cours, prévu ou livré.
         </figcaption>
       </figure>
+
+      <h3 data-intertitre class={H3}>Le lead et ses créneaux</h3>
+      <p>
+        Le lead ne code pas : il tient des créneaux. Chaque créneau est une
+        session qui travaille, au plus une par dépôt pour que deux runs ne se
+        marchent pas dessus. Dès qu'un run rend la main (une ligne, ou une
+        question), le lead relit le résultat et remplit le créneau libéré avec
+        le lot suivant du plan, sans attendre qu'on le lui demande. Une question
+        se tranche tout de suite quand la réponse est réversible et sourcée ;
+        le reste remonte à l'humain, pendant que les autres créneaux continuent.
+      </p>
+      <div class="-mx-borne-5 sm:mx-0">
+      <Schema id="lead-creneaux" legende="Le lead remplit les créneaux de session, un run par dépôt ; chaque run rend une ligne ou une question. Pointillés : le créneau libéré reçoit aussitôt le lot suivant.">
+        <svg viewBox="0 0 420 340" role="img" aria-labelledby="sch-lead-creneaux-t sch-lead-creneaux-d" xmlns="http://www.w3.org/2000/svg">
+          <title id="sch-lead-creneaux-t">Le lead et ses créneaux</title>
+          <desc id="sch-lead-creneaux-d">Le lead, une session de pilotage, choisit le lot suivant dans l'ordre des priorités, un run par dépôt. Il remplit deux sortes de créneaux : un créneau occupé par un cadence run, une session dans un dépôt, et un créneau libre qu'il remplit sans attendre. Le run occupé rend au lead une ligne ou une question ; le créneau se libère alors pour le lot suivant.</desc>
+          <rect class="sch-box" x="16" y="12" width="388" height="78" rx="10" />
+          <text class="sch-a" x="30" y="34">{LEAD.haut.qui}</text>
+          <text class="sch-t" x="30" y="56">{LEAD.haut.titre}</text>
+          <text class="sch-m" x="30" y="76">{LEAD.haut.detail}</text>
+          {LEAD.creneaux.map((c, i) => (
+            <>
+              <line class="sch-line" x1={109 + 202 * i} y1="90" x2={109 + 202 * i} y2="112" />
+              <path class="sch-arrow" d={`M${103 + 202 * i} 110 L${115 + 202 * i} 110 L${109 + 202 * i} 120 Z`} />
+              <rect class={c.accent ? "sch-box-accent" : "sch-box"} x={16 + 202 * i} y="122" width="186" height="96" rx="10" />
+              <text class="sch-t" x={30 + 202 * i} y="146">{c.titre}</text>
+              <text class={i === 0 ? "sch-m sch-mono" : "sch-m"} x={30 + 202 * i} y="170">{c.code}</text>
+              <text class="sch-m" x={30 + 202 * i} y="192">{c.detail}</text>
+            </>
+          ))}
+          <line class="sch-line" x1="109" y1="218" x2="109" y2="240" />
+          <path class="sch-arrow" d="M103 238 L115 238 L109 248 Z" />
+          <path class="sch-line-accent" d="M311 250 V230" />
+          <path class="sch-arrow-accent" d="M305 230 L317 230 L311 220 Z" />
+          <rect class="sch-box-accent" x="16" y="250" width="388" height="78" rx="10" />
+          <text class="sch-a" x="30" y="272">{LEAD.bas.qui}</text>
+          <text class="sch-t" x="30" y="294">{LEAD.bas.titre}</text>
+          <text class="sch-m" x="30" y="314">{LEAD.bas.detail}</text>
+        </svg>
+        <div class="sch-liste" data-sch-liste="lead-creneaux">
+          <ul class="sch-suite" aria-label="Le lead et ses créneaux">
+            <li class="sch-etape">
+              <span class="sch-qui">{LEAD.haut.qui}</span>
+              <span class="sch-titre">{LEAD.haut.titre}</span>
+              <span class="sch-detail">{LEAD.haut.detail}</span>
+            </li>
+            <li class="sch-etape">
+              <ul class="sch-sous">
+                {LEAD.creneaux.map((c, i) => (
+                  <li class={c.accent ? "sch-etape-accent" : undefined}>
+                    <span class="sch-titre">{c.titre}</span>
+                    <span class:list={["sch-detail", { "sch-mono": i === 0 }]}>{c.code}</span>
+                    <span class="sch-detail">{c.detail}</span>
+                  </li>
+                ))}
+              </ul>
+            </li>
+            <li class="sch-etape sch-etape-accent">
+              <span class="sch-qui">{LEAD.bas.qui}</span>
+              <span class="sch-titre">{LEAD.bas.titre}</span>
+              <span class="sch-detail">{LEAD.bas.detail}</span>
+            </li>
+          </ul>
+          <p class="sch-boucle"><span aria-hidden="true">↺ </span>{LEAD.boucle}</p>
+        </div>
+      </Schema>
+      </div>
+      <figure data-capture="bande-hud" class="rounded-xl border border-white/10 bg-paper-elevated p-3">
+        <a href="/case-studies/cadence-hud-bande-2026-10-08.png" target="_blank" rel="noopener" class="block">
+          <img
+            src="/case-studies/cadence-hud-bande-2026-10-08.png"
+            alt="La bande du mod cadence-hud le 8 octobre 2026 : en tête, le contexte de la session et les quotas ; puis deux projets, chacun avec le lot en cours, son étape (revue, implémentation), le modèle qui la joue, les lots en attente, le budget de jetons et « 1 session/2 »."
+            width="768"
+            height="146"
+            loading="lazy"
+            class="w-full h-auto rounded-lg"
+          />
+        </a>
+        <figcaption class="mt-2 text-xs text-ink-muted leading-relaxed">
+          Ce que voit le lead : la bande du mod <code class="font-mono text-claude-soft">cadence-hud</code>,
+          capturée le 8 octobre 2026, au temps de la V1 (vagues orchestrate). Une ligne par projet
+          en cours, avec son lot, l'étape, le modèle et les lots en attente ; « 1 session/2 » y
+          compte les créneaux occupés sur le plafond réglé ce jour-là. Toucher l'image l'ouvre en
+          taille réelle.
+        </figcaption>
+      </figure>
+
+      <h3 data-intertitre class={H3}>Une mémoire en fichiers, jamais dans la conversation</h3>
+      <p>
+        Les sessions sont neuves et courtes : aucune ne se souvient de la
+        précédente. Ce qui passe d'une session à l'autre est écrit dans des
+        fichiers du projet. Le plan et l'historique git sont versionnés avec le
+        code ; les journaux de run gardent le brief, le résultat et la porte de
+        chaque run. Une session qui démarre les relit ; en partant, elle y
+        laisse un commit qui cite son lot, un verdict ou une note.
+      </p>
+      <div class="-mx-borne-5 sm:mx-0">
+      <Schema id="memoire-fichiers" legende="La mémoire partagée : le plan, l'historique git et les journaux de run. Chaque session neuve les relit et y écrit ; pointillés : ce qu'elle laisse est relu par la suivante.">
+        <svg viewBox="0 0 420 340" role="img" aria-labelledby="sch-memoire-fichiers-t sch-memoire-fichiers-d" xmlns="http://www.w3.org/2000/svg">
+          <title id="sch-memoire-fichiers-t">Une mémoire en fichiers</title>
+          <desc id="sch-memoire-fichiers-d">Trois fichiers du projet : le plan (raf.yaml, lots et verdicts), l'historique (git log, commits et lots) et les journaux (.cadence/runs, brief et porte). Chaque session neuve lit ces fichiers au départ ; rien ne vient d'une conversation passée. Ce qu'elle laisse, un commit, un verdict, une note, est écrit dans ces mêmes fichiers et relu par la session suivante.</desc>
+          {MEMOIRE.fichiers.map((f, i) => (
+            <>
+              <rect class="sch-box" x={16 + 132 * i} y="12" width="124" height="96" rx="10" />
+              <text class="sch-t" x={26 + 132 * i} y="36">{f.titre}</text>
+              <text class="sch-m sch-mono" x={26 + 132 * i} y="60">{f.code}</text>
+              <text class="sch-m" x={26 + 132 * i} y="82">{f.detail}</text>
+              <line class="sch-line" x1={78 + 132 * i} y1="108" x2={78 + 132 * i} y2="130" />
+              <path class="sch-arrow" d={`M${72 + 132 * i} 128 L${84 + 132 * i} 128 L${78 + 132 * i} 138 Z`} />
+            </>
+          ))}
+          <rect class="sch-box" x="16" y="140" width="388" height="78" rx="10" />
+          <text class="sch-a" x="30" y="162">{MEMOIRE.session.qui}</text>
+          <text class="sch-t" x="30" y="184">{MEMOIRE.session.titre}</text>
+          <text class="sch-m" x="30" y="204">{MEMOIRE.session.detail}</text>
+          <line class="sch-line" x1="210" y1="218" x2="210" y2="240" />
+          <path class="sch-arrow" d="M204 238 L216 238 L210 248 Z" />
+          <rect class="sch-box-accent" x="16" y="250" width="380" height="78" rx="10" />
+          <text class="sch-a" x="30" y="272">{MEMOIRE.trace.qui}</text>
+          <text class="sch-t" x="30" y="294">{MEMOIRE.trace.titre}</text>
+          <text class="sch-m" x="30" y="314">{MEMOIRE.trace.detail}</text>
+          <path class="sch-line-accent" d="M396 289 H412 V60 H410" />
+          <path class="sch-arrow-accent" d="M413 54 L413 66 L404 60 Z" />
+        </svg>
+        <div class="sch-liste" data-sch-liste="memoire-fichiers">
+          <ul class="sch-suite" aria-label="Une mémoire en fichiers">
+            <li class="sch-etape">
+              <ul class="sch-sous">
+                {MEMOIRE.fichiers.map((f) => (
+                  <li>
+                    <span class="sch-titre">{f.titre}</span>
+                    <span class="sch-detail sch-mono">{f.code}</span>
+                    <span class="sch-detail">{f.detail}</span>
+                  </li>
+                ))}
+              </ul>
+            </li>
+            <li class="sch-etape">
+              <span class="sch-qui">{MEMOIRE.session.qui}</span>
+              <span class="sch-titre">{MEMOIRE.session.titre}</span>
+              <span class="sch-detail">{MEMOIRE.session.detail}</span>
+            </li>
+            <li class="sch-etape sch-etape-accent">
+              <span class="sch-qui">{MEMOIRE.trace.qui}</span>
+              <span class="sch-titre">{MEMOIRE.trace.titre}</span>
+              <span class="sch-detail">{MEMOIRE.trace.detail}</span>
+            </li>
+          </ul>
+          <p class="sch-boucle"><span aria-hidden="true">↺ </span>{MEMOIRE.boucle}</p>
+        </div>
+      </Schema>
+      </div>
     </CaseStudySection>
 
     <CaseStudySection eyebrow="Le point de départ : la V1" id="le-point-de-depart">
@@ -808,6 +986,7 @@ const v2Decisions: { id: string; titre: string; causes: string[]; corps: string;
       </ul>
       <div class="mt-4 flex flex-wrap gap-3 text-xs">
         <a href={CADENCE} target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">↗ Dépôt cadence</a>
+        <a href={NPM} target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">↗ Paquet npm @sylad/cadence</a>
         <a href={`${CADENCE}/blob/main/CHANGELOG.md`} target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">↗ CHANGELOG</a>
         <a href={`${CADENCE}/blob/main/docs/quickstart.md`} target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors">↗ Démarrage en 10 minutes</a>
       </div>

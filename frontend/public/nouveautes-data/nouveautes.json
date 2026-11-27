@@ -1,7 +1,22 @@
 {
   "project": "claude-code-codex",
-  "generated": "2026-11-26 15:40",
+  "generated": "2026-11-27 09:25",
   "entries": [
+    {
+      "slug": "2026-11-27-l-etude-de-cas-cadence-montre-le-lead-et-la-memoire-en-fichiers",
+      "title": "L'étude de cas cadence montre le lead et la mémoire en fichiers",
+      "date": "2026-11-27",
+      "lots": [
+        "L33"
+      ],
+      "captures": [
+        "captures/L33-lead-memoire.png"
+      ],
+      "alts": [
+        "Les deux nouveaux schémas côte à côte : à gauche le lead et ses créneaux (un créneau occupé par un cadence run, un créneau libre que le lead remplit, le run qui rend une ligne ou une question) ; à droite la mémoire en fichiers (le plan, l'historique git et les journaux de run, relus par chaque session neuve qui y laisse un commit, un verdict ou une note)"
+      ],
+      "html": "<p>L'étude de cas cadence explique deux pièces de plus, chacune avec son schéma lisible sur téléphone.</p>\n<ul><li><strong>Le lead et ses créneaux</strong> : le lead choisit le lot suivant dans l'ordre des priorités, un run par dépôt ; dès qu'un run rend une ligne ou une question, le créneau libéré reçoit le lot suivant.</li><li><strong>La bande cadence-hud</strong>, telle que le lead la voyait le 8 octobre 2026 (V1) : un projet par ligne, avec son lot, l'étape, le modèle et les créneaux occupés. Un toucher l'ouvre en taille réelle.</li><li><strong>Une mémoire en fichiers, jamais dans la conversation</strong> : le plan, l'historique git et les journaux de run sont relus par chaque session neuve, qui y laisse à son tour un commit, un verdict ou une note.</li><li><strong>Le paquet npm</strong> de cadence est maintenant lié en bas de page, à côté du dépôt.</li></ul>"
+    },
     {
       "slug": "2026-11-26-le-sur-titre-de-l-accueil-ne-laisse-plus-un-point-seul",
       "title": "Le sur-titre de l'accueil ne laisse plus un point seul en fin de ligne",
