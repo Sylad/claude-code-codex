@@ -699,6 +699,7 @@ lots:
     title: "Titres publics : un test de la porte vérifie AU MOMENT DE LA VAGUE que le titre de chaque entrée Nouveautés d'un lot visible respecte la règle de la page Plan (≤ 80 caractères, aucun nom de technique) — aujourd'hui l'erreur n'apparaît qu'au build après raf done ; trois builds rouges le 31-10 (L50, L58, L61)"
     status: done
     estimate: 0.25
+    delivered: { date: 2026-11-27, sha: 3e4ab82c3a88e7196841540c5a5283d33aded6c0 }
     created: 2026-10-31
     started: 2026-10-31
     review: { date: 2026-11-27, verdict: "conforme : d838467 cite L62 seulement parce qu'il corrige un titre refusé par le test L62 R8 ; il ne touche pas le code du lot L62 (Nouveauté de L113 et son JSON), relu par le lead", commit: d838467afed3e79b9dcaead2796e7a73270a24f7 }
@@ -1196,6 +1197,7 @@ lots:
     status: done
     estimate: 1
     visible: true
+    delivered: { date: 2026-11-27, sha: 3e4ab82c3a88e7196841540c5a5283d33aded6c0 }
     created: 2026-11-27
     started: 2026-11-27
     review: { date: 2026-11-27, verdict: "conforme : les 3 commits après la revue (a5ba289, 7d1e2cd, d838467) ne touchent que l'entrée Nouveautés, son JSON et sa capture ; diff relu par le lead, test L62 vert", commit: d838467afed3e79b9dcaead2796e7a73270a24f7 }
