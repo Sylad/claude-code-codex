@@ -118,7 +118,7 @@
   du 25-11 : eslint 187 violations dans 70 des 135 fichiers lus (~7 s), tsc 0 erreur après build (~3 s).
 - Changer un seuil ou une exclusion = lot `config: true` du plan.
 
-- L107 (27-11) : catalogue Tools tested de `/case-studies/` (`src/data/tools-tested.ts`) — fiches impeccable
+- L107 (27-11) : catalogue Tools tested de `/case-studies/` (`src/data/tools-tested.ts`, fiches récentes dans `tools-tested-recents.ts`, ajoutées en fin de liste : `tools-tested.ts` a une taille gelée par l'analyse) — fiches impeccable
   (reject + watchlist), hallmark (skillify : inventaire avant/après d'une refonte) et agent-browser (reject + watchlist,
   mesure contre le MCP Playwright), placées avant Omnara (radar). Un outil testé après le relevé commun
   (`TOOLS_SURVEYED_AT`) n'a ni `stars` ni `lastPush` : ses étoiles sont citées dans la description, pour que l'en-tête
