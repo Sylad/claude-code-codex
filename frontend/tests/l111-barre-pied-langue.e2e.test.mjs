@@ -175,31 +175,44 @@ test('B6 — aucun débord à 320 et 1440 px (page, barre, pied, sélecteur), an
   assert.deepEqual(ecarts, []);
 });
 
+/** Pastille Nouveautés sur une page : son texte visible et le texte lu à l'écran (texte masqué de la
+ * barre du bureau, ou nom du bouton du menu du téléphone). */
+async function lirePastille(page, bureau) {
+  const badge = page.locator(bureau ? 'header nav .news-badge' : 'button[aria-controls="mobile-menu"] .news-badge').first();
+  await badge.waitFor({ state: 'visible' });
+  const badgeTexte = (await badge.textContent()).trim();
+  if (!bureau) return { badgeTexte, lu: (await page.locator('button[aria-controls="mobile-menu"]').getAttribute('aria-label')) ?? '' };
+  const caches = await page.locator('header nav .sr-only').evaluateAll((els) => els.map((e) => e.textContent.trim()));
+  return { badgeTexte, lu: caches.find((x) => /\d/.test(x)) ?? '' };
+}
+
+/** Le texte lu dit le compte de la pastille, dans la langue de la page, sans texte de l'autre langue. */
+async function verifierPastille(page, url, width, langue) {
+  const L = LIBELLES[langue];
+  const bureau = width >= 1024;
+  const { badgeTexte, lu } = await lirePastille(page, bureau);
+  const n = Number(lu.match(/\d+/)?.[0] ?? 0);
+  assert.ok(n > 0, `${url} ${width} : aucun compte lu (${JSON.stringify(lu)})`);
+  assert.equal(badgeTexte, n > 9 ? '9+' : String(n), `${url} ${width} : pastille et texte lu ne disent pas le même compte`);
+  const attendu = bureau ? `(${L.nonVues(n)})` : `${L.menuOuvrir} (${L.nonVues(n)})`;
+  assert.equal(lu, attendu, `${url} ${width} : texte lu de la pastille`);
+  const autre = LIBELLES[langue === 'en' ? 'fr' : 'en'].nonVues(n);
+  const header = page.locator('header');
+  assert.ok(!(await header.innerText()).includes(autre), `${url} ${width} : texte de l’autre langue (visible)`);
+  assert.ok(!(await header.innerHTML()).includes(autre), `${url} ${width} : texte de l’autre langue (HTML)`);
+}
+
 test('B7 — pastille Nouveautés : le texte lu à l’écran (lien de la barre, bouton du menu) est dans la langue de la page', async (t) => {
   const env = await setupBrowser(t);
   if (!env) return;
-  for (const [url, langue] of [[EN, 'en'], ['/about/', 'fr']]) {
-    const L = LIBELLES[langue];
-    for (const width of [1440, 390]) {
-      const context = await env.browser.newContext({ viewport: { width, height: 900 } });
-      await context.addInitScript(([k, v]) => localStorage.setItem(k, v), [SEEN_KEY, JSON.stringify(OLD_VISIT)]);
-      const page = await context.newPage();
-      await page.goto(`${env.base}${url}`, { waitUntil: 'load' });
-      await pageReady(page);
-      const badge = page.locator(width >= 1024 ? 'header nav .news-badge' : 'button[aria-controls="mobile-menu"] .news-badge').first();
-      await badge.waitFor({ state: 'visible' });
-      const badgeTexte = (await badge.textContent()).trim();
-      const lu = width >= 1024
-        ? (await page.locator('header nav .sr-only').evaluateAll((els) => els.map((e) => e.textContent.trim()))).find((x) => /\d/.test(x)) ?? ''
-        : (await page.locator('button[aria-controls="mobile-menu"]').getAttribute('aria-label')) ?? '';
-      const n = Number(lu.match(/\d+/)?.[0] ?? 0);
-      assert.ok(n > 0, `${url} ${width} : aucun compte lu (${JSON.stringify(lu)})`);
-      assert.equal(badgeTexte, n > 9 ? '9+' : String(n), `${url} ${width} : pastille et texte lu ne disent pas le même compte`);
-      const attendu = width >= 1024 ? `(${L.nonVues(n)})` : `${L.menuOuvrir} (${L.nonVues(n)})`;
-      assert.equal(lu, attendu, `${url} ${width} : texte lu de la pastille`);
-      const autre = LIBELLES[langue === 'en' ? 'fr' : 'en'].nonVues(n);
-      assert.ok(!(await page.locator('header').innerText()).includes(autre) && !(await page.locator('header').innerHTML()).includes(autre), `${url} ${width} : texte de l’autre langue`);
-      await context.close();
-    }
+  const cas = [[EN, 'en'], ['/about/', 'fr']].flatMap(([url, langue]) => [1440, 390].map((width) => ({ url, langue, width })));
+  for (const { url, langue, width } of cas) {
+    const context = await env.browser.newContext({ viewport: { width, height: 900 } });
+    await context.addInitScript(([k, v]) => localStorage.setItem(k, v), [SEEN_KEY, JSON.stringify(OLD_VISIT)]);
+    const page = await context.newPage();
+    await page.goto(`${env.base}${url}`, { waitUntil: 'load' });
+    await pageReady(page);
+    await verifierPastille(page, url, width, langue);
+    await context.close();
   }
 });
