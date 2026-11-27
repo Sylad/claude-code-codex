@@ -1167,9 +1167,10 @@ lots:
     finished: 2026-11-27
   - id: L111
     title: "Site en deux langues, suites de L108 : barre et pied de page en anglais sur /en/ ; « No English yet » mène vers l'étude cadence en anglais (accueil, /case-studies/) ; « (in French) » sur la citation de l'étape 7 du schéma du livreur — vu par la revue UX de L108 le 27-11"
-    status: todo
+    status: doing
     estimate: 1
     created: 2026-11-27
+    started: 2026-11-27
   - id: L112
     title: "Site entier bilingue FR/EN (D-6), comme AetherWX : routage i18n de toutes les pages, sélecteur de langue dans la barre de menu (remplace le sélecteur flottant de L108) ; reprend L111 (barre et pied en anglais) ; décider d'abord le mécanisme de traduction (pages dupliquées vs contenu partagé, cf. revue de L108 : 56 % de mise en page copiée)"
     status: todo
