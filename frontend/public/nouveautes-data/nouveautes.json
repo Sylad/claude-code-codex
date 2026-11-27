@@ -1,7 +1,22 @@
 {
   "project": "claude-code-codex",
-  "generated": "2026-11-27 09:25",
+  "generated": "2026-11-27 11:41",
   "entries": [
+    {
+      "slug": "2026-11-27-une-premiere-page-du-site-se-lit-en-anglais",
+      "title": "Une première page du site se lit en anglais",
+      "date": "2026-11-27",
+      "lots": [
+        "L108"
+      ],
+      "captures": [
+        "captures/L108-cadence-en-1440.png"
+      ],
+      "alts": [
+        "Le haut de la version anglaise de l'étude de cas cadence au bureau : en haut à droite, le sélecteur « Français · English » avec English en cours ; dessous, le titre « A plan tied to the commits, measured AI sessions » et la date « Updated November 27, 2026 »"
+      ],
+      "html": "<p>Le site parle maintenant deux langues. Chaque page porte, en haut à droite, un sélecteur <strong>Français · English</strong>.</p>\n<ul><li><strong>L'étude de cas cadence</strong> existe en anglais, à l'adresse <code>/en/case-studies/cadence/</code>. Elle reprend la page française à l'identique : mêmes chiffres, mêmes dates, mêmes sources, mêmes schémas, écrits à l'anglaise.</li><li><strong>Depuis la page française</strong>, « English » mène à sa version anglaise, et « Français » ramène à la page française.</li><li><strong>Sur les autres pages</strong>, pas encore traduites, le sélecteur le dit (« No English yet ») au lieu de mener à une page introuvable.</li><li><strong>Les adresses françaises ne changent pas</strong> : tous les liens déjà partagés restent bons.</li><li>Les liens de la page anglaise vers des pages qui n'existent qu'en français le signalent par « (in French) ».</li></ul>"
+    },
     {
       "slug": "2026-11-27-l-ecosysteme-montre-les-nouveautes-a-tester",
       "title": "L'écosystème montre les nouveautés à tester",

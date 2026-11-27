@@ -1,12 +1,15 @@
 ---
 /** L8 (revue UX, suite de lecture) : chaque étude finit par un retour à l'index des études. */
+// L108 : sur une page anglaise, l'index (en français) est annoncé comme tel.
+const en = Astro.currentLocale === "en";
 ---
 
-<nav aria-label="Suite de lecture" class="mx-auto max-w-3xl px-borne-5 sm:px-8 pb-12">
+<nav aria-label={en ? "Keep reading" : "Suite de lecture"} class="mx-auto max-w-3xl px-borne-5 sm:px-8 pb-12">
   <a
     href="/case-studies/"
+    hreflang={en ? "fr" : undefined}
     class="inline-flex min-h-11 items-center gap-2 rounded-lg border border-white/10 bg-paper-elevated px-borne-4 py-2 text-sm text-ink hover:border-claude/40 hover:text-claude transition-colors"
   >
-    ← Toutes les études de cas
+    {en ? <span>← All case studies <span class="text-ink-muted">(in French)</span></span> : "← Toutes les études de cas"}
   </a>
 </nav>

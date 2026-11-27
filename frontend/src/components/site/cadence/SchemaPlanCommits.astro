@@ -1,0 +1,71 @@
+---
+import Schema from "@/components/site/Schema.astro";
+// L108 — schéma « plan relié aux commits » de l'étude cadence, partagé par la page française et sa
+// traduction (/en/) : le dessin et ses coordonnées ici, les textes en props (déplacé de L104 sans changement).
+interface Item { code: string; detail: string; accent?: boolean }
+interface Props {
+  data: {
+    groupes: { qui: string; lien?: string; items: Item[] }[];
+    commandes: { code: string; detail: string }[];
+  };
+  titre: string;
+  desc: string;
+  legende: string;
+}
+const { data, titre, desc, legende } = Astro.props;
+const PC_Y = [12, 152]; // haut de chaque groupe dans le dessin (viewBox 420 × 372)
+---
+
+<Schema id="plan-commits" legende={legende}>
+  <svg viewBox="0 0 420 372" role="img" aria-labelledby="sch-plan-commits-t sch-plan-commits-d" xmlns="http://www.w3.org/2000/svg">
+    <title id="sch-plan-commits-t">{titre}</title>
+    <desc id="sch-plan-commits-d">{desc}</desc>
+    {data.groupes.map((g, i) => (
+      <>
+        <rect class="sch-box" x="16" y={PC_Y[i]} width="388" height="96" rx="10" />
+        <text class="sch-a" x="30" y={PC_Y[i] + 22}>{g.qui}</text>
+        {g.items.map((it, j) => (
+          <>
+            <rect class={it.accent ? "sch-box-accent" : "sch-box"} x={30 + 190 * j} y={PC_Y[i] + 36} width="170" height="46" rx="8" />
+            <text class="sch-t sch-mono" x={42 + 190 * j} y={PC_Y[i] + 56}>{it.code}</text>
+            <text class="sch-m" x={42 + 190 * j} y={PC_Y[i] + 74}>{it.detail}</text>
+          </>
+        ))}
+      </>
+    ))}
+    <line class="sch-line" x1="115" y1="108" x2="115" y2="142" />
+    <path class="sch-arrow" d="M109 140 L121 140 L115 150 Z" />
+    <text class="sch-m" x="126" y="132">{data.groupes[0].lien}</text>
+    <line class="sch-line" x1="115" y1="248" x2="115" y2="272" />
+    <path class="sch-arrow" d="M109 270 L121 270 L115 280 Z" />
+    <rect class="sch-box" x="16" y="282" width="388" height="78" rx="10" />
+    {data.commandes.map((c, k) => (
+      <>
+        <text class="sch-t sch-mono" x="30" y={304 + 22 * k}>{c.code}</text>
+        <text class="sch-m" x="190" y={304 + 22 * k}>{c.detail}</text>
+      </>
+    ))}
+  </svg>
+  <div class="sch-liste" data-sch-liste="plan-commits">
+    <ul class="sch-suite" aria-label={titre}>
+      {data.groupes.map((g) => (
+        <li class="sch-etape">
+          <span class="sch-qui">{g.qui}</span>
+          <ul class="sch-sous">
+            {g.items.map((it) => (
+              <li class={it.accent ? "sch-etape-accent" : undefined}><span class="sch-titre sch-mono">{it.code}</span> <span class="sch-detail">{it.detail}</span></li>
+            ))}
+          </ul>
+          {g.lien && <span class="sch-detail">{g.lien}</span>}
+        </li>
+      ))}
+      <li class="sch-etape">
+        <ul class="sch-sous">
+          {data.commandes.map((c) => (
+            <li><span class="sch-titre sch-mono">{c.code}</span> <span class="sch-detail">{c.detail}</span></li>
+          ))}
+        </ul>
+      </li>
+    </ul>
+  </div>
+</Schema>

@@ -21,15 +21,22 @@ const GAP = 28;
 const top = (i: number) => 12 + i * (H + GAP);
 const height = top(steps.length - 1) + H + 12;
 const uid = `sch-${id}`;
+// L108 : la chaîne parle la langue de la page (page anglaise sous /en/).
+const en = Astro.currentLocale === "en";
+const QUI = en ? "Who: " : "Qui : ";
 // Sous role="img", les <text> du dessin sont présentationnels : seul title + desc est lu par un lecteur
 // d'écran (WCAG 1.1.1). La desc nomme donc chaque étape, son détail et qui la fait.
 const descAccessible = [
   desc,
-  ...steps.map((s, i) => `${i + 1}. ${s.titre} : ${s.detail}${s.qui ? ` ; qui : ${s.qui}` : ""}.`),
+  ...steps.map((s, i) => en
+    ? `${i + 1}. ${s.titre}: ${s.detail}${s.qui ? `; who: ${s.qui}` : ""}.`
+    : `${i + 1}. ${s.titre} : ${s.detail}${s.qui ? ` ; qui : ${s.qui}` : ""}.`),
 ].join(" ");
 // L104 — la même chaîne en HTML (texte en rem : il grandit avec la police), montrée par Schema.astro à la
 // place du dessin quand le cadre est étroit en em. Une seule des deux est affichée, donc lue.
-const boucleTexte = boucle
+const boucleTexte = boucle && en
+  ? `Dotted loop from “${boucle.de + 1}. ${steps[boucle.de].titre}” back to “${boucle.vers + 1}. ${steps[boucle.vers].titre}” — ${boucle.mot}.`
+  : boucle
   ? `Boucle en pointillés de « ${boucle.de + 1}. ${steps[boucle.de].titre} » vers « ${boucle.vers + 1}. ${steps[boucle.vers].titre} » — ${boucle.mot}.`
   : "";
 ---
@@ -42,7 +49,7 @@ const boucleTexte = boucle
       <rect class={s.accent ? "sch-box-accent" : "sch-box"} x={X} y={top(i)} width={BOX_W} height={H} rx="10" />
       <text class="sch-t" x={X + 14} y={top(i) + 24}>{`${i + 1}. ${s.titre}`}</text>
       <text class="sch-m" x={X + 14} y={top(i) + 44}>{s.detail}</text>
-      {s.qui && <text class="sch-a" x={X + 14} y={top(i) + 64}>{`Qui : ${s.qui}`}</text>}
+      {s.qui && <text class="sch-a" x={X + 14} y={top(i) + 64}>{`${QUI}${s.qui}`}</text>}
       {i < steps.length - 1 && (
         <g>
           <line class="sch-line" x1={X + BOX_W / 2} y1={top(i) + H} x2={X + BOX_W / 2} y2={top(i) + H + GAP - 8} />
@@ -68,7 +75,7 @@ const boucleTexte = boucle
       <li class:list={["sch-etape", { "sch-etape-accent": s.accent }]}>
         <span class="sch-titre">{`${i + 1}. ${s.titre}`}</span>
         <span class="sch-detail">{s.detail}</span>
-        {s.qui && <span class="sch-qui">{`Qui : ${s.qui}`}</span>}
+        {s.qui && <span class="sch-qui">{`${QUI}${s.qui}`}</span>}
       </li>
     ))}
   </ol>

@@ -14,10 +14,12 @@ const siteLinks = [
 // l'est sur /plan-de-travail/ ni /about/. Le pied n'est donc plus persisté entre les pages
 // (transition:persist) : il est rendu à chaque page avec la bonne adresse.
 const pathname = Astro.url.pathname;
+// L108 : le pied n'existe qu'en français ; sur une page anglaise il le dit (lang, WCAG 3.1.2).
+const langPied = Astro.currentLocale === "en" ? "fr" : undefined;
 const isCurrent = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 ---
 
-<footer class="mt-24 border-t border-white/5 bg-paper">
+<footer lang={langPied} class="mt-24 border-t border-white/5 bg-paper">
   <nav aria-label="Le site" class="site-links border-b border-white/5">
     <ul class="mx-auto max-w-6xl px-borne-5 sm:px-8 py-2 flex flex-wrap items-center gap-x-8 gap-y-0 text-sm">
       {siteLinks.map((l) => (

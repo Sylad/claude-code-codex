@@ -1,0 +1,60 @@
+---
+// L108 (D-5) — sélecteur de langue, en tête du contenu de chaque page (mise en page commune). La page dans
+// l'autre langue quand elle existe ; sinon, il dit que la version anglaise n'existe pas encore au lieu de
+// mener à une 404. Liens de 44 px au moins (WCAG 2.5.8 et cible tactile), noms écrits chacun dans sa langue.
+// Position : à 100 %, il est posé dans la marge haute du premier bloc (≥ 4 rem sur toutes les pages), hors
+// du flux : aucune page ne bouge d'un pixel. Quand la largeur, mesurée en em (texte agrandi, WCAG 1.4.4 et
+// 1.4.10), ne lui laisse plus une ligne, il revient dans le flux au lieu de recouvrir le titre (@container,
+// comme les schémas). Une pastille sombre, comme le sur-titre de PageHero, le garde lisible sur l'image.
+import { versions, NOMS } from "@/lib/langues.mjs";
+
+const v = versions(Astro.url.pathname);
+const langue = (Astro.currentLocale ?? v.langue) === "en" ? "en" : "fr";
+const cible = { fr: v.fr, en: v.en };
+const LIEN = "inline-flex items-center justify-center min-h-11 min-w-11 px-2.5 rounded-md underline underline-offset-4 text-ink hover:text-claude focus-visible:outline-2 focus-visible:outline-claude transition-colors";
+const TEXTE = "inline-flex items-center min-h-11 px-2.5";
+---
+
+<div class="langues mx-auto max-w-6xl">
+  <nav aria-label={langue === "en" ? "Language" : "Langue"} data-selecteur-langue class="rounded-md bg-paper/85">
+    <ul class="flex flex-wrap items-center justify-end text-sm">
+      {(["fr", "en"] as const).map((l) => (
+        <li>
+          {l === langue ? (
+            <span lang={l} aria-current="true" data-langue-courante={l} class={`${TEXTE} font-semibold text-claude-soft`}>{NOMS[l]}</span>
+          ) : cible[l] ? (
+            <a href={cible[l]} hreflang={l} lang={l} data-langue={l} class={LIEN}>{NOMS[l]}</a>
+          ) : (
+            <span lang={l} data-langue-absente={l} class={`${TEXTE} text-ink-muted`}>No English yet</span>
+          )}
+        </li>
+      ))}
+    </ul>
+  </nav>
+</div>
+
+<style>
+  .langues {
+    position: relative;
+    container-type: inline-size;
+  }
+  .langues nav {
+    position: absolute;
+    /* au-dessus du premier bloc de la page, qui vient après lui et se peint par-dessus (sinon il prend le toucher) */
+    z-index: 10;
+    top: 0.5rem;
+    right: var(--spacing-borne-5);
+  }
+  @media (min-width: 40rem) {
+    .langues nav { right: 2rem; }
+  }
+  /* Une ligne demande ≈ 13 em (« Français » et « No English yet », marges comprises) plus les gouttières :
+     en dessous de 17 em de large (320 px dès 125 %, 390 px dès 150 %), il passe dans le flux. */
+  @container (max-width: 17em) {
+    .langues nav {
+      position: static;
+      width: fit-content;
+      margin: 0.5rem var(--spacing-borne-5) 0 auto;
+    }
+  }
+</style>

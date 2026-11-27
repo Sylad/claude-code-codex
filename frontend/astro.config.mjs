@@ -10,6 +10,13 @@ export default defineConfig({
   // Astro 7 passe compressHTML à 'jsx' par défaut : les espaces entre éléments inline
   // disparaissent (« avecClaude Code » sur 38 pages sur 40, mesuré au passage à Astro 7).
   compressHTML: true,
+  // L108 (D-5) — deux langues : le français par défaut, aux URL de toujours (sans préfixe), l'anglais sous
+  // /en/. Une page n'a sa version anglaise que si elle existe sous src/pages/en/ (liste dans src/lib/langues.mjs).
+  i18n: {
+    locales: ['fr', 'en'],
+    defaultLocale: 'fr',
+    routing: { prefixDefaultLocale: false },
+  },
   integrations: [vue()],
   vite: {
     plugins: [tailwindcss()],
