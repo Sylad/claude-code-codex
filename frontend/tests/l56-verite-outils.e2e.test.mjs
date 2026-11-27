@@ -44,6 +44,8 @@ const RELEVE = {
   impeccable: [undefined, undefined],
   hallmark: [undefined, undefined],
   'agent-browser': [undefined, undefined],
+  treg: [undefined, undefined],
+  openjarvis: [undefined, undefined],
 };
 const page = (p) => readFileSync(join(DIST, p, 'index.html'), 'utf8');
 const texte = (p) => page(p).replace(/<[^>]+>/g, ' ').replace(/&nbsp;| /g, ' ').replace(/\s+/g, ' ');
