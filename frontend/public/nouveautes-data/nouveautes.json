@@ -3,6 +3,21 @@
   "generated": "2026-11-27 09:25",
   "entries": [
     {
+      "slug": "2026-11-27-l-ecosysteme-montre-les-nouveautes-a-tester",
+      "title": "L'écosystème montre les nouveautés à tester",
+      "date": "2026-11-27",
+      "lots": [
+        "L35"
+      ],
+      "captures": [
+        "captures/L35-nouveautes-a-tester.png"
+      ],
+      "alts": [
+        "La section « Nouveautés à tester » de la page Écosystème : à gauche les skills du dépôt anthropics/skills, dernier relevé le 24 août 2026, avec academy-guide et discernment-nudge, chacune avec son résumé et son lien GitHub ; à droite les serveurs MCP de modelcontextprotocol/servers, dernier relevé le 9 mai 2026, tous déjà au catalogue"
+      ],
+      "html": "<p>La page Écosystème a une section « Nouveautés à tester » : ce que le relevé hebdomadaire des dépôts officiels a trouvé et qui n'est pas encore au catalogue.</p>\n<ul><li><strong>Skills</strong> du dépôt anthropics/skills et <strong>serveurs MCP</strong> du dépôt modelcontextprotocol/servers, chacun dans son bloc avec la date de son dernier relevé.</li><li>Chaque entrée donne son nom, le résumé du relevé quand il en existe un, son lien GitHub et le jour où elle a été relevée.</li><li>Quand tout ce qui a été relevé est déjà au catalogue, le bloc le dit.</li></ul>"
+    },
+    {
       "slug": "2026-11-27-l-etude-de-cas-cadence-montre-le-lead-et-la-memoire-en-fichiers",
       "title": "L'étude de cas cadence montre le lead et la mémoire en fichiers",
       "date": "2026-11-27",

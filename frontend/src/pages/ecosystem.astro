@@ -3,6 +3,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import PageHero from "@/components/site/PageHero.astro";
 import RevueContenu from "@/components/site/RevueContenu.astro";
 import VeilleEcosysteme from "@/components/site/VeilleEcosysteme.astro";
+import NouveautesATester from "@/components/site/NouveautesATester.astro";
 import EcosystemCatalog from "@/components/site/EcosystemCatalog.vue";
 import { ecosystemEntries } from "@/data/ecosystem";
 
@@ -81,6 +82,8 @@ const communityEntries = ecosystemEntries.filter((e) => !e.official);
   </section>
 
   <VeilleEcosysteme />
+
+  <NouveautesATester />
 
   {
     communityEntries.length > 0 && (
