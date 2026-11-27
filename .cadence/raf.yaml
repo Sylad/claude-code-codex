@@ -1171,6 +1171,9 @@ lots:
     estimate: 1
     created: 2026-11-27
     started: 2026-11-27
+    review: { date: 2026-11-27, verdict: non-compliant, commit: 70244f6c494911a22d5c869e0c24dcd5a600f27f }
+    notes:
+      - { date: 2026-11-27, text: "revue de code passe 1 (27-11) : 1 majeur (CLAUDE.md attribue la mesure de la barre anglaise à navbar.e2e), 3 mineurs ; passe 2 lancée" }
   - id: L112
     title: "Site entier bilingue FR/EN (D-6), comme AetherWX : routage i18n de toutes les pages, sélecteur de langue dans la barre de menu (remplace le sélecteur flottant de L108) ; reprend L111 (barre et pied en anglais) ; décider d'abord le mécanisme de traduction (pages dupliquées vs contenu partagé, cf. revue de L108 : 56 % de mise en page copiée)"
     status: todo
