@@ -480,12 +480,14 @@ lots:
   - id: L35
     title: "/ecosystem : afficher la veille déjà récoltée — les skills d'anthropics/skills et les serveurs MCP des flux hebdo (data/feeds/github-anthropics-skills.json, github-mcp-servers.json) absents du catalogue, en « nouveautés à tester » (ex. 24-10 : academy-guide, discernment-nudge) ; date de relevé affichée. Constat 24-10 : la page sert le catalogue statique de 42 entrées inchangé depuis le 22-06, les flux sont récoltés chaque lundi mais aucune page ne les lit"
     public: "Écosystème : les nouveaux skills et serveurs MCP à tester"
-    status: doing
+    status: done
     estimate: 0.25
     visible: true
     created: 2026-10-24
     started: 2026-11-27
     review: { date: 2026-11-27, verdict: "conforme (passe 2, relue par le lead) : date du dernier passage du batch dans derniers-releves.json, repli « Dernière nouveauté relevée le » tant que le batch n'a pas tourné, test qui échoue avec l'ancien calcul ; README et branche flux vide testée", commit: 3bcc0ccf9e3031ff77927c407043f5414e4a26af }
+    ux: { date: 2026-11-27, verdict: "conforme (lead, d'après la revue et la capture 1440) — 2 mineurs suivis en L109 : carte MCP étirée 230-294 px vides à ≥768 px ; « 19 relevées » sans « 17 déjà au catalogue »" }
+    finished: 2026-11-27
   - id: L40
     title: "Plan déplacé vers .cadence/raf.yaml avec raf migrate (cadence L284, L305) : --dry-run d'abord, chaque lecteur du chemin (scripts plan-data, tests, CI, CLAUDE.md, skills) mis à jour ou signalé ; un lecteur non traité (chemin construit à la main) corrigé à la main dans le même lot ; tests, build et raf check verts ; l'avertissement « ancien emplacement » disparaît"
     status: done
@@ -1132,6 +1134,13 @@ lots:
     title: "D-5 : deux langues dans codex — routage i18n d'Astro (FR par défaut, /en/ en anglais), sélecteur de langue visible, lien hreflang ; première page traduite : case-studies/cadence (relue en anglais naturel, chiffres et sources identiques) ; vécu 27-11 : Sylvain lit le français, un curieux venu du README de cadence lira l'anglais ; mesure : la page EN existe, le sélecteur passe d'une langue à l'autre sur la même page, aucune page FR cassée"
     status: todo
     estimate: 2
+    visible: true
+    created: 2026-11-27
+  - id: L109
+    title: "Suites UX de L35 : grille de « Nouveautés à tester » en items-start (carte MCP étirée, 230-294 px vides à 768-1440 px) ; compteur « 19 skills relevées, 17 déjà au catalogue » (Nielsen 1) ; langue de l'extrait déduite du texte, pas supposée française (risque lang=fr sur un résumé anglais) — revue UX L35 du 27-11"
+    status: todo
+    estimate: 0.25
+    quickwin: true
     visible: true
     created: 2026-11-27
 acknowledged:
