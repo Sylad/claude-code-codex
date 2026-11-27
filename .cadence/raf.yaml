@@ -1152,6 +1152,7 @@ lots:
     estimate: 0.25
     quickwin: true
     visible: true
+    delivered: { date: 2026-11-27, sha: fa3c135772308eb71283e49f1b2f40c411cae619 }
     created: 2026-11-27
     started: 2026-11-27
     review: { date: 2026-11-27, verdict: compliant, commit: c25f23d29ae0a3c1d1e10e4d774ed58de4b1ff90 }
