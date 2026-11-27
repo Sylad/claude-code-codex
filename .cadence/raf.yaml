@@ -1155,7 +1155,7 @@ lots:
     created: 2026-11-27
   - id: L110
     title: "Étude de cas cadence (FR et EN) : dans les schémas, plusieurs lignes « Qui : … » débordent de leur boîte (jusqu'à +49 unités pour « relecteur neuf (Opus), qui n'a pas écrit le code », mesuré polices web bloquées) ; seuls deux schémas sont couverts par un test — vu par le run de L108 le 27-11 ; mesure : aucun texte hors de sa boîte dans les trois schémas, test qui les couvre tous"
-    status: doing
+    status: done
     estimate: 0.5
     created: 2026-11-27
     started: 2026-11-27
@@ -1163,6 +1163,7 @@ lots:
     ux: { date: 2026-11-27, verdict: compliant }
     notes:
       - { date: 2026-11-27, text: "UX (lead, d'après L110-ux.md) : 0 débord, 0 chevauchement, FR et EN, 4 largeurs, 100 et 200 %. Note : le texte des dessins descend à 8,4 px à 320 (10,6 à 390), déjà avant L110 ; barre de la page EN en français = L111." }
+    finished: 2026-11-27
   - id: L111
     title: "Site en deux langues, suites de L108 : barre et pied de page en anglais sur /en/ ; « No English yet » mène vers l'étude cadence en anglais (accueil, /case-studies/) ; « (in French) » sur la citation de l'étape 7 du schéma du livreur — vu par la revue UX de L108 le 27-11"
     status: todo
