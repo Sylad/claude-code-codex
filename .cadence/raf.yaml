@@ -1169,6 +1169,7 @@ lots:
     title: "Site en deux langues, suites de L108 : barre et pied de page en anglais sur /en/ ; « No English yet » mène vers l'étude cadence en anglais (accueil, /case-studies/) ; « (in French) » sur la citation de l'étape 7 du schéma du livreur — vu par la revue UX de L108 le 27-11"
     status: done
     estimate: 1
+    delivered: { date: 2026-11-27, sha: d2f99430b96137bd87d767c434850da168db87d1 }
     created: 2026-11-27
     started: 2026-11-27
     review: { date: 2026-11-27, verdict: compliant, commit: 49b92f97b1f618299e4bfcdeab610c35f2b15f95 }
