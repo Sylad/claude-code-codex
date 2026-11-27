@@ -1128,9 +1128,10 @@ lots:
       - { date: 2026-11-26, text: "26-11 : QA prod conforme (/, /about/, maritime-atlas à 320/390/1440 : écart 0–1 px, 0 erreur console, 0 requête en échec)" }
   - id: L107
     title: "Catalogue Tools tested : fiches d'impeccable (pbakaus, reject + watchlist), hallmark (Nutlope, skillify → inventaire avant/après d'une refonte, cadence L915) et agent-browser (vercel-labs, reject + watchlist → mesure contre le MCP Playwright, cadence L916), testés le 27-11 ; verdicts et mesures dans les notes de mémoire du lead (impeccable_test, hallmark_test, agent-browser_test du 2026-11-27), à recopier sans rien de privé"
-    status: todo
+    status: doing
     estimate: 1
     created: 2026-11-27
+    started: 2026-11-27
   - id: L108
     title: "D-5 : deux langues dans codex — routage i18n d'Astro (FR par défaut, /en/ en anglais), sélecteur de langue visible, lien hreflang ; première page traduite : case-studies/cadence (relue en anglais naturel, chiffres et sources identiques) ; vécu 27-11 : Sylvain lit le français, un curieux venu du README de cadence lira l'anglais ; mesure : la page EN existe, le sélecteur passe d'une langue à l'autre sur la même page, aucune page FR cassée"
     status: todo
