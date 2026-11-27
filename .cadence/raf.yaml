@@ -1157,6 +1157,7 @@ lots:
     title: "Étude de cas cadence (FR et EN) : dans les schémas, plusieurs lignes « Qui : … » débordent de leur boîte (jusqu'à +49 unités pour « relecteur neuf (Opus), qui n'a pas écrit le code », mesuré polices web bloquées) ; seuls deux schémas sont couverts par un test — vu par le run de L108 le 27-11 ; mesure : aucun texte hors de sa boîte dans les trois schémas, test qui les couvre tous"
     status: done
     estimate: 0.5
+    delivered: { date: 2026-11-27, sha: 57ca56f016bd90b0a53b0a009f3b99a3f35612e9 }
     created: 2026-11-27
     started: 2026-11-27
     review: { date: 2026-11-27, verdict: compliant, commit: 287e092365c577757d6e52ccb74d5c6504ffbcf5 }
