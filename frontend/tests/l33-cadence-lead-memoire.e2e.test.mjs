@@ -10,7 +10,19 @@ import { join } from 'node:path';
 import { DIST, setupBrowser } from './lib/e2e-dist.mjs';
 
 const html = () => readFileSync(join(DIST, 'case-studies', 'cadence', 'index.html'), 'utf8');
-const plain = (s) => s.replace(/<[^>]+>/g, ' ').replace(/&#39;/g, "'").replace(/\s+/g, ' ');
+// Retire les balises en un seul passage (sans expression régulière qui revient en arrière).
+const sansBalises = (s) => {
+  let out = '';
+  let i = 0;
+  for (let lt = s.indexOf('<'); lt >= 0; lt = s.indexOf('<', i)) {
+    const gt = s.indexOf('>', lt);
+    if (gt < 0) break;
+    out += `${s.slice(i, lt)} `;
+    i = gt + 1;
+  }
+  return out + s.slice(i);
+};
+const plain = (s) => sansBalises(s).replaceAll('&#39;', "'").replace(/\s+/g, ' ');
 const figure = (attr, id) => {
   const m = html().match(new RegExp(`<figure[^>]*${attr}="${id}"[^>]*>([\\s\\S]*?)</figure>`));
   assert.ok(m, `figure « ${id} » absente`);
