@@ -6,15 +6,13 @@ import skills from "@/data/feeds/github-anthropics-skills.json";
 import mcpServers from "@/data/feeds/github-mcp-servers.json";
 import releves from "@/data/feeds/derniers-releves.json";
 import { ecosystemEntries } from "@/data/ecosystem";
-import { fluxATester } from "@/lib/nouveautes-a-tester.mjs";
+import { compteurFlux, fluxATester } from "@/lib/nouveautes-a-tester.mjs";
 import DateLongue from "./DateLongue.astro";
 
 const flux = [
   fluxATester("github-anthropics-skills", skills, ecosystemEntries, releves),
   fluxATester("github-mcp-servers", mcpServers, ecosystemEntries, releves),
 ];
-const unite = (f: (typeof flux)[number], n: number) =>
-  f.nature === "skill" ? (n > 1 ? "skills relevées" : "skill relevée") : n > 1 ? "serveurs relevés" : "serveur relevé";
 ---
 
 <section
@@ -28,7 +26,7 @@ const unite = (f: (typeof flux)[number], n: number) =>
     Ce que le relevé automatique des dépôts officiels a trouvé et qui n'est pas encore dans le
     catalogue ci-dessus. Pas encore testé : chaque entrée renvoie à sa source.
   </p>
-  <div class="grid gap-6 md:grid-cols-2">
+  <div class="grid items-start gap-6 md:grid-cols-2">
     {flux.map((f) => (
       <div
         class="rounded-lg border border-white/10 bg-paper-elevated p-borne-4 [overflow-wrap:anywhere]"
@@ -40,9 +38,9 @@ const unite = (f: (typeof flux)[number], n: number) =>
         </h3>
         <p class="mt-1 font-mono text-xs text-ink-muted" data-releve>
           {f.releve ? (
-            <>Dernier relevé le <DateLongue day={f.releve} /> · {f.total} {unite(f, f.total)}</>
+            <>Dernier relevé le <DateLongue day={f.releve} /> · {compteurFlux(f)}</>
           ) : f.derniereNouveaute ? (
-            <>Dernière nouveauté relevée le <DateLongue day={f.derniereNouveaute} /> · {f.total} {unite(f, f.total)}</>
+            <>Dernière nouveauté relevée le <DateLongue day={f.derniereNouveaute} /> · {compteurFlux(f)}</>
           ) : (
             <>Aucun relevé pour l'instant</>
           )}

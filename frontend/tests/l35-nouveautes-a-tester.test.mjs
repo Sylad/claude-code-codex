@@ -73,9 +73,52 @@ test('L35 — extrait : description d’un SKILL.md, prose d’un README, résum
   const coupe = '---\nname: x\ndescription: "Build things with a long description that the batch cut somewhere in the middle of a word because it is long enough to be cut by the batch at one hundred forty charac';
   assert.ok(coupe.length >= 130);
   assert.deepEqual(extraitResume(coupe), { texte: 'Build things with a long description that the batch cut somewhere in the middle of a word because it is long enough to be cut by the batch at one hundred forty charac…', langue: 'en' });
-  assert.deepEqual(extraitResume('---\nname: x\ndescription: "Short."\n---'), { texte: 'Short.', langue: 'en' });
+  // L109 : « Short. » ne donne aucun indice de langue → lang="" (inconnue), jamais supposée.
+  assert.deepEqual(extraitResume('---\nname: x\ndescription: "Short."\n---'), { texte: 'Short.', langue: '' });
   assert.deepEqual(extraitResume('# Fetch MCP Server\n\n<!-- mcp-name: x -->\n\nA server that fetches.'), { texte: 'A server that fetches.', langue: 'en' });
   assert.equal(extraitResume('# Everything\n**[Architecture](docs/a.md)\n| [Structure](docs/s.md)'), null);
   assert.deepEqual(extraitResume('Fait une chose utile.'), { texte: 'Fait une chose utile.', langue: 'fr' });
   assert.equal(extraitResume(''), null);
+});
+
+// L109 — suites de la revue UX de L35 : compteur explicite, langue de l'extrait déduite du texte.
+import { compteurFlux, langueDuTexte } from '../src/lib/nouveautes-a-tester.mjs';
+
+test('L109 — la langue d’un extrait est déduite du texte, jamais supposée française', () => {
+  // Résumé déjà rédigé (ni en-tête YAML, ni Markdown) mais en anglais : il ne porte pas lang=fr.
+  assert.deepEqual(extraitResume('Adds verification questions after substantive answers to help the user check assumptions.'), {
+    texte: 'Adds verification questions after substantive answers to help the user check assumptions.',
+    langue: 'en',
+  });
+  assert.equal(extraitResume('Ajoute des questions de vérification après les réponses pour aider l’utilisateur.').langue, 'fr');
+  // Description d'un SKILL.md écrite en français : lang=fr, pas « en » par défaut.
+  assert.equal(extraitResume('---\nname: x\ndescription: "Recommande les cours adaptés quand l\'utilisateur demande de l\'aide."\n---').langue, 'fr');
+  // Rien pour trancher : langue inconnue (lang=""), ni fr ni en.
+  assert.equal(langueDuTexte('Model Context Protocol'), '');
+  assert.equal(langueDuTexte(''), '');
+});
+
+test('L109 — les extraits des flux réels : chaque langue suit le texte', () => {
+  for (const cle of ['github-anthropics-skills', 'github-mcp-servers']) {
+    for (const el of feed(cle)) {
+      const x = extraitResume(el.summary);
+      if (!x) continue;
+      assert.equal(x.langue, langueDuTexte(x.texte), el.title);
+    }
+  }
+  const skills = feed('github-anthropics-skills');
+  const langue = (titre) => extraitResume(skills.find((e) => e.title === titre).summary).langue;
+  assert.equal(langue('academy-guide'), 'fr');
+  assert.equal(langue('pdf'), 'en');
+});
+
+test('L109 — le compteur dit ce qu’il compte : relevés et déjà au catalogue', () => {
+  assert.equal(compteurFlux({ nature: 'skill', total: 19, auCatalogue: 17 }), '19 skills relevées, 17 déjà au catalogue');
+  assert.equal(compteurFlux({ nature: 'mcp', total: 7, auCatalogue: 7 }), '7 serveurs relevés, 7 déjà au catalogue');
+  assert.equal(compteurFlux({ nature: 'skill', total: 1, auCatalogue: 0 }), '1 skill relevée, aucune déjà au catalogue');
+  assert.equal(compteurFlux({ nature: 'mcp', total: 1, auCatalogue: 1 }), '1 serveur relevé, 1 déjà au catalogue');
+  for (const cle of ['github-anthropics-skills', 'github-mcp-servers']) {
+    const r = fluxATester(cle, feed(cle), catalogue, releves);
+    assert.equal(r.auCatalogue + r.aTester.length, r.total, cle);
+  }
 });

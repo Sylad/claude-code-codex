@@ -37,13 +37,40 @@ function sansFin(t, jeu) {
   return t.slice(0, n);
 }
 
+/** Mots-outils fréquents de chaque langue : le texte est comparé, jamais supposé. */
+const MOTS_FR = new Set('le la les un une des du de et est sont pour avec quand qui que dans sur au aux ses son sa leur ce cette ces par pas ne plus il elle vous nous lorsque selon'.split(' '));
+const MOTS_EN = new Set('the and of to an is are for with when that this these use using from by your you it its which into as be or can will should any all'.split(' '));
+
+/**
+ * Langue d'un extrait, déduite de son texte (mots-outils et lettres accentuées du français) :
+ * 'fr', 'en', ou '' quand le texte ne permet pas de trancher (attribut lang="" : langue inconnue).
+ * @param {string} texte
+ * @returns {'fr' | 'en' | ''}
+ */
+export function langueDuTexte(texte) {
+  const t = String(texte ?? '').toLowerCase();
+  const mots = t.split(/[^a-zà-ÿœæ]+/u).filter(Boolean);
+  // « l'utilisateur », « d'agir » : élisions propres au français (le découpage les a séparées).
+  let fr = (t.match(/\b[ldjnstcq]['’][a-zà-ÿ]/gu) ?? []).length + (t.match(/[éèêàçùâîôûœ]/gu) ?? []).length;
+  let en = 0;
+  for (const m of mots) {
+    if (MOTS_FR.has(m)) fr += 1;
+    if (MOTS_EN.has(m)) en += 1;
+  }
+  if (fr === en) return '';
+  return fr > en ? 'fr' : 'en';
+}
+
 /** Longueur au-delà de laquelle le batch a coupé le résumé (scripts/lib : 140 caractères). */
 const RESUME_COUPE = 130;
+
+/** @param {string} texte */
+const avecLangue = (texte) => ({ texte, langue: langueDuTexte(texte) });
 
 /**
  * Extrait lisible du résumé d'un flux, ou null s'il n'y a pas de phrase à montrer.
  * @param {string} resume
- * @returns {{ texte: string, langue: 'fr' | 'en' } | null}
+ * @returns {{ texte: string, langue: 'fr' | 'en' | '' } | null}
  */
 export function extraitResume(resume) {
   const brut = String(resume ?? '').trim();
@@ -55,23 +82,23 @@ export function extraitResume(resume) {
     const ligne = brut.split('\n').find((l) => /^description:\s*/.test(l));
     if (!ligne) return null;
     const texte = ligne.replace(/^description:\s*/, '').replace(/^["']/, '').replace(/["']$/, '').trim();
-    return texte ? { texte: fin(texte), langue: 'en' } : null;
+    return texte ? avecLangue(fin(texte)) : null;
   }
   // README Markdown : la première ligne de prose (ni titre, ni commentaire, ni lien seul, ni tableau).
   if (/^(#|<!--|\*\*\[)/.test(brut)) {
     const prose = brut.split('\n').map((l) => l.trim()).find((l) => l && !/^(#|<!--|\||\*\*\[|!\[|\[|-|\*)/.test(l));
-    return prose ? { texte: fin(prose), langue: 'en' } : null;
+    return prose ? avecLangue(fin(prose)) : null;
   }
-  // Résumé déjà rédigé par le batch, en français et en phrases entières : montré tel quel.
-  return { texte: brut, langue: 'fr' };
+  // Résumé déjà rédigé par le batch, en phrases entières : montré tel quel, sa langue lue dans le texte.
+  return avecLangue(brut);
 }
 
 /**
  * @typedef {{ id: string, source: string, url: string, title: string, summary?: string, fetchedAt: string }} ElementFlux
  * @typedef {{ name: string, source: string }} EntreeCatalogue
- * @typedef {{ nom: string, lien: string, releve: string, extrait: { texte: string, langue: 'fr' | 'en' } | null }} NouveauteATester
+ * @typedef {{ nom: string, lien: string, releve: string, extrait: { texte: string, langue: 'fr' | 'en' | '' } | null }} NouveauteATester
  * @typedef {{ cle: string, nature: string, libelle: string, depot: { label: string, href: string },
- *   releve: string | null, derniereNouveaute: string | null, total: number, aTester: NouveauteATester[] }} FluxATester
+ *   releve: string | null, derniereNouveaute: string | null, total: number, auCatalogue: number, aTester: NouveauteATester[] }} FluxATester
  */
 
 const norm = (s) => sansFin(String(s).trim().toLowerCase(), '/');
@@ -119,5 +146,18 @@ export function fluxATester(cle, elements, catalogue, releves = {}) {
     aTester.push({ nom, lien: el.url, releve: jour, extrait: extraitResume(el.summary) });
   }
   aTester.sort(parRelevePuisNom);
-  return { cle, ...flux, releve, derniereNouveaute, total: elements.length, aTester };
+  return { cle, ...flux, releve, derniereNouveaute, total: elements.length, auCatalogue: elements.length - aTester.length, aTester };
+}
+
+/**
+ * Compteur d'un flux, qui dit ce qu'il compte : « 19 skills relevées, 17 déjà au catalogue ».
+ * @param {{ nature: string, total: number, auCatalogue: number }} f
+ */
+export function compteurFlux(f) {
+  const skill = f.nature === 'skill';
+  const releves = f.total > 1
+    ? `${f.total} ${skill ? 'skills relevées' : 'serveurs relevés'}`
+    : `${f.total} ${skill ? 'skill relevée' : 'serveur relevé'}`;
+  const deja = f.auCatalogue === 0 ? (skill ? 'aucune' : 'aucun') : String(f.auCatalogue);
+  return `${releves}, ${deja} déjà au catalogue`;
 }
