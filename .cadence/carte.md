@@ -117,3 +117,10 @@
 - Base figée par le lead (`cadence analyse --init`, `.cadence/analyse/*.json`) ; aucune correction de l'existant. Mesure
   du 25-11 : eslint 187 violations dans 70 des 135 fichiers lus (~7 s), tsc 0 erreur après build (~3 s).
 - Changer un seuil ou une exclusion = lot `config: true` du plan.
+
+- L107 (27-11) : catalogue Tools tested de `/case-studies/` (`src/data/tools-tested.ts`) — fiches impeccable
+  (reject + watchlist), hallmark (skillify : inventaire avant/après d'une refonte) et agent-browser (reject + watchlist,
+  mesure contre le MCP Playwright), placées avant Omnara (radar). Un outil testé après le relevé commun
+  (`TOOLS_SURVEYED_AT`) n'a ni `stars` ni `lastPush` : ses étoiles sont citées dans la description, pour que l'en-tête
+  « relevées le … » reste vrai. Aucune fiche publique ne nomme une machine, un chemin, un lot ou une demande interne, ni
+  le compte pro (`tests/l107-outils-27-11.test.mjs`).

@@ -40,6 +40,10 @@ const RELEVE = {
   kodza: [15, '2026-11-20'],
   'cloudflare-security-audit': [76841, '2026-09-14'],
   omnara: [3434, '2026-11-21'],
+  // L107 (27-11) : testés après le relevé du 22-11 ; étoiles citées dans la description, pas de badge daté du 22-11.
+  impeccable: [undefined, undefined],
+  hallmark: [undefined, undefined],
+  'agent-browser': [undefined, undefined],
 };
 const page = (p) => readFileSync(join(DIST, p, 'index.html'), 'utf8');
 const texte = (p) => page(p).replace(/<[^>]+>/g, ' ').replace(/&nbsp;| /g, ' ').replace(/\s+/g, ' ');
