@@ -468,13 +468,14 @@ lots:
   - id: L33
     title: "Étude de cas cadence : page /case-studies/cadence sur le modèle de maritime-atlas — comment ça marche : schémas (chaîne lot → implémentation → revue de code → correction en session neuve → done → livraison vérifiée → QA ; le lead, les vagues orchestrate, les sessions neuves et courtes, la mémoire partagée = fichiers versionnés raf.yaml / git / .cadence/runs, jamais la conversation), capture de la bande cadence-hud (copie dans ~/projects/developpeur/tmp/cadence-hud-bande-2026-10-08.png, à placer dans frontend/public), lien vers github.com/Sylad/cadence et npm ; schémas en SVG inline lisibles à 390 px (demande Sylvain 08-10)"
     public: "Étude de cas : l'outil qui organise le travail avec Claude Code"
-    status: doing
+    status: done
     estimate: 1
     visible: true
     created: 2026-10-08
     started: 2026-11-27
     review: { date: 2026-11-27, verdict: "conforme revue de code 27-11 (bilans/2026-11-27/L33-code.md) : 0 constat, 78 tests ciblés verts, rien de privé dans le HTML construit", commit: e1f9ecdda1db2d53df3fce8fe4f2eea78a723488 }
     ux: { date: 2026-11-27, verdict: "conforme revue UX 27-11 (bilans/2026-11-27/L33-ux.md) : 0 bloquant 0 majeur, axe 0 violation 320-1440, pas de défilement horizontal ; mineurs : m1 capture hud ~5 px à 390 (lien taille réelle), m2 texte des schémas 8,85 px à 320 (composant Schema, hors lot), m3 pointillés de memoire-fichiers vers un seul des trois fichiers, m4 légende « Toucher l'image » sans mention du nouvel onglet" }
+    finished: 2026-11-27
   - id: L35
     title: "/ecosystem : afficher la veille déjà récoltée — les skills d'anthropics/skills et les serveurs MCP des flux hebdo (data/feeds/github-anthropics-skills.json, github-mcp-servers.json) absents du catalogue, en « nouveautés à tester » (ex. 24-10 : academy-guide, discernment-nudge) ; date de relevé affichée. Constat 24-10 : la page sert le catalogue statique de 42 entrées inchangé depuis le 22-06, les flux sont récoltés chaque lundi mais aucune page ne les lit"
     public: "Écosystème : les nouveaux skills et serveurs MCP à tester"
