@@ -9,6 +9,7 @@ import { join, relative } from 'node:path';
 import { DIST, setupBrowser, pageReady } from './lib/e2e-dist.mjs';
 import { LIBELLES } from '../src/lib/libelles-site.mjs';
 import { ENTREE_EN } from '../src/lib/langues.mjs';
+import { SEEN_KEY, OLD_VISIT } from './lib/mesure-barre.mjs';
 
 const EN = '/en/case-studies/cadence/';
 
@@ -71,7 +72,7 @@ test('B2 — sur une page anglaise, un lien vers une page qui n’existe qu’en
   for (const zone of [entre(html, '<header', '</header>'), entre(html, '<footer', '</footer>')]) {
     for (const [, attrs] of zone.matchAll(/<a\b([^>]*)>/g)) {
       const href = attrs.match(/href="([^"]+)"/)?.[1];
-      if (!href || href.startsWith('http') || href === '/') continue;
+      if (!href || href.startsWith('http')) continue;
       if (href.startsWith('/en/')) assert.ok(existsSync(join(DIST, href, 'index.html')), `${href} : page absente`);
       else assert.match(attrs, /hreflang="fr"/, `${href} sans hreflang="fr"`);
     }
@@ -172,4 +173,33 @@ test('B6 — aucun débord à 320 et 1440 px (page, barre, pied, sélecteur), an
     }
   }
   assert.deepEqual(ecarts, []);
+});
+
+test('B7 — pastille Nouveautés : le texte lu à l’écran (lien de la barre, bouton du menu) est dans la langue de la page', async (t) => {
+  const env = await setupBrowser(t);
+  if (!env) return;
+  for (const [url, langue] of [[EN, 'en'], ['/about/', 'fr']]) {
+    const L = LIBELLES[langue];
+    for (const width of [1440, 390]) {
+      const context = await env.browser.newContext({ viewport: { width, height: 900 } });
+      await context.addInitScript(([k, v]) => localStorage.setItem(k, v), [SEEN_KEY, JSON.stringify(OLD_VISIT)]);
+      const page = await context.newPage();
+      await page.goto(`${env.base}${url}`, { waitUntil: 'load' });
+      await pageReady(page);
+      const badge = page.locator(width >= 1024 ? 'header nav .news-badge' : 'button[aria-controls="mobile-menu"] .news-badge').first();
+      await badge.waitFor({ state: 'visible' });
+      const badgeTexte = (await badge.textContent()).trim();
+      const lu = width >= 1024
+        ? (await page.locator('header nav .sr-only').evaluateAll((els) => els.map((e) => e.textContent.trim()))).find((x) => /\d/.test(x)) ?? ''
+        : (await page.locator('button[aria-controls="mobile-menu"]').getAttribute('aria-label')) ?? '';
+      const n = Number(lu.match(/\d+/)?.[0] ?? 0);
+      assert.ok(n > 0, `${url} ${width} : aucun compte lu (${JSON.stringify(lu)})`);
+      assert.equal(badgeTexte, n > 9 ? '9+' : String(n), `${url} ${width} : pastille et texte lu ne disent pas le même compte`);
+      const attendu = width >= 1024 ? `(${L.nonVues(n)})` : `${L.menuOuvrir} (${L.nonVues(n)})`;
+      assert.equal(lu, attendu, `${url} ${width} : texte lu de la pastille`);
+      const autre = LIBELLES[langue === 'en' ? 'fr' : 'en'].nonVues(n);
+      assert.ok(!(await page.locator('header').innerText()).includes(autre) && !(await page.locator('header').innerHTML()).includes(autre), `${url} ${width} : texte de l’autre langue`);
+      await context.close();
+    }
+  }
 });

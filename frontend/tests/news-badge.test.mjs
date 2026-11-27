@@ -5,9 +5,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { LIBELLES } from '../src/lib/libelles-site.mjs';
 import {
   NEWS_SEEN_KEY, badgeLabel, countUnseen, ensureBaseline, isUnseen, markAllSeen, readSeen, seenSeparatorIndex, seenSeparatorLabel,
-  sinceLabel, unseenLabel,
+  sinceLabel,
 } from '../src/lib/news-badge.ts';
 
 class MemoryStorage {
@@ -85,9 +86,10 @@ test('libellés : pastille vide à zéro, « 9+ » au-delà de neuf ; texte pour
   assert.equal(badgeLabel(0), '');
   assert.equal(badgeLabel(3), '3');
   assert.equal(badgeLabel(12), '9+');
-  assert.equal(unseenLabel(0), '');
-  assert.equal(unseenLabel(1), '1 nouveauté non vue');
-  assert.equal(unseenLabel(4), '4 nouveautés non vues');
+  // texte pour lecteur d'écran : source unique libelles-site.mjs (L111)
+  assert.equal(LIBELLES.fr.nonVues(0), '');
+  assert.equal(LIBELLES.fr.nonVues(1), '1 nouveauté non vue');
+  assert.equal(LIBELLES.fr.nonVues(4), '4 nouveautés non vues');
 });
 
 test('clé de stockage inchangée depuis L13 : ccc.news.seen-v1 (les mémoires des visiteurs restent valables)', () => {

@@ -161,6 +161,7 @@ const panelId = (id: string) => `panneau-${id}`;
     <nav class="@container mx-auto max-w-6xl px-borne-5 sm:px-8 h-16 flex items-center justify-between gap-3">
       <a
         :href="lien('/').href"
+        :hreflang="hreflangDe('/')"
         class="flex min-w-0 lg:shrink-0 items-center gap-2.5 whitespace-nowrap group"
         :aria-label="L.accueil"
       >

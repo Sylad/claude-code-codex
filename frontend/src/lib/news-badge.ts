@@ -177,12 +177,6 @@ export function badgeLabel(count: number): string {
   return count > 9 ? "9+" : String(count);
 }
 
-/** Texte pour lecteur d'écran (la pastille seule n'est qu'une forme colorée). */
-export function unseenLabel(count: number): string {
-  if (count <= 0) return "";
-  return count === 1 ? "1 nouveauté non vue" : `${count} nouveautés non vues`;
-}
-
 /** localStorage, ou null s'il est inaccessible (navigation privée stricte, iframe…). */
 export function browserStorage(): StorageLike | null {
   try {
