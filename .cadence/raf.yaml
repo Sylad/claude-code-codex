@@ -1142,6 +1142,7 @@ lots:
     visible: true
     created: 2026-11-27
     started: 2026-11-27
+    review: { date: 2026-11-27, verdict: "compliant after 1 fix (9707fd7: README/CLAUDE.md document the two-language mechanism, English calques reworded); 2 minor notes kept (56% layout copy, C7 dates without month)", commit: 9707fd7841fc488c39a108b1ab50a3a9720cc189 }
   - id: L109
     title: "Suites UX de L35 : grille de « Nouveautés à tester » en items-start (carte MCP étirée, 230-294 px vides à 768-1440 px) ; compteur « 19 skills relevées, 17 déjà au catalogue » (Nielsen 1) ; langue de l'extrait déduite du texte, pas supposée française (risque lang=fr sur un résumé anglais) — revue UX L35 du 27-11"
     status: todo
