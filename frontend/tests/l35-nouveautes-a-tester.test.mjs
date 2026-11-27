@@ -11,13 +11,13 @@ const feed = (nom) => JSON.parse(readFileSync(new URL(`../src/data/feeds/${nom}.
 // Catalogue lu dans la source TS (nom + lien source de chaque entrée) : node --test ne charge pas le TS.
 const src = readFileSync(new URL('../src/data/ecosystem.ts', import.meta.url), 'utf8');
 const catalogue = src
-  .split(/\n  \{\n/)
+  .split(/\n {2}\{\n/)
   .slice(1)
   .map((bloc) => ({ name: /name: "([^"]+)"/.exec(bloc)?.[1], source: /source:\s*"([^"]+)"/.exec(bloc)?.[1] }))
   .filter((e) => e.name && e.source);
 
 test('L35 — le catalogue lu par le test a toutes ses entrées', () => {
-  assert.equal(catalogue.length, (src.match(/\n    id: "/g) ?? []).length);
+  assert.equal(catalogue.length, (src.match(/\n {4}id: "/g) ?? []).length);
 });
 
 for (const cle of ['github-anthropics-skills', 'github-mcp-servers']) {

@@ -24,6 +24,16 @@ export const FLUX_A_TESTER = {
   },
 };
 
+/**
+ * Chaîne sans ses caractères finaux pris dans `jeu` (boucle plutôt qu'une regex ancrée en fin,
+ * dont le retour arrière est quadratique). @param {string} t @param {string} jeu
+ */
+function sansFin(t, jeu) {
+  let n = t.length;
+  while (n > 0 && jeu.includes(t[n - 1])) n -= 1;
+  return t.slice(0, n);
+}
+
 /** Longueur au-delà de laquelle le batch a coupé le résumé (scripts/lib : 140 caractères). */
 const RESUME_COUPE = 130;
 
@@ -36,7 +46,7 @@ export function extraitResume(resume) {
   const brut = String(resume ?? '').trim();
   if (!brut) return null;
   const coupe = brut.length >= RESUME_COUPE;
-  const fin = (t) => (coupe && brut.endsWith(t.slice(-12)) ? `${t.replace(/[\s.,;:]+$/, '')}…` : t);
+  const fin = (t) => (coupe && brut.endsWith(t.slice(-12)) ? `${sansFin(t, ' \t\n.,;:')}…` : t);
   // En-tête YAML d'un SKILL.md : la description, sans ses guillemets.
   if (brut.startsWith('---')) {
     const ligne = brut.split('\n').find((l) => /^description:\s*/.test(l));
@@ -61,7 +71,13 @@ export function extraitResume(resume) {
  *   releve: string | null, total: number, aTester: NouveauteATester[] }} FluxATester
  */
 
-const norm = (s) => String(s).trim().toLowerCase().replace(/\/+$/, '');
+const norm = (s) => sansFin(String(s).trim().toLowerCase(), '/');
+
+/** Plus récent relevé d'abord, puis par nom. @param {NouveauteATester} a @param {NouveauteATester} b */
+function parRelevePuisNom(a, b) {
+  if (a.releve !== b.releve) return a.releve < b.releve ? 1 : -1;
+  return a.nom.localeCompare(b.nom);
+}
 
 /**
  * Éléments d'un flux absents du catalogue, triés par relevé le plus récent puis par nom.
@@ -91,6 +107,6 @@ export function fluxATester(cle, elements, catalogue) {
     if (liens.has(norm(el.url)) || noms.has(norm(nom))) continue;
     aTester.push({ nom, lien: el.url, releve: jour, extrait: extraitResume(el.summary) });
   }
-  aTester.sort((a, b) => (a.releve === b.releve ? a.nom.localeCompare(b.nom) : a.releve < b.releve ? 1 : -1));
+  aTester.sort(parRelevePuisNom);
   return { cle, ...flux, releve, total: elements.length, aTester };
 }
