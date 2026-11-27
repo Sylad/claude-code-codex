@@ -1137,12 +1137,15 @@ lots:
     finished: 2026-11-27
   - id: L108
     title: "D-5 : deux langues dans codex — routage i18n d'Astro (FR par défaut, /en/ en anglais), sélecteur de langue visible, lien hreflang ; première page traduite : case-studies/cadence (relue en anglais naturel, chiffres et sources identiques) ; vécu 27-11 : Sylvain lit le français, un curieux venu du README de cadence lira l'anglais ; mesure : la page EN existe, le sélecteur passe d'une langue à l'autre sur la même page, aucune page FR cassée"
-    status: doing
+    status: done
     estimate: 2
     visible: true
+    delivered: { date: 2026-11-27, sha: fe104e86aaf56e7ee757e37cf29689f04e035561 }
     created: 2026-11-27
     started: 2026-11-27
     review: { date: 2026-11-27, verdict: "compliant after 1 fix (9707fd7: README/CLAUDE.md document the two-language mechanism, English calques reworded); 2 minor notes kept (56% layout copy, C7 dates without month)", commit: 9707fd7841fc488c39a108b1ab50a3a9720cc189 }
+    ux: { date: 2026-11-27, verdict: "compliant: 0 blocking, 3 minor (nav/footer still French on /en/, 'No English yet' links nowhere, step 7 French quote unmarked); switcher 44 px, contrast ≥ 6.1:1, axe 0" }
+    finished: 2026-11-27
   - id: L109
     title: "Suites UX de L35 : grille de « Nouveautés à tester » en items-start (carte MCP étirée, 230-294 px vides à 768-1440 px) ; compteur « 19 skills relevées, 17 déjà au catalogue » (Nielsen 1) ; langue de l'extrait déduite du texte, pas supposée française (risque lang=fr sur un résumé anglais) — revue UX L35 du 27-11"
     status: todo
@@ -1154,6 +1157,11 @@ lots:
     title: "Étude de cas cadence (FR et EN) : dans les schémas, plusieurs lignes « Qui : … » débordent de leur boîte (jusqu'à +49 unités pour « relecteur neuf (Opus), qui n'a pas écrit le code », mesuré polices web bloquées) ; seuls deux schémas sont couverts par un test — vu par le run de L108 le 27-11 ; mesure : aucun texte hors de sa boîte dans les trois schémas, test qui les couvre tous"
     status: todo
     estimate: 0.5
+    created: 2026-11-27
+  - id: L111
+    title: "Site en deux langues, suites de L108 : barre et pied de page en anglais sur /en/ ; « No English yet » mène vers l'étude cadence en anglais (accueil, /case-studies/) ; « (in French) » sur la citation de l'étape 7 du schéma du livreur — vu par la revue UX de L108 le 27-11"
+    status: todo
+    estimate: 1
     created: 2026-11-27
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
