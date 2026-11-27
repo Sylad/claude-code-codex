@@ -2,8 +2,8 @@
  "id": "D-5",
  "texte": "limite dans le readme de cadence, il pourrais y avoir un liens vers cette page. ce qui nécessiterais peut-être que l'on gère les langue dans codex, car moi je lis facilement le français, mais l'anglais c'est une torture. Et une personne curieuse ca risque d'être l'inverse",
  "date": "2026-11-27",
- "etat": "ouverte",
- "preuve": null,
+ "etat": "livrée",
+ "preuve": "Côté codex : L108 en prod 5708961, QA du 27-11 : /en/case-studies/cadence/ 200 lang=en, sélecteur FR↔EN bon à 1440 et 390, hreflang réciproques (bilans/2026-11-27/L108-qa.md). Reste le lien du README de cadence vers la page : lot L921 de cadence (D-42).",
  "lots": [
   "L108"
  ],
