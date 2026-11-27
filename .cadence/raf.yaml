@@ -1137,10 +1137,11 @@ lots:
     finished: 2026-11-27
   - id: L108
     title: "D-5 : deux langues dans codex — routage i18n d'Astro (FR par défaut, /en/ en anglais), sélecteur de langue visible, lien hreflang ; première page traduite : case-studies/cadence (relue en anglais naturel, chiffres et sources identiques) ; vécu 27-11 : Sylvain lit le français, un curieux venu du README de cadence lira l'anglais ; mesure : la page EN existe, le sélecteur passe d'une langue à l'autre sur la même page, aucune page FR cassée"
-    status: todo
+    status: doing
     estimate: 2
     visible: true
     created: 2026-11-27
+    started: 2026-11-27
   - id: L109
     title: "Suites UX de L35 : grille de « Nouveautés à tester » en items-start (carte MCP étirée, 230-294 px vides à 768-1440 px) ; compteur « 19 skills relevées, 17 déjà au catalogue » (Nielsen 1) ; langue de l'extrait déduite du texte, pas supposée française (risque lang=fr sur un résumé anglais) — revue UX L35 du 27-11"
     status: todo
