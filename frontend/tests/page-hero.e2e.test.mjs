@@ -14,12 +14,15 @@ const walk = (d) => readdirSync(d, { withFileTypes: true }).flatMap((e) => (e.is
 const routes = walk(PAGES)
   // GuideLayout (L9) pose lui-même le PageHero des guides longs : ses pages en font partie.
   .filter((f) => f.endsWith('.astro') && /<(PageHero|GuideLayout)\b/.test(readFileSync(f, 'utf8')))
-  .map((f) => `/${relative(PAGES, f).split(sep).join('/').replace(/\.astro$/, '').replace(/index$/, '')}/`.replace('//', '/'));
+  .map((f) => `/${relative(PAGES, f).split(sep).join('/').replace(/\.astro$/, '').replace(/index$/, '')}/`.replace('//', '/'))
+  // L28 : 404.astro sort en dist/404.html (le fichier que Cloudflare Pages sert aux adresses inconnues).
+  .map((r) => (r === '/404/' ? '/404.html' : r));
+const fichier = (r) => (r.endsWith('.html') ? join(DIST, r) : join(DIST, r, 'index.html'));
 
 
 test('PageHero est utilisé par plusieurs pages (le test les trouve)', () => {
   assert.ok(routes.length >= 10, `${routes.length} pages trouvées`);
-  for (const r of routes) assert.ok(existsSync(join(DIST, r, 'index.html')), `${r} absente de dist : lancer astro build`);
+  for (const r of routes) assert.ok(existsSync(fichier(r)), `${r} absente de dist : lancer astro build`);
 });
 
 // L80 — plus de plafond de temps sur l'ensemble : la mesure (1 890 couples de captures) est bornée

@@ -19,7 +19,7 @@ classe et une source, décomptes exacts).
 | faux | 7 |
 | dépassé | 30 |
 | non sourcé | 23 |
-| ok | 59 |
+| ok | 60 |
 
 ## Ce qui a été vérifié, et ce qui ne l'a pas été
 
@@ -44,6 +44,10 @@ classe et une source, décomptes exacts).
 
 - **ok** — le nombre d'applications vient de `APP_COUNT` (8, lu dans `apps.ts`), jamais écrit en dur dans la page (source : `frontend/src/data/apps.ts`)
 - **faux** — « {APP_COUNT} applications construites avec Claude Code, déployées sur Kubernetes + GitOps » (`index.astro` l. 106-107) : sur les 8 applications, 4 seulement tournent sur le k3s de dark-blue ; 2 sont sur Cloudflare Pages, jobmail-assistant est en local sur Big-Blue, et ce site est lui aussi sur Pages (source : `CLAUDE.md` du dossier developpeur, tableau « Architecture générale »)
+
+## `/404`
+
+- **ok** — page « introuvable » (L28, 27-11) : aucune affirmation datée ou chiffrée ; « Erreur 404 » est vrai, Cloudflare Pages sert le `404.html` de la racine avec le statut 404 à toute adresse inconnue (source : documentation Cloudflare Pages, « Serving Pages », comportement Not Found ; `frontend/tests/l28-page-404.e2e.test.mjs`)
 
 ## `/about`
 

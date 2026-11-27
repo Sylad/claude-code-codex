@@ -1,0 +1,48 @@
+---
+// L28 — page « introuvable ». Astro la construit en `dist/404.html` ; Cloudflare Pages, dès qu'un
+// 404.html existe à la racine, le sert avec le statut HTTP 404 pour toute adresse inconnue (sans lui,
+// Pages traite le site comme une application d'une page et renvoie l'accueil en 200).
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+
+const pistes = [
+  { href: "/start/", label: "Démarrer", detail: "Claude Code pour les vrais débutants" },
+  { href: "/theory/", label: "Théorie", detail: "comment Claude Code fonctionne sous le capot" },
+  { href: "/case-studies/", label: "Études de cas", detail: "les applications construites avec Claude Code" },
+  { href: "/nouveautes/", label: "Nouveautés", detail: "ce qui a changé récemment sur le site" },
+];
+---
+
+<BaseLayout
+  title="Page introuvable"
+  description="Cette adresse ne correspond à aucune page du codex Claude Code."
+  noindex
+>
+  <PageHero
+    eyebrow="Erreur 404 · page introuvable"
+    title="Cette page n'existe pas"
+    intro="L'adresse est peut-être mal tapée, ou la page a changé de nom. Rien n'est cassé de ton côté : repars de l'accueil ou d'une des pages ci-dessous."
+  />
+
+  <section class="mx-auto max-w-3xl px-borne-5 sm:px-8 py-16 space-y-10" data-page-404>
+    <a
+      href="/"
+      class="inline-flex items-center gap-2 min-h-11 px-borne-5 py-2.5 rounded-md bg-claude text-paper font-semibold hover:bg-claude-soft transition-colors motion-safe:active:scale-95"
+      data-retour-accueil
+    >
+      <span aria-hidden="true">←</span> Retour à l'accueil
+    </a>
+
+    <div class="rounded-xl border border-white/10 bg-paper-elevated p-borne-6 sm:p-8">
+      <h2 class="font-mono text-xs uppercase tracking-wider text-claude mb-4">Ou bien</h2>
+      <ul class="space-y-3 text-ink leading-relaxed">
+        {pistes.map((p) => (
+          <li>
+            <a href={p.href} class="text-claude hover:text-claude-soft underline underline-offset-4 font-medium">{p.label}</a>
+            {" "}— {p.detail}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>

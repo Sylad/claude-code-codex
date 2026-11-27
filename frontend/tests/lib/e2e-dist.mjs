@@ -22,7 +22,14 @@ function serveDist() {
     if (path.includes('..')) { res.writeHead(400).end(); return; }
     let file = join(DIST, path);
     if (existsSync(file) && statSync(file).isDirectory()) file = join(file, 'index.html');
-    if (!existsSync(file)) { res.writeHead(404).end(); return; }
+    // L28 — comme Cloudflare Pages : une adresse inconnue reçoit le 404.html de la racine, avec le statut 404
+    // (sans 404.html, Pages servirait l'accueil en 200 ; ici, réponse vide en 404).
+    if (!existsSync(file)) {
+      const page404 = join(DIST, '404.html');
+      if (!existsSync(page404)) { res.writeHead(404).end(); return; }
+      res.writeHead(404, { 'content-type': TYPES['.html'] }).end(readFileSync(page404));
+      return;
+    }
     res.writeHead(200, { 'content-type': TYPES[extname(file)] ?? 'application/octet-stream' });
     res.end(readFileSync(file));
   });
