@@ -1171,7 +1171,7 @@ lots:
     estimate: 1
     created: 2026-11-27
     started: 2026-11-27
-    review: { date: 2026-11-27, verdict: non-compliant, commit: 70244f6c494911a22d5c869e0c24dcd5a600f27f }
+    review: { date: 2026-11-27, verdict: compliant, commit: 49b92f97b1f618299e4bfcdeab610c35f2b15f95 }
     notes:
       - { date: 2026-11-27, text: "revue de code passe 1 (27-11) : 1 majeur (CLAUDE.md attribue la mesure de la barre anglaise à navbar.e2e), 3 mineurs ; passe 2 lancée" }
   - id: L112
