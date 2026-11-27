@@ -485,7 +485,7 @@ lots:
     visible: true
     created: 2026-10-24
     started: 2026-11-27
-    review: { date: 2026-11-27, verdict: "non conforme : 2 majeurs — « Dernier relevé le » faux (fetchedAt = premier vu, pas le dernier passage du batch : MCP affiché 9 mai, batch du 23-11), README /ecosystem non à jour ; 1 mineur (branche flux vide sans test)", commit: a5a649aebe48584add7016c6129ed1147e64320a }
+    review: { date: 2026-11-27, verdict: "conforme (passe 2, relue par le lead) : date du dernier passage du batch dans derniers-releves.json, repli « Dernière nouveauté relevée le » tant que le batch n'a pas tourné, test qui échoue avec l'ancien calcul ; README et branche flux vide testée", commit: 3bcc0ccf9e3031ff77927c407043f5414e4a26af }
   - id: L40
     title: "Plan déplacé vers .cadence/raf.yaml avec raf migrate (cadence L284, L305) : --dry-run d'abord, chaque lecteur du chemin (scripts plan-data, tests, CI, CLAUDE.md, skills) mis à jour ou signalé ; un lecteur non traité (chemin construit à la main) corrigé à la main dans le même lot ; tests, build et raf check verts ; l'avertissement « ancien emplacement » disparaît"
     status: done
