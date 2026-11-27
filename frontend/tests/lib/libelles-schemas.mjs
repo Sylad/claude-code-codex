@@ -130,3 +130,25 @@ export async function mesurerLibelles(page) {
   await page.addScriptTag({ content: `window.__libellesL110 = (o) => {\n${LIB.map(String).join('\n')}\nreturn mesurerFigures(o);\n};` });
   return page.evaluate((o) => window.__libellesL110(o), { MARGE, TOLERANCE, SERRAGE_MAX });
 }
+
+// Largeurs et tailles de police par défaut (16 = 100 %, 32 = 200 %) mesurées par L110 et L113.
+export const LARGEURS = [320, 390, 840, 1440];
+export const POLICES = [16, 32];
+
+/**
+ * Ouvre `path` à la largeur et à la taille de police données (police réglée par CDP, Page.setFontSizes, comme
+ * un vrai réglage du navigateur), polices web bloquées ou chargées, et rend la mesure de mesurerLibelles.
+ */
+export async function mesurerPage(env, path, largeur, police, policesWeb) {
+  const context = await env.browser.newContext({ viewport: { width: largeur, height: 900 } });
+  if (!policesWeb) await context.route(/fonts\.(googleapis|gstatic)\.com/, (r) => r.abort());
+  const page = await context.newPage();
+  const cdp = await context.newCDPSession(page);
+  await cdp.send('Page.setFontSizes', { fontSizes: { standard: police, fixed: Math.round(police * 13 / 16) } });
+  await page.goto(`${env.base}${path}`);
+  await page.waitForFunction((v) => getComputedStyle(document.documentElement).fontSize === `${v}px`, police);
+  await page.evaluate(() => document.fonts.ready);
+  const r = await mesurerLibelles(page);
+  await context.close();
+  return r;
+}

@@ -210,15 +210,17 @@ const limites = [
         <svg viewBox="0 0 340 330" style="max-width:26rem" role="img" aria-labelledby="sch-besoins-t sch-besoins-d" xmlns="http://www.w3.org/2000/svg">
           <title id="sch-besoins-t">Un mécanisme par besoin</title>
           <desc id="sch-besoins-d">Ne rien oublier : le registre des demandes. Lire les documents : la lecture obligatoire. Ne rien casser : la porte de tests. Rester cohérent : la revue. Travailler en équipe : le plan relié aux commits et le banc.</desc>
-          <text class="sch-a" data-sch-entete x="8" y="20">Besoin</text>
-          <text class="sch-a" data-sch-entete x="178" y="20">Pièce de cadence</text>
+          {/* L113 — en police de repli, « 4 · Rester cohérent » fait 141 unités : la boîte de gauche lui en laisse 142
+               (marges extérieures 4, flèche de 12) ; « Revue code et écran » (150) n'est resserré que ×1,09 à droite. */}
+          <text class="sch-a" data-sch-entete x="14" y="20">Besoin</text>
+          <text class="sch-a" data-sch-entete x="188" y="20">Pièce de cadence</text>
           {PIECES.map(([gauche, droite], i) => (
             <g>
-              <rect class="sch-box" x="8" y={34 + i * 58} width="142" height="44" rx="8" />
-              <text class="sch-t" x="18" y={61 + i * 58} style="font-size:13px">{gauche}</text>
-              <line class="sch-line" x1="150" y1={56 + i * 58} x2="170" y2={56 + i * 58} />
-              <path class="sch-arrow" d={`M168 ${50 + i * 58} L178 ${56 + i * 58} L168 ${62 + i * 58} Z`} />
-              <rect class="sch-box-accent" x="178" y={34 + i * 58} width="154" height="44" rx="8" />
+              <rect class="sch-box" x="4" y={34 + i * 58} width="162" height="44" rx="8" />
+              <text class="sch-t" x="14" y={61 + i * 58} style="font-size:13px">{gauche}</text>
+              <line class="sch-line" x1="166" y1={56 + i * 58} x2="172" y2={56 + i * 58} />
+              <path class="sch-arrow" d={`M170 ${50 + i * 58} L178 ${56 + i * 58} L170 ${62 + i * 58} Z`} />
+              <rect class="sch-box-accent" x="178" y={34 + i * 58} width="158" height="44" rx="8" />
               <text class="sch-t" x="188" y={61 + i * 58} style="font-size:13px">{droite}</text>
             </g>
           ))}
