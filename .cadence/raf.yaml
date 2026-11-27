@@ -1157,6 +1157,7 @@ lots:
     review: { date: 2026-11-27, verdict: compliant, commit: c25f23d29ae0a3c1d1e10e4d774ed58de4b1ff90 }
     notes:
       - { date: 2026-11-27, text: "revue de code conforme (27-11), mineur : langueDuTexte donne lang=fr à un résumé anglais court avec un mot accentué (« Generates a résumé »), chaque accent pèse autant qu'un mot-outil (nouveautes-a-tester.mjs:54) ; aucun extrait actuel touché" }
+    ux: { date: 2026-11-27, verdict: compliant }
   - id: L110
     title: "Étude de cas cadence (FR et EN) : dans les schémas, plusieurs lignes « Qui : … » débordent de leur boîte (jusqu'à +49 unités pour « relecteur neuf (Opus), qui n'a pas écrit le code », mesuré polices web bloquées) ; seuls deux schémas sont couverts par un test — vu par le run de L108 le 27-11 ; mesure : aucun texte hors de sa boîte dans les trois schémas, test qui les couvre tous"
     status: done
@@ -1190,6 +1191,11 @@ lots:
       - { date: 2026-11-27, text: "à reprendre de la revue UX de L111 (27-11, mineurs) : sur /en/, 13 entrées de barre sur 15 mènent à une page française sans le dire à l'œil ; « No English yet » ne dit pas qu'il mène à l'étude cadence ; /en/ sert la 404 française — ajouter une 404 anglaise sous /en/" }
   - id: L113
     title: "Schémas : étendre la mesure de L110 (libellé qui déborde ou en chevauche un autre, largeur réelle, FR et EN, 320/390/840/1440, texte 200 %) à toutes les pages qui ont un figure.schema — vu à la revue de L110 : « 4 · Rester cohérent » de pourquoi-cadence resserré ×1,16 en police de repli."
+    status: todo
+    estimate: 1
+    created: 2026-11-27
+  - id: L114
+    title: "Catalogue Tools tested à 390 px : les bascules de filtre (Plugin, Serveur MCP, Skill) — après le second clic, ce qui change est hors de la vue (3 constats des sondes d'interaction de la revue UX de L109, 27-11, rapport bilans/2026-11-27/L109-ux.md) ; mesure : sondes à 390 sans constat sur ces bascules"
     status: todo
     estimate: 1
     created: 2026-11-27
