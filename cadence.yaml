@@ -53,14 +53,9 @@ docs:
 # tsc lit les types de .astro/ (générés par le build, que la porte joue avant l'analyse ; à la main : npx astro sync).
 # Pas de Python dans le dépôt : pas de ruff. Les scripts de la racine (scripts/*.ts, batch hebdo) ne sont pas analysés.
 analyse:
-  # L110 (27-11) : la porte a vu ESLint tomber sur une assertion interne de V8 (« Trace/breakpoint trap »,
-  # code 133) dans le fil qui compile le code optimisé en tâche de fond (OptimizingCompileDispatcher) :
-  # rapport vide, porte rouge sans aucune violation. Non reproduit en 15 passes ; ce fil est donc coupé
-  # (--no-concurrent-recompilation, refusé dans NODE_OPTIONS, d'où node + eslint.js) : même rapport,
-  # 23,5 s au lieu de 20,2 s.
   - name: eslint
     dir: frontend
-    command: ../scripts/avec-node.sh node --no-concurrent-recompilation node_modules/eslint/bin/eslint.js -f json .
+    command: ../scripts/avec-node.sh npx eslint -f json .
     format: eslint-json
     configs: [frontend/eslint.config.mjs]
   - name: tsc
