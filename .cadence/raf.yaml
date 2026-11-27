@@ -420,6 +420,7 @@ lots:
     title: "Route inexistante : servir un vrai 404 (aujourd'hui 200 + page d'accueil, 26 665 octets ; /404.html en 200) — QA prod 05-10"
     status: done
     estimate: 1
+    delivered: { date: 2026-11-27, sha: 5265017769c69a167f2aeb8c945d853fd2f8e080 }
     created: 2026-10-05
     started: 2026-11-27
     review: { date: 2026-11-27, verdict: "conforme (lead) : 404.astro + noindex dans BaseLayout, liens vers pages existantes, porte verify --gate 8e390c4 verte, e2e 404 à 1440/390", commit: 8e390c4dc4c539b3c77fc10ea4ad1f8b0c7c7b49 }
