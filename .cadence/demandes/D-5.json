@@ -1,0 +1,13 @@
+{
+ "id": "D-5",
+ "texte": "limite dans le readme de cadence, il pourrais y avoir un liens vers cette page. ce qui nécessiterais peut-être que l'on gère les langue dans codex, car moi je lis facilement le français, mais l'anglais c'est une torture. Et une personne curieuse ca risque d'être l'inverse",
+ "date": "2026-11-27",
+ "etat": "ouverte",
+ "preuve": null,
+ "lots": [
+  "L108"
+ ],
+ "precisions": [
+  "2026-11-27 (lead) : part codex = gérer deux langues (FR par défaut, EN pour les lecteurs du README de cadence) : routage i18n d'Astro, sélecteur de langue, en commençant par la page case-studies/cadence ; le reste du site suit page par page."
+ ]
+}
