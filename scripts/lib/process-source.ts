@@ -13,6 +13,11 @@ export interface ProcessDeps {
   writeFeed(source: string, entries: FeedEntry[]): void;
   summarize(raw: RawEntry, source: string): Promise<string>;
   now?(): string;
+  /**
+   * L35 : appelé une fois la source relevée et son flux écrit, avec l'instant du passage.
+   * Une source en échec (exception) ne l'atteint pas : sa date de dernier relevé ne bouge pas.
+   */
+  noteReleve?(source: string, instant: string): void;
 }
 
 export async function processSource(
@@ -66,5 +71,6 @@ export async function processSource(
 
   const merged = dedupeByUrl(existing, fresh, 50);
   deps.writeFeed(source.NAME, merged);
+  deps.noteReleve?.(source.NAME, now);
   return { source: source.NAME, added, total: merged.length };
 }

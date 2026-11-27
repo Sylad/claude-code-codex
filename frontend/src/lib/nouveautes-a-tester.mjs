@@ -5,6 +5,9 @@
  * Rien d'inventé : chaque entrée est un élément d'un flux, avec son lien, sa date de relevé (fetchedAt,
  * jour de Paris) et, quand le flux en donne un, un extrait de son résumé — jamais réécrit, seulement
  * débarrassé de l'en-tête YAML ou des titres Markdown qui l'entourent.
+ * Dates : « dernier relevé » = dernier passage réussi du batch sur la source (src/data/feeds/
+ * derniers-releves.json, écrit par le batch) ; le plus grand fetchedAt ne date que la dernière NOUVEAUTÉ
+ * (le batch ne le pose qu'à la première apparition d'un élément) et n'est montré que comme tel.
  * « Au catalogue » : une entrée du catalogue a le même lien source OU le même nom (le plugin
  * frontend-design porte la skill du même nom). Module pur, importable par node --test.
  */
@@ -68,7 +71,7 @@ export function extraitResume(resume) {
  * @typedef {{ name: string, source: string }} EntreeCatalogue
  * @typedef {{ nom: string, lien: string, releve: string, extrait: { texte: string, langue: 'fr' | 'en' } | null }} NouveauteATester
  * @typedef {{ cle: string, nature: string, libelle: string, depot: { label: string, href: string },
- *   releve: string | null, total: number, aTester: NouveauteATester[] }} FluxATester
+ *   releve: string | null, derniereNouveaute: string | null, total: number, aTester: NouveauteATester[] }} FluxATester
  */
 
 const norm = (s) => sansFin(String(s).trim().toLowerCase(), '/');
@@ -81,18 +84,26 @@ function parRelevePuisNom(a, b) {
 
 /**
  * Éléments d'un flux absents du catalogue, triés par relevé le plus récent puis par nom.
- * Lève une erreur sur un élément invalide (lien hors du dépôt du flux, nom vide, date illisible).
+ * Lève une erreur sur un élément invalide (lien hors du dépôt du flux, nom vide, date illisible) ou sur
+ * une date de dernier relevé illisible.
  * @param {string} cle clé de FLUX_A_TESTER
  * @param {ElementFlux[]} elements
  * @param {EntreeCatalogue[]} catalogue
+ * @param {Record<string, string>} [releves] dernier passage réussi du batch par source (derniers-releves.json)
  * @returns {FluxATester}
  */
-export function fluxATester(cle, elements, catalogue) {
+export function fluxATester(cle, elements, catalogue, releves = {}) {
   const flux = FLUX_A_TESTER[cle];
   if (!flux) throw new Error(`nouveautés à tester : flux inconnu « ${cle} »`);
+  let releve = null;
+  if (releves[cle] !== undefined) {
+    const passage = new Date(releves[cle]);
+    if (Number.isNaN(passage.getTime())) throw new Error(`nouveautés à tester (${cle}) : date de dernier relevé illisible (${releves[cle]})`);
+    releve = jourParis(passage);
+  }
   const liens = new Set(catalogue.map((e) => norm(e.source)));
   const noms = new Set(catalogue.map((e) => norm(e.name)));
-  let releve = null;
+  let derniereNouveaute = null;
   const aTester = [];
   for (const el of elements) {
     const nom = String(el.title ?? '').trim();
@@ -103,10 +114,10 @@ export function fluxATester(cle, elements, catalogue) {
     const instant = new Date(el.fetchedAt);
     if (Number.isNaN(instant.getTime())) throw new Error(`nouveautés à tester (${cle}) : « ${nom} » sans date de relevé`);
     const jour = jourParis(instant);
-    if (!releve || jour > releve) releve = jour;
+    if (!derniereNouveaute || jour > derniereNouveaute) derniereNouveaute = jour;
     if (liens.has(norm(el.url)) || noms.has(norm(nom))) continue;
     aTester.push({ nom, lien: el.url, releve: jour, extrait: extraitResume(el.summary) });
   }
   aTester.sort(parRelevePuisNom);
-  return { cle, ...flux, releve, total: elements.length, aTester };
+  return { cle, ...flux, releve, derniereNouveaute, total: elements.length, aTester };
 }

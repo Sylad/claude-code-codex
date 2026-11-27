@@ -21,7 +21,7 @@ officielle avec Anthropic.
 |------|-------|
 | `/start` | **Démarrer** — Claude Code pour les vrais débutants. Pas de jargon, 7 sections progressives, exemples copy-pastable. La porte d'entrée du site. |
 | `/theory` | Comment Claude Code fonctionne sous le capot — architecture agentique, context window, sessions, hooks, slash commands, MCP, skills, agents SDK · bloc de revue du contenu |
-| `/ecosystem` | Catalogue triable des plugins, MCP servers, skills officiels Anthropic et SDKs, puis **Actualités de l'écosystème** : nouveautés retenues par la veille, la plus récente en tête, chacune datée (publication ou relevé) et sourcée (`frontend/src/data/veille-ecosysteme.mjs`). Porte le bloc de revue du contenu (voir [Revue du contenu](#revue-du-contenu)) |
+| `/ecosystem` | Catalogue triable des plugins, MCP servers, skills officiels Anthropic et SDKs, puis **Actualités de l'écosystème** : nouveautés retenues par la veille, la plus récente en tête, chacune datée (publication ou relevé) et sourcée (`frontend/src/data/veille-ecosysteme.mjs`), puis **Nouveautés à tester** : les skills d'anthropics/skills et les serveurs MCP de modelcontextprotocol/servers relevés par le batch hebdomadaire et absents du catalogue, avec leur lien, leur résumé et la date du dernier relevé de chaque flux (lus au build dans `frontend/src/data/feeds/`, voir [le batch](#mise-à-jour-hebdo)). Porte le bloc de revue du contenu (voir [Revue du contenu](#revue-du-contenu)) |
 | `/case-studies` | 7 deep-dives d'apps perso construites en pair-programming + récits transverses (K8s migration overnight, AetherWX encyclopedia, **Cadence** — la méthode de travail, ses chiffres mesurés et ses échecs, illustrée par trois schémas SVG (plan relié aux commits, parcours d'un lot, chaîne du livreur ; les schémas Mermaid, comme ceux de l'étude AetherWX, gardent un texte rendu à 11 px ou plus à 360–390 px et défilent dans leur cadre quand ils sont plus larges que l'écran) lisibles en thème clair et sombre — composants `Schema`, `StepChain` (description accessible du svg composée des étapes : titre, détail, qui), `Callout` —, `/case-studies/cadence`, et **Pourquoi cadence** — les cinq besoins qui l'ont fait naître, sa définition en une phrase, les preuves chiffrées du banc A/B, chacune datée et sourcée dans le dépôt cadence, et ce que les mesures ne prouvent pas, `/case-studies/pourquoi-cadence`) + section **Tools tested** (RTK adopté, Ruflo rejeté+8 leçons, code-review-graph adopt-conditional) ; la liste des outils testés porte le bloc de revue du contenu |
 | `/atelier-ia` | L'atelier IA perso — quels outils (Claude Code, Codex…), quels rôles, quelles frontières |
 | `/k8s-for-java-developers` | **Guide** — introduction Kubernetes pour dev Java, du jar au pod |
@@ -125,6 +125,17 @@ lundi à 06:00 UTC :
 
 Le composant `LatestNews.astro` lit ces feeds JSON au build time pour
 afficher les 10 articles les plus récents sur `/learning`.
+
+Le composant `NouveautesATester.astro` (`/ecosystem`) lit au build
+`github-anthropics-skills.json` et `github-mcp-servers.json` : il montre les
+éléments absents du catalogue (`frontend/src/data/ecosystem.ts`, même lien ou
+même nom). Le batch note aussi, pour chaque source relevée sans erreur, l'instant
+de son passage dans `frontend/src/data/feeds/derniers-releves.json` : c'est la
+date « Dernier relevé le … » du bloc. Le `fetchedAt` d'une entrée n'est posé
+qu'à sa première apparition ; il ne date que la dernière nouveauté, et le bloc
+n'affiche que « Dernière nouveauté relevée le … » tant qu'aucun passage n'est
+noté. Le build échoue si un lien de ces flux sort du dépôt de la source, si un
+fichier de flux manque ou si une date est illisible.
 
 Secrets requis dans le repo GitHub : `ANTHROPIC_API_KEY`, `YOUTUBE_API_KEY`
 (optionnel, pour `/videos`).

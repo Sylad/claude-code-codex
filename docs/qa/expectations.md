@@ -43,9 +43,9 @@ shows: chaque schéma rendu (svg présent) ; texte SVG ≥ 11 px rendus à 390 p
 shows: h1 non vide ; contenu non vide (au moins 4 000 caractères de texte) ; liens sortants avec un href réel
 
 ## /ecosystem/ — nouveautés à tester (L35)
-shows: section « Nouveautés à tester » (`[data-a-tester]`) ; un bloc par flux, `[data-flux="github-anthropics-skills"]` et `[data-flux="github-mcp-servers"]`, chacun avec « Dernier relevé le <date> · <n> … » ; au moins une entrée tant que le flux des skills a un élément hors catalogue, chacune avec un lien « Voir <nom> sur GitHub » identique à une `url` de frontend/src/data/feeds/ et « relevé le <date> » ; un bloc sans nouveauté dit « Tout ce qui a été relevé est déjà au catalogue. » ; à 390 px, aucun défilement latéral
-never: une entrée déjà au catalogue (même lien source ou même nom) ; un lien qui ne vient pas d'un flux ; un bloc vide sans message ; un en-tête YAML brut (`---`, `name:`) dans un extrait
-Test : `tests/l35-nouveautes-a-tester.test.mjs` et `tests/l35-nouveautes-a-tester.e2e.test.mjs`.
+shows: section « Nouveautés à tester » (`[data-a-tester]`) ; un bloc par flux, `[data-flux="github-anthropics-skills"]` et `[data-flux="github-mcp-servers"]`, chacun avec « Dernier relevé le <date> · <n> … », la date étant le jour du dernier passage du batch noté dans frontend/src/data/feeds/derniers-releves.json (sans passage noté : « Dernière nouveauté relevée le <date> · <n> … », sans élément : « Aucun relevé pour l'instant » et « Rien à montrer. ») ; au moins une entrée tant que le flux des skills a un élément hors catalogue, chacune avec un lien « Voir <nom> sur GitHub » identique à une `url` de frontend/src/data/feeds/ et « relevé le <date> » ; un bloc sans nouveauté dit « Tout ce qui a été relevé est déjà au catalogue. » ; à 390 px, aucun défilement latéral
+never: « Dernier relevé le » daté d'un fetchedAt (date de la dernière nouveauté, pas du relevé) ; une entrée déjà au catalogue (même lien source ou même nom) ; un lien qui ne vient pas d'un flux ; un bloc vide sans message ; un en-tête YAML brut (`---`, `name:`) dans un extrait
+Test : `tests/l35-nouveautes-a-tester.test.mjs`, `tests/l35-dernier-releve.test.mjs` et `tests/l35-nouveautes-a-tester.e2e.test.mjs`.
 
 ## /<route inexistante>/
 shows: statut 404 (livré par L28) ; h1 « Cette page n'existe pas » ; un lien « Retour à l'accueil » vers /

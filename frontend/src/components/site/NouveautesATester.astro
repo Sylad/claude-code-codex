@@ -4,13 +4,14 @@
 // Rien d'inventé : nom, lien, date de relevé et extrait viennent du flux (src/lib/nouveautes-a-tester.mjs).
 import skills from "@/data/feeds/github-anthropics-skills.json";
 import mcpServers from "@/data/feeds/github-mcp-servers.json";
+import releves from "@/data/feeds/derniers-releves.json";
 import { ecosystemEntries } from "@/data/ecosystem";
 import { fluxATester } from "@/lib/nouveautes-a-tester.mjs";
 import DateLongue from "./DateLongue.astro";
 
 const flux = [
-  fluxATester("github-anthropics-skills", skills, ecosystemEntries),
-  fluxATester("github-mcp-servers", mcpServers, ecosystemEntries),
+  fluxATester("github-anthropics-skills", skills, ecosystemEntries, releves),
+  fluxATester("github-mcp-servers", mcpServers, ecosystemEntries, releves),
 ];
 const unite = (f: (typeof flux)[number], n: number) =>
   f.nature === "skill" ? (n > 1 ? "skills relevées" : "skill relevée") : n > 1 ? "serveurs relevés" : "serveur relevé";
@@ -40,6 +41,8 @@ const unite = (f: (typeof flux)[number], n: number) =>
         <p class="mt-1 font-mono text-xs text-ink-muted" data-releve>
           {f.releve ? (
             <>Dernier relevé le <DateLongue day={f.releve} /> · {f.total} {unite(f, f.total)}</>
+          ) : f.derniereNouveaute ? (
+            <>Dernière nouveauté relevée le <DateLongue day={f.derniereNouveaute} /> · {f.total} {unite(f, f.total)}</>
           ) : (
             <>Aucun relevé pour l'instant</>
           )}

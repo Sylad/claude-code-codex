@@ -18,7 +18,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 
-import { FEEDS_DIR, ROOT, readFeed, writeFeed } from "./lib/feeds.js";
+import { FEEDS_DIR, ROOT, readFeed, writeFeed, writeReleve } from "./lib/feeds.js";
 import type { RawEntry, SourceModule } from "./lib/types.js";
 import { summarize } from "./lib/claude.js";
 import { processSource, type ProcessDeps } from "./lib/process-source.js";
@@ -74,13 +74,13 @@ async function summarizeWithFallback(
 }
 
 function depsFor(opts: Options): ProcessDeps {
+  const previewDir = "/tmp/codex-feeds";
   return {
     readFeed,
     summarize: (raw, source) =>
       summarizeWithFallback(raw, source, opts.noSummarize),
     writeFeed: (source, entries) => {
       if (opts.dryRun) {
-        const previewDir = "/tmp/codex-feeds";
         mkdirSync(previewDir, { recursive: true });
         writeFileSync(
           resolve(previewDir, `${source}.json`),
@@ -91,6 +91,10 @@ function depsFor(opts: Options): ProcessDeps {
         writeFeed(source, entries);
         console.log(`  wrote ${entries.length} entries to feeds/${source}.json`);
       }
+    },
+    noteReleve: (source, instant) => {
+      if (opts.dryRun) writeReleve(source, instant, resolve(previewDir, "derniers-releves.json"));
+      else writeReleve(source, instant);
     },
   };
 }

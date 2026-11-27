@@ -6,7 +6,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { extraitResume, fluxATester } from '../src/lib/nouveautes-a-tester.mjs';
+import { jourParis } from '../src/lib/revue-contenu.mjs';
 
+const releves = JSON.parse(readFileSync(new URL('../src/data/feeds/derniers-releves.json', import.meta.url), 'utf8'));
 const feed = (nom) => JSON.parse(readFileSync(new URL(`../src/data/feeds/${nom}.json`, import.meta.url), 'utf8'));
 // Catalogue lu dans la source TS (nom + lien source de chaque entrée) : node --test ne charge pas le TS.
 const src = readFileSync(new URL('../src/data/ecosystem.ts', import.meta.url), 'utf8');
@@ -23,7 +25,7 @@ test('L35 — le catalogue lu par le test a toutes ses entrées', () => {
 for (const cle of ['github-anthropics-skills', 'github-mcp-servers']) {
   test(`L35 — ${cle} : seuls les éléments absents du catalogue, chacun venu du flux`, () => {
     const elements = feed(cle);
-    const r = fluxATester(cle, elements, catalogue);
+    const r = fluxATester(cle, elements, catalogue, releves);
     assert.equal(r.total, elements.length);
     const liens = new Set(catalogue.map((e) => e.source));
     const noms = new Set(catalogue.map((e) => e.name.toLowerCase()));
@@ -38,7 +40,10 @@ for (const cle of ['github-anthropics-skills', 'github-mcp-servers']) {
     // Tout élément du flux est soit au catalogue, soit à tester.
     const absents = elements.filter((e) => !liens.has(e.url) && !noms.has(e.title.toLowerCase()));
     assert.deepEqual(r.aTester.map((n) => n.lien).sort(), absents.map((e) => e.url).sort());
-    assert.match(r.releve, /^\d{4}-\d{2}-\d{2}$/);
+    // Date du dernier passage : seulement celle que le batch a notée (derniers-releves.json), jamais un fetchedAt.
+    const passage = releves[cle];
+    assert.equal(r.releve, passage === undefined ? null : jourParis(new Date(passage)));
+    if (elements.length) assert.match(r.derniereNouveaute, /^\d{4}-\d{2}-\d{2}$/);
   });
 }
 
@@ -60,7 +65,8 @@ test('L35 — un élément du catalogue (même lien ou même nom) est écarté, 
     [{ name: 'B', source: 'https://ailleurs' }, { name: 'z', source: 'https://github.com/anthropics/skills/tree/main/skills/c/' }],
   );
   assert.deepEqual(r.aTester.map((n) => [n.nom, n.releve]), [['a', '2026-11-21']]);
-  assert.equal(r.releve, '2026-11-21');
+  assert.equal(r.derniereNouveaute, '2026-11-21');
+  assert.equal(r.releve, null);
 });
 
 test('L35 — extrait : description d’un SKILL.md, prose d’un README, résumé français tel quel', () => {

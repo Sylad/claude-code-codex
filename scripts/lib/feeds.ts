@@ -10,6 +10,31 @@ export function feedPath(source: string): string {
   return resolve(FEEDS_DIR, `${source}.json`);
 }
 
+/**
+ * L35 — date du dernier passage RÉUSSI du batch sur chaque source ({ "<source>": "<ISO>" }).
+ * Le `fetchedAt` d'une entrée n'est posé qu'à sa première apparition : il date la dernière
+ * nouveauté, pas le dernier relevé. /ecosystem lit ce fichier au build (« Dernier relevé le … »).
+ */
+export const RELEVES_PATH = resolve(FEEDS_DIR, "derniers-releves.json");
+
+export function readReleves(path = RELEVES_PATH): Record<string, string> {
+  if (!existsSync(path)) return {};
+  try {
+    const data = JSON.parse(readFileSync(path, "utf-8"));
+    return data && typeof data === "object" && !Array.isArray(data) ? data : {};
+  } catch {
+    return {};
+  }
+}
+
+/** Note le passage réussi de `source` à `instant`, sans toucher aux autres sources. */
+export function writeReleve(source: string, instant: string, path = RELEVES_PATH): void {
+  const releves = { ...readReleves(path), [source]: instant };
+  const tries = Object.fromEntries(Object.entries(releves).sort(([a], [b]) => a.localeCompare(b)));
+  mkdirSync(dirname(path), { recursive: true });
+  writeFileSync(path, JSON.stringify(tries, null, 2) + "\n");
+}
+
 export function hashUrl(url: string): string {
   return createHash("sha256").update(url).digest("hex").slice(0, 16);
 }

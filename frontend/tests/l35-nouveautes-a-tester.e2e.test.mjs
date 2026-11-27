@@ -5,8 +5,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { setupBrowser } from './lib/e2e-dist.mjs';
+import { jourParis } from '../src/lib/revue-contenu.mjs';
 
 const FLUX = ['github-anthropics-skills', 'github-mcp-servers'];
+const releves = JSON.parse(readFileSync(new URL('../src/data/feeds/derniers-releves.json', import.meta.url), 'utf8'));
 const urls = new Set(FLUX.flatMap((f) => JSON.parse(readFileSync(new URL(`../src/data/feeds/${f}.json`, import.meta.url), 'utf8')).map((e) => e.url)));
 
 for (const width of [1440, 390]) {
@@ -22,8 +24,14 @@ for (const width of [1440, 390]) {
     for (const f of FLUX) {
       const bloc = section.locator(`[data-flux="${f}"]`);
       assert.equal(await bloc.count(), 1, f);
-      assert.match(await bloc.locator('[data-releve]').innerText(), /^Dernier relevé le \d{1,2}(er)?\s\S+ \d{4} · \d+ /, f);
-      assert.equal(await bloc.locator('[data-releve] time[datetime]').count(), 1, `${f} : date sans <time>`);
+      assert.match(await bloc.locator('[data-releve]').innerText(), /^(Dernier relevé le|Dernière nouveauté relevée le) \d{1,2}(er)?\s\S+ \d{4} · \d+ |^Aucun relevé pour l'instant$/, f);
+      const releve = await bloc.locator('[data-releve]').innerText();
+      assert.equal(await bloc.locator('[data-releve] time[datetime]').count(), releve.startsWith('Aucun') ? 0 : 1, `${f} : date sans <time>`);
+      // La date de « Dernier relevé » est celle du passage noté par le batch (derniers-releves.json).
+      if (releves[f]) {
+        assert.ok(releve.startsWith('Dernier relevé le'), `${f} : ${releve}`);
+        assert.equal(await bloc.locator('[data-releve] time').getAttribute('datetime'), jourParis(new Date(releves[f])), f);
+      } else assert.ok(!releve.startsWith('Dernier relevé le'), `${f} : relevé affirmé sans passage noté`);
       const n = await bloc.locator('[data-a-tester-entree]').count();
       assert.ok(n > 0 || (await bloc.locator('[data-rien]').count()) === 1, `${f} : ni entrée ni message`);
     }
