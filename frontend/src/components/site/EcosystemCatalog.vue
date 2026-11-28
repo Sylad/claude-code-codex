@@ -120,6 +120,25 @@ async function copyInstall(entry: EcosystemEntry) {
         />
       </div>
 
+      <!-- L114 : le compteur et « Réinitialiser » vivent AU-DESSUS des bascules, sur une ligne
+           toujours présente. À 390 px, les bascules arrivent en bas de l'écran : un compteur placé
+           dessous (et la liste) restait hors de la vue après le clic. Ici, quand le bouton cliqué
+           est visible, le résultat de son geste l'est aussi, et rien ne bouge quand « Réinitialiser »
+           apparaît ou disparaît (hauteur de ligne réservée). -->
+      <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 min-h-6">
+        <p role="status" class="font-mono text-xs text-ink-muted">
+          {{ filteredEntries.length }} / {{ entries.length }} entrées
+        </p>
+        <button
+          v-if="selectedCategories.size > 0 || searchQuery.trim() !== ''"
+          type="button"
+          class="text-sm text-ink-muted hover:text-claude underline underline-offset-4 cursor-pointer"
+          @click="clearFilters"
+        >
+          Réinitialiser
+        </button>
+      </div>
+
       <div class="flex flex-wrap items-center gap-2">
         <button
           v-for="c in categories"
@@ -138,20 +157,7 @@ async function copyInstall(entry: EcosystemEntry) {
           <span>{{ CATEGORY_LABELS[c] }}</span>
           <span class="font-mono text-xs opacity-70">{{ counts[c] }}</span>
         </button>
-
-        <button
-          v-if="selectedCategories.size > 0 || searchQuery.trim() !== ''"
-          type="button"
-          class="text-sm text-ink-muted hover:text-claude underline underline-offset-4 ml-auto cursor-pointer"
-          @click="clearFilters"
-        >
-          Réinitialiser
-        </button>
       </div>
-
-      <p role="status" class="font-mono text-xs text-ink-muted">
-        {{ filteredEntries.length }} / {{ entries.length }} entrées
-      </p>
     </div>
 
     <div
