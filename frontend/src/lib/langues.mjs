@@ -22,15 +22,27 @@ export const NOMS = { fr: 'Français', en: 'English' };
 /** Code court de chaque langue, affiché dans la barre du bureau (L112). */
 export const CODES = { fr: 'FR', en: 'EN' };
 
-/** Adresse avec barre finale (Astro sert /x/ ; en dev, /x peut arriver sans barre). */
+/** Sépare le chemin de sa suite « ?requête » ou « #ancre » (gardée telle quelle d'une langue à l'autre). */
+function decoupe(adresse) {
+  const p = String(adresse || '/');
+  const i = p.search(/[?#]/);
+  return i < 0 ? [p, ''] : [p.slice(0, i), p.slice(i)];
+}
+
+/** Chemin seul, sans requête ni ancre. */
+const chemin = (adresse) => decoupe(adresse)[0];
+
+/** Adresse avec barre finale (Astro sert /x/ ; en dev, /x peut arriver sans barre) ; requête et ancre gardées. */
 export function avecBarre(pathname) {
-  const p = String(pathname || '/');
-  return p.endsWith('/') ? p : `${p}/`;
+  const [c, suite] = decoupe(pathname);
+  const p = c || '/';
+  const barre = p.endsWith('/') ? '' : '/';
+  return `${p}${barre}${suite}`;
 }
 
 /** Langue d'une adresse : « en » sous /en/, « fr » partout ailleurs. */
 export function langueDe(pathname) {
-  return /^\/en(\/|$)/.test(String(pathname)) ? 'en' : 'fr';
+  return /^\/en(\/|$)/.test(chemin(pathname)) ? 'en' : 'fr';
 }
 
 /** Adresse française d'une adresse (retire le préfixe /en). */
@@ -41,12 +53,12 @@ export function adresseFr(pathname) {
 
 /** La page « introuvable » (dist/404.html, dist/en/404.html) : servie à n'importe quelle adresse. */
 export function est404(pathname) {
-  return /^\/404(\.html|\/)?$/.test(adresseFr(String(pathname).replace(/\.html$/, '')));
+  return /^\/404(\.html|\/)?$/.test(chemin(adresseFr(chemin(pathname).replace(/\.html$/, ''))));
 }
 
 /** Page dont le texte existe en anglais : listée dans TRADUITES (la 404 a aussi le sien). */
 export function traduite(pathname) {
-  return TRADUITES.includes(adresseFr(pathname)) || est404(pathname);
+  return TRADUITES.includes(chemin(adresseFr(pathname))) || est404(pathname);
 }
 
 /** Adresse anglaise d'une page (toute page en a une depuis L112). */
@@ -93,7 +105,7 @@ export function adresseDePage(fichier) {
  */
 export function versions(pathname) {
   const fr = adresseFr(pathname);
-  return { langue: langueDe(pathname), fr, en: TRADUITES.includes(fr) ? `/en${fr}` : null };
+  return { langue: langueDe(pathname), fr, en: TRADUITES.includes(chemin(fr)) ? `/en${fr}` : null };
 }
 
 /**

@@ -221,4 +221,4 @@ export const EN = {
     demarrage: "↗ Quickstart in 10 minutes",
     releve: "Figures taken from the cadence repository: V1's as of October 30, 2026, those of the chapter “The problem with V1” as of November 24, 2026.",
   },
-} as unknown as ContenuEtudeCadence;
+} satisfies ContenuEtudeCadence;

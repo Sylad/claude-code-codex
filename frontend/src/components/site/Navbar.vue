@@ -280,7 +280,7 @@ const panelId = (id: string) => `panneau-${id}`;
             :data-langue="autre.langue"
             data-selecteur-langue
             :aria-label="autreNom"
-            class="inline-flex items-center gap-1 pointer-coarse:min-h-11 whitespace-nowrap px-1.5 xl:px-2 py-2 text-sm rounded-md border border-white/10 text-ink-muted hover:text-ink hover:border-claude/40 hover:bg-white/5 transition-colors motion-safe:active:scale-95"
+            class="inline-flex items-center justify-center gap-1 pointer-coarse:min-h-11 pointer-coarse:min-w-11 whitespace-nowrap px-1.5 xl:px-2 py-2 text-sm rounded-md border border-white/10 text-ink-muted hover:text-ink hover:border-claude/40 hover:bg-white/5 transition-colors motion-safe:active:scale-95"
           >
             <Languages :size="14" aria-hidden="true" class="hidden xl:block" />
             {{ CODES[autre.langue] }}

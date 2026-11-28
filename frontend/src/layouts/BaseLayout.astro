@@ -71,7 +71,8 @@ const newsIndex = newsData.entries.map(({ slug, date }) => ({ slug, date }));
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
     />
-    <title>{fullTitle}</title>
+    {/* L112 (revue UX) : sous /en/, une page sans anglais garde son titre français, marqué comme tel (WCAG 3.1.2) */}
+    <title lang={nonTraduite ? "fr" : undefined}>{fullTitle}</title>
     <ClientRouter />
   </head>
   <body class="text-ink min-h-dvh flex flex-col">

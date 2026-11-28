@@ -12,6 +12,7 @@ import {
   TRADUITES, adresseDePage, adresseEn, autreLangue, est404, langueDuContenu, traduite,
 } from '../src/lib/langues.mjs';
 import { PAGE_404 } from '../src/contenus/page-404.mjs';
+import { withViteSsr } from './lib/vite-ssr.mjs';
 
 const SRC = fileURLToPath(new URL('../src/', import.meta.url));
 const PAGES = join(SRC, 'pages');
@@ -90,24 +91,44 @@ test('R4 — un seul contrôle de langue, dans la barre : plus de sélecteur pos
   assert.doesNotMatch(layout, /SelecteurLangue/);
 });
 
+/** Champs d'audit que seul le français porte (vérifiés par l93 sur la version française) : hors comparaison. */
+const CHAMPS_FRANCAIS = new Set(['nombres', 'passages']);
+
 /** Squelette d'un jeu de textes : les clés et la forme, sans le texte (fonctions comprises). */
 function squelette(v) {
   if (Array.isArray(v)) return v.map(squelette);
   if (typeof v === 'function') return 'fn';
-  if (v && typeof v === 'object') return Object.fromEntries(Object.keys(v).sort().map((k) => [k, squelette(v[k])]));
+  if (v && typeof v === 'object') {
+    return Object.fromEntries(Object.keys(v).filter((k) => !CHAMPS_FRANCAIS.has(k)).sort().map((k) => [k, squelette(v[k])]));
+  }
   return typeof v;
 }
 
-test('R5 — textes longs : un fichier par langue, mêmes clés (étude cadence, page 404)', async () => {
-  // les fichiers de l'étude sont en TypeScript : on compare leurs clés de premier et de second niveau dans le source
-  const cles = (f) => {
-    const s = readFileSync(join(SRC, 'contenus', 'etude-cadence', f), 'utf8');
-    const objet = s.slice(s.indexOf('export const '));
-    return [...objet.matchAll(/^ {2,4}(\w+):/gm)].map((m) => m[1]);
-  };
-  assert.deepEqual(cles('en.ts'), cles('fr.ts'), 'étude cadence : clés des textes');
+/** Chemins des feuilles où deux squelettes diffèrent (clé absente d'un côté, forme ou longueur différente). */
+function ecarts(a, b, chemin = '') {
+  if (a === b) return [];
+  if (a && b && typeof a === 'object' && typeof b === 'object' && Array.isArray(a) === Array.isArray(b)) {
+    const cles = [...new Set([...Object.keys(a), ...Object.keys(b)])];
+    return cles.flatMap((k) => (k in a && k in b ? ecarts(a[k], b[k], `${chemin}.${k}`) : [`${chemin}.${k} : ${k in a ? 'absent en anglais' : 'absent en français'}`]));
+  }
+  return [`${chemin} : ${JSON.stringify(a)} ≠ ${JSON.stringify(b)}`];
+}
+
+test('R5 — textes longs : un fichier par langue, mêmes clés à tous les niveaux (étude cadence, page 404)', async () => {
+  // L112 (revue de code) : les textes de l'étude sont chargés tels que la page les reçoit (fr.ts, en.ts et leurs
+  // fichiers -parcours / -histoire), puis comparés clé par clé à toute profondeur, longueur des listes comprise.
+  const { FR, EN } = await withViteSsr([], async (charger) => ({
+    FR: (await charger('/src/contenus/etude-cadence/fr.ts')).FR,
+    EN: (await charger('/src/contenus/etude-cadence/en.ts')).EN,
+  }));
+  assert.ok(FR.donnees.pieces.length > 0 && FR.donnees.v2Decisions.length > 0, 'textes de l’étude chargés');
+  assert.deepEqual(ecarts(squelette(FR), squelette(EN)), [], 'étude cadence : clés des textes');
   const commun = readFileSync(join(SRC, 'contenus', 'etude-cadence', 'commun.ts'), 'utf8');
   assert.match(commun, /export const DESIGN/);
+  // en.ts se conforme au type du français (satisfies), sans conversion qui ferait taire tsc
+  const en = readFileSync(join(SRC, 'contenus', 'etude-cadence', 'en.ts'), 'utf8');
+  assert.match(en, /\} satisfies ContenuEtudeCadence;\s*$/);
+  assert.doesNotMatch(en, /as unknown as/);
   assert.deepEqual(squelette(PAGE_404.en), squelette(PAGE_404.fr), 'page 404 : mêmes clés');
   assert.deepEqual(PAGE_404.en.pistes.map((p) => p.href), PAGE_404.fr.pistes.map((p) => p.href), 'page 404 : mêmes adresses');
 });
@@ -134,4 +155,31 @@ test('R6 — module des langues : toute page a son adresse /en/, contrôle vers 
   assert.equal(adresseDePage('404.astro'), null);
   assert.equal(adresseDePage('../en/case-studies/cadence.astro'), null);
   assert.equal(adresseDePage('en/[...page].astro'), null);
+});
+
+test('R7 — enveloppes sous src/pages/en/ et TRADUITES se répondent, dans les deux sens', () => {
+  // L112 (revue de code, constat 3) : une enveloppe anglaise sans son adresse dans TRADUITES entrerait en
+  // collision avec la route générale et garderait le bandeau « Not translated yet » ; une adresse listée sans
+  // enveloppe n'aurait plus de page anglaise (la route générale l'écarte).
+  const enveloppes = fichiers(EN_DIR).map((f) => relative(EN_DIR, f)).map(adresseDePage).filter(Boolean).sort();
+  assert.deepEqual(enveloppes.filter((a) => !TRADUITES.includes(a)), [], 'enveloppe anglaise absente de TRADUITES');
+  assert.deepEqual(TRADUITES.filter((a) => !enveloppes.includes(a)), [], 'adresse de TRADUITES sans enveloppe sous src/pages/en/');
+  assert.deepEqual(enveloppes, [...TRADUITES].sort());
+});
+
+test('R8 — bords du module des langues : page introuvable, requête et ancre', () => {
+  // la 404 a son texte anglais : sous /en/ son contenu est anglais, en français ailleurs
+  for (const a of ['/en/404/', '/en/404', '/en/404.html']) assert.equal(langueDuContenu(a), 'en', a);
+  for (const a of ['/404/', '/404.html']) assert.equal(langueDuContenu(a), 'fr', a);
+  // requête et ancre : gardées d'une langue à l'autre, la barre finale reste sur le chemin
+  assert.deepEqual(autreLangue('/about/#credits'), { langue: 'en', href: '/en/about/#credits' });
+  assert.deepEqual(autreLangue('/about#credits'), { langue: 'en', href: '/en/about/#credits' });
+  assert.deepEqual(autreLangue('/en/about/?tri=date'), { langue: 'fr', href: '/about/?tri=date' });
+  assert.deepEqual(autreLangue('/en/?x=1#haut'), { langue: 'fr', href: '/?x=1#haut' });
+  assert.deepEqual(autreLangue('/404?x=1'), { langue: 'en', href: '/en/' });
+  assert.equal(adresseEn('/case-studies/cadence/#le-probleme-de-la-v1'), '/en/case-studies/cadence/#le-probleme-de-la-v1');
+  assert.ok(traduite('/en/case-studies/cadence/?a=1#x'), 'page traduite reconnue malgré la requête');
+  assert.equal(langueDuContenu('/en/case-studies/cadence/#x'), 'en');
+  assert.equal(langueDuContenu('/en/about/?a=1'), 'fr');
+  assert.ok(!est404('/404-x/?a') && est404('/en/404/#x'));
 });

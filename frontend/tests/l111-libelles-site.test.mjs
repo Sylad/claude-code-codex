@@ -45,6 +45,9 @@ test('R3 — sur une page anglaise, un lien reste sous /en/ (L112) ; sa langue d
   }
   assert.deepEqual(lienDans('/about', 'en'), { href: '/en/about/', langue: 'fr' });
   assert.deepEqual(lienDans('/', 'en'), { href: '/en/', langue: 'fr' });
+  // L112 (revue de code) : requête et ancre restent après la barre finale
+  assert.deepEqual(lienDans('/about/#x', 'en'), { href: '/en/about/#x', langue: 'fr' });
+  assert.deepEqual(lienDans('/case-studies/cadence/?a=1', 'en'), { href: '/en/case-studies/cadence/?a=1', langue: 'en' });
   assert.deepEqual(lienDans('/about', 'fr'), { href: '/about', langue: 'fr' });
 });
 

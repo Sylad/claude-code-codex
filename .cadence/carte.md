@@ -22,6 +22,12 @@
   seul contrôle de langue, dans la barre (`Navbar.vue`, `data-selecteur-langue`, code de l'autre langue, icône dès
   xl ; sur téléphone en tête du menu, « Language / Français ») ; `SelecteurLangue.astro` supprimé. 404 anglaise :
   `src/pages/en/404.astro` → `dist/en/404.html` (intégration `page404Anglaise` d'`astro.config.mjs`).
+  Après la revue de code et UX (L112, 28-11) : sous /en/, une page sans anglais a son `<title lang="fr">` (titre
+  français marqué, pas traduit) ; au pointeur grossier le contrôle de langue fait 44 × 44 px (`pointer-coarse:min-w-11`,
+  barre anglaise à 1024 px tactile : 16 px après le logo, juste au seuil). `en.ts` de l'étude cadence se conforme au type
+  du français par `satisfies ContenuEtudeCadence` (`Partage<typeof FR>`, sans `nombres`/`passages`, propres au français) ;
+  R5 charge fr.ts/en.ts par Vite et compare les clés à toute profondeur ; R7 : enveloppes de `src/pages/en/` ⇔
+  `TRADUITES`. `langues.mjs` garde `?requête` et `#ancre` après la barre finale (`avecBarre`, `autreLangue`, `lienDans`).
 
 ## Workflow de revue du contenu (L21)
 

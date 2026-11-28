@@ -226,4 +226,19 @@ export const FR = {
   },
 };
 
-export type ContenuEtudeCadence = typeof FR;
+/**
+ * L112 — forme des textes de l'étude, dans les deux langues : celle du français, moins les champs d'audit que seul
+ * le français porte (`nombres`, `passages`, vérifiés par l93 sur la version française), rendus facultatifs.
+ * en.ts s'y conforme par `satisfies` : une clé absente de l'anglais fait échouer tsc (porte d'analyse).
+ */
+type ChampsFrancais = "nombres" | "passages";
+type Partage<T> = T extends (...a: never[]) => unknown
+  ? T
+  : T extends readonly (infer U)[]
+    ? Partage<U>[]
+    : T extends object
+      ? { [K in keyof T as K extends ChampsFrancais ? never : K]: Partage<T[K]> } & {
+          [K in keyof T as K extends ChampsFrancais ? K : never]?: T[K];
+        }
+      : T;
+export type ContenuEtudeCadence = Partage<typeof FR>;

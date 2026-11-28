@@ -23,12 +23,13 @@ import { inlineCodeHtml } from "@/lib/inline-code.mjs";
 import { CADENCE, NPM, DESIGN, doc } from "@/contenus/etude-cadence/commun";
 import { FR } from "@/contenus/etude-cadence/fr";
 import { EN } from "@/contenus/etude-cadence/en";
+import type { ContenuEtudeCadence } from "@/contenus/etude-cadence/fr";
 
 interface Props {
   langue: "fr" | "en";
 }
 
-const T = Astro.props.langue === "en" ? EN : FR;
+const T: ContenuEtudeCadence = Astro.props.langue === "en" ? EN : FR;
 const { insecable } = T;
 const { PLAN_COMMITS, parcours, parcoursV2, livreur, LEAD, MEMOIRE, pieces, chiffres, echecs, v1Mesures, v1Causes, v2Decisions } = T.donnees;
 const M = T.methode;
