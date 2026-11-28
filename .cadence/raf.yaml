@@ -717,6 +717,7 @@ lots:
     status: done
     estimate: 0.1
     visible: true
+    delivered: { date: 2026-11-28, sha: 91aa092579608d6e9b6d497539bf9b50407fbac6 }
     created: 2026-10-31
     started: 2026-11-28
     ux: { date: 2026-11-28, verdict: "conforme (ux-reviewer 28-11, 5/5 critères, 0 CLS, 43-137 Ko sans métadonnées) ; mineur : légende « Capture du … » sur une photo (legendeCapture partagé) → « Photo du … » à reprendre" }
