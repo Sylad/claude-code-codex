@@ -6,5 +6,11 @@
  "preuve": "",
  "lots": [
   "L112"
+ ],
+ "precisions": [
+  {
+   "date": "2026-11-28",
+   "texte": "Mécanisme choisi par Sylvain : contenu partagé (pas de pages dupliquées) — mise en page unique par page, route /en/ en enveloppe, dictionnaire pour les textes courts, un fichier par langue pour les textes longs, bandeau « pas encore traduit ». Lot de migration L112 ; D-7 (contrôle de langue unique dans la barre du haut) servi par le même lot."
+  }
  ]
 }

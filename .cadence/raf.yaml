@@ -1197,6 +1197,7 @@ lots:
     created: 2026-11-27
     notes:
       - { date: 2026-11-27, text: "à reprendre de la revue UX de L111 (27-11, mineurs) : sur /en/, 13 entrées de barre sur 15 mènent à une page française sans le dire à l'œil ; « No English yet » ne dit pas qu'il mène à l'étude cadence ; /en/ sert la 404 française — ajouter une 404 anglaise sous /en/" }
+      - { date: 2026-11-28, text: "28-11 décision de Sylvain : contenu partagé (pas de pages dupliquées). Une mise en page par page en composant qui reçoit la langue ; route /en/ = enveloppe de 3 lignes ; textes courts (menu, boutons, src/data) en dictionnaire par langue ; textes longs = un fichier par langue, même mise en page ; page non traduite = texte français sous /en/ avec bandeau visible « pas encore traduit » ; 404 anglaise ; menu /en/ vers /en/ ; test qui refuse une mise en page recopiée sous /en/ et liste les pages sans anglais. L112 = lot de migration (≈ 1 j : socle, menu, 404, page cadence convertie), puis lots de traduction par section. Mesure : mise en page copiée 56 % → ~0." }
   - id: L113
     title: "Schémas : étendre la mesure de L110 (libellé qui déborde ou en chevauche un autre, largeur réelle, FR et EN, 320/390/840/1440, texte 200 %) à toutes les pages qui ont un figure.schema — vu à la revue de L110 : « 4 · Rester cohérent » de pourquoi-cadence resserré ×1,16 en police de repli."
     status: done
