@@ -61,7 +61,9 @@ test('L117 — chaque appel du formateur et chaque <Capture> des sources déclar
   assert.ok(appels >= 10, `${appels} appels trouvés`);
 });
 
-const texte = (h) => h.replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&').replace(/&#39;|&apos;/g, "'").replace(/&quot;/g, '"')
+// balises retirées sans expression régulière (sonarjs/super-linear-regex) : chaque « <…> » devient une espace
+const sansBalises = (h) => h.split('<').map((p, i) => (i === 0 ? p : p.slice(p.indexOf('>') + 1))).join(' ');
+const texte = (h) => sansBalises(h).replace(/&amp;/g, '&').replace(/&#39;|&apos;/g, "'").replace(/&quot;/g, '"')
   .replace(/&nbsp;|[\u00a0\u202f]/g, ' ').replace(/\s+/g, ' ').trim();
 
 // Étude AetherWX : sur /en/ la page n'est pas traduite (TRADUITES), son texte reste français sous lang="fr",

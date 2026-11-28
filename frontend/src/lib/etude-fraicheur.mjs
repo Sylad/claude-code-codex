@@ -54,7 +54,8 @@ export function legendeCapture({ date, description, carte2d, nature, langue = 'f
   const en = langue === 'en';
   const fr = jour(date); // valide la date dans les deux langues
   const quand = en ? formatDayEn(date) : fr;
-  const mention = carte2d ? ` (${en ? MENTION_CARTE_2D_EN : MENTION_CARTE_2D})` : '';
+  const carte = en ? MENTION_CARTE_2D_EN : MENTION_CARTE_2D;
+  const mention = carte2d ? ` (${carte})` : '';
   return `${TETE[langue][nature]} ${quand}${mention} — ${description.trim()}`;
 }
 
