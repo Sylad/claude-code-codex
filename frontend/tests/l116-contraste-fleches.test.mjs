@@ -36,3 +36,9 @@ test('L116 — trait et pointe des schémas lisent le jeton des flèches', () =>
   assert.match(SRC, /\.schema \.sch-line \{[^}]*stroke: var\(--sch-fleche\)/);
   assert.match(SRC, /\.schema \.sch-arrow \{[^}]*fill: var\(--sch-fleche\)/);
 });
+
+test('L116 — flèches de la liste HTML (.sch-suite) : trait et pointe lisent le jeton des flèches', () => {
+  // trait (::before, background) et pointe (::after, border-top-color) entre deux étapes
+  assert.match(SRC, /\.schema \.sch-suite > \.sch-etape:not\(:last-child\)::before \{[^}]*background: var\(--sch-fleche\)/);
+  assert.match(SRC, /\.schema \.sch-suite > \.sch-etape:not\(:last-child\)::after \{[^}]*border-top-color: var\(--sch-fleche\)/);
+});

@@ -15,7 +15,7 @@
       "alts": [
         "Schéma « Un mécanisme par besoin » de la page Pourquoi cadence en thème sombre, sur un téléphone de 390 px : cinq besoins à gauche, cinq pièces de cadence à droite, reliés par des flèches grises plus claires qu'avant"
       ],
-      "html": "<p>En thème sombre, les flèches du schéma « Un mécanisme par besoin », sur la page Pourquoi cadence, sont plus claires : leur trait et leur pointe se détachent maintenant nettement des boîtes qu'elles relient.</p>\n<ul><li><strong>Contraste suffisant</strong> : 3,86 pour 1 contre les boîtes et 4,40 pour 1 contre le fond du schéma, au lieu de 2,86 pour 1 ; le minimum recommandé pour un élément graphique est de 3 pour 1.</li><li><strong>Tous les schémas du site</strong> en profitent : leurs flèches partagent la même couleur.</li><li><strong>Thème clair inchangé.</strong></li><li><strong>Vérifié</strong> sur la page rendue, en thème sombre et en thème clair, à 390 px de large.</li></ul>"
+      "html": "<p>En thème sombre, les flèches du schéma « Un mécanisme par besoin », sur la page Pourquoi cadence, sont plus claires : leur trait et leur pointe se détachent maintenant nettement des boîtes qu'elles relient.</p>\n<ul><li><strong>Contraste suffisant</strong> : 3,86 pour 1 contre les boîtes au lieu de 2,86, et 4,40 pour 1 contre le fond du schéma au lieu de 3,27 ; le minimum recommandé pour un élément graphique est de 3 pour 1.</li><li><strong>Tous les schémas du site</strong> en profitent : leurs flèches partagent la même couleur.</li><li><strong>Thème clair inchangé.</strong></li><li><strong>Vérifié</strong> sur la page rendue, en thème sombre et en thème clair, à 390 px de large.</li></ul>"
     },
     {
       "slug": "2026-11-28-les-fleches-du-schema-des-besoins-se-voient-a-nouveau",
