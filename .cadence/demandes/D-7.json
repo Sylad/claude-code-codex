@@ -2,8 +2,8 @@
  "id": "D-7",
  "texte": "faudra faire évoluer claude codex, le choix de la langue doit être global, un seul control dans le menu du haut, pas un par page",
  "date": "2026-11-28",
- "etat": "ouverte",
- "preuve": "",
+ "etat": "livrée",
+ "preuve": "L112 (b45fa43, ed2f175, 686daf4) : un seul contrôle de langue dans la barre (menu au téléphone), toutes les pages sous /en/ en contenu partagé, bandeau « Not translated yet. », 404 anglaise ; revue UX conforme (20 adresses fr/en, 1 contrôle visible) ; livré en prod le 2026-11-28",
  "lots": [
   "L112"
  ]
