@@ -30,6 +30,9 @@ const { id, legende } = Astro.props;
     --sch-bg: #1b1b1f;
     --sch-box: #26262c;
     --sch-line: #6b6b78;
+    /* L116 (WCAG 1.4.11) — flèches (trait et pointe) : 3,86:1 sur les boîtes (#26262c), 4,40:1 sur le fond ;
+       #6b6b78 ne donnait que 2,86:1 sur les boîtes. Les bordures de boîte gardent --sch-line. */
+    --sch-fleche: #80808c;
     --sch-text: #ececf1;
     --sch-muted: #b4b4c0;
     --sch-accent: #f0936a;
@@ -48,6 +51,7 @@ const { id, legende } = Astro.props;
       --sch-bg: #faf7f2;
       --sch-box: #ffffff;
       --sch-line: #7a7a86;
+      --sch-fleche: #7a7a86; /* L116 : thème clair inchangé (= --sch-line) */
       --sch-text: #1c1c22;
       --sch-muted: #4d4d58;
       --sch-accent: #a8401a;
@@ -56,10 +60,10 @@ const { id, legende } = Astro.props;
   .schema svg { display: block; width: 100%; max-width: 100%; height: auto; margin: 0 auto; }
   .schema .sch-box { fill: var(--sch-box); stroke: var(--sch-line); stroke-width: 1.5; }
   .schema .sch-box-accent { fill: var(--sch-box); stroke: var(--sch-accent); stroke-width: 2; }
-  .schema .sch-line { fill: none; stroke: var(--sch-line); stroke-width: 2; }
+  .schema .sch-line { fill: none; stroke: var(--sch-fleche); stroke-width: 2; }
   .schema .sch-line-accent { fill: none; stroke: var(--sch-accent); stroke-width: 2; stroke-dasharray: 6 4; }
   .schema .sch-head { fill: var(--sch-accent); }
-  .schema .sch-arrow { fill: var(--sch-line); }
+  .schema .sch-arrow { fill: var(--sch-fleche); }
   .schema .sch-arrow-accent { fill: var(--sch-accent); }
   .schema .sch-t { fill: var(--sch-text); font: 600 15px/1 var(--font-sans, system-ui, sans-serif); }
   .schema .sch-m { fill: var(--sch-muted); font: 400 13px/1 var(--font-sans, system-ui, sans-serif); }
@@ -99,11 +103,11 @@ const { id, legende } = Astro.props;
   /* flèche vers l'étape suivante : un trait et une pointe, sans texte lu */
   .schema .sch-suite > .sch-etape:not(:last-child)::before {
     content: ""; position: absolute; left: 50%; top: 100%; width: 2px; height: 1.1rem;
-    margin-left: -1px; margin-top: 0.15rem; background: var(--sch-line);
+    margin-left: -1px; margin-top: 0.15rem; background: var(--sch-fleche);
   }
   .schema .sch-suite > .sch-etape:not(:last-child)::after {
     content: ""; position: absolute; left: 50%; top: 100%; margin-left: -0.375rem; margin-top: 1.2rem;
-    border: 0.375rem solid transparent; border-top-color: var(--sch-line); border-bottom: 0;
+    border: 0.375rem solid transparent; border-top-color: var(--sch-fleche); border-bottom: 0;
   }
   .schema .sch-titre { display: block; color: var(--sch-text); font-weight: 600; font-size: 0.9375rem; }
   .schema .sch-detail { display: block; color: var(--sch-muted); font-size: 0.8125rem; margin-top: 0.25rem; }
