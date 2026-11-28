@@ -51,14 +51,29 @@ mention de confidentialité ; liens seulement vers une page du site qui existe o
 dans la semaine, une seule entrée par semaine. Une entrée refusée fait échouer le build. Tests :
 `tests/livre-de-bord.test.mjs` et `tests/livre-de-bord-page.e2e.test.mjs`. Lien dans le pied de page (`Footer.astro`).
 
-**Deux langues** (L108) : le site est en français aux adresses de toujours ; une page traduite a sa version
-anglaise sous `/en/` (i18n d'Astro dans `astro.config.mjs`, `prefixDefaultLocale: false`). Seule traduite à ce
-jour : `/en/case-studies/cadence/`. Le sélecteur de langue (`src/components/site/SelecteurLangue.astro`, posé
-par `BaseLayout.astro` sur chaque page) mène à l'autre version quand elle existe, sinon il dit « No English yet » ;
-la mise en page pose les liens `hreflang` (fr, en, x-default → français) des pages traduites. Sur une page sans traduction, « No English yet » est un lien vers `ENTREE_EN` (l'étude cadence en anglais). **Barre et pied** (L111) : leurs libellés vivent dans une source unique par langue, `frontend/src/lib/libelles-site.mjs` (jamais en dur dans `Navbar.vue` ni `Footer.astro`) ; sur /en/ ils sont en anglais, et un lien vers une page restée en français porte `hreflang="fr"` (`lienDans`). Tests : `tests/l111-libelles-site.test.mjs`, `tests/l111-barre-pied-langue.e2e.test.mjs` ; la barre anglaise est mesurée par `tests/l111-barre-anglaise.e2e.test.mjs` (même mesure que la française, `tests/lib/mesure-barre.mjs`). **Traduire une page** :
-ajouter son adresse française (barre finale) à `TRADUITES` dans `frontend/src/lib/langues.mjs`, puis créer la page
-sous `frontend/src/pages/en/` (mêmes chiffres, dates et sources, écrits à l'anglaise ; dates par `formatDayEn`).
-**Règle : une page française traduite qui change → sa page anglaise change dans le même lot.** Tests :
-`tests/l108-langues.test.mjs` (chaque adresse de `TRADUITES` a sa page) et `tests/l108-langues.e2e.test.mjs`
-(hreflang, sélecteur, mêmes nombres, liens externes et captures des deux versions, carte par carte) — ils ne voient
-pas une phrase sans chiffre ajoutée d'un seul côté : la règle reste à tenir à la main.
+**Deux langues** (L108, contenu partagé depuis L112) : le site est en français aux adresses de toujours, et **chaque
+page existe aussi sous `/en/`** (i18n d'Astro dans `astro.config.mjs`, `prefixDefaultLocale: false`). Une page traduite
+(adresse dans `TRADUITES` de `frontend/src/lib/langues.mjs`, à ce jour `/case-studies/cadence/`) a son texte anglais ;
+les autres sont servies sous `/en/` par la route générale `src/pages/en/[...page].astro` : texte français dans
+`<div lang="fr">`, bandeau « Not translated yet. », canonique vers la page française, aucun `hreflang` alternatif.
+**Un seul contrôle de langue, global, dans la barre** (`Navbar.vue`, `data-selecteur-langue` ; sur téléphone en tête
+du menu) : il mène à la même adresse dans l'autre langue (`autreLangue`), depuis la 404 à l'accueil de l'autre ; aucun
+sélecteur dans les pages. La 404 anglaise est construite en `dist/en/404.html` (intégration de `astro.config.mjs`),
+que Cloudflare Pages sert sous `/en/`. Le contenu d'un composant commun suit `langueDuContenu` (français sur une page
+non traduite), pas `Astro.currentLocale`. **Barre et pied** (L111) : leurs libellés vivent dans une source unique par
+langue, `frontend/src/lib/libelles-site.mjs` (jamais en dur dans `Navbar.vue` ni `Footer.astro`) ; sur /en/ ils sont
+en anglais, leurs liens restent sous /en/, et un lien vers une page restée en français porte `hreflang="fr"`
+(`lienDans`). La barre du bureau est pleine entre 64em et 80em : toute entrée ajoutée se mesure dans les deux langues
+(`tests/navbar.e2e.test.mjs`, `tests/l111-barre-anglaise.e2e.test.mjs`, mesure partagée `tests/lib/mesure-barre.mjs`).
+**Traduire une page** (contenu partagé, jamais une copie de la mise en page) : 1. déplacer sa mise en page dans
+`frontend/src/components/pages/<Page>.astro`, qui reçoit `langue` ; 2. ses textes courts dans un dictionnaire par
+langue (prolonger `libelles-site.mjs` ou un `src/contenus/<page>.mjs` `{ fr, en }`), ses textes longs dans
+`src/contenus/<page>/fr.ts` et `en.ts` (mêmes clés ; modèle : `etude-cadence/`) ; 3. réduire
+`src/pages/<page>.astro` et `src/pages/en/<page>.astro` à une enveloppe `<Page langue="fr|en" />` ; 4. ajouter
+l'adresse (barre finale) à `TRADUITES`. Chiffres, dates et sources identiques, écrits à l'anglaise (`formatDayEn`).
+**Règle : une page française traduite qui change → son texte anglais change dans le même lot.** Tests :
+`tests/l112-contenu-partage.test.mjs` (enveloppes seulement sous `src/pages/en/`, part de mise en page copiée ≤ 5 %,
+liste des pages sans anglais, mêmes clés fr/en), `tests/l112-langue-globale.e2e.test.mjs` (chaque page sous /en/,
+bandeau, contrôle unique, liens /en/, 404 anglaise, parcours au clic), `tests/l108-langues.test.mjs` et
+`tests/l108-langues.e2e.test.mjs` (hreflang, mêmes nombres, liens externes et captures des deux versions, carte par
+carte) — ils ne voient pas une phrase sans chiffre ajoutée d'un seul côté : la règle reste à tenir à la main.

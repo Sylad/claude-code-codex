@@ -74,7 +74,8 @@ test('R3 — une revue non conforme ramène à un run de correction (boucle revu
 });
 
 test('R4 — la règle d’escalade est écrite en entier près du schéma : Fable dès la 3e passe de correction ou après deux revues non conformes', () => {
-  const h = html();
+  // L112 : le titre vient des textes de la page (src/contenus/etude-cadence/), l'apostrophe sort en entité
+  const h = html().replace(/&#39;/g, "'");
   const avant = plain(h.slice(h.indexOf("Le parcours d'un lot dans cadence 2"), h.indexOf('data-schema="parcours-v2"')));
   assert.match(avant, /troisième passe de correction/);
   assert.match(avant, /deux revues non conformes/);

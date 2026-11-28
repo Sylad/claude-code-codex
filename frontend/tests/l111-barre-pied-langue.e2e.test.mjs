@@ -1,5 +1,5 @@
 // L111 — suites de L108. Critères de la consigne du lot : barre et pied en anglais sur chaque page /en/, en
-// français ailleurs ; « No English yet » (accueil, /case-studies/) mène à l'étude cadence en anglais ;
+// français ailleurs ; (L112) le contrôle de langue de la barre mène à la même page sous /en/ ;
 // « (in French) » sur la citation de l'étape 7 du schéma du livreur ; aucun débord à 320 et 1440 px.
 // Les attentes sont lues dans la source des libellés (src/lib/libelles-site.mjs). Lit dist : build avant.
 import test from 'node:test';
@@ -8,7 +8,7 @@ import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { DIST, setupBrowser, pageReady } from './lib/e2e-dist.mjs';
 import { LIBELLES } from '../src/lib/libelles-site.mjs';
-import { ENTREE_EN } from '../src/lib/langues.mjs';
+import { CODES, NOMS } from '../src/lib/langues.mjs';
 import { SEEN_KEY, OLD_VISIT } from './lib/mesure-barre.mjs';
 
 const EN = '/en/case-studies/cadence/';
@@ -51,7 +51,8 @@ test('B1 — chaque page construite : barre et pied dans la langue de la page (a
     const header = plain(entre(html, '<header', '</header>'));
     const footer = plain(entre(html, '<footer', '</footer>'));
     const a = attendus(langue);
-    assert.equal(header, `claude-code-codex ${a.barre.join(' ')}`, `${url} : barre`);
+    // L112 : la barre finit par le contrôle de langue, le code de l'autre langue (« EN » sur une page française)
+    assert.equal(header, `claude-code-codex ${a.barre.join(' ')} ${CODES[autre]}`, `${url} : barre`);
     for (const t of a.pied) assert.ok(footer.includes(t), `${url} : pied sans « ${t} »`);
     // rien de l'autre langue qui ne soit pas aussi dans celle-ci
     const b = attendus(autre);
@@ -67,18 +68,27 @@ test('B1 — chaque page construite : barre et pied dans la langue de la page (a
   }
 });
 
-test('B2 — sur une page anglaise, un lien vers une page qui n’existe qu’en français le dit (hreflang="fr") ; les liens vers une page traduite vont à /en/', () => {
+test('B2 — sur une page anglaise, les liens de la barre et du pied restent sous /en/ (L112) ; un lien vers une page au texte encore français le dit (hreflang="fr")', () => {
   const html = readFileSync(join(DIST, EN, 'index.html'), 'utf8');
   for (const zone of [entre(html, '<header', '</header>'), entre(html, '<footer', '</footer>')]) {
     for (const [, attrs] of zone.matchAll(/<a\b([^>]*)>/g)) {
       const href = attrs.match(/href="([^"]+)"/)?.[1];
       if (!href || href.startsWith('http')) continue;
-      if (href.startsWith('/en/')) assert.ok(existsSync(join(DIST, href, 'index.html')), `${href} : page absente`);
+      if (/data-selecteur-langue/.test(attrs)) {
+        assert.equal(href, '/case-studies/cadence/', 'contrôle de langue : la même page en français');
+        continue;
+      }
+      assert.ok(href.startsWith('/en/'), `${href} : lien de la barre ou du pied hors de /en/`);
+      assert.ok(existsSync(join(DIST, href, 'index.html')), `${href} : page absente`);
+      const traduite = href === EN;
+      if (traduite) assert.doesNotMatch(attrs, /hreflang=/, `${href} : page traduite`);
       else assert.match(attrs, /hreflang="fr"/, `${href} sans hreflang="fr"`);
     }
   }
   const fr = readFileSync(join(DIST, 'about', 'index.html'), 'utf8');
-  assert.doesNotMatch(entre(fr, '<header', '</header>') + entre(fr, '<footer', '</footer>'), /hreflang=/, 'page française : aucun hreflang dans la barre ni le pied');
+  const zonesFr = entre(fr, '<header', '</header>') + entre(fr, '<footer', '</footer>');
+  // page française : un seul hreflang, celui du contrôle de langue (vers la page anglaise)
+  assert.deepEqual([...zonesFr.matchAll(/hreflang="(\w+)"/g)].map((m) => m[1]), ['en'], 'page française : hreflang hors du contrôle de langue');
 });
 
 test('B3 — « (in French) » sur la citation de l’étape 7 du schéma du livreur (dessin et liste)', () => {
@@ -90,8 +100,7 @@ test('B3 — « (in French) » sur la citation de l’étape 7 du schéma du liv
   assert.doesNotMatch(fr, /in French/, 'la page française ne change pas');
 });
 
-test('B4 — « No English yet » (accueil, /case-studies/) est un lien vers l’étude cadence en anglais, et y mène', async (t) => {
-  assert.equal(ENTREE_EN, EN);
+test('B4 — le contrôle de langue de la barre (accueil, /case-studies/) mène à la même page sous /en/, puis retour ; la barre suit la langue', async (t) => {
   const env = await setupBrowser(t);
   if (!env) return;
   for (const url of ['/', '/case-studies/']) {
@@ -99,23 +108,21 @@ test('B4 — « No English yet » (accueil, /case-studies/) est un lien vers l�
     const page = await context.newPage();
     await page.goto(`${env.base}${url}`, { waitUntil: 'load' });
     await pageReady(page);
-    const lien = page.locator('[data-selecteur-langue] a[data-langue-absente="en"]');
-    assert.equal(await lien.count(), 1, `${url} : pas de lien « No English yet »`);
-    assert.equal((await lien.textContent()).trim(), 'No English yet');
-    assert.equal(await lien.getAttribute('href'), EN);
+    const lien = page.locator('header a[data-selecteur-langue]');
+    assert.equal(await lien.count(), 1, `${url} : pas de contrôle de langue dans la barre`);
+    assert.equal((await lien.textContent()).trim(), CODES.en);
+    assert.equal(await lien.getAttribute('href'), `/en${url}`);
     const nom = await lien.getAttribute('aria-label');
-    assert.ok(nom.startsWith('No English yet') && /cadence/.test(nom), `${url} : nom accessible « ${nom} »`);
-    const b = await lien.boundingBox();
-    assert.ok(b.height >= 44 && b.width >= 44, `${url} : cible ${b.width}×${b.height}`);
+    assert.ok(nom.startsWith(CODES.en) && nom.includes(NOMS.en), `${url} : nom accessible « ${nom} »`);
     await lien.click();
-    await page.waitForURL(`${env.base}${EN}`);
+    await page.waitForURL(`${env.base}/en${url}`);
     await pageReady(page);
     // après la navigation (routeur des transitions), la barre est celle de la page anglaise
     await page.waitForFunction((t) => document.querySelector('header ul a')?.textContent.trim() === t, LIBELLES.en.barre[0].label);
     assert.equal(await page.locator('html').getAttribute('lang'), 'en');
     // et le retour au français rend la barre française
-    await page.click('[data-selecteur-langue] a[data-langue="fr"]');
-    await page.waitForURL(`${env.base}/case-studies/cadence/`);
+    await page.click('header a[data-selecteur-langue][data-langue="fr"]');
+    await page.waitForURL(`${env.base}${url}`);
     await page.waitForFunction((t) => document.querySelector('header ul a')?.textContent.trim() === t, LIBELLES.fr.barre[0].label);
     await context.close();
   }
@@ -139,7 +146,8 @@ test('B5 — menu du téléphone en anglais sur /en/ (nom du bouton, liens), en 
       c.querySelectorAll('.news-badge, .sr-only').forEach((x) => x.remove());
       return c.textContent.trim();
     }));
-    const a = [...L.barre.flatMap((l) => (l.children ? [l.label, ...l.children.map((c) => c.label)] : [l.label])), ...L.telephone.map((l) => l.label)];
+    // L112 : le menu commence par le contrôle de langue (intitulé, puis le nom de l'autre langue)
+    const a = [L.langue, NOMS[langue === 'en' ? 'fr' : 'en'], ...L.barre.flatMap((l) => (l.children ? [l.label, ...l.children.map((c) => c.label)] : [l.label])), ...L.telephone.map((l) => l.label)];
     assert.deepEqual(textes, a, `${url} : menu du téléphone`);
     await context.close();
   }
@@ -157,7 +165,7 @@ test('B6 — aucun débord à 320 et 1440 px (page, barre, pied, sélecteur), an
       await pageReady(page);
       const m = await page.evaluate(() => {
         const deborde = (e) => (e ? e.scrollWidth - e.clientWidth : 0);
-        const horsEcran = [...document.querySelectorAll('header a, header button, footer a, [data-selecteur-langue] a, [data-selecteur-langue] span')]
+        const horsEcran = [...document.querySelectorAll('header a, header button, footer a')]
           .filter((e) => getComputedStyle(e).display !== 'none' && e.getBoundingClientRect().width > 0)
           .filter((e) => { const r = e.getBoundingClientRect(); return r.left < 0 || r.right > innerWidth; })
           .map((e) => e.textContent.trim() || e.getAttribute('aria-label'));

@@ -1,8 +1,25 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 
+import { renameSync, rmdirSync, existsSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import vue from '@astrojs/vue';
 import tailwindcss from '@tailwindcss/vite';
+
+// L112 — la 404 anglaise (src/pages/en/404.astro) sort en dist/en/404/index.html : Cloudflare Pages sert le
+// 404.html le plus proche de l'adresse demandée (dist/en/404.html pour une adresse inconnue sous /en/).
+const page404Anglaise = {
+  name: 'page-404-anglaise',
+  hooks: {
+    'astro:build:done': ({ dir }) => {
+      const racine = fileURLToPath(dir);
+      const source = `${racine}en/404/index.html`;
+      if (!existsSync(source)) return;
+      renameSync(source, `${racine}en/404.html`);
+      rmdirSync(`${racine}en/404`);
+    },
+  },
+};
 
 // https://astro.build/config
 export default defineConfig({
@@ -17,7 +34,7 @@ export default defineConfig({
     defaultLocale: 'fr',
     routing: { prefixDefaultLocale: false },
   },
-  integrations: [vue()],
+  integrations: [vue(), page404Anglaise],
   vite: {
     plugins: [tailwindcss()],
     build: {

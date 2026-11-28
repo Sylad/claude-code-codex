@@ -19,7 +19,7 @@ classe et une source, décomptes exacts).
 | faux | 7 |
 | dépassé | 30 |
 | non sourcé | 23 |
-| ok | 61 |
+| ok | 63 |
 
 ## Ce qui a été vérifié, et ce qui ne l'a pas été
 
@@ -111,6 +111,14 @@ classe et une source, décomptes exacts).
 - **ok** — (L93) « Le problème de la V1 » : ×3,8 en temps (199 contre 52 min) et ×4,5 en jetons (5,7 M contre 1,27 M), 12 interventions contre 0, causes C1 à C5, quatre mesurées et C2 seulement décrite (« B écrit en Sonnet, plusieurs sessions par lot », sans chiffre) ; chaque décision de cadence 2 nomme la cause à laquelle elle répond, d'après la colonne « Contre-mesure v2 » (source : `cadence/docs/v2/2026-11-07-cadence-2-design.md` §0)
 - **ok** — (L93) lot moyen de la V1 : 25 min et 266 k jetons sur 721 lots, tests 62 % d'une session, suite 4,6 fois par lot, revue 42 % et corrections 41 % des jetons (source : `cadence/docs/mesures/temps-d-un-lot.md`, relevé du 01-11-2026)
 - **ok** — (L93) décisions de cadence 2 et effets : banc en trois niveaux (plus de 5 h le 13-11, micro ≈ 8 min, mécanique ≈ 30 min visées), critère de temps 4 rouges sur 9 entre bras identiques, encore 3 avec la règle livrée en 2.0.10 (médiane des dernières paires, correctif L738), 1 si le passage jugé est laissé hors du calcul — le « 0 » de la ligne L737 du CHANGELOG est l'étape intermédiaire, corrigé le 24-11 —, contexte allégé 64 844 → 57 653 jetons (−11,1 %, 0,12 $ par lot, −5,0 %), livreur sur Sonnet sans résultat publié, 11 404 lignes des vagues (source : `cadence/docs/v2/banc.md` (mesure L737/L738), CHANGELOG 2.0.10, `docs/mesures/socle-session-2026-11-11.md`, `docs/mesures/modele-agents-l757.md`, `docs/etudes/retrait-vagues.md` ; chaque nombre vérifié à sa place, dans sa carte et dans un passage cité mot pour mot de sa source, par `tests/l93-cadence-v1.e2e.test.mjs` R7)
+
+## `/en/404`
+
+- **ok** — (L112, 28-11) page introuvable en anglais, mêmes textes que `/404` traduits (`frontend/src/contenus/page-404.mjs`) ; construite en `dist/en/404.html`, Cloudflare Pages sert le `404.html` le plus proche de l'adresse demandée, donc celui-ci sous `/en/` avec le statut 404 (source : documentation Cloudflare Pages, « Serving Pages », comportement Not Found ; `frontend/tests/l112-langue-globale.e2e.test.mjs` G4)
+
+## `/en/[...page]`
+
+- **ok** — (L112, 28-11) version `/en/` de chaque page encore sans traduction : le texte est celui de la page française, déclaré `lang="fr"`, sous le bandeau « Not translated yet. » ; aucune affirmation propre à cette route (source : la page française de même adresse ; `frontend/tests/l112-langue-globale.e2e.test.mjs` G1)
 
 ## `/en/case-studies/cadence`
 

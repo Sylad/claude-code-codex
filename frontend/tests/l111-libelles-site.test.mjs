@@ -5,7 +5,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { LIBELLES, libelles, lienDans } from '../src/lib/libelles-site.mjs';
-import { ENTREE_EN, TRADUITES } from '../src/lib/langues.mjs';
+import { TRADUITES } from '../src/lib/langues.mjs';
 
 /** Squelette d'un jeu de libellés : clés et adresses, sans le texte. */
 const ADRESSE = new Set(['href', 'id']);
@@ -38,14 +38,14 @@ test('R2 — les libellés anglais sont en anglais (aucun mot français courant 
   assert.equal(libelles('xx'), LIBELLES.fr, 'langue inconnue : français');
 });
 
-test('R3 — un lien mène à la version anglaise quand elle existe, sinon à la page française (annoncée)', () => {
+test('R3 — sur une page anglaise, un lien reste sous /en/ (L112) ; sa langue dit si la page visée est traduite', () => {
   for (const p of TRADUITES) {
     assert.deepEqual(lienDans(p, 'en'), { href: `/en${p}`, langue: 'en' });
     assert.deepEqual(lienDans(p, 'fr'), { href: p, langue: 'fr' });
   }
-  assert.deepEqual(lienDans('/about', 'en'), { href: '/about', langue: 'fr' });
+  assert.deepEqual(lienDans('/about', 'en'), { href: '/en/about/', langue: 'fr' });
+  assert.deepEqual(lienDans('/', 'en'), { href: '/en/', langue: 'fr' });
   assert.deepEqual(lienDans('/about', 'fr'), { href: '/about', langue: 'fr' });
-  assert.ok(TRADUITES.some((p) => `/en${p}` === ENTREE_EN), '« No English yet » doit mener à une page traduite');
 });
 
 test('R4 — la barre et le pied n’écrivent aucun libellé en dur : ils lisent la source unique', () => {

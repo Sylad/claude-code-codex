@@ -24,8 +24,9 @@ function serveDist() {
     if (existsSync(file) && statSync(file).isDirectory()) file = join(file, 'index.html');
     // L28 — comme Cloudflare Pages : une adresse inconnue reçoit le 404.html de la racine, avec le statut 404
     // (sans 404.html, Pages servirait l'accueil en 200 ; ici, réponse vide en 404).
+    // L112 — Pages sert le 404.html le plus proche : dist/en/404.html sous /en/.
     if (!existsSync(file)) {
-      const page404 = join(DIST, '404.html');
+      const page404 = path.startsWith('/en/') && existsSync(join(DIST, 'en', '404.html')) ? join(DIST, 'en', '404.html') : join(DIST, '404.html');
       if (!existsSync(page404)) { res.writeHead(404).end(); return; }
       res.writeHead(404, { 'content-type': TYPES['.html'] }).end(readFileSync(page404));
       return;

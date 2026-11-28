@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed } from "vue";
-import { Menu, X, BookOpenText, ChevronDown } from "lucide-vue-next";
+import { Menu, X, BookOpenText, ChevronDown, Languages } from "lucide-vue-next";
 import {
   NEWS_SEEN_EVENT,
   badgeLabel,
@@ -10,11 +10,14 @@ import {
   readSeen,
 } from "@/lib/news-badge";
 import { libelles, lienDans } from "@/lib/libelles-site.mjs";
+import { CODES, NOMS } from "@/lib/langues.mjs";
 
 const props = defineProps<{
   pathname: string;
   /** L111 : langue de la page (« en » sous /en/), celle des libellés. */
   langue?: "fr" | "en";
+  /** L112 : cible du contrôle de langue unique (la même page dans l'autre langue, langues.mjs `autreLangue`). */
+  autre?: { langue: "fr" | "en"; href: string };
   news?: { slug: string; date: string }[];
 }>();
 
@@ -52,6 +55,12 @@ function hreflangDe(href: string) {
   const l = lien(href).langue;
   return l === (props.langue ?? "fr") ? undefined : l;
 }
+
+// L112 (D-6, D-7) — un seul contrôle de langue, global, dans la barre (et dans le menu du téléphone) :
+// la même page dans l'autre langue. Texte : le code (bureau) ou le nom (téléphone) de cette langue, écrit
+// dans cette langue (lang + hreflang) ; nom accessible « EN — English », qui commence par le texte visible.
+const autre = computed(() => props.autre ?? (props.langue === "en" ? { langue: "fr" as const, href: props.pathname } : { langue: "en" as const, href: `/en${props.pathname}` }));
+const autreNom = computed(() => `${CODES[autre.value.langue]} — ${NOMS[autre.value.langue]}`);
 
 const open = ref(false);
 const scrolled = ref(false);
@@ -175,7 +184,7 @@ const panelId = (id: string) => `panneau-${id}`;
         </span>
       </a>
 
-      <ul class="hidden lg:flex min-w-0 items-center gap-0.5 ml-4">
+      <ul class="hidden lg:flex min-w-0 items-center gap-0.5 ml-1">
         <template v-for="link in links" :key="link.label">
           <!-- Lien simple -->
           <li v-if="'href' in link">
@@ -185,7 +194,7 @@ const panelId = (id: string) => `panneau-${id}`;
               :aria-current="isActive(link.href, props.pathname) ? 'page' : undefined"
               :class="[
                 // Pointeur grossier (tablette en paysage, barre affichée) : cible de 44 px.
-                'relative inline-flex items-center pointer-coarse:min-h-11 whitespace-nowrap px-2 xl:px-2.5 py-2 text-sm rounded-md transition-colors motion-safe:active:scale-95',
+                'relative inline-flex items-center pointer-coarse:min-h-11 whitespace-nowrap px-1.5 xl:px-2.5 py-2 text-sm rounded-md transition-colors motion-safe:active:scale-95',
                 isActive(link.href, props.pathname)
                   ? 'text-claude bg-claude/10'
                   : 'text-ink-muted hover:text-ink hover:bg-white/5',
@@ -216,7 +225,7 @@ const panelId = (id: string) => `panneau-${id}`;
             <button
               type="button"
               :class="[
-                'flex items-center gap-1 cursor-pointer pointer-coarse:min-h-11 whitespace-nowrap px-2 xl:px-2.5 py-2 text-sm rounded-md transition-colors motion-safe:active:scale-95',
+                'flex items-center gap-1 cursor-pointer pointer-coarse:min-h-11 whitespace-nowrap px-1.5 xl:px-2.5 py-2 text-sm rounded-md transition-colors motion-safe:active:scale-95',
                 isGroupActive(link.children, props.pathname)
                   ? 'text-claude bg-claude/10'
                   : 'text-ink-muted hover:text-ink hover:bg-white/5',
@@ -260,6 +269,23 @@ const panelId = (id: string) => `panneau-${id}`;
             </div>
           </li>
         </template>
+        <!-- L112 : contrôle de langue unique du site. La barre est pleine entre 64em et 80em (mesurée par
+             navbar.e2e et l111-barre-anglaise) : l'icône ne s'y affiche qu'à partir de xl, et chaque entrée
+             garde 6 px de retrait au lieu de 8 : la barre garde la même marge à droite qu'à gauche. -->
+        <li class="ml-0.5">
+          <a
+            :href="autre.href"
+            :hreflang="autre.langue"
+            :lang="autre.langue"
+            :data-langue="autre.langue"
+            data-selecteur-langue
+            :aria-label="autreNom"
+            class="inline-flex items-center gap-1 pointer-coarse:min-h-11 whitespace-nowrap px-1.5 xl:px-2 py-2 text-sm rounded-md border border-white/10 text-ink-muted hover:text-ink hover:border-claude/40 hover:bg-white/5 transition-colors motion-safe:active:scale-95"
+          >
+            <Languages :size="14" aria-hidden="true" class="hidden xl:block" />
+            {{ CODES[autre.langue] }}
+          </a>
+        </li>
       </ul>
 
       <button
@@ -302,6 +328,23 @@ const panelId = (id: string) => `panneau-${id}`;
         class="lg:hidden border-t border-white/5 bg-paper max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain"
       >
         <ul class="px-borne-5 py-4 flex flex-col gap-1">
+          <!-- L112 : le contrôle de langue en tête du menu, visible dès l'ouverture (pas sous le pli). -->
+          <li class="mb-2 border-b border-white/5 pb-2">
+            <div class="px-3 pt-1 pb-1 text-xs uppercase tracking-wider text-ink-muted">{{ L.langue }}</div>
+            <a
+              :href="autre.href"
+              :hreflang="autre.langue"
+              :lang="autre.langue"
+              :data-langue="autre.langue"
+              data-selecteur-langue
+              :aria-label="autreNom"
+              class="flex items-center gap-2 px-3 py-3 rounded-md text-base text-ink-muted hover:text-ink hover:bg-white/5 transition-colors"
+              @click="open = false"
+            >
+              <Languages :size="16" aria-hidden="true" />
+              {{ NOMS[autre.langue] }}
+            </a>
+          </li>
           <template v-for="link in links" :key="link.label">
             <li v-if="'href' in link">
               <a

@@ -1,0 +1,280 @@
+---
+/*
+  L112 — l'étude de cas de cadence, une seule mise en page pour ses deux langues. Les routes
+  src/pages/case-studies/cadence.astro et src/pages/en/case-studies/cadence.astro ne font que l'envelopper
+  avec leur langue ; les textes vivent dans src/contenus/etude-cadence/ (fr.ts, en.ts, mêmes clés), les
+  adresses du dépôt et les fichiers sources dans commun.ts.
+  Histoire de la page : L19 (étude), L33 (lead, mémoire, bande cadence-hud), L93 (chapitre « Le problème de
+  la V1 », data-nombres / data-source vérifiés par tests/l93-cadence-v1.e2e.test.mjs, version française
+  seulement), L103 (parcours cadence 2), L104 (schémas en une source), L108 (version anglaise).
+*/
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import RetourEtudes from "@/components/site/RetourEtudes.astro";
+import EtudeFraicheur from "@/components/site/EtudeFraicheur.astro";
+import CaseStudySection from "@/components/site/CaseStudySection.astro";
+import Schema from "@/components/site/Schema.astro";
+import StepChain from "@/components/site/StepChain.astro";
+import Callout from "@/components/site/Callout.astro";
+import SchemaPlanCommits from "@/components/site/cadence/SchemaPlanCommits.astro";
+import SchemaLeadCreneaux from "@/components/site/cadence/SchemaLeadCreneaux.astro";
+import SchemaMemoire from "@/components/site/cadence/SchemaMemoire.astro";
+import { inlineCodeHtml } from "@/lib/inline-code.mjs";
+import { CADENCE, NPM, DESIGN, doc } from "@/contenus/etude-cadence/commun";
+import { FR } from "@/contenus/etude-cadence/fr";
+import { EN } from "@/contenus/etude-cadence/en";
+
+interface Props {
+  langue: "fr" | "en";
+}
+
+const T = Astro.props.langue === "en" ? EN : FR;
+const { insecable } = T;
+const { PLAN_COMMITS, parcours, parcoursV2, livreur, LEAD, MEMOIRE, pieces, chiffres, echecs, v1Mesures, v1Causes, v2Decisions } = T.donnees;
+const M = T.methode;
+const P = T.problemeV1;
+
+const CODE = "[&_code]:font-mono [&_code]:text-claude-soft [&_code]:text-[0.9em] [&_code]:px-1 [&_code]:rounded [&_code]:bg-white/5";
+const H3 = "text-lg font-medium text-ink pt-2";
+const PUCE = "mt-2 inline-block w-1 h-1 rounded-full bg-claude shrink-0";
+const PASTILLE = "inline-flex items-center gap-1 px-2.5 py-1 rounded border border-white/10 hover:border-claude/40 text-ink-muted hover:text-claude transition-colors";
+---
+
+<BaseLayout title={T.page.title} description={T.page.description}>
+  <PageHero eyebrow={T.hero.eyebrow} title={T.hero.title} intro={T.hero.intro} />
+
+  <section class="mx-auto max-w-3xl px-borne-5 sm:px-8 py-12 space-y-12">
+    <EtudeFraicheur depots={[{ nom: "Sylad/cadence", href: "https://github.com/Sylad/cadence" }]} date="2026-11-27" />
+
+    <CaseStudySection eyebrow={T.probleme.eyebrow}>
+      <h3 data-intertitre class={H3}>{T.probleme.h1}</h3>
+      <p set:html={T.probleme.p1} />
+      <h3 data-intertitre class={H3}>{T.probleme.h2}</h3>
+      <p set:html={T.probleme.p2} />
+      <Callout titre={T.probleme.principeTitre}>
+        <p set:html={T.probleme.principe} />
+      </Callout>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow={M.eyebrow}>
+      <h3 data-intertitre class={H3}>{M.piecesTitre}</h3>
+      <p set:html={M.piecesIntro} />
+      <p data-v1-note set:html={M.piecesV1} />
+      <ol class="grid gap-3 sm:grid-cols-2">
+        {pieces.map((p, i) => (
+          <li class="rounded-xl border border-white/10 bg-paper-elevated p-borne-5">
+            <p class="font-mono text-xs text-claude mb-2">
+              {String(i + 1).padStart(2, "0")}
+              {p.v1 && <span data-v1-badge class="ml-2 rounded border border-white/15 px-1.5 py-0.5 text-ink-muted">{M.v1Seulement}</span>}
+            </p>
+            <h3 class="text-base font-medium text-ink mb-1.5">{p.nom}</h3>
+            <p class={`text-sm text-ink-muted leading-relaxed [overflow-wrap:anywhere] ${CODE}`} set:html={inlineCodeHtml(p.corps)} />
+            <p class="mt-3 font-mono text-[0.6875rem] text-ink-muted">
+              <a href={doc(p.doc)} target="_blank" rel="noopener">↗ {p.doc}</a>
+            </p>
+          </li>
+        ))}
+      </ol>
+      <h3 data-intertitre class={H3}>{M.planTitre}</h3>
+      <p set:html={M.planIntro} />
+      <div class="-mx-borne-5 sm:mx-0">
+        <SchemaPlanCommits data={PLAN_COMMITS} titre={M.planSchema.titre} desc={M.planSchema.desc} legende={M.planSchema.legende} />
+      </div>
+
+      <h3 data-intertitre class={H3}>{M.parcoursTitre}</h3>
+      <p set:html={M.parcoursP1} />
+      <p set:html={M.parcoursP2} />
+      <div class="-mx-borne-5 sm:mx-0">
+        <Schema id="parcours-v2" legende={M.parcoursSchema.legende}>
+          <StepChain
+            id="parcours-v2"
+            steps={parcoursV2}
+            boucle={{ de: 3, vers: 1, nom: "revue-correction", mot: M.parcoursSchema.boucle }}
+            titre={M.parcoursSchema.titre}
+            desc={M.parcoursSchema.desc}
+          />
+        </Schema>
+      </div>
+      <Callout titre={M.retenirTitre}>
+        <p set:html={M.retenir} />
+      </Callout>
+
+      <h3 data-intertitre class={H3}>{M.livraisonTitre}</h3>
+      <p set:html={M.livraison} />
+      <div class="-mx-borne-5 sm:mx-0">
+        <Schema id="chaine-livreur" legende={M.livreurSchema.legende}>
+          <StepChain id="chaine-livreur" steps={livreur} titre={M.livreurSchema.titre} desc={M.livreurSchema.desc} />
+        </Schema>
+      </div>
+      <figure data-capture="panneau-lots" class="rounded-xl border border-white/10 bg-paper-elevated p-3">
+        <img
+          src="/case-studies/cadence-panneau-lots.png"
+          alt={M.panneauAlt}
+          width="705"
+          height="615"
+          loading="lazy"
+          class="w-full h-auto rounded-lg"
+        />
+        <figcaption class="mt-2 text-xs text-ink-muted leading-relaxed">{M.panneauLegende}</figcaption>
+      </figure>
+
+      <h3 data-intertitre class={H3}>{M.leadTitre}</h3>
+      <p set:html={M.lead} />
+      <div class="-mx-borne-5 sm:mx-0">
+        <SchemaLeadCreneaux data={LEAD} titre={M.leadSchema.titre} desc={M.leadSchema.desc} legende={M.leadSchema.legende} />
+      </div>
+      <figure data-capture="bande-hud" class="rounded-xl border border-white/10 bg-paper-elevated p-3">
+        <a href="/case-studies/cadence-hud-bande-2026-10-08.png" target="_blank" rel="noopener" class="block">
+          <img
+            src="/case-studies/cadence-hud-bande-2026-10-08.png"
+            alt={M.hudAlt}
+            width="768"
+            height="146"
+            loading="lazy"
+            class="w-full h-auto rounded-lg"
+          />
+        </a>
+        <figcaption class="mt-2 text-xs text-ink-muted leading-relaxed" set:html={M.hudLegende} />
+      </figure>
+
+      <h3 data-intertitre class={H3}>{M.memoireTitre}</h3>
+      <p set:html={M.memoire} />
+      <div class="-mx-borne-5 sm:mx-0">
+        <SchemaMemoire data={MEMOIRE} titre={M.memoireSchema.titre} desc={M.memoireSchema.desc} legende={M.memoireSchema.legende} />
+      </div>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow={T.depart.eyebrow} id="le-point-de-depart">
+      <div data-historique="v1" class="space-y-4 border-t border-dashed border-white/20 pt-borne-5 sm:rounded-xl sm:border sm:p-borne-5">
+        <p data-historique-date class="font-mono text-xs text-ink-muted">{T.depart.date}</p>
+        <h3 data-intertitre class={H3}>{T.depart.titre}</h3>
+        <p set:html={T.depart.texte} />
+        <div class="-mx-borne-5 sm:mx-0">
+          <Schema id="parcours-lot" legende={T.depart.schema.legende}>
+            <p data-schema-titre class="mb-3 text-sm font-semibold leading-snug text-[var(--sch-text)]">{T.depart.schema.titre}</p>
+            <StepChain
+              id="parcours-lot"
+              steps={parcours}
+              boucle={{ de: 3, vers: 2, nom: "correction-revue", mot: T.depart.schema.boucle }}
+              titre={T.depart.schema.titre}
+              desc={T.depart.schema.desc}
+            />
+          </Schema>
+        </div>
+        <p class="font-mono text-[0.6875rem] text-ink-muted">
+          <a href={doc("docs/orchestrate.md")} target="_blank" rel="noopener">↗ docs/orchestrate.md</a> {T.depart.docVagues}
+        </p>
+      </div>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow={T.chiffresV1.eyebrow}>
+      <p data-v1-note set:html={T.chiffresV1.note} />
+      <p set:html={T.chiffresV1.intro} />
+      <dl class="grid gap-3 sm:grid-cols-2">
+        {chiffres.map((c) => (
+          <div class="rounded-xl border border-white/10 bg-paper-elevated p-borne-5">
+            <dt class="font-mono text-lg text-claude">{c.valeur}</dt>
+            <dd class="mt-2 text-sm text-ink-muted leading-relaxed [overflow-wrap:anywhere]">
+              <span class={CODE} set:html={inlineCodeHtml(c.legende)} />
+              <span class="mt-2 block font-mono text-[0.6875rem] text-ink-muted">{T.chiffresV1.source} {c.source}</span>
+            </dd>
+          </div>
+        ))}
+      </dl>
+      <p class="text-sm text-ink-muted rounded-xl border border-white/10 bg-paper-elevated p-borne-5" set:html={T.chiffresV1.limite} />
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow={T.echecsV1.eyebrow}>
+      <p set:html={T.echecsV1.intro} />
+      <ul class="space-y-4 list-none">
+        {echecs.map((e) => (
+          <li data-echec={e.id} class="rounded-xl border border-white/10 bg-paper-elevated p-borne-5">
+            <h3 class="text-base font-medium text-ink mb-1.5">{e.titre}</h3>
+            <p class={`text-sm text-ink-muted leading-relaxed [overflow-wrap:anywhere] ${CODE}`} set:html={inlineCodeHtml(e.corps)} />
+            <p class="mt-3 text-sm text-ink leading-relaxed">
+              <strong>{T.echecsV1.change}</strong> <span class={CODE} set:html={inlineCodeHtml(e.change)} />
+            </p>
+          </li>
+        ))}
+      </ul>
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow={P.eyebrow} id="le-probleme-de-la-v1">
+      <h3 data-intertitre class={H3}>{P.essaiTitre}</h3>
+      <p set:html={P.essai} />
+      <div class="grid gap-3 sm:grid-cols-2">
+        {v1Mesures.map((m) => (
+          <div data-v1-chiffre={m.id} data-nombres={m.nombres} data-source={m.source} data-passages={m.passages ? JSON.stringify(m.passages) : undefined} class="rounded-xl border border-white/10 bg-paper-elevated p-borne-5">
+            <p class="font-mono text-lg text-claude">{insecable(m.valeur)}</p>
+            <p class="mt-1 font-mono text-xs text-ink-muted">{insecable(m.quand)}</p>
+            <p class="mt-2 text-sm text-ink-muted leading-relaxed">{insecable(m.legende)}</p>
+            <p class="mt-2 font-mono text-[0.6875rem] text-ink-muted [overflow-wrap:anywhere]">
+              {P.source} <a href={doc(m.source)} target="_blank" rel="noopener">↗ {m.source}</a>
+            </p>
+          </div>
+        ))}
+      </div>
+
+      <h3 data-intertitre class={H3}>{P.causesTitre}</h3>
+      <p set:html={P.causes} />
+      <ul class="space-y-3 list-none">
+        {v1Causes.map((c) => (
+          <li data-v1-cause={c.id} data-nombres={c.nombres || undefined} data-source={DESIGN} data-passages={c.nombres ? JSON.stringify(c.passages) : undefined} class="rounded-xl border border-white/10 bg-paper-elevated p-borne-5">
+            <p class="font-mono text-xs text-claude mb-2">{c.id}</p>
+            <h4 class="text-base font-medium text-ink mb-1.5">{c.titre}</h4>
+            <p class="text-sm text-ink-muted leading-relaxed">{insecable(c.corps)}</p>
+            {!c.mesuree && <p class="mt-2 text-xs text-ink-muted"><strong>{P.decrite}</strong></p>}
+          </li>
+        ))}
+      </ul>
+      <Callout titre={P.laisseTitre}>
+        <p set:html={P.laisse} />
+      </Callout>
+
+      <h3 data-intertitre class={H3}>{P.decisionsTitre}</h3>
+      <p set:html={P.decisions} />
+      <ul class="space-y-4 list-none">
+        {v2Decisions.map((d) => (
+          <li data-v2-decision={d.id} data-causes={d.causes.join(" ")} class="rounded-xl border border-white/10 bg-paper-elevated p-borne-5">
+            <h4 class="text-base font-medium text-ink mb-1">{d.titre}</h4>
+            <p data-repond class="font-mono text-xs text-claude mb-2">{P.repond(d.causes)}</p>
+            <p class={`text-sm text-ink-muted leading-relaxed [overflow-wrap:anywhere] ${CODE}`} set:html={inlineCodeHtml(insecable(d.corps))} />
+            <p class="mt-3 text-sm text-ink leading-relaxed">
+              <strong>{d.mesure ? P.effetMesure : P.pasMesure}</strong>{" "}
+              {insecable(d.effet)}
+              {d.id === "run" && <> <Fragment set:html={P.preuvesBanc} /></>}
+            </p>
+            <ul class="mt-2 space-y-1 list-none">
+              {d.preuves.map((pr) => (
+                <li data-nombres={pr.nombres || undefined} data-source={pr.fichier} data-passages={pr.nombres ? JSON.stringify(pr.passages ?? []) : undefined} class="font-mono text-[0.6875rem] text-ink-muted [overflow-wrap:anywhere]">
+                  {P.source} <a href={doc(pr.fichier)} target="_blank" rel="noopener">↗ {pr.fichier}</a> ({insecable(pr.quand)})
+                </li>
+              ))}
+            </ul>
+          </li>
+        ))}
+      </ul>
+      <p class="text-sm text-ink-muted rounded-xl border border-white/10 bg-paper-elevated p-borne-5" set:html={P.manque} />
+    </CaseStudySection>
+
+    <CaseStudySection eyebrow={T.plusLoin.eyebrow}>
+      {T.plusLoin.note && <p class="text-sm text-ink-muted">{T.plusLoin.note}</p>}
+      <ul class="list-none space-y-2.5">
+        {T.plusLoin.liens.map((l) => (
+          <li class="flex gap-3">
+            <span class={PUCE}></span>
+            <span set:html={l} />
+          </li>
+        ))}
+      </ul>
+      <div class="mt-4 flex flex-wrap gap-3 text-xs">
+        <a href={CADENCE} target="_blank" rel="noopener" class={PASTILLE}>{T.plusLoin.depot}</a>
+        <a href={NPM} target="_blank" rel="noopener" class={PASTILLE}>{T.plusLoin.paquet}</a>
+        <a href={doc("CHANGELOG.md")} target="_blank" rel="noopener" class={PASTILLE}>{T.plusLoin.changelog}</a>
+        <a href={doc("docs/quickstart.md")} target="_blank" rel="noopener" class={PASTILLE}>{T.plusLoin.demarrage}</a>
+      </div>
+      <p class="text-center text-xs text-ink-muted font-mono rounded-xl border border-white/10 bg-paper-elevated p-borne-4">{T.plusLoin.releve}</p>
+    </CaseStudySection>
+  </section>
+  <RetourEtudes />
+</BaseLayout>

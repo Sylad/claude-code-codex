@@ -1,13 +1,14 @@
 /**
  * L111 — libellés de la barre de navigation et du pied de page, une source par langue. La barre
  * (Navbar.vue) et le pied (Footer.astro) n'existent qu'une fois : ils lisent `libelles(langue)`.
- * Les adresses sont les adresses françaises ; `lienDans` les mène à la version anglaise quand elle
- * existe (TRADUITES de langues.mjs), sinon à la page française (le lien porte alors hreflang="fr").
- * Pour L112 (site entier bilingue) : ajouter une page à TRADUITES suffit à faire pointer ses liens
- * de la barre et du pied vers sa version anglaise ; le sélecteur de langue pourra entrer ici.
+ * Les adresses sont les adresses françaises ; `lienDans` les mène, sur une page anglaise, à leur adresse
+ * sous /en/ (L112 : toute page y existe, traduite ou avec le bandeau « Not translated yet ») ; une page
+ * dont le texte n'est pas traduit est annoncée par hreflang="fr" (la langue de son contenu).
+ * L112 — le contrôle de langue unique de la barre lit `langue` (intitulé du groupe dans le menu du
+ * téléphone) ; son texte est le nom de l'autre langue, écrit dans cette langue (NOMS, CODES de langues.mjs).
  * Test : tests/l111-libelles-site.test.mjs (mêmes clés, mêmes adresses dans les deux langues).
  */
-import { TRADUITES, avecBarre } from './langues.mjs';
+import { avecBarre, traduite } from './langues.mjs';
 
 /** Texte d'un compte : vide à zéro, singulier à un, pluriel au-delà. */
 function compte(n, un, plusieurs) {
@@ -19,6 +20,9 @@ const FR = {
   accueil: 'Claude Code Codex — accueil',
   menuOuvrir: 'Ouvrir le menu',
   menuFermer: 'Fermer le menu',
+  langue: 'Langue',
+  /** Bandeau d'une page affichée dans l'autre langue faute de traduction (BaseLayout). */
+  nonTraduite: { titre: 'Pas encore traduite.', texte: 'Cette page est affichée dans sa version anglaise.' },
   /** @param {number} n */
   nonVues: (n) => compte(n, '1 nouveauté non vue', `${n} nouveautés non vues`),
   barre: [
@@ -82,6 +86,8 @@ const EN = {
   accueil: 'Claude Code Codex — home',
   menuOuvrir: 'Open the menu',
   menuFermer: 'Close the menu',
+  langue: 'Language',
+  nonTraduite: { titre: 'Not translated yet.', texte: 'This page is shown in its French version.' },
   nonVues: (n) => compte(n, '1 unseen update', `${n} unseen updates`),
   barre: [
     { href: '/start', label: 'Get started' },
@@ -146,13 +152,14 @@ export function libelles(langue) {
 }
 
 /**
- * Adresse d'un lien du site dans une langue : la version anglaise quand elle existe, sinon la page
- * française. `langue` du résultat dit la langue de la page visée (pour hreflang).
+ * Adresse d'un lien du site dans une langue : sur une page anglaise, l'adresse sous /en/ (les liens de la
+ * barre et du pied restent dans l'anglais, L112). `langue` du résultat dit la langue du texte de la page
+ * visée (pour hreflang) : « fr » tant qu'elle n'est pas traduite.
  * @param {string} href adresse française (sans /en)
  * @param {string} langue langue de la page qui affiche le lien
  * @returns {{ href: string, langue: 'fr'|'en' }}
  */
 export function lienDans(href, langue) {
-  if (langue === 'en' && TRADUITES.includes(avecBarre(href))) return { href: `/en${avecBarre(href)}`, langue: 'en' };
-  return { href, langue: 'fr' };
+  if (langue !== 'en') return { href, langue: 'fr' };
+  return { href: `/en${avecBarre(href)}`, langue: traduite(href) ? 'en' : 'fr' };
 }

@@ -1,7 +1,9 @@
 ---
+import { langueDuContenu } from "@/lib/langues.mjs";
 /** L8 (revue UX, suite de lecture) : chaque étude finit par un retour à l'index des études. */
 // L108 : sur une page anglaise, l'index (en français) est annoncé comme tel.
-const en = Astro.currentLocale === "en";
+// L112 : la langue du texte de la page (une page sans anglais servie sous /en/ reste en français).
+const en = langueDuContenu(Astro.url.pathname) === "en";
 ---
 
 <nav aria-label={en ? "Keep reading" : "Suite de lecture"} class="mx-auto max-w-3xl px-borne-5 sm:px-8 pb-12">

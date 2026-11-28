@@ -3,8 +3,8 @@ import "@/styles/global.css";
 import { ClientRouter } from "astro:transitions";
 import Navbar from "@/components/site/Navbar.vue";
 import Footer from "@/components/site/Footer.astro";
-import SelecteurLangue from "@/components/site/SelecteurLangue.astro";
-import { adresseFr, alternates, langueDe } from "@/lib/langues.mjs";
+import { adresseFr, alternates, autreLangue, langueDe, traduite } from "@/lib/langues.mjs";
+import { libelles } from "@/lib/libelles-site.mjs";
 import { BUILD_VERSION } from "@/lib/build-version";
 import newsData from "../../public/nouveautes-data/nouveautes.json";
 
@@ -25,7 +25,12 @@ const pathname = Astro.url.pathname;
 // hreflang réciproques quand la page a ses deux versions.
 const langue = (Astro.currentLocale ?? langueDe(pathname)) === "en" ? "en" : "fr";
 const hreflangs = noindex ? [] : alternates(pathname, Astro.site ?? Astro.url);
-const canonical = new URL(pathname, Astro.url);
+// L112 — sous /en/, une page sans texte anglais garde son texte français : bandeau « Not translated yet »,
+// contenu marqué lang="fr" (WCAG 3.1.2), adresse canonique = la page française (même texte, pas un doublon).
+const nonTraduite = langue === "en" && !traduite(pathname);
+const canonical = new URL(nonTraduite ? adresseFr(pathname) : pathname, Astro.url);
+const autre = autreLangue(pathname);
+const bandeau = libelles(langue).nonTraduite;
 const ogImage = new URL("/og.svg", Astro.url).toString();
 const heroPoster = "/hero-cyberpunk.jpg";
 // Index léger (slug + date) pour la pastille « nouveau » du lien Nouveautés (L13).
@@ -97,10 +102,24 @@ const newsIndex = newsData.entries.map(({ slug, date }) => ({ slug, date }));
     </div>
     {/* L111 : la barre parle la langue de la page (libellés de src/lib/libelles-site.mjs) et marque la rubrique
          de la page française correspondante. Persistée par langue : passer de /x/ à /en/x/ la reconstruit. */}
-    <Navbar client:load pathname={adresseFr(pathname)} langue={langue} news={newsIndex} transition:persist={`navbar-${langue}`} />
+    {/* L112 (D-6, D-7) : le seul contrôle de langue du site est dans cette barre (`autre` : la même page dans
+         l'autre langue) ; plus aucun sélecteur dans les pages. */}
+    <Navbar client:load pathname={adresseFr(pathname)} langue={langue} autre={autre} news={newsIndex} transition:persist={`navbar-${langue}`} />
     <main id="main" tabindex="-1" class="flex-1 pt-16 focus:outline-none">
-      <SelecteurLangue />
-      <slot />
+      {nonTraduite ? (
+        <>
+          <div data-non-traduite class="mx-auto max-w-6xl px-borne-5 sm:px-8 pt-4">
+            <p role="note" class="rounded-md border border-claude/40 bg-paper-elevated px-4 py-3 text-sm text-ink">
+              <strong class="font-semibold text-claude">{bandeau.titre}</strong> {bandeau.texte}
+            </p>
+          </div>
+          <div lang="fr" data-contenu-fr>
+            <slot />
+          </div>
+        </>
+      ) : (
+        <slot />
+      )}
     </main>
     <Footer />
     <script>

@@ -36,9 +36,16 @@ function pagesConstruites() {
 test('chaque <MermaidDiagram> des sources arrive dans le site construit', () => {
   const sources = walk(SRC, (n) => /\.(astro|vue|mdx?)$/.test(n) && n !== 'MermaidDiagram.vue');
   const attendus = sources.reduce((s, f) => s + (readFileSync(f, 'utf8').match(/<MermaidDiagram\b/g) ?? []).length, 0);
-  const construits = pagesConstruites().reduce((s, p) => s + p.n, 0);
+  // L112 : chaque page existe aussi sous /en/ ; les sources se comptent sur les pages françaises, et chaque
+  // version /en/ porte autant de schémas que sa page française
+  const pages = pagesConstruites();
+  const parAdresse = new Map(pages.map((p) => [p.path, p.n]));
+  const construits = pages.filter((p) => !p.path.startsWith('/en/')).reduce((s, p) => s + p.n, 0);
   assert.ok(attendus >= 15, `seulement ${attendus} schémas dans les sources`);
   assert.equal(construits, attendus, 'schémas des sources absents du site construit (rendu côté client seulement ?)');
+  for (const p of pages.filter((x) => x.path.startsWith('/en/'))) {
+    assert.equal(p.n, parAdresse.get(p.path.slice(3)), `${p.path} : schémas différents de la page française`);
+  }
 });
 
 test('toutes les pages construites : chaque schéma Mermaid a son svg, aucune erreur de rendu', async (t) => {

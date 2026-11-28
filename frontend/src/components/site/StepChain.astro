@@ -1,4 +1,5 @@
 ---
+import { langueDuContenu } from "@/lib/langues.mjs";
 // L50 — chaîne verticale d'étapes en SVG, pour le parcours d'un lot et la chaîne du livreur.
 // Les positions se calculent des étapes : ajouter une étape ne demande aucune coordonnée.
 interface Step { titre: string; detail: string; qui?: string; accent?: boolean }
@@ -22,7 +23,8 @@ const top = (i: number) => 12 + i * (H + GAP);
 const height = top(steps.length - 1) + H + 12;
 const uid = `sch-${id}`;
 // L108 : la chaîne parle la langue de la page (page anglaise sous /en/).
-const en = Astro.currentLocale === "en";
+// L112 : la langue du texte de la page (une page sans anglais servie sous /en/ reste en français).
+const en = langueDuContenu(Astro.url.pathname) === "en";
 const QUI = en ? "Who: " : "Qui : ";
 // Sous role="img", les <text> du dessin sont présentationnels : seul title + desc est lu par un lecteur
 // d'écran (WCAG 1.1.1). La desc nomme donc chaque étape, son détail et qui la fait.

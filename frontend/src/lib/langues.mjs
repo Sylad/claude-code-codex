@@ -4,6 +4,10 @@
  * et par node --test) dit, pour une adresse, sa langue, ses deux versions et si la traduction existe.
  * Une page est traduite quand son adresse française figure dans TRADUITES ET que la page /en/ existe :
  * le test tests/l108-langues.test.mjs vérifie que chaque adresse listée a sa page sous src/pages/en/.
+ * L112 (D-6, D-7) — tout le site existe sous /en/ : une page traduite y a son texte anglais (une enveloppe
+ * de quelques lignes autour de sa mise en page partagée, src/components/pages/) ; une page sans anglais y est
+ * servie par src/pages/en/[...page].astro avec son texte français et le bandeau « Not translated yet ».
+ * Le contrôle de langue unique est dans la barre du haut (Navbar.vue) : il mène à `autreLangue(adresse)`.
  */
 
 export const LANGUES = /** @type {const} */ (['fr', 'en']);
@@ -12,11 +16,11 @@ export const LANGUE_PAR_DEFAUT = 'fr';
 /** Adresses françaises (avec barre finale) qui ont leur version anglaise sous /en/. */
 export const TRADUITES = ['/case-studies/cadence/'];
 
-/** L111 — où mène « No English yet » sur une page sans traduction : une page qui existe en anglais. */
-export const ENTREE_EN = '/en/case-studies/cadence/';
-
-/** Nom de chaque langue, écrit dans cette langue (le sélecteur se lit des deux côtés). */
+/** Nom de chaque langue, écrit dans cette langue (le contrôle de langue se lit des deux côtés). */
 export const NOMS = { fr: 'Français', en: 'English' };
+
+/** Code court de chaque langue, affiché dans la barre du bureau (L112). */
+export const CODES = { fr: 'FR', en: 'EN' };
 
 /** Adresse avec barre finale (Astro sert /x/ ; en dev, /x peut arriver sans barre). */
 export function avecBarre(pathname) {
@@ -33,6 +37,53 @@ export function langueDe(pathname) {
 export function adresseFr(pathname) {
   const p = avecBarre(pathname);
   return langueDe(p) === 'en' ? p.slice(3) || '/' : p;
+}
+
+/** La page « introuvable » (dist/404.html, dist/en/404.html) : servie à n'importe quelle adresse. */
+export function est404(pathname) {
+  return /^\/404(\.html|\/)?$/.test(adresseFr(String(pathname).replace(/\.html$/, '')));
+}
+
+/** Page dont le texte existe en anglais : listée dans TRADUITES (la 404 a aussi le sien). */
+export function traduite(pathname) {
+  return TRADUITES.includes(adresseFr(pathname)) || est404(pathname);
+}
+
+/** Adresse anglaise d'une page (toute page en a une depuis L112). */
+export function adresseEn(pathname) {
+  return `/en${adresseFr(pathname)}`;
+}
+
+/**
+ * L112 — langue du TEXTE de la page : l'anglais seulement sous /en/ et si la page est traduite. Une page
+ * sans anglais servie sous /en/ garde son texte (et ses composants de contenu) en français ; seules la
+ * barre, le pied et le bandeau parlent anglais.
+ */
+export function langueDuContenu(pathname) {
+  return langueDe(pathname) === 'en' && traduite(pathname) ? 'en' : 'fr';
+}
+
+/**
+ * L112 — cible du contrôle de langue de la barre : la même page dans l'autre langue (sous /en/ elle existe
+ * toujours, traduite ou avec le bandeau). Depuis la 404, l'accueil de l'autre langue.
+ * @returns {{ langue: 'fr'|'en', href: string }}
+ */
+export function autreLangue(pathname) {
+  const langue = langueDe(pathname) === 'en' ? 'fr' : 'en';
+  if (est404(pathname)) return { langue, href: langue === 'en' ? '/en/' : '/' };
+  return { langue, href: langue === 'en' ? adresseEn(pathname) : adresseFr(pathname) };
+}
+
+/**
+ * L112 — adresse française d'un fichier de src/pages (chemin relatif, « about.astro », « case-studies/x.astro »,
+ * « index.astro ») ; null pour ce qui n'est pas une page simple (404, route dynamique, page sous en/).
+ */
+export function adresseDePage(fichier) {
+  const r = String(fichier).replace(/\\/g, '/').replace(/^(\.\.?\/)+/, '');
+  if (!r.endsWith('.astro') || r.includes('[') || r.startsWith('en/')) return null;
+  const sans = r.replace(/\.astro$/, '').replace(/(^|\/)index$/, '');
+  if (sans === '404') return null;
+  return sans ? `/${sans}/` : '/';
 }
 
 /**

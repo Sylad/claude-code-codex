@@ -1,0 +1,19 @@
+---
+// L112 (D-6) — every French page without an English text is served under /en/ too: its own layout, rendered
+// as it is (French text in <div lang="fr">, "Not translated yet" banner, English bar and footer: BaseLayout).
+// Pages that are translated have their own wrapper here (TRADUITES of src/lib/langues.mjs) and are left out.
+import { adresseDePage, TRADUITES } from "@/lib/langues.mjs";
+
+export function getStaticPaths() {
+  const pages = import.meta.glob(["../**/*.astro", "!../en/**"], { eager: true });
+  return Object.entries(pages).flatMap(([fichier, module]) => {
+    const adresse = adresseDePage(fichier);
+    if (!adresse || TRADUITES.includes(adresse)) return [];
+    return [{ params: { page: adresse === "/" ? undefined : adresse.slice(1, -1) }, props: { Page: (module as { default: unknown }).default } }];
+  });
+}
+
+const { Page } = Astro.props as { Page: any };
+---
+
+<Page />

@@ -15,6 +15,14 @@
 - `/ecosystem/` : section « Actualités de l'écosystème » (`VeilleEcosysteme.astro`, `data-veille`) APRÈS le catalogue
   officiel (le catalogue reste au-dessus du pli, test L6/t2), avant la section community.
 
+- Deux langues, contenu partagé (L112, D-6, D-7) : chaque page existe aussi sous `/en/`. Traduite (`TRADUITES` de
+  `src/lib/langues.mjs`) : enveloppe `src/pages/en/<page>.astro` → `src/components/pages/<Page>.astro` (`langue`),
+  textes dans `src/contenus/<page>/fr|en` ; sinon route générale `src/pages/en/[...page].astro` (texte français dans
+  `<div lang="fr" data-contenu-fr>`, bandeau `data-non-traduite` « Not translated yet. », canonique française). Un
+  seul contrôle de langue, dans la barre (`Navbar.vue`, `data-selecteur-langue`, code de l'autre langue, icône dès
+  xl ; sur téléphone en tête du menu, « Language / Français ») ; `SelecteurLangue.astro` supprimé. 404 anglaise :
+  `src/pages/en/404.astro` → `dist/en/404.html` (intégration `page404Anglaise` d'`astro.config.mjs`).
+
 ## Workflow de revue du contenu (L21)
 
 - Source unique : `src/lib/revue-contenu.mjs` (`PAGES_REVUES` : `derniereRevue`, `corrige`, `perimes` avec source et
@@ -82,7 +90,20 @@
   - Rendu au réglage normal : aucune césure posée de 390 à 1440 px à 100 % ; seuls des <wbr> là où la page
     servie coupait déjà un nom sans trait (5 pages, vérifié sur la page sans script).
 
+- (L112) Contenu partagé plutôt que pages copiées (décision de Sylvain le 28-11) : une page traduite = une mise en
+  page + deux jeux de textes ; la part de mise en page copiée sous `src/pages/en/` passe de 56 % à 0 % (test R2).
+  Une page non traduite est servie sous `/en/` en français, signalée par un bandeau, et pointe sa canonique vers la
+  page française (pas de contenu en double pour les moteurs) ; les liens de la barre et du pied /en/ restent sous
+  /en/ avec `hreflang="fr"` vers une page non traduite. La barre du bureau gagne la place du contrôle en passant
+  le retrait des entrées de 8 à 6 px entre 64em et 80em (marges gauche et droite égales, mesurées).
+
 ## Tests
+
+- `frontend/tests/l112-contenu-partage.test.mjs` (statique) : enveloppes seules sous `src/pages/en/`, part de mise en
+  page copiée ≤ 5 % (diagnostic), liste des pages sans anglais, un seul `data-selecteur-langue` (Navbar.vue), mêmes
+  clés fr/en, module des langues. `l112-langue-globale.e2e.test.mjs` (lit `dist`) : chaque page sous /en/ avec
+  bandeau, `lang="fr"` et canonique ; contrôle unique dans la barre ; liens /en/ ; 404 anglaise (statut 404) ;
+  parcours /about/ → /en/about/ → retour à 1440 et 390 px.
 
 - `frontend/tests/l73-pourquoi-cadence.e2e.test.mjs` (lit `dist`) : besoins, définition, chiffres datés et sourcés,
   limites, liens, rien de privé, R12 : chaque nombre (`data-nombres`) cherché dans le fichier `data-source` du dépôt

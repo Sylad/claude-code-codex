@@ -1,0 +1,47 @@
+---
+// L28 — page « introuvable ». Astro la construit en `dist/404.html` (et `dist/en/404.html`, L112) ;
+// Cloudflare Pages sert le 404.html le plus proche de l'adresse demandée, avec le statut HTTP 404 (sans lui,
+// Pages traite le site comme une application d'une page et renvoie l'accueil en 200).
+// L112 — une seule mise en page pour les deux langues ; textes dans src/contenus/page-404.mjs.
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import { PAGE_404 } from "@/contenus/page-404.mjs";
+import { lienDans } from "@/lib/libelles-site.mjs";
+
+interface Props {
+  langue: "fr" | "en";
+}
+
+const { langue } = Astro.props;
+const T = PAGE_404[langue];
+const lien = (href: string) => {
+  const l = lienDans(href, langue);
+  return { href: l.href, hreflang: l.langue === langue ? undefined : l.langue };
+};
+---
+
+<BaseLayout title={T.title} description={T.description} noindex>
+  <PageHero eyebrow={T.eyebrow} title={T.titre} intro={T.intro} />
+
+  <section class="mx-auto max-w-3xl px-borne-5 sm:px-8 py-16 space-y-10" data-page-404>
+    <a
+      href={lien("/").href}
+      class="inline-flex items-center gap-2 min-h-11 px-borne-5 py-2.5 rounded-md bg-claude text-paper font-semibold hover:bg-claude-soft transition-colors motion-safe:active:scale-95"
+      data-retour-accueil
+    >
+      <span aria-hidden="true">←</span> {T.retour}
+    </a>
+
+    <div class="rounded-xl border border-white/10 bg-paper-elevated p-borne-6 sm:p-8">
+      <h2 class="font-mono text-xs uppercase tracking-wider text-claude mb-4">{T.ouBien}</h2>
+      <ul class="space-y-3 text-ink leading-relaxed">
+        {T.pistes.map((p) => (
+          <li>
+            <a {...lien(p.href)} class="text-claude hover:text-claude-soft underline underline-offset-4 font-medium">{p.label}</a>
+            {" "}— {p.detail}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>

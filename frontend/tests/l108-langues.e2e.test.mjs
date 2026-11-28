@@ -1,6 +1,6 @@
 // L108 (D-5) — deux langues dans le site. Critères d'acceptation de la consigne du lot :
 // 1) /en/case-studies/cadence/ existe et est en anglais ; 2) depuis /case-studies/cadence/ le sélecteur mène
-// à la version EN de la même page et retour ; 3) toutes les URL françaises répondent comme avant ;
+// à la version EN de la même page et retour (L112 : le contrôle de langue unique de la barre) ; 3) toutes les URL françaises répondent comme avant ;
 // 4) hreflang fr/en sur les deux versions ; 5) sélecteur utilisable au clavier et au toucher (≥ 44 px),
 // lisible à 390 px. Plus : chiffres, dates et sources identiques des deux côtés ; une page sans traduction
 // le dit au lieu de mener à une 404. Lit dist : `npx astro build` avant.
@@ -102,18 +102,21 @@ test('C4 — hreflang fr, en et x-default réciproques sur les deux versions ; a
   assert.doesNotMatch(lire('/about/'), /<link rel="alternate" hreflang=/);
 });
 
-test('C6 — sélecteur sur chaque page ; sans traduction il le dit, et aucun lien ne mène vers une page /en/ absente', () => {
+test('C6 — contrôle de langue sur chaque page, dans la barre (L112) ; aucun lien ne mène vers une page /en/ absente', () => {
   const pages = [...adressesFr(), EN];
   for (const a of pages) {
     const html = lire(a);
-    assert.match(html, /data-selecteur-langue/, `${a} : pas de sélecteur`);
+    // L112 : un seul contrôle, dans la barre du haut (plus de sélecteur posé dans chaque page)
+    assert.equal(html.split('data-selecteur-langue').length - 1, 1, `${a} : un seul contrôle de langue attendu`);
+    assert.match(html.slice(html.indexOf('<header'), html.indexOf('</header>')), /data-selecteur-langue/, `${a} : contrôle hors de la barre`);
     for (const [, href] of html.matchAll(/href="(\/en\/[^"#]*)"/g)) {
       assert.ok(existsSync(join(DIST, href, 'index.html')), `${a} : lien vers ${href}, page absente`);
     }
   }
+  // L112 : une page sans traduction mène à sa propre adresse /en/ (texte français et bandeau « Not translated yet »)
   const about = lire('/about/');
-  assert.match(about, /data-langue-absente="en"[^>]*>No English yet</);
-  assert.doesNotMatch(about, /data-langue="en"/);
+  assert.match(about, /<a[^>]*href="\/en\/about\/"[^>]*data-selecteur-langue/);
+  assert.doesNotMatch(about, /No English yet/);
 });
 
 test('C7 — mêmes chiffres, dates et sources des deux côtés, carte par carte et sur toute la page', () => {
@@ -145,81 +148,71 @@ async function ouvrir(env, url, options) {
   return { context, page };
 }
 
-test('C2 — le sélecteur mène de la page française à sa version anglaise au clavier, et retour au toucher', async (t) => {
+test('C2 — le contrôle de la barre mène de la page française à sa version anglaise au clavier, et retour au toucher (menu du téléphone)', async (t) => {
   const env = await setupBrowser(t);
   if (!env) return;
   const { context, page } = await ouvrir(env, FR, { viewport: { width: 1440, height: 900 } });
-  // clavier : Tab jusqu'au lien « English » (il vient tôt dans l'ordre de tabulation), puis Entrée
+  // clavier : Tab jusqu'au contrôle « EN » de la barre (il vient tôt dans l'ordre de tabulation), puis Entrée
   let trouve = false;
   for (let i = 0; i < 40 && !trouve; i++) {
     await page.keyboard.press('Tab');
-    trouve = await page.evaluate(() => document.activeElement?.matches('[data-selecteur-langue] a[hreflang="en"]'));
+    trouve = await page.evaluate(() => document.activeElement?.matches('header a[data-selecteur-langue][hreflang="en"]'));
   }
-  assert.ok(trouve, 'lien « English » jamais atteint au clavier');
+  assert.ok(trouve, 'contrôle « EN » jamais atteint au clavier');
   await Promise.all([page.waitForURL(`**${EN}`), page.keyboard.press('Enter')]);
   await page.waitForFunction(() => document.documentElement.lang === 'en');
   assert.match(await page.locator('h1').innerText(), /A plan tied to the commits/);
   await context.close();
 
   const tel = await ouvrir(env, EN, { viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
-  await Promise.all([tel.page.waitForURL(`**${FR}`), tel.page.locator('[data-selecteur-langue] a[hreflang="fr"]').tap()]);
+  await tel.page.locator('button[aria-controls="mobile-menu"]').tap();
+  await Promise.all([tel.page.waitForURL(`**${FR}`), tel.page.locator('#mobile-menu a[data-selecteur-langue][hreflang="fr"]').tap()]);
   await tel.page.waitForFunction(() => document.documentElement.lang === 'fr');
   assert.match(await tel.page.locator('h1').innerText(), /Un plan relié aux commits/);
   await tel.context.close();
 });
 
-test('C5 — à 390 px : cibles du sélecteur ≥ 44 px, visibles, sans défilement horizontal, texte ≥ 14 px', async (t) => {
+/** Ouvre le menu du téléphone et mesure son contrôle de langue (L112 : il est dans le menu de la barre). */
+async function controleDuMenu(page, largeur) {
+  await page.locator('button[aria-controls="mobile-menu"]').click();
+  const c = page.locator('#mobile-menu a[data-selecteur-langue]');
+  await c.waitFor({ state: 'visible' });
+  return c.evaluate((e, l) => {
+    const b = e.getBoundingClientRect();
+    return { texte: e.textContent.trim(), w: b.width, h: b.height, gauche: b.left, droite: b.right, haut: b.top, bas: b.bottom, ecran: innerHeight,
+      police: parseFloat(getComputedStyle(e).fontSize), scroll: document.documentElement.scrollWidth - document.documentElement.clientWidth, largeur: l };
+  }, largeur);
+}
+
+test('C5 — à 390 px : le contrôle de langue du menu est visible dès l’ouverture, cible ≥ 44 px, texte ≥ 14 px, sans défilement horizontal', async (t) => {
   const env = await setupBrowser(t);
   if (!env) return;
-  for (const url of [FR, EN, '/about/']) {
+  for (const url of [FR, EN, '/about/', '/en/about/']) {
     const { context, page } = await ouvrir(env, url, { viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
-    const r = await page.evaluate(() => {
-      const nav = document.querySelector('[data-selecteur-langue]');
-      const items = [...nav.querySelectorAll('a, span[lang]')].map((e) => {
-        const b = e.getBoundingClientRect();
-        return { texte: e.textContent.trim(), lien: e.tagName === 'A', w: b.width, h: b.height, gauche: b.left, droite: b.right, police: parseFloat(getComputedStyle(e).fontSize) };
-      });
-      return { items, scroll: document.documentElement.scrollWidth - document.documentElement.clientWidth };
-    });
+    const r = await controleDuMenu(page, 390);
     await context.close();
     assert.ok(r.scroll <= 0, `${url} : défilement horizontal de ${r.scroll} px`);
-    assert.equal(r.items.length, 2, `${url} : deux langues attendues`);
-    for (const it of r.items) {
-      assert.ok(it.gauche >= 0 && it.droite <= 390, `${url} : « ${it.texte} » hors de l'écran`);
-      assert.ok(it.police >= 14, `${url} : « ${it.texte} » à ${it.police} px`);
-      if (it.lien) assert.ok(it.w >= 44 && it.h >= 44, `${url} : cible « ${it.texte} » de ${it.w}×${it.h} px`);
-    }
+    assert.ok(r.gauche >= 0 && r.droite <= 390, `${url} : « ${r.texte} » hors de l'écran`);
+    assert.ok(r.bas <= r.ecran, `${url} : « ${r.texte} » sous le pli du menu (${r.bas} > ${r.ecran})`);
+    assert.ok(r.police >= 14, `${url} : « ${r.texte} » à ${r.police} px`);
+    assert.ok(r.w >= 44 && r.h >= 44, `${url} : cible « ${r.texte} » de ${r.w}×${r.h} px`);
   }
 });
 
-test('C5 bis — texte agrandi de 100 à 200 % à 320 et 390 px : le sélecteur reste dans l’écran et ne recouvre rien', async (t) => {
+test('C5 bis — texte agrandi de 100 à 200 % à 320 et 390 px : le contrôle de langue du menu reste entier dans l’écran', async (t) => {
   const env = await setupBrowser(t);
   if (!env) return;
   for (const url of ['/', FR, EN, '/about/', '/livre-de-bord/']) {
     for (const largeur of [320, 390]) {
-      const { context, page } = await ouvrir(env, url, { viewport: { width: largeur, height: 800 } });
       for (const taille of [100, 125, 150, 175, 200]) {
+        const { context, page } = await ouvrir(env, url, { viewport: { width: largeur, height: 800 } });
         await page.evaluate((n) => { document.documentElement.style.fontSize = `${n}%`; }, taille);
-        // la césure du site suit la mise en page à l'image suivante : mesurer après elle (L88)
-        await page.waitForFunction(() => {
-          const b = document.body.getBoundingClientRect();
-          return document.documentElement.dataset.cesureMesure === `${b.width}x${b.height}`;
-        });
-        const r = await page.evaluate(() => {
-          const nav = document.querySelector('[data-selecteur-langue]');
-          const n = nav.getBoundingClientRect();
-          // le premier texte du contenu après le sélecteur (sur-titre, titre ou chapeau)
-          const suivant = [...document.querySelectorAll('main h1, main p')].find((e) => !nav.contains(e) && e.getBoundingClientRect().height > 0);
-          const s = suivant.getBoundingClientRect();
-          const recouvre = !(n.bottom <= s.top || s.bottom <= n.top || n.right <= s.left || s.right <= n.left);
-          return { n: [n.left, n.top, n.right, n.bottom].map(Math.round), s: Math.round(s.top), recouvre, scroll: document.documentElement.scrollWidth - document.documentElement.clientWidth };
-        });
+        const r = await controleDuMenu(page, largeur);
+        await context.close();
         const ou = `${url} @${largeur}px ${taille} %`;
-        assert.ok(!r.recouvre, `${ou} : le sélecteur ${JSON.stringify(r.n)} recouvre le texte qui commence à ${r.s}`);
-        assert.ok(r.n[0] >= 0 && r.n[2] <= largeur, `${ou} : sélecteur hors de l'écran ${JSON.stringify(r.n)}`);
+        assert.ok(r.gauche >= 0 && r.droite <= largeur, `${ou} : contrôle hors de l'écran ${JSON.stringify(r)}`);
         assert.ok(r.scroll <= 0, `${ou} : défilement horizontal`);
       }
-      await context.close();
     }
   }
 });
