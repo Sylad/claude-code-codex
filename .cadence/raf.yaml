@@ -714,10 +714,11 @@ lots:
     finished: 2026-10-31
   - id: L64
     title: "Étude de cas AetherWX : remettre la photo de la tour Big-Blue (fournie par Sylvain le 31-10, original dans ~/projects/developpeur/tmp/big-blue-tower-original.jpg, 1502×2000) — redimensionnée et compressée (WebP ou JPG ≤ 300 Ko) dans frontend/public/case-studies/aetherwx-encyclopedia/big-blue-tower.jpg, <img> réinséré avec largeur/hauteur ; légende et alt À JOUR : Big-Blue est le poste de dev (le cluster k3s tourne sur dark-blue depuis septembre) ; README du dossier mis à jour ; le test R5 de L60 doit passer"
-    status: todo
+    status: doing
     estimate: 0.1
     visible: true
     created: 2026-10-31
+    started: 2026-11-28
   - id: L65
     title: "Catalogue : ui-ux-pro-max-skill testé le 01-11"
     status: done
