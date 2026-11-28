@@ -1,7 +1,22 @@
 {
   "project": "claude-code-codex",
-  "generated": "2026-11-28 12:35",
+  "generated": "2026-11-28 14:10",
   "entries": [
+    {
+      "slug": "2026-11-28-la-photo-de-la-tour-big-blue-est-de-retour",
+      "title": "La photo de la tour Big-Blue est de retour sur l'étude AetherWX",
+      "date": "2026-11-28",
+      "lots": [
+        "L64"
+      ],
+      "captures": [
+        "captures/L64-photo-big-blue-390.png"
+      ],
+      "alts": [
+        "Sur un téléphone de 390 px, la photo de la tour Big-Blue dans la pénombre, vitre latérale ouverte sur la carte graphique et les ventilateurs lumineux, suivie de sa légende qui la présente comme le poste de développement"
+      ],
+      "html": "<p>L'étude de cas AetherWX montre à nouveau la tour Big-Blue, dans le chapitre « Le truc qui tourne ça » : jusqu'ici, seule sa légende restait.</p>\n<ul><li><strong>Une vraie photo</strong>, prise le 31 octobre 2026, avec une description complète pour les lecteurs d'écran.</li><li><strong>Légende à jour</strong> : Big-Blue y est présentée comme le poste de développement, le cluster tournant sur dark-blue depuis septembre 2026.</li><li><strong>Légère</strong> : 44 à 137 Ko selon la taille de l'écran, chargée seulement quand on approche du chapitre ; la place de l'image est réservée, le texte ne saute pas à son arrivée.</li><li><strong>Sans métadonnées</strong> : la copie publiée ne contient ni date d'appareil, ni position GPS.</li><li><strong>Vérifié</strong> sur la page rendue à 320, 390 et 1440 px.</li></ul>"
+    },
     {
       "slug": "2026-11-28-sur-telephone-le-catalogue-ecosysteme-montre-le-resultat-dun",
       "title": "Sur téléphone, le catalogue Écosystème montre le résultat d'un filtre dès le clic",

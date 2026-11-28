@@ -6,6 +6,11 @@ import MermaidDiagram from "@/components/site/MermaidDiagram.vue";
 import CaseStudySection from "@/components/site/CaseStudySection.astro";
 import EtudeFraicheur from "@/components/site/EtudeFraicheur.astro";
 import ChiffreDate from "@/components/site/ChiffreDate.astro";
+import { legendeCapture } from "@/lib/etude-fraicheur.mjs";
+
+// L64 — légende de la photo de Big-Blue (prise le 31 octobre 2026) : poste de dev, la prod est sur dark-blue.
+const DESC_BIG_BLUE =
+  "Big-Blue, RTX SUPRIM + AIO Liquid, 6 fans RGB, WSL2 Ubuntu. Aujourd'hui le poste de développement : le cluster k3s tourne sur dark-blue depuis septembre 2026. Watercooled du temps où la prod tournait dessus : à chaque cycle GFS (4×/jour) le pod weather-fetcher moulinait 65 GeoTIFFs en quelques secondes.";
 
 // Pods du namespace maritime : relevé reporté au 3 novembre 2026, le cluster étant en maintenance ce jour-là.
 const nbPods: number | undefined = undefined;
@@ -250,13 +255,20 @@ const tokenFlow = `flowchart LR
         qui pousse du code et des images.
       </p>
 
-      <p class="text-xs text-ink-muted font-mono">
-        Big-Blue — RTX SUPRIM + AIO Liquid (CPU @31°C en idle), 6 fans
-        RGB, WSL2 Ubuntu + Docker Desktop + k3s. Watercooled parce qu'à
-        chaque cycle GFS (4×/jour) le pod weather-fetcher mouline 65
-        GeoTIFFs en quelques secondes, du temps où la prod tournait encore
-        dessus.
-      </p>
+      <figure data-photo="big-blue" class="my-6 mx-auto max-w-[28rem]">
+        <img
+          src="/case-studies/aetherwx-encyclopedia/big-blue-tower.jpg"
+          srcset="/case-studies/aetherwx-encyclopedia/big-blue-tower-480.jpg 480w, /case-studies/aetherwx-encyclopedia/big-blue-tower.jpg 720w, /case-studies/aetherwx-encyclopedia/big-blue-tower-960.jpg 960w"
+          sizes="(min-width: 30em) 28rem, calc(100vw - 2rem)"
+          alt="La tour Big-Blue de profil dans la pénombre : à travers la vitre latérale, une carte graphique GeForce RTX SUPRIM, un watercooling dont la pompe affiche 38 °C et des ventilateurs à anneaux lumineux bleus, violets et roses ; la façade, barrée de bandes bleu vif, porte un écusson de l'Olympique Lyonnais."
+          width="720"
+          height="959"
+          loading="lazy"
+          decoding="async"
+          class="w-full h-auto rounded-lg border border-white/10"
+        />
+        <figcaption class="text-xs text-ink-muted mt-2 font-mono" data-testid="legende-capture">{legendeCapture({ date: "2026-10-31", description: DESC_BIG_BLUE })}</figcaption>
+      </figure>
 
       <p>
         <strong>Spec Big-Blue</strong> : i9-14900KF, 32 GiB RAM, RTX SUPRIM,
