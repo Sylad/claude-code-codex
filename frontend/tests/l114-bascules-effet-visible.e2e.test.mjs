@@ -46,6 +46,22 @@ const MESURE = (ile) => {
   };
 };
 
+// Écarts d'un clic sur la bascule i : compteur hors de la vue, bascule déplacée, largeur changée, compte faux.
+function ecartsDuClic(avant, m, i, ou) {
+  const constats = [];
+  if (m.compteur.top < 0 || m.compteur.bottom > m.vue) {
+    constats.push(`${ou} : compteur à ${Math.round(m.compteur.top)}..${Math.round(m.compteur.bottom)} hors de la vue (${m.vue})`);
+  }
+  m.bascules.forEach((p, j) => {
+    const a = avant.bascules[j];
+    if (p[0] !== a[0] || p[1] !== a[1]) constats.push(`${ou} : bascule ${j + 1} passée de (${a[0]}, ${a[1]}) à (${p[0]}, ${p[1]})`);
+    if (j === i && p[2] !== a[2]) constats.push(`${ou} : largeur de la bascule pressée ${a[2]} → ${p[2]} px`);
+  });
+  const [affiche] = m.compteur.texte.match(/^\d+/) ?? [];
+  if (Number(affiche) !== m.cartes) constats.push(`${ou} : compteur « ${m.compteur.texte} » pour ${m.cartes} cartes`);
+  return constats;
+}
+
 const CONFIGS = [
   ...['100%', '112.5%', '200%'].flatMap((fontSize) => [
     { width: 390, height: 844, fontSize },
@@ -77,17 +93,7 @@ for (const cfg of CONFIGS) {
           await b.click();
           const m = await ile.evaluate(MESURE);
           const nom = (await b.textContent()).replace(/\s+/g, ' ').trim();
-          const ou = `catalogue ${k + 1}, ${nom}, ${clic} clic`;
-          if (m.compteur.top < 0 || m.compteur.bottom > m.vue) {
-            constats.push(`${ou} : compteur à ${Math.round(m.compteur.top)}..${Math.round(m.compteur.bottom)} hors de la vue (${m.vue})`);
-          }
-          m.bascules.forEach((p, j) => {
-            const a = avant.bascules[j];
-            if (p[0] !== a[0] || p[1] !== a[1]) constats.push(`${ou} : bascule ${j + 1} passée de (${a[0]}, ${a[1]}) à (${p[0]}, ${p[1]})`);
-            if (j === i && p[2] !== a[2]) constats.push(`${ou} : largeur de la bascule pressée ${a[2]} → ${p[2]} px`);
-          });
-          const [affiche] = m.compteur.texte.match(/^\d+/) ?? [];
-          if (Number(affiche) !== m.cartes) constats.push(`${ou} : compteur « ${m.compteur.texte} » pour ${m.cartes} cartes`);
+          constats.push(...ecartsDuClic(avant, m, i, `catalogue ${k + 1}, ${nom}, ${clic} clic`));
         }
       }
       // Une recherche fait aussi apparaître « Réinitialiser » : les bascules restent en place.
@@ -149,7 +155,7 @@ test('L114 — « Réinitialiser » : 24 px de haut au moins ; après lui, au cl
     await page.keyboard.press('Enter');
     const actif = await page.evaluate(() => {
       const a = document.activeElement;
-      return `${a.tagName}${a.type ? `[${a.type}]` : ''}`;
+      return a.type ? `${a.tagName}[${a.type}]` : a.tagName;
     });
     if (actif !== 'INPUT[search]') constats.push(`${width} : après « Réinitialiser », focus sur ${actif}`);
     if (await ile.locator('button[aria-pressed="true"]').count()) constats.push(`${width} : filtre encore actif`);
