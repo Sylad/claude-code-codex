@@ -1213,6 +1213,7 @@ lots:
     status: done
     estimate: 1
     visible: true
+    delivered: { date: 2026-11-28, sha: 4f104aa4d1a308f7e162aab9581dca211da7c836 }
     created: 2026-11-27
     started: 2026-11-28
     ux: { date: 2026-11-28, verdict: "conforme (revue UX 28-11) : trait avant la pointe 10,1 px à 320, libellés 11,78 px, 0 chevauchement sur 40 configurations (2 thèmes, 2 polices, 5 largeurs, 100/200 %), contrastes ok ; mineur : police de repli, « Revue code et écran » resserré de 9,4 %, lisible" }
