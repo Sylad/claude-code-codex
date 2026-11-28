@@ -1207,6 +1207,7 @@ lots:
     title: "Catalogue Tools tested à 390 px : les bascules de filtre (Plugin, Serveur MCP, Skill) — après le second clic, ce qui change est hors de la vue (3 constats des sondes d'interaction de la revue UX de L109, 27-11, rapport bilans/2026-11-27/L109-ux.md) ; mesure : sondes à 390 sans constat sur ces bascules"
     status: done
     estimate: 1
+    delivered: { date: 2026-11-28, sha: d1a13a8f5890fd30f6a4792e41445c16d965f14b }
     created: 2026-11-27
     started: 2026-11-28
     review: { date: 2026-11-28, verdict: "conforme (2e revue, 236738b + afbbb35) : majeur corrigé, 0 écart sur les 43 autres pages — bilans/2026-11-28/L114-code-2.md", commit: afbbb3500c84642e6d7ca1d672f2ab5c2bbe1666 }
