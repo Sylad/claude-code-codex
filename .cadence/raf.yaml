@@ -1209,6 +1209,8 @@ lots:
     estimate: 1
     created: 2026-11-27
     started: 2026-11-28
+    review: { date: 2026-11-28, verdict: "non conforme : 1 majeur — police 200 % à 390, Réinitialiser décale les bascules de 32 px (bilans/2026-11-28/L114-code.md)", commit: 35a5201a8a397fa95cd97768268a231703e8a7ed }
+    ux: { date: 2026-11-28, verdict: "non conforme : 1 majeur — à 390×844 la 1re carte reste sous le pli (917 px) après un clic (bilans/2026-11-28/L114-ux.md)" }
   - id: L115
     title: "pourquoi-cadence, schéma « 4 · Rester cohérent » : les flèches ne sont plus qu'une pointe (écart 28 → 12 unités, trait ≈ 2,6 px à 320) alors que les autres schémas gardent un trait ; prendre la place sur la marge intérieure (texte à x+6, boîte de 154) et garder un écart de 20. Vu à la revue UX de L113 le 27-11 ; aussi : libellés à 10,4 px à 320 px (annoncés ≥ 11)."
     status: done
