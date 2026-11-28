@@ -1249,10 +1249,11 @@ lots:
     finished: 2026-11-28
   - id: L117
     title: Légende « Photo du … » au lieu de « Capture du … » quand l'image est une photo (legendeCapture partagé ; vu à la revue UX de L64 le 28-11, étude AetherWX)
-    status: todo
+    status: doing
     estimate: 1
     visible: true
     created: 2026-11-28
+    started: 2026-11-28
   - id: L118
     title: Attentes QA des pages /en/ dans docs/qa/expectations.md (bandeau « Not translated yet. », contrôle de langue unique, 404 anglaise) — proposé par la QA de L112 le 28-11
     status: todo
