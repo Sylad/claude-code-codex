@@ -1219,6 +1219,16 @@ lots:
     ux: { date: 2026-11-28, verdict: "conforme (revue UX 28-11) : trait avant la pointe 10,1 px à 320, libellés 11,78 px, 0 chevauchement sur 40 configurations (2 thèmes, 2 polices, 5 largeurs, 100/200 %), contrastes ok ; mineur : police de repli, « Revue code et écran » resserré de 9,4 %, lisible" }
     review: { date: 2026-11-28, verdict: "conforme (revue de code 28-11) : 2 notes mineures sur le test", commit: 87045913090b9e82536aa38ec775030197bcb25e }
     finished: 2026-11-28
+  - id: L116
+    title: "Schéma des besoins, thème sombre : flèches à 3:1 au moins sur le fond (QA de L115 le 28-11 : trait rgb(107,107,120) sur rgb(38,38,44) = 2,86:1, sous WCAG 1.4.11)"
+    status: done
+    estimate: 1
+    visible: true
+    created: 2026-11-28
+    started: 2026-11-28
+    review: { date: 2026-11-28, verdict: "conforme : 468e602 + correctif 3af6f25 (test des flèches de la liste HTML .sch-suite ajouté, vérifié par le lead) — rapport bilans/2026-11-28/L116-code.md", commit: 3af6f2557e6d5fe3d26ed4d866c52fa51ff900f9 }
+    ux: { date: 2026-11-28, verdict: "conforme (lead, d'après ux-reviewer) : flèches ≥ 3:1 en sombre aux 3 largeurs, clair inchangé au pixel sur 18 schémas ; mineur du texte Nouveautés corrigé en 3af6f25 (4,40 contre le fond au lieu de 3,27) — rapport bilans/2026-11-28/L116-ux.md" }
+    finished: 2026-11-28
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
