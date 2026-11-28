@@ -210,18 +210,19 @@ const limites = [
         <svg viewBox="0 0 340 330" style="max-width:26rem" role="img" aria-labelledby="sch-besoins-t sch-besoins-d" xmlns="http://www.w3.org/2000/svg">
           <title id="sch-besoins-t">Un mécanisme par besoin</title>
           <desc id="sch-besoins-d">Ne rien oublier : le registre des demandes. Lire les documents : la lecture obligatoire. Ne rien casser : la porte de tests. Rester cohérent : la revue. Travailler en équipe : le plan relié aux commits et le banc.</desc>
-          {/* L113 — en police de repli, « 4 · Rester cohérent » fait 141 unités : la boîte de gauche lui en laisse 142
-               (marges extérieures 4, flèche de 12) ; « Revue code et écran » (150) n'est resserré que ×1,09 à droite. */}
-          <text class="sch-a" data-sch-entete x="14" y="20">Besoin</text>
-          <text class="sch-a" data-sch-entete x="188" y="20">Pièce de cadence</text>
+          {/* L115 — marge intérieure de 6 unités (texte à x + 6) : la boîte de gauche fait 154 et l'écart entre les
+               boîtes reste de 20, soit un trait de 12 avant la pointe de 8, visible comme dans les autres schémas.
+               Libellés à 14 unités : 11,2 px à 320 px de large (dessin de 272 px), la taille promise par la page. */}
+          <text class="sch-a" data-sch-entete x="10" y="20" style="font-size:14px">Besoin</text>
+          <text class="sch-a" data-sch-entete x="184" y="20" style="font-size:14px">Pièce de cadence</text>
           {PIECES.map(([gauche, droite], i) => (
             <g>
-              <rect class="sch-box" x="4" y={34 + i * 58} width="162" height="44" rx="8" />
-              <text class="sch-t" x="14" y={61 + i * 58} style="font-size:13px">{gauche}</text>
-              <line class="sch-line" x1="166" y1={56 + i * 58} x2="172" y2={56 + i * 58} />
+              <rect class="sch-box" x="4" y={34 + i * 58} width="154" height="44" rx="8" />
+              <text class="sch-t" x="10" y={61 + i * 58} style="font-size:14px">{gauche}</text>
+              <line class="sch-line" x1="158" y1={56 + i * 58} x2="171" y2={56 + i * 58} />
               <path class="sch-arrow" d={`M170 ${50 + i * 58} L178 ${56 + i * 58} L170 ${62 + i * 58} Z`} />
               <rect class="sch-box-accent" x="178" y={34 + i * 58} width="158" height="44" rx="8" />
-              <text class="sch-t" x="188" y={61 + i * 58} style="font-size:13px">{droite}</text>
+              <text class="sch-t" x="184" y={61 + i * 58} style="font-size:14px">{droite}</text>
             </g>
           ))}
         </svg>

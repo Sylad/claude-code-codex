@@ -1,7 +1,22 @@
 {
   "project": "claude-code-codex",
-  "generated": "2026-11-27 18:19",
+  "generated": "2026-11-28 10:51",
   "entries": [
+    {
+      "slug": "2026-11-28-les-fleches-du-schema-des-besoins-se-voient-a-nouveau",
+      "title": "Les flèches du schéma des besoins se voient à nouveau",
+      "date": "2026-11-28",
+      "lots": [
+        "L115"
+      ],
+      "captures": [
+        "captures/L115-schema-besoins-320.png"
+      ],
+      "alts": [
+        "Schéma « Un mécanisme par besoin » de la page Pourquoi cadence sur un téléphone de 320 px : cinq besoins à gauche, cinq pièces de cadence à droite, chaque paire reliée par une flèche dont on voit le trait, libellés plus grands, chacun dans sa boîte"
+      ],
+      "html": "<p>Sur la page Pourquoi cadence, le schéma « Un mécanisme par besoin » relie de nouveau chaque besoin à sa pièce de cadence par une vraie flèche, avec un trait visible et pas seulement une pointe, comme dans les autres schémas du site.</p>\n<ul><li><strong>Texte plus grand</strong> : sur un téléphone de 320 px de large, les libellés du schéma mesurent maintenant au moins 11 px, la taille minimale que le site s'est fixée, au lieu de 10,4 px.</li><li><strong>Rien ne se chevauche</strong> : chaque libellé tient dans sa boîte, avec la police du site comme avec la police de remplacement du navigateur, où les plus longs sont légèrement resserrés.</li><li><strong>Vérifié</strong> à 320, 390 et 1440 px de large.</li></ul>"
+    },
     {
       "slug": "2026-11-27-schemas-etendre-la-mesure-de-l110-libelle-qui-deborde-ou-en",
       "title": "Le schéma « Rester cohérent » se lit sans texte tassé",
