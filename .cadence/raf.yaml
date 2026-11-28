@@ -1247,6 +1247,17 @@ lots:
     review: { date: 2026-11-28, verdict: "conforme : 468e602 + correctif 3af6f25 (test des flèches de la liste HTML .sch-suite ajouté, vérifié par le lead) — rapport bilans/2026-11-28/L116-code.md", commit: 3af6f2557e6d5fe3d26ed4d866c52fa51ff900f9 }
     ux: { date: 2026-11-28, verdict: "conforme (lead, d'après ux-reviewer) : flèches ≥ 3:1 en sombre aux 3 largeurs, clair inchangé au pixel sur 18 schémas ; mineur du texte Nouveautés corrigé en 3af6f25 (4,40 contre le fond au lieu de 3,27) — rapport bilans/2026-11-28/L116-ux.md" }
     finished: 2026-11-28
+  - id: L117
+    title: Légende « Photo du … » au lieu de « Capture du … » quand l'image est une photo (legendeCapture partagé ; vu à la revue UX de L64 le 28-11, étude AetherWX)
+    status: todo
+    estimate: 1
+    visible: true
+    created: 2026-11-28
+  - id: L118
+    title: Attentes QA des pages /en/ dans docs/qa/expectations.md (bandeau « Not translated yet. », contrôle de langue unique, 404 anglaise) — proposé par la QA de L112 le 28-11
+    status: todo
+    estimate: 1
+    created: 2026-11-28
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
