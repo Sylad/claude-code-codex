@@ -1210,12 +1210,14 @@ lots:
     created: 2026-11-27
   - id: L115
     title: "pourquoi-cadence, schéma « 4 · Rester cohérent » : les flèches ne sont plus qu'une pointe (écart 28 → 12 unités, trait ≈ 2,6 px à 320) alors que les autres schémas gardent un trait ; prendre la place sur la marge intérieure (texte à x+6, boîte de 154) et garder un écart de 20. Vu à la revue UX de L113 le 27-11 ; aussi : libellés à 10,4 px à 320 px (annoncés ≥ 11)."
-    status: doing
+    status: done
     estimate: 1
     visible: true
     created: 2026-11-27
     started: 2026-11-28
     ux: { date: 2026-11-28, verdict: "conforme (revue UX 28-11) : trait avant la pointe 10,1 px à 320, libellés 11,78 px, 0 chevauchement sur 40 configurations (2 thèmes, 2 polices, 5 largeurs, 100/200 %), contrastes ok ; mineur : police de repli, « Revue code et écran » resserré de 9,4 %, lisible" }
+    review: { date: 2026-11-28, verdict: "conforme (revue de code 28-11) : 2 notes mineures sur le test", commit: 87045913090b9e82536aa38ec775030197bcb25e }
+    finished: 2026-11-28
 acknowledged:
   - { sha: f826a82bbee8f2dca88b22c5626e7c1ed12ab4d0, subject: "chore(L144): skill sync-site-docs retiré, remplacé par docs.articles de cadence (lot « Article <projet> à rafraîchir »)", date: 2026-10-09, reason: "retrait du skill sync-site-docs fait par la vague cadence 2026-10-09-1303 (lot du dépôt cadence, mécanisme docs.articles) ; l'id cité appartient à cadence" }
   - { sha: ce68cfd54f23613f8c1414916140292e1fb5cd2f, subject: "plan: visible: true sur les lots « Revue UX — » (règle raf check de cadence L271)", date: 2026-10-23, reason: "plan seul : pose visible: true sur les revues UX, cite un lot du dépôt cadence" }
