@@ -1224,6 +1224,7 @@ lots:
     status: done
     estimate: 1
     visible: true
+    delivered: { date: 2026-11-28, sha: 2acf0ac39375b8c7519a67a79d50aa422f6c3107 }
     created: 2026-11-28
     started: 2026-11-28
     review: { date: 2026-11-28, verdict: "conforme : 468e602 + correctif 3af6f25 (test des flèches de la liste HTML .sch-suite ajouté, vérifié par le lead) — rapport bilans/2026-11-28/L116-code.md", commit: 3af6f2557e6d5fe3d26ed4d866c52fa51ff900f9 }
