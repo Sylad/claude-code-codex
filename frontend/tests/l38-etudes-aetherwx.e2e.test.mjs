@@ -96,7 +96,7 @@ test('R3 — aucun chiffre de l\'état réel (pods, lignes, scripts) sans date d
   }
 });
 
-test('R4 — chaque image des études touchées a une légende « Capture du <date> — <description existante> »', () => {
+test('R4 — chaque image des études touchées a une légende « Capture du <date> — <description existante> » (« Photo du » pour une photo, L117)', () => {
   const attendues = ['Navires AIS live (2500+ positions)', 'SST (température de surface de la mer)', 'Vent (GFS)', 'Vagues — NOAA WaveWatch III',
     'Radar pluie (RainViewer', 'Alerts engine', 'Particules vent style windy.com'];
   for (const e of Object.keys(ETUDES)) {
@@ -104,7 +104,7 @@ test('R4 — chaque image des études touchées a une légende « Capture du <da
     const legendes = figures.map((f) => marques(f, 'legende-capture')[0]);
     legendes.forEach((l, i) => {
       assert.ok(l, `${e} : figure ${i} légendée`);
-      assert.match(l, new RegExp(`^Capture du ${DATE}(?: \\(carte 2D, avant le globe\\))? — \\S`), `${e} : « ${l.slice(0, 60)} »`);
+      assert.match(l, new RegExp(`^(?:Capture|Photo) du ${DATE}(?: \\(carte 2D, avant le globe\\))? — \\S`), `${e} : « ${l.slice(0, 60)} »`);
     });
     if (e === 'maritime-atlas') {
       assert.equal(legendes.length, attendues.length + 2);

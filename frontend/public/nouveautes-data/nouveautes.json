@@ -1,7 +1,22 @@
 {
   "project": "claude-code-codex",
-  "generated": "2026-11-28 15:04",
+  "generated": "2026-11-28 17:10",
   "entries": [
+    {
+      "slug": "2026-11-28-une-photo-est-legendee-photo-du-plus-capture-du",
+      "title": "Une photo est légendée « Photo du … », et non plus « Capture du … »",
+      "date": "2026-11-28",
+      "lots": [
+        "L117"
+      ],
+      "captures": [
+        "captures/L117-legende-photo-390.png"
+      ],
+      "alts": [
+        "Sur un téléphone de 390 px, la photo de la tour Big-Blue dans la pénombre, suivie de sa légende qui commence par Photo du 31 octobre 2026"
+      ],
+      "html": "<p>Sur les études de cas, la légende d'une image dit maintenant ce qu'elle est : « Photo du … » pour une photographie, « Capture du … » pour une capture d'écran ou un schéma.</p>\n<ul><li><strong>Étude AetherWX</strong> : la photo de la tour Big-Blue est légendée « Photo du 31 octobre 2026 », à l'adresse française comme à l'adresse anglaise, où la page reste en français.</li><li><strong>Les captures ne changent pas</strong> : celles de la carte et les schémas d'architecture gardent « Capture du … ».</li><li><strong>En anglais</strong>, quand une étude sera traduite, ces légendes diront « Photo from … » et « Screenshot from … ».</li></ul>"
+    },
     {
       "slug": "2026-11-28-un-seul-choix-de-langue-dans-la-barre-pour-tout-le-site",
       "title": "Un seul choix de langue, dans la barre, pour tout le site",

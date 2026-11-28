@@ -3,6 +3,7 @@
  * Module pur (importé par les pages Astro et par node --test) ; les dates passent par format-date.mjs.
  */
 import { formatDay } from './format-date.mjs';
+import { formatDayEn } from './langues.mjs';
 
 /** Jour de la dernière mise à jour des études touchées par L38 (« YYYY-MM-DD »). */
 export const DATE_MAJ = '2026-11-03';
@@ -24,13 +25,37 @@ function jour(day) {
  */
 export const dateMajLabel = (day = DATE_MAJ) => jour(day);
 
+/** Mention d'une capture de l'ancienne carte 2D, en anglais (page traduite). */
+export const MENTION_CARTE_2D_EN = '2D map, before the globe';
+
 /**
- * Légende d'une capture : « Capture du <date> [(carte 2D, avant le globe)] — <description> ».
- * @param {{date: string, description: string, carte2d: boolean}} p
+ * L117 — nature d'une image, DÉCLARÉE par qui la pose (jamais devinée du nom de fichier) :
+ * `capture` pour une capture d'écran (ou l'image d'un écran, d'un diagramme rendu), `photo` pour une
+ * photographie. Le mot de tête de la légende en dépend, dans chaque langue.
  */
-export function legendeCapture({ date, description, carte2d }) {
+export const NATURES = /** @type {const} */ (['capture', 'photo']);
+const TETE = {
+  fr: { capture: 'Capture du', photo: 'Photo du' },
+  en: { capture: 'Screenshot from', photo: 'Photo from' },
+};
+
+/**
+ * Légende d'une image datée : « Capture du <date> [(carte 2D, avant le globe)] — <description> » pour une
+ * capture d'écran, « Photo du <date> — <description> » pour une photo ; sous une page traduite en anglais,
+ * « Screenshot from <date> [(2D map, before the globe)] — … » ou « Photo from <date> — … ».
+ * `nature` est obligatoire : une image sans nature déclarée fait échouer le build.
+ * @param {{date: string, description: string, carte2d?: boolean, nature: 'capture'|'photo', langue?: 'fr'|'en'}} p
+ */
+export function legendeCapture({ date, description, carte2d, nature, langue = 'fr' }) {
   if (typeof description !== 'string' || !description.trim()) throw new Error('légende : description absente');
-  return `Capture du ${jour(date)}${carte2d ? ` (${MENTION_CARTE_2D})` : ''} — ${description.trim()}`;
+  if (!NATURES.includes(nature)) throw new Error(`légende : nature ${JSON.stringify(nature)} (attendu « capture » ou « photo »)`);
+  if (!(langue in TETE)) throw new Error(`légende : langue ${JSON.stringify(langue)}`);
+  if (nature === 'photo' && carte2d) throw new Error('légende : une photo ne montre pas la carte 2D');
+  const en = langue === 'en';
+  const fr = jour(date); // valide la date dans les deux langues
+  const quand = en ? formatDayEn(date) : fr;
+  const mention = carte2d ? ` (${en ? MENTION_CARTE_2D_EN : MENTION_CARTE_2D})` : '';
+  return `${TETE[langue][nature]} ${quand}${mention} — ${description.trim()}`;
 }
 
 /**
@@ -45,12 +70,14 @@ export function chiffreDate({ valeur, unite, libelleAbsent, date, source, pourqu
   return `${libelleAbsent} non relevé au ${quand} : ${pourquoi.trim()}. Il sera ajouté à la prochaine mise à jour.`;
 }
 
-/** Messages d'une capture en cours de chargement et en échec (R6, R7). */
-export function messageCapture(nom) {
+/** Messages d'une capture (ou d'une photo, L117) en cours de chargement et en échec (R6, R7). */
+export function messageCapture(nom, nature = 'capture') {
   if (typeof nom !== 'string' || !nom.trim()) throw new Error('capture : nom absent');
+  if (!NATURES.includes(nature)) throw new Error(`capture : nature ${JSON.stringify(nature)}`);
   const n = nom.trim();
+  const mot = nature === 'photo' ? 'Photo' : 'Capture';
   return {
-    chargement: `Capture « ${n} » en cours de chargement. Elle apparaît dans un instant.`,
-    erreur: `Capture « ${n} » indisponible : le fichier n'a pas pu être chargé. Recharge la page pour la réafficher ; sa description reste lisible dans la légende ci-dessous.`,
+    chargement: `${mot} « ${n} » en cours de chargement. Elle apparaît dans un instant.`,
+    erreur: `${mot} « ${n} » indisponible : le fichier n'a pas pu être chargé. Recharge la page pour la réafficher ; sa description reste lisible dans la légende ci-dessous.`,
   };
 }

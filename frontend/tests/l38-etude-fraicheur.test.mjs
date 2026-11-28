@@ -39,15 +39,15 @@ test('R5 — un chiffre absent sans raison ou une date invalide font échouer le
 
 test('R4 — la légende compose la date avec la description, qui n\'est jamais remplacée', () => {
   const d = 'Navires AIS live (2500+ positions) + trajets daily agrégés.';
-  assert.equal(nb(legendeCapture({ date: '2026-05-11', carte2d: true, description: d })),
+  assert.equal(nb(legendeCapture({ date: '2026-05-11', carte2d: true, nature: 'capture', description: d })),
     `Capture du 11 mai 2026 (carte 2D, avant le globe) — ${d}`);
   // capture refaite : nouvelle date, plus de mention
-  assert.equal(nb(legendeCapture({ date: '2026-11-03', carte2d: false, description: d })), `Capture du 3 novembre 2026 — ${d}`);
+  assert.equal(nb(legendeCapture({ date: '2026-11-03', carte2d: false, nature: 'capture', description: d })), `Capture du 3 novembre 2026 — ${d}`);
 });
 
 test('R4 — une légende sans description ou sans date valide est refusée', () => {
-  assert.throws(() => legendeCapture({ date: '2026-05-11', carte2d: true, description: '' }), /description/);
-  assert.throws(() => legendeCapture({ date: '11/05/2026', carte2d: true, description: 'x' }), /date/);
+  assert.throws(() => legendeCapture({ date: '2026-05-11', carte2d: true, nature: 'capture', description: '' }), /description/);
+  assert.throws(() => legendeCapture({ date: '11/05/2026', carte2d: true, nature: 'capture', description: 'x' }), /date/);
 });
 
 test('R6 — R7 — les messages d\'une capture la nomment', () => {

@@ -8,6 +8,7 @@ import EtudeFraicheur from "@/components/site/EtudeFraicheur.astro";
 import Capture from "@/components/site/Capture.astro";
 import ChiffreDate from "@/components/site/ChiffreDate.astro";
 import { legendeCapture, chiffreDate } from "@/lib/etude-fraicheur.mjs";
+import { langueDuContenu } from "@/lib/langues.mjs";
 
 // Relevé du 3 novembre 2026 : entrées du manifeste du harnais QA, généré depuis globe.component.ts.
 const nbLayers: number | undefined = 68;
@@ -113,17 +114,17 @@ const DESC_PARTICULES = "Particules vent style windy.com — à l'époque 1500 p
         même pilotage temporel, rendu différent. Chaque légende dit quand la
         capture a été prise et si elle montre encore l'ancienne carte 2D.
       </p>
-      <Capture id="01-vessels" src="/case-studies/maritime-atlas/01-vessels.jpg" alt="Navires AIS live + trajets daily aggregés" nom="Navires AIS live" date="2026-05-11" carte2d={true}
+      <Capture id="01-vessels" nature="capture" src="/case-studies/maritime-atlas/01-vessels.jpg" alt="Navires AIS live + trajets daily aggregés" nom="Navires AIS live" date="2026-05-11" carte2d={true}
         description="Navires AIS live (2500+ positions) + trajets daily agrégés. Chaque couleur = catégorie de bateau (cargo bleu, tanker rose, pêche jaune, passenger vert)." />
-      <Capture id="02-sst" src="/case-studies/maritime-atlas/02-sst.jpg" alt="SST — température mer NOAA OISST" nom="SST" date="2026-05-11" carte2d={true}
+      <Capture id="02-sst" nature="capture" src="/case-studies/maritime-atlas/02-sst.jpg" alt="SST — température mer NOAA OISST" nom="SST" date="2026-05-11" carte2d={true}
         description="SST (température de surface de la mer) — NOAA OISST quotidien, gradient bleu→cyan→vert→jaune→rouge (-2°C → 30°C)." />
-      <Capture id="03-wind" src="/case-studies/maritime-atlas/03-wind.jpg" alt="Vent raster + flèches directionnelles" nom="Vent" date="2026-05-11" carte2d={true}
+      <Capture id="03-wind" nature="capture" src="/case-studies/maritime-atlas/03-wind.jpg" alt="Vent raster + flèches directionnelles" nom="Vent" date="2026-05-11" carte2d={true}
         description="Vent (GFS) — raster magnitude + flèches directionnelles sample par 2×2 cellules grille. Sélecteur GFS / AROME inline." />
-      <Capture id="04-waves" src="/case-studies/maritime-atlas/04-waves.jpg" alt="Vagues hauteur + direction (WaveWatch III)" nom="Vagues" date="2026-05-11" carte2d={true}
+      <Capture id="04-waves" nature="capture" src="/case-studies/maritime-atlas/04-waves.jpg" alt="Vagues hauteur + direction (WaveWatch III)" nom="Vagues" date="2026-05-11" carte2d={true}
         description="Vagues — NOAA WaveWatch III. Raster hauteur sig. + flèches direction primaire DIRPW. Land mask = pas de flèches sur la terre." />
-      <Capture id="05-rain-lightning" src="/case-studies/maritime-atlas/05-rain-lightning.jpg" alt="Radar pluie + foudre live" nom="Radar pluie et foudre" date="2026-05-11" carte2d={true}
+      <Capture id="05-rain-lightning" nature="capture" src="/case-studies/maritime-atlas/05-rain-lightning.jpg" alt="Radar pluie + foudre live" nom="Radar pluie et foudre" date="2026-05-11" carte2d={true}
         description="Radar pluie (RainViewer, XYZ tiles time-aware) + Foudre live (Blitzortung WSS, ~30 strikes/30s en bbox FR pendant un orage). Yellow halos = strikes <5min, ambre = <30min." />
-      <Capture id="06-alerts" src="/case-studies/maritime-atlas/06-alerts.jpg" alt="Panel alertes maritimes — Vent fort sur cargos / tankers" nom="Alertes maritimes" date="2026-05-11" carte2d={true}
+      <Capture id="06-alerts" nature="capture" src="/case-studies/maritime-atlas/06-alerts.jpg" alt="Panel alertes maritimes — Vent fort sur cargos / tankers" nom="Alertes maritimes" date="2026-05-11" carte2d={true}
         description={`Alerts engine — règles RMQ qui croisent ais.positions + wind grid + lightning.strike. Ici : 17 alertes "Vent fort" sur cargos / tankers (MSC CALYPSO, MSC ALIYA, etc. à 10-16 m/s).`} />
       <figure class="my-6">
         <video
@@ -134,7 +135,7 @@ const DESC_PARTICULES = "Particules vent style windy.com — à l'époque 1500 p
           playsinline
           class="rounded-lg border border-white/10 w-full"
         ></video>
-        <figcaption class="text-xs text-ink-muted mt-2 font-mono" data-testid="legende-capture">{legendeCapture({ date: "2026-05-11", carte2d: true, description: DESC_PARTICULES })}</figcaption>
+        <figcaption class="text-xs text-ink-muted mt-2 font-mono" data-testid="legende-capture">{legendeCapture({ date: "2026-05-11", carte2d: true, nature: "capture", description: DESC_PARTICULES, langue: langueDuContenu(Astro.url.pathname) })}</figcaption>
       </figure>
     </CaseStudySection>
 
@@ -161,9 +162,9 @@ const DESC_PARTICULES = "Particules vent style windy.com — à l'époque 1500 p
     </CaseStudySection>
 
     <CaseStudySection eyebrow="Architecture — vue d'ensemble">
-      <Capture id="architecture-plateforme" src="/case-studies/maritime-atlas/architecture-plateforme.png" href="/case-studies/maritime-atlas/architecture-plateforme.html" alt="AetherWX — plateforme : sources ouvertes, Argo Workflows et Deployments d'ingestion, PVC /coverage, pg-data PostgreSQL 18 TimescaleDB, RabbitMQ, GeoServer 3.0.1 ×3, pg-catalog, maritime-api NestJS, SeaweedFS S3, frontend Angular 19, utilisateur via Cloudflare Tunnel" nom="Architecture de la plateforme" date="2026-09-17" carte2d={false} largeur={2880} hauteur={2500}
+      <Capture id="architecture-plateforme" nature="capture" src="/case-studies/maritime-atlas/architecture-plateforme.png" href="/case-studies/maritime-atlas/architecture-plateforme.html" alt="AetherWX — plateforme : sources ouvertes, Argo Workflows et Deployments d'ingestion, PVC /coverage, pg-data PostgreSQL 18 TimescaleDB, RabbitMQ, GeoServer 3.0.1 ×3, pg-catalog, maritime-api NestJS, SeaweedFS S3, frontend Angular 19, utilisateur via Cloudflare Tunnel" nom="Architecture de la plateforme" date="2026-09-17" carte2d={false} largeur={2880} hauteur={2500}
         description={DESC_PLATEFORME} credit={{ label: "Archify", href: "https://github.com/tt-a1i/archify" }} />
-      <Capture id="architecture-livraison" src="/case-studies/maritime-atlas/architecture-livraison.png" href="/case-studies/maritime-atlas/architecture-livraison.html" alt="AetherWX — livraison GitOps : Big-Blue → maritime-atlas → GitHub Actions sur runners auto-hébergés → GHCR privé → bump du tag dans aetherwx-gitops → ArgoCD → k3s dark-blue" nom="Architecture de la livraison" date="2026-09-17" carte2d={false} largeur={2880} hauteur={2500}
+      <Capture id="architecture-livraison" nature="capture" src="/case-studies/maritime-atlas/architecture-livraison.png" href="/case-studies/maritime-atlas/architecture-livraison.html" alt="AetherWX — livraison GitOps : Big-Blue → maritime-atlas → GitHub Actions sur runners auto-hébergés → GHCR privé → bump du tag dans aetherwx-gitops → ArgoCD → k3s dark-blue" nom="Architecture de la livraison" date="2026-09-17" carte2d={false} largeur={2880} hauteur={2500}
         description={DESC_LIVRAISON} />
       <p>
         L'arête importante : <strong>le frontend ne tape qu'un seul backend

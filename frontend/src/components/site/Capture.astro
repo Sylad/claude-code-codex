@@ -1,5 +1,6 @@
 ---
 import { legendeCapture, messageCapture } from "@/lib/etude-fraicheur.mjs";
+import { langueDuContenu } from "@/lib/langues.mjs";
 
 interface Props {
   /** Identifiant du cadre (nom du fichier sans extension). */
@@ -12,6 +13,8 @@ interface Props {
   description: string;
   /** Jour de prise (YYYY-MM-DD). */
   date: string;
+  /** L117 — nature déclarée de l'image : « capture » d'écran ou « photo » ; elle choisit le mot de la légende. */
+  nature: "capture" | "photo";
   /** Vrai tant que la capture montre l'ancienne carte 2D. */
   carte2d: boolean;
   /** Dimensions du fichier : le cadre réserve ce rapport avant le chargement (16/9 par défaut). */
@@ -23,9 +26,9 @@ interface Props {
   credit?: { label: string; href: string };
 }
 
-const { id, src, alt, nom, description, date, carte2d, largeur = 1600, hauteur = 900, href, credit } = Astro.props;
-const message = messageCapture(nom);
-const legende = legendeCapture({ date, description, carte2d });
+const { id, src, alt, nom, description, date, nature, carte2d, largeur = 1600, hauteur = 900, href, credit } = Astro.props;
+const message = messageCapture(nom, nature);
+const legende = legendeCapture({ date, description, carte2d, nature, langue: langueDuContenu(Astro.url.pathname) });
 ---
 
 <figure class="my-6">

@@ -7,6 +7,7 @@ import CaseStudySection from "@/components/site/CaseStudySection.astro";
 import EtudeFraicheur from "@/components/site/EtudeFraicheur.astro";
 import ChiffreDate from "@/components/site/ChiffreDate.astro";
 import { legendeCapture } from "@/lib/etude-fraicheur.mjs";
+import { langueDuContenu } from "@/lib/langues.mjs";
 
 // L64 — légende de la photo de Big-Blue (prise le 31 octobre 2026) : poste de dev, la prod est sur dark-blue.
 const DESC_BIG_BLUE =
@@ -267,7 +268,7 @@ const tokenFlow = `flowchart LR
           decoding="async"
           class="w-full h-auto rounded-lg border border-white/10"
         />
-        <figcaption class="text-xs text-ink-muted mt-2 font-mono" data-testid="legende-capture">{legendeCapture({ date: "2026-10-31", description: DESC_BIG_BLUE })}</figcaption>
+        <figcaption class="text-xs text-ink-muted mt-2 font-mono" data-testid="legende-capture">{legendeCapture({ date: "2026-10-31", nature: "photo", description: DESC_BIG_BLUE, langue: langueDuContenu(Astro.url.pathname) })}</figcaption>
       </figure>
 
       <p>
