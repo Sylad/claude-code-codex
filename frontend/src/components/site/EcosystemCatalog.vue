@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import { espacesOrdinaires } from "@/lib/jour-mois.mjs";
-import { Search, Tag, ExternalLink, Check } from "lucide-vue-next";
+import { Search, Tag, ExternalLink, Circle, CircleCheck } from "lucide-vue-next";
 import type {
   EcosystemEntry,
   EcosystemCategory,
@@ -27,6 +27,10 @@ const showFilters = computed(() => props.entries.length >= props.filtersFrom);
 const categories: EcosystemCategory[] = ["plugin", "mcp", "skill", "tool"];
 const selectedCategories = ref<Set<EcosystemCategory>>(new Set());
 const searchQuery = ref("");
+const searchInput = ref<HTMLInputElement | null>(null);
+const hasFilters = computed(
+  () => selectedCategories.value.size > 0 || searchQuery.value.trim() !== "",
+);
 const copiedId = ref<string | null>(null);
 const copiedMessage = ref("");
 
@@ -78,9 +82,12 @@ function toggleCategory(c: EcosystemCategory) {
   selectedCategories.value = next;
 }
 
+// L114 (WCAG 2.4.3) : le bouton pressé disparaît (ou devient invisible) une fois les filtres vidés ;
+// le focus irait au <body>. Il revient au champ de recherche, d'où l'on refiltre.
 function clearFilters() {
   selectedCategories.value = new Set();
   searchQuery.value = "";
+  searchInput.value?.focus();
 }
 
 async function copyInstall(entry: EcosystemEntry) {
@@ -105,13 +112,14 @@ async function copyInstall(entry: EcosystemEntry) {
   <div>
     <p role="status" class="sr-only">{{ copiedMessage }}</p>
 
-    <div v-if="showFilters" class="flex flex-col gap-4 mb-8">
+    <div v-if="showFilters" class="flex flex-col gap-3 mb-6">
       <div class="relative">
         <Search
           :size="16"
           class="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted"
         />
         <input
+          ref="searchInput"
           v-model="searchQuery"
           type="search"
           :aria-label="searchLabel"
@@ -120,19 +128,22 @@ async function copyInstall(entry: EcosystemEntry) {
         />
       </div>
 
-      <!-- L114 : le compteur et « Réinitialiser » vivent AU-DESSUS des bascules, sur une ligne
-           toujours présente. À 390 px, les bascules arrivent en bas de l'écran : un compteur placé
-           dessous (et la liste) restait hors de la vue après le clic. Ici, quand le bouton cliqué
-           est visible, le résultat de son geste l'est aussi, et rien ne bouge quand « Réinitialiser »
-           apparaît ou disparaît (hauteur de ligne réservée). -->
-      <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 min-h-6">
+      <!-- L114 : le compteur et « Réinitialiser » vivent AU-DESSUS des bascules. À 390 px, les
+           bascules arrivent en bas de l'écran : un compteur placé dessous (et la liste) restait hors
+           de la vue après le clic. « Réinitialiser » est TOUJOURS rendu (invisible sans filtre, donc
+           hors de l'arbre d'accessibilité et du parcours clavier) : la ligne a la même hauteur avec
+           ou sans lui, à toute taille de police, même quand il passe sous le compteur (200 %). -->
+      <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
         <p role="status" class="font-mono text-xs text-ink-muted">
           {{ filteredEntries.length }} / {{ entries.length }} entrées
         </p>
         <button
-          v-if="selectedCategories.size > 0 || searchQuery.trim() !== ''"
           type="button"
-          class="text-sm text-ink-muted hover:text-claude underline underline-offset-4 cursor-pointer"
+          data-reinitialiser
+          :class="[
+            'inline-flex items-center min-h-6 text-sm text-ink-muted hover:text-claude underline underline-offset-4 cursor-pointer',
+            !hasFilters && 'invisible',
+          ]"
           @click="clearFilters"
         >
           Réinitialiser
@@ -153,7 +164,10 @@ async function copyInstall(entry: EcosystemEntry) {
           ]"
           @click="toggleCategory(c)"
         >
-          <Check v-if="selectedCategories.has(c)" :size="14" />
+          <!-- L114 : même largeur pressé ou non (cercle vide / cercle coché, 14 px) : une bascule
+               qui s'élargissait au clic (coche ajoutée) changeait de ligne à 112,5 %. -->
+          <CircleCheck v-if="selectedCategories.has(c)" :size="14" aria-hidden="true" class="shrink-0" />
+          <Circle v-else :size="14" aria-hidden="true" class="shrink-0" />
           <span>{{ CATEGORY_LABELS[c] }}</span>
           <span class="font-mono text-xs opacity-70">{{ counts[c] }}</span>
         </button>

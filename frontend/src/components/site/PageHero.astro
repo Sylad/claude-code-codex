@@ -26,9 +26,14 @@ interface Props {
    *   l'ont déjà ; l'étendre aux autres pages change leur rendu à 200 %, c'est un lot à part.
    */
   titleScale?: "clamped" | "text";
+  /**
+   * L114 : marge du bas réduite sous 640 px (pb-8 au lieu de 5 rem). Pour une page dont l'outil
+   * (filtres, liste) doit tenir dans le premier écran du téléphone. Grand écran inchangé.
+   */
+  compactBottom?: boolean;
 }
 
-const { eyebrow, title, intro, titleLang, class: className, eyebrowClass, introClass, titleScale = "clamped" } = Astro.props;
+const { eyebrow, title, intro, titleLang, class: className, eyebrowClass, introClass, titleScale = "clamped", compactBottom = false } = Astro.props;
 const titleClass =
   titleScale === "text"
     ? "mt-3 text-4xl sm:text-5xl font-semibold tracking-tight text-ink"
@@ -36,7 +41,7 @@ const titleClass =
 ---
 
 <section class:list={[className, "relative codex-grid border-b border-white/5"]}>
-  <div class="mx-auto max-w-6xl px-borne-5 sm:px-8 py-20 sm:py-28">
+  <div class:list={["mx-auto max-w-6xl px-borne-5 sm:px-8 pt-20 sm:py-28", compactBottom ? "pb-8" : "pb-20"]}>
     <p class:list={[eyebrowClass, "inline-block max-w-full rounded bg-paper/85 px-2 py-1 font-mono text-xs uppercase tracking-[0.2em] text-claude-soft"]} data-epouse>
       {lierPoints(eyebrow)}
     </p>

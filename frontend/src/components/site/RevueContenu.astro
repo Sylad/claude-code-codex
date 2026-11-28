@@ -8,9 +8,14 @@ import DateLongue from "./DateLongue.astro";
 interface Props {
   page: keyof typeof PAGES_REVUES;
   class?: string;
+  /**
+   * L114 : sous 640 px, une seule ligne (« Dernière revue : … ») au-dessus du bouton ; le rythme et
+   * la prochaine revue passent en tête du panneau dépliable. Grand écran inchangé.
+   */
+  compact?: boolean;
 }
 
-const { page, class: classe = "" } = Astro.props;
+const { page, class: classe = "", compact = false } = Astro.props;
 const maintenant = new Date();
 verifierRevues(maintenant);
 const p = PAGES_REVUES[page];
@@ -28,10 +33,12 @@ const idDetails = `revue-${page}-details`;
 >
   <p>
     <span class="text-ink">Dernière revue : <DateLongue day={e.derniere} /></span>
-    <span aria-hidden="true"> · </span>
-    revue tous les {RYTHME_JOURS} jours
-    <span aria-hidden="true"> · </span>
-    prochaine avant le <DateLongue day={e.prochaine} />
+    <span class:list={[compact && "max-sm:hidden"]}>
+      <span aria-hidden="true"> · </span>
+      revue tous les {RYTHME_JOURS} jours
+      <span aria-hidden="true"> · </span>
+      prochaine avant le <DateLongue day={e.prochaine} />
+    </span>
   </p>
   <p
     data-revue-retard
@@ -48,6 +55,11 @@ const idDetails = `revue-${page}-details`;
       Ce que cette revue a vérifié
     </summary>
     <div id={idDetails} class="pb-1 space-y-3">
+      {compact && (
+        <p class="sm:hidden" data-revue-rythme>
+          Revue tous les {RYTHME_JOURS} jours, prochaine avant le <DateLongue day={e.prochaine} />.
+        </p>
+      )}
       {p.corrige.length > 0 && (
         <div data-revue-corrige>
           <p class="text-ink font-medium">Mis à jour</p>
