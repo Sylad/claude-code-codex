@@ -8,6 +8,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 // L112 — la 404 anglaise (src/pages/en/404.astro) sort en dist/en/404/index.html : Cloudflare Pages sert le
 // 404.html le plus proche de l'adresse demandée (dist/en/404.html pour une adresse inconnue sous /en/).
+/** @type {import('astro').AstroIntegration} */
 const page404Anglaise = {
   name: 'page-404-anglaise',
   hooks: {
