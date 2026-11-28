@@ -1205,12 +1205,13 @@ lots:
     finished: 2026-11-27
   - id: L114
     title: "Catalogue Tools tested à 390 px : les bascules de filtre (Plugin, Serveur MCP, Skill) — après le second clic, ce qui change est hors de la vue (3 constats des sondes d'interaction de la revue UX de L109, 27-11, rapport bilans/2026-11-27/L109-ux.md) ; mesure : sondes à 390 sans constat sur ces bascules"
-    status: doing
+    status: done
     estimate: 1
     created: 2026-11-27
     started: 2026-11-28
-    review: { date: 2026-11-28, verdict: "non conforme : 1 majeur — police 200 % à 390, Réinitialiser décale les bascules de 32 px (bilans/2026-11-28/L114-code.md)", commit: 35a5201a8a397fa95cd97768268a231703e8a7ed }
-    ux: { date: 2026-11-28, verdict: "non conforme : 1 majeur — à 390×844 la 1re carte reste sous le pli (917 px) après un clic (bilans/2026-11-28/L114-ux.md)" }
+    review: { date: 2026-11-28, verdict: "conforme (2e revue, 236738b + afbbb35) : majeur corrigé, 0 écart sur les 43 autres pages — bilans/2026-11-28/L114-code-2.md", commit: afbbb3500c84642e6d7ca1d672f2ab5c2bbe1666 }
+    ux: { date: 2026-11-28, verdict: "conforme (lead, d'après ux-reviewer 2e revue) : critères 1-5 tenus, pages partagées identiques à la prod ; mineur accepté : titre de la 1re carte coupé de 6 px à 390×844 (carte et catégorie visibles) — bilans/2026-11-28/L114-ux-2.md" }
+    finished: 2026-11-28
   - id: L115
     title: "pourquoi-cadence, schéma « 4 · Rester cohérent » : les flèches ne sont plus qu'une pointe (écart 28 → 12 unités, trait ≈ 2,6 px à 320) alors que les autres schémas gardent un trait ; prendre la place sur la marge intérieure (texte à x+6, boîte de 154) et garder un écart de 20. Vu à la revue UX de L113 le 27-11 ; aussi : libellés à 10,4 px à 320 px (annoncés ≥ 11)."
     status: done
