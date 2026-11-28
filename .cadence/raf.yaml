@@ -1255,6 +1255,7 @@ lots:
     created: 2026-11-28
     started: 2026-11-28
     review: { date: 2026-11-28, verdict: "conforme : nature déclarée et obligatoire (capture|photo), photo de Big-Blue = photo, 8 captures maritime ; 27/27 tests ciblés, build vert ; mineur : légendes « Capture du » en dur sur 4 études (exactes) — bilans/2026-11-28/L117-code.md", commit: 15daff432a985086cc96d572bc9612cfcb449399 }
+    ux: { date: 2026-11-28, verdict: "conforme : « Photo du 31 octobre 2026 » sur la vraie photo, 9 « Capture du » exactes, mise en page inchangée (8,55:1), Nouveautés lisibles fr/en ; mineurs en note : vidéo « Particules vent » → « Capture vidéo du », espace insécable avant « … » à 390 — bilans/2026-11-28/L117-ux.md" }
   - id: L118
     title: Attentes QA des pages /en/ dans docs/qa/expectations.md (bandeau « Not translated yet. », contrôle de langue unique, 404 anglaise) — proposé par la QA de L112 le 28-11
     status: todo
